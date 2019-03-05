@@ -6,6 +6,8 @@
  nf-core/demultiplex Analysis Pipeline.
  #### Homepage / Documentation
  https://github.com/nf-core/demultiplex
+ #### Authors
+ Chelsea Sawyer <chelsea.sawyer@crick.ac.uk> - https://github.com/csawye01/demultiplex
 ----------------------------------------------------------------------------------------
 */
 
@@ -27,24 +29,39 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --reads '*_R{1,2}.fastq.gz' -profile docker
+    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/fastq/RUNFOLDER/SAMPLESHEET.csv
 
     Mandatory arguments:
-      --reads                       Path to input data (must be surrounded with quotes)
-      --genome                      Name of iGenomes reference
+
+      --samplesheet                 Full pathway to samplesheet
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, singularity, awsbatch, test and more.
 
     Options:
-      --singleEnd                   Specifies that the input is single end reads
-
-    References                      If not specified in the configuration file or you wish to overwrite any of the references.
-      --fasta                       Path to Fasta reference
-
-    Other options:
-      --outdir                      The output directory where the results will be saved
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --outdir                      The output directory where the results will be saved
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+
+    bcl2fastq Options:
+      --adapter_stringency              The minimum match rate that would trigger the masking or trimming process
+      --barcode_mismatches              Number of allowed mismatches per index
+      --create_fastq_for_indexreads     Create FASTQ files also for Index Reads
+      --ignore_missing_bcls             Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
+      --ignore_missing_filter           Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
+      --ignore_missing_positions        Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
+      --minimum_trimmed_readlength      Minimum read length after adapter trimming.
+      --mask_short_adapter_reads        This option applies when a read is shorter than the length specified by --minimum-trimmed-read-length (note that the read does not specifically have to be trimmed for this option to trigger, it need only fall below the —minimum-trimmed-read-length for any reason).
+      --tiles                           The --tiles argument takes a regular expression to select for processing only a subset of the tiles available in the flow cell Multiple selections can be made by separating the regular expressions with commas
+      --use_bases_mask                  The --use-bases-mask string specifies how to use each cycle
+      --with_failed_reads               Include all clusters in the output, even clusters that are non-PF. These clusters would have been excluded by default
+      --write_fastq_reversecomplement   Generate FASTQ files containing reverse complements of actual data.
+      --no_bgzf_compression             Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
+      --fastq_compression_level         Zlib compression level (1–9) used for FASTQ files.
+      --no_lane_splitting               Do not split FASTQ files by lane.
+      --find_adapters_withsliding-window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+      --loading_threads                 Number of threads used for loading BCL data.
+      --processing_threads              Number of threads used for processing demultiplexed data
+      --writing_threads                 Number of threads used for writing FASTQ data. This number should not be set higher than number of samples.
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -62,21 +79,6 @@ if (params.help){
     exit 0
 }
 
-// TODO nf-core: Add any reference files that are needed
-// Configurable reference genomes
-fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if ( params.fasta ){
-    fasta = file(params.fasta)
-    if( !fasta.exists() ) exit 1, "Fasta file not found: ${params.fasta}"
-}
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the above in a process, define the following:
-//   input:
-//   file fasta from fasta
-//
-
-
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
@@ -84,6 +86,13 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
+////////////////////////////////////////////////////
+/* --          VALIDATE INPUTS                 -- */
+////////////////////////////////////////////////////
+if ( params.samplesheet ){
+    ss_sheet = file(params.samplesheet)
+    if( !ss_sheet.exists() ) exit 1, "Sample sheet not found: ${params.samplesheet}"
+}
 
 if( workflow.profile == 'awsbatch') {
   // AWSBatch sanity checking
@@ -97,30 +106,6 @@ if( workflow.profile == 'awsbatch') {
 // Stage config files
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
-
-/*
- * Create a channel for input read files
- */
- if(params.readPaths){
-     if(params.singleEnd){
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
-     } else {
-         Channel
-             .from(params.readPaths)
-             .map { row -> [ row[0], [file(row[1][0]), file(row[1][1])]] }
-             .ifEmpty { exit 1, "params.readPaths was empty - no input files supplied" }
-             .into { read_files_fastqc; read_files_trimming }
-     }
- } else {
-     Channel
-         .fromFilePairs( params.reads, size: params.singleEnd ? 1 : 2 )
-         .ifEmpty { exit 1, "Cannot find any reads matching: ${params.reads}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --singleEnd on the command line." }
-         .into { read_files_fastqc; read_files_trimming }
- }
 
 
 // Header log info
@@ -138,9 +123,6 @@ summary['Pipeline Name']  = 'nf-core/demultiplex'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
-summary['Reads']        = params.reads
-summary['Fasta Ref']    = params.fasta
-summary['Data Type']    = params.singleEnd ? 'Single-End' : 'Paired-End'
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -181,7 +163,6 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
    return yaml_file
 }
 
-
 /*
  * Parse software version numbers
  */
@@ -195,67 +176,461 @@ process get_software_versions {
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
+    bcl2fastq --version > v_bcl2fastq.txt
     fastqc --version > v_fastqc.txt
+    fastq_screen --version > v_fastq_screen.txt
     multiqc --version > v_multiqc.txt
     scrape_software_versions.py > software_versions_mqc.yaml
     """
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                              MODULES                                -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+def MODULE_PYTHON_DEFAULT = "Python/3.6.4-foss-2018a"
+def MODULE_BCL2FASTQ_DEFAULT = "bcl2fastq2/2.20.0-foss-2018a"
+def MODULE_FASTQC_DEFAULT = "FastQC/0.11.7-Java-1.8.0_172"
+def MODULE_FSCREEN_DEFAULT = "FastQ_Screen/0.12.1-foss-2018a-Perl-5.26.1"
+def MODULE_MULTIQC_DEFAULT = "MultiQC/1.6-Python-2.7.15-foss-2018a"
+def MODULE_CELLRANGER_DEFAULT = "CellRanger/3.0.2-bcl2fastq-2.20.0"
+
+
+// Default bcl2fastq values that can be overwritten
+params.adapter_stringency = 0.9
+params.barcode_mismatches = 0
+params.create_fastq_for_indexreads = False
+params.ignore_missing_bcls = True
+params.ignore_missing_filter = True
+params.ignore_missing_positions = True
+params.minimum_trimmed_readlength = 35
+params.mask_short_adapter_reads = 22
+params.tiles = False
+params.use_bases_mask = False
+params.with_failed_reads = False
+params.write_fastq_reversecomplement = False
+params.no-bgzf-compression = False
+params.fastq_compression_level = 4
+params.no_lane_splitting = False
+params.find_adapters_withsliding = False
+params.loading_threads = 8
+params.processing_threads = 24
+params.writing_threads = 6
+
+
+if (params.samplesheet){
+    lastPath = params.samplesheet.lastIndexOf(File.separator)
+    runName_dir =  params.samplesheet.substring(0,lastPath+1)
+    runName =  params.samplesheet.substring(51,lastPath)
+    samplesheet_f = params.samplesheet.substring(lastPath+1)
+}
+
+//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
+tempOutputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/temp_files/")
+tempOutDir_result = outputDir.mkdir()
+
+//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
+outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
+outDir_result = outputDir.mkdir()
+
+samplesheetDir = "${tempOutputDir}samplesheets"
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --               Sample Sheet Reformatting and Check`                  -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/*
+ * STEP 1 - Check sample sheet for iCLIP samples and 10X samples
+ *        - This will collapse iCLIP samples into one sample and pull out 10X
+ *          samples into new samplesheet
+ */
+
+process reformat_samplesheet {
+  tag 'reformat_samplesheet'
+  module MODULE_PYTHON_DEFAULT
+
+  input:
+  file sheet from samplesheet_f
+
+  output:
+  stdout into reformatted_samplesheet
+
+  script:
+  """
+  mkdir "${tempOutputDir}samplesheets"
+  collapse_iclip.py --samplesheet "${sheet}" --pathway "${samplesheetDir}"
+  """
+}
+
+/*
+ * STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
+ *          indexes on same lanes and output pass or fail
+ */
+
+process check_samplesheet {
+  tag check_samplesheet
+  module MODULE_PYTHON_DEFAULT
+
+  input:
+  file sheet from reformatted_samplesheet
+
+  when:
+  reformatted_samplesheet.exists()
+
+  output:
+  set stdout, file(reformatted_samplesheet) into samplesheet_check
+
+  script:
+  // output a value to  send to choice channel
+  """
+  check_samplesheet.py --samplesheet "${sheet}"
+  """
+}
+
+PROBLEM_SAMPLESHEET = Channel.create()
+BCL2FASTQ = Channel.create()
+// put failed sample sheet into PROBLEM_SAMPLESHEET and pass into BCL2FASTQ
+samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --               Problem Sample Sheet Processes`                       -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/*
+ * STEP 3 - If previous process fails remove problem samples from entire sample
+ *          and create a new one
+ *          ONLY RUNS WHEN SAMPLESHEET FAILS
+ */
+
+process make_fake_SS {
+  tag 'fake_samplesheet'
+  module MODULE_PYTHON_DEFAULT
+
+  when:
+  !PROBLEM_SAMPLESHEET.isEmpty()
+
+  input:
+  val, sheet from PROBLEM_SAMPLESHEET
+
+  output:
+  stdout into fake_samplesheet
+
+  script:
+  """
+  create_falseSS.py --samplesheet "${sheet}" --pathway "${samplesheetDir}"
+  """
+}
+
+/*
+ * STEP 4 -  Running bcl2fastq on the false_samplesheet
+ *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ */
+
+process bcl2fastq_problem_SS {
+  tag 'bcl2fastq_problem_SS'
+  module MODULE_BCL2FASTQ_DEFAULT
+
+  when:
+  fake_samplesheet
+
+  input:
+  file sheet from fake_samplesheet
+
+  output:
+  file "Stats/Stats.json" into stats_json_file
+
+  script:
+  """
+  bcl2fastq \\
+      --runfolder-dir ${runName_dir} \\
+      --output-dir ${tempOutputDir} \\
+      --sample-sheet ${sheet} \\
+      --loading-threads 8 \\
+      --processing-threads 24 \\
+      --writing-threads 6 \\
+  """
+}
+
+/*
+ * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the
+ *           unknown barcodes section. The barcodes that match the short indexes
+ *           and/or missing index 2 with the highest count to remake the sample
+ *           sheet so that bcl2fastq can run properly
+ *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ */
+
+process parse_jsonfile {
+  tag 'parse_jsonfile'
+  module MODULE_PYTHON_DEFAULT
+
+  when:
+  !PROBLEM_SAMPLESHEET.isEmpty()
+
+  input:
+  file json from stats_json_file
+  file sheet from reformatted_samplesheet
+
+  output:
+  file "SampleSheet_new.csv" into updated_samplesheet
+
+  script:
+  """
+  parse_json.py --samplesheet "${sheet}" \\
+  --pathway "${tempOutputDir}" \\
+  --jsonfile "${stats_json_file}" \\
+  --problemsamples "${samplesheetDir}problem_samples_list.txt"
+  """
+}
+
+/*
+ * STEP 6 -  Checking the remade sample sheet. If this fails again the pipeline
+ *           will exit and fail
+ *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ */
+
+process recheck_samplesheet {
+  tag 'recheck_samplesheet'
+  module MODULE_PYTHON_DEFAULT
+
+  when:
+  !PROBLEM_SAMPLESHEET.isEmpty()
+
+  input:
+  file sheet from updated_samplesheet
+
+  output:
+  set stdout, file(updated_samplesheet) into samplesheet_check_2
+
+  when:
+  updated_samplesheet.exists()
+
+  script:
+  """
+  check_samplesheet.py --samplesheet "${sheet}"
+  """
+
+}
+
+PROBLEM_SS_CHECK2 = Channel.create()
+// Take sample check result and merge into same variable as passed samplesheet
+samplesheet_check_2.choice( PROBLEM_SS_CHECK2, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
+BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet recheck failed" }
+
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --               Main Demultiplexing Processes`                        -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
 /*
- * STEP 1 - FastQC
+ * STEP 7 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
+ *           passed the initial check. bcl2fastq parameters can be changed
  */
+
+process bcl2fastq_default {
+    tag 'bcl2fastq'
+    module MODULE_BCL2FASTQ_DEFAULT
+
+    input:
+    set val(v), file(updated_samplesheet) from BCL2FASTQ
+
+    output:
+    file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
+    file "*.fastq.gz" into undetermined_default_fq_ch mode flatten
+    file "Reports" into b2fq_default_reports_ch
+    file "Stats" into b2fq_default_stats_ch
+
+    script:
+    """
+    bcl2fastq \\
+        --runfolder-dir ${runName_dir} \\
+        --output-dir ${params.outdir} \\
+        --sample-sheet ${updated_samplesheet} \\
+        --adapter-stringency ${params.adapter_stringency} \\
+        --create-fastq-for-indexreads ${params.create_fastq_for_indexreads}\\
+        --ignore-missing-bcls ${params.ignore_missing_bcls}\\
+        --ignore-missing-filter ${params.ignore_missing_filter}\\
+        --ignore-missing-positions ${params.ignore_missing_positions}\\
+        --minimum-trimmed-readlength ${params.minimum_trimmed_readlength}\\
+        --mask-short-adapter-reads ${params.mask_short_adapter_reads}\\
+        --tiles ${params.tiles}\\
+        --use-bases-mask ${params.use_bases_mask}\\
+        --with-failed-reads ${params.with_failed_reads}\\
+        --write-fastq-reversecomplement ${params.write_fastq_reversecomplement}\\
+        --no-bgzf-compression ${params.no_bgzf_compression}\\
+        --fastq-compression-level ${params.fastq_compression_level}\\
+        --no-lane-splitting ${params.no_lane_splitting}\\
+        --find-adapters-withsliding-window ${params.find_adapters_withsliding} \\
+        --barcode-mismatches ${params.barcode_mismatches} \\
+        --loading-threads ${params.loading_threads} \\
+        --processing-threads ${params.processing_threads} \\
+        --writing-threads ${params.writing_threads} \\
+    """
+}
+
+// Capture Sample ID from FastQ file name
+def getFastqNameFile(fqfile) {
+    //println fqfile
+    def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
+    if (m.getCount()) {
+        return m[0][1]
+    }
+}
+
+sample_project_ch = Channel.fromPath(reformatted_samplesheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
+
+// This channel will be a tuple associating a sample ID and a fastq file
+fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
+
+// This creates two channels containing tuples associating a sample ID, a fastq file and a project name
+// One channel will be used for fastqc and the other one for fastq screen
+fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
+
+/*
+ * STEP 8 - FastQC
+ */
+
 process fastqc {
     tag "$name"
+    module MODULE_FASTQC_DEFAULT
     publishDir "${params.outdir}/fastqc", mode: 'copy',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 
     input:
-    set val(name), file(reads) from read_files_fastqc
+    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
 
     output:
-    file "*_fastqc.{zip,html}" into fastqc_results
+    file "*/*_fastqc" into fqc_folder_ch
 
     script:
     """
-    fastqc -q $reads
+    mkdir ${params.outdir}${projectName}
+    fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
     """
 }
 
+/*
+ * STEP 9 - FastQ Screen
+ */
 
+process fastq_screen {
+    tag "$name"
+    module MODULE_FASTQC_DEFAULT
+    publishDir "${params.outdir}/fastqc", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+
+    input:
+    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
+
+    output:
+    file "*/*_fastqc" into fqc_folder_ch
+
+    script:
+    """
+    fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
+    """
+}
 
 /*
- * STEP 2 - MultiQC
+ * STEP 10 - MultiQC
  */
 process multiqc {
+    module MODULE_MULTIQC_DEFAULT
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
     input:
-    file multiqc_config from ch_multiqc_config
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from software_versions_yaml
-    file workflow_summary from create_workflow_summary(summary)
+    file fqc_folder from fqc_folder_ch.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
 
     script:
-    rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
-    rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
+
     """
-    multiqc -f $rtitle $rfilename --config $multiqc_config .
+    multiqc ${fqc_folder} --config $multiqc_config .
     """
 }
 
+/*
+ * STEP 11 - CellRanger MkFastQ
+ * for the potential of a 10X samplesheet existing
+ */
 
+cellranger_input = "${samplesheetDir}10X_samplesheet.csv"
+process cellRangerMkFastQ {
+    tag 'cellRangerMkFastQ'
+    module MODULE_CELLRANGER_DEFAULT
+
+    when:
+    cellranger_input.exists()
+
+    output:
+    file "*/*_fastqc" into cr_fq_folder_ch mode flatten
+
+    script:
+    "cellranger mkfastq --run ${runName_dir} --samplesheet cellranger_input"
+}
+
+// This channel will be a tuple associating a sample ID and a fastq file
+cr_fqname_fqfile_ch = cr_fq_folder_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
+
+// This creates a channel containing tuples associating a sample ID, a fastq file and a project name
+// This channel will be used for CellRanger Count
+cr_sample_project_ch = Channel.fromPath(cellranger_input).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
+cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_project_ch}
 
 /*
- * STEP 3 - Output Description HTML
+ * STEP 12 - CellRanger count
+ * for the potential of a 10X samplesheet existing
  */
+
+process cellRangerCount {
+  tag 'cellRangerCount'
+  module MODULE_CELLRANGER_DEFAULT
+
+  when:
+  cr_fq_folder_ch.exists()
+
+  input:
+  set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
+
+  script:
+  "cellranger count --id ${runName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
+
+}
+
+/*
+ * STEP 13 - delete all files output from bcl2fastq after pipeline is complete
+ *
+
+process delete_bcl2fastq_problem_files {
+  when:
+
+
+  script:
+  """
+  rm -rf ${temp_bcl2fastq_output_dir}
+  """
+
+}/
+
+/*
+ * STEP 14 - Output Description HTML
+ */
+ 
 process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
@@ -270,8 +645,6 @@ process output_documentation {
     markdown_to_html.r $output_docs results_description.html
     """
 }
-
-
 
 /*
  * Completion e-mail notification
