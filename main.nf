@@ -433,7 +433,6 @@ BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet reche
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
 /*
  * STEP 7 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
  *           passed the initial check. bcl2fastq parameters can be changed
@@ -630,7 +629,7 @@ process delete_bcl2fastq_problem_files {
 /*
  * STEP 14 - Output Description HTML
  */
- 
+
 process output_documentation {
     publishDir "${params.outdir}/Documentation", mode: 'copy'
 
