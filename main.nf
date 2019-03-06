@@ -210,7 +210,7 @@ params.tiles = False
 params.use_bases_mask = False
 params.with_failed_reads = False
 params.write_fastq_reversecomplement = False
-params.no-bgzf-compression = False
+params.no_bgzf_compression = False
 params.fastq_compression_level = 4
 params.no_lane_splitting = False
 params.find_adapters_withsliding = False
@@ -296,6 +296,8 @@ BCL2FASTQ = Channel.create()
 // put failed sample sheet into PROBLEM_SAMPLESHEET and pass into BCL2FASTQ
 samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -318,7 +320,7 @@ process make_fake_SS {
   !PROBLEM_SAMPLESHEET.isEmpty()
 
   input:
-  val, sheet from PROBLEM_SAMPLESHEET
+  set foo, sheet from PROBLEM_SAMPLESHEET
 
   output:
   stdout into fake_samplesheet
@@ -339,7 +341,7 @@ process bcl2fastq_problem_SS {
   module MODULE_BCL2FASTQ_DEFAULT
 
   when:
-  fake_samplesheet
+  fake_samplesheet.exists()
 
   input:
   file sheet from fake_samplesheet
