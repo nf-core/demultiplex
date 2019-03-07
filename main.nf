@@ -184,6 +184,7 @@ process get_software_versions {
     """
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
 /* --                              MODULES                                -- */
@@ -296,8 +297,6 @@ BCL2FASTQ = Channel.create()
 // put failed sample sheet into PROBLEM_SAMPLESHEET and pass into BCL2FASTQ
 samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -315,9 +314,6 @@ samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail
 process make_fake_SS {
   tag 'fake_samplesheet'
   module MODULE_PYTHON_DEFAULT
-
-  when:
-  !PROBLEM_SAMPLESHEET.isEmpty()
 
   input:
   set foo, sheet from PROBLEM_SAMPLESHEET
@@ -374,7 +370,7 @@ process parse_jsonfile {
   module MODULE_PYTHON_DEFAULT
 
   when:
-  !PROBLEM_SAMPLESHEET.isEmpty()
+  stats_json_file.exists()
 
   input:
   file json from stats_json_file
@@ -403,7 +399,7 @@ process recheck_samplesheet {
   module MODULE_PYTHON_DEFAULT
 
   when:
-  !PROBLEM_SAMPLESHEET.isEmpty()
+  updated_samplesheet.exists()
 
   input:
   file sheet from updated_samplesheet
@@ -559,7 +555,6 @@ process multiqc {
     file "*_data"
 
     script:
-
     """
     multiqc ${fqc_folder} --config $multiqc_config .
     """
@@ -603,7 +598,7 @@ process cellRangerCount {
   module MODULE_CELLRANGER_DEFAULT
 
   when:
-  cr_fq_folder_ch.exists()
+  cellranger_input.exists()
 
   input:
   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
