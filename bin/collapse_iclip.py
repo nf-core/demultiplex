@@ -65,15 +65,16 @@ for lane in iclip_lanes_set:
     new_sample_ID = sample_ID + 'A' + str(min_value) + '-A' + str(max_value)
     new_sample_name = iclip_sample_name + "pool"
     # change the Sample_ID and Sample_Name of first row with matching lane (not in idx list)
-    sample_pd.loc[(sample_pd['Lane'] == lane) & (~sample_pd.index.isin(idx_list_to_drop)), ['Sample_ID', 'Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
+    sample_pd.loc[(sample_pd['Lane'] == lane) & (~sample_pd.index.isin(idx_list_to_drop)),
+                  ['Sample_ID', 'Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
 
-sample_pd.drop(sample_pd.index[idx_list_to_drop], inplace=True)
+
 
 # remove rows and create new samplesheet with 10X samples
 sc_list = ['10X-3prime', '10X-ATAC', '10X-CNV']
 
 # create new csv for just 10X samples
-cellranger_10X_df = sample_pd[sample_pd['data_analysis_pipeline'].isin(sc_list)]
+cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)]
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 
 #combine 10X and iCLIP lists to drop

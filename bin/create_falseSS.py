@@ -117,5 +117,5 @@ with open(pathway + 'fake_samplesheet.csv', 'w+') as fp:
 with open(pathway + 'problem_samples_list.txt', 'w+') as f:
     for item in problem_sample_ids:
         f.write("%s\n" % item)
-
-print('fake_samplesheet.csv')
+    f.close()
+print(pathway + 'fake_samplesheet.csv')

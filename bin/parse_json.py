@@ -88,8 +88,9 @@ for index, row in SS_new_problem_ids.iterrows():
 # delete read count column from dataframe
 SS_new_problem_ids.drop('read_count', 1, inplace=True)
 
-with open(pathway + 'json_samplesheet.csv', 'w') as fp:
+with open(pathway + 'json_samplesheet.csv', 'w+') as fp:
     fp.write('[Data]\n')
     sample_pd.to_csv(fp, index=False)
+    fp.close()
 
 print(pathway + 'json_samplesheet.csv')
