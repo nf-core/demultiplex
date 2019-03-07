@@ -8,8 +8,10 @@ import csv
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument('--samplesheet', type=str)
+argparser.add_argument('--pathway', type=str)
 ARGS = argparser.parse_args()
 samplesheet = ARGS.samplesheet
+pathway = ARGS.pathway
 
 # import sample sheet as not fixed path when in pipeline
 # samplesheet = "/camp/stp/sequencing/inputs/instruments/sequencers/190201_K00102_0307_AH3KTVBBXY/H3KTVBBXY.csv"
@@ -66,7 +68,7 @@ def check_samplesheet(samplesheet):
                             samplesheet_check = "fail"
                             return samplesheet_check
                         # second index short
-                        elif v != len(row['index2']):
+                        elif v != len(row['index2']) and row['index2'] != 'nan':
                             samplesheet_check = "fail"
                             return samplesheet_check
                         # if no problems are detected
@@ -75,4 +77,10 @@ def check_samplesheet(samplesheet):
                             return samplesheet_check
 
 results_ss = check_samplesheet(samplesheet)
-print(results_ss)
+
+if results_ss == "fail":
+    with open(pathway + 'fail_check_result.txt', 'w+') as f:
+        f.write(results_ss)
+        f.close()
+
+print(pathway + "reformatted_samplesheet.csv")

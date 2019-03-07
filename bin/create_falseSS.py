@@ -12,11 +12,10 @@ there will be no errors causing the process to stop
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument('--samplesheet', type=str)
-argparser.add_argument('--pathway', type=str)
+
 
 ARGS = argparser.parse_args()
 samplesheet = ARGS.samplesheet
-pathway =  ARGS.pathway
 
 # get idx of Data tag
 data_tag_search = '[Data]'
@@ -110,12 +109,13 @@ for k, v in lane_length_dict.items():
 
 sample_pd.drop(sample_pd.index[indexes_to_drop], inplace=True )
 
-with open(pathway + 'fake_samplesheet.csv', 'w+') as fp:
+with open('fake_samplesheet.csv', 'w+') as fp:
     fp.write('[Data]\n')
     sample_pd.to_csv(fp, index=False)
+    fp.close()
 
-with open(pathway + 'problem_samples_list.txt', 'w+') as f:
+with open('problem_samples_list.txt', 'w+') as f:
     for item in problem_sample_ids:
         f.write("%s\n" % item)
     f.close()
-print(pathway + 'fake_samplesheet.csv')
+

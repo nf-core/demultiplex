@@ -68,8 +68,6 @@ for lane in iclip_lanes_set:
     sample_pd.loc[(sample_pd['Lane'] == lane) & (~sample_pd.index.isin(idx_list_to_drop)),
                   ['Sample_ID', 'Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
 
-
-
 # remove rows and create new samplesheet with 10X samples
 sc_list = ['10X-3prime', '10X-ATAC', '10X-CNV']
 
@@ -80,17 +78,16 @@ cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 #combine 10X and iCLIP lists to drop
 total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop
 
+
 if len(cellranger_10X_df) > 0:
-    with open(pathway + '10X_samplesheet.csv', 'w+') as fp:
+    with open('10X_samplesheet.10x.csv', 'w+') as fp:
         fp.write('[Data]\n')
         cellranger_10X_df.to_csv(fp, index=False)
         fp.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
-with open(pathway + 'reformatted_samplesheet.csv', 'w+') as f:
+with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')
     sample_pd.to_csv(f, index=False)
     f.close()
-
-print("reformatted_samplesheet.csv")
