@@ -59,9 +59,6 @@ def helpMessage() {
       --fastq_compression_level         Zlib compression level (1–9) used for FASTQ files.
       --no_lane_splitting               Do not split FASTQ files by lane.
       --find_adapters_withsliding-window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
-      --loading_threads                 Number of threads used for loading BCL data.
-      --processing_threads              Number of threads used for processing demultiplexed data
-      --writing_threads                 Number of threads used for writing FASTQ data. This number should not be set higher than number of samples.
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -198,44 +195,18 @@ def MODULE_MULTIQC_DEFAULT = "MultiQC/1.6-Python-2.7.15-foss-2018a"
 def MODULE_CELLRANGER_DEFAULT = "CellRanger/3.0.2-bcl2fastq-2.20.0"
 
 
-// Default bcl2fastq values that can be overwritten
-params.adapter_stringency = 0.9
-params.barcode_mismatches = 0
-params.create_fastq_for_indexreads = False
-params.ignore_missing_bcls = True
-params.ignore_missing_filter = True
-params.ignore_missing_positions = True
-params.minimum_trimmed_readlength = 35
-params.mask_short_adapter_reads = 22
-params.tiles = False
-params.use_bases_mask = False
-params.with_failed_reads = False
-params.write_fastq_reversecomplement = False
-params.no_bgzf_compression = False
-params.fastq_compression_level = 4
-params.no_lane_splitting = False
-params.find_adapters_withsliding = False
-params.loading_threads = 8
-params.processing_threads = 24
-params.writing_threads = 6
-
-
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
     runName_dir =  params.samplesheet.substring(0,lastPath+1)
     runName =  params.samplesheet.substring(51,lastPath)
-    samplesheet_f = params.samplesheet.substring(lastPath+1)
+    samplesheet_string = params.samplesheet.getName()
 }
-
-//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
-tempOutputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/temp_files/")
-tempOutDir_result = outputDir.mkdir()
+// make channel for file
 
 //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
 outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
 outDir_result = outputDir.mkdir()
 
-samplesheetDir = "${tempOutputDir}samplesheets"
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -258,12 +229,12 @@ process reformat_samplesheet {
   file sheet from samplesheet_f
 
   output:
-  stdout into reformatted_samplesheet
+  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3
+  file "*.10x.csv" optional true into tenx_samplesheet
 
   script:
   """
-  mkdir "${tempOutputDir}samplesheets"
-  collapse_iclip.py --samplesheet "${sheet}" --pathway "${samplesheetDir}"
+  collapse_iclip.py --samplesheet "${sheet}"
   """
 }
 
@@ -277,13 +248,10 @@ process check_samplesheet {
   module MODULE_PYTHON_DEFAULT
 
   input:
-  file sheet from reformatted_samplesheet
-
-  when:
-  reformatted_samplesheet.exists()
+  file sheet from standard_samplesheet1
 
   output:
-  set stdout, file(reformatted_samplesheet) into samplesheet_check
+  stdout into samplesheet_check
 
   script:
   // output a value to  send to choice channel
@@ -291,11 +259,13 @@ process check_samplesheet {
   check_samplesheet.py --samplesheet "${sheet}"
   """
 }
+//get contents of result file to a string variable to pass to next process for the when directive
+//String samplesheet_check_results = new File(${tempOutputDir}"samplesheet_check_result.txt").text
 
 PROBLEM_SAMPLESHEET = Channel.create()
 BCL2FASTQ = Channel.create()
 // put failed sample sheet into PROBLEM_SAMPLESHEET and pass into BCL2FASTQ
-samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
+samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }.val == 'fail'
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -316,14 +286,15 @@ process make_fake_SS {
   module MODULE_PYTHON_DEFAULT
 
   input:
-  set foo, sheet from PROBLEM_SAMPLESHEET
+  file sheet from standard_samplesheet2
 
   output:
-  stdout into fake_samplesheet
+  file "*.csv" into fake_samplesheet
+  file "*.txt" into problem_samples_list
 
   script:
   """
-  create_falseSS.py --samplesheet "${sheet}" --pathway "${samplesheetDir}"
+  create_falseSS.py --samplesheet "${sheet}"
   """
 }
 
@@ -335,9 +306,6 @@ process make_fake_SS {
 process bcl2fastq_problem_SS {
   tag 'bcl2fastq_problem_SS'
   module MODULE_BCL2FASTQ_DEFAULT
-
-  when:
-  fake_samplesheet.exists()
 
   input:
   file sheet from fake_samplesheet
@@ -364,27 +332,23 @@ process bcl2fastq_problem_SS {
  *           sheet so that bcl2fastq can run properly
  *     ONLY RUNS WHEN SAMPLESHEET FAILS
  */
-
 process parse_jsonfile {
   tag 'parse_jsonfile'
   module MODULE_PYTHON_DEFAULT
 
-  when:
-  stats_json_file.exists()
-
   input:
   file json from stats_json_file
-  file sheet from reformatted_samplesheet
+  file sheet from standard_samplesheet3
 
   output:
-  file "SampleSheet_new.csv" into updated_samplesheet
+  file "*.csv" into updated_samplesheet
 
   script:
+  problem_list = new File(problem_samples_list).collect {it}
   """
   parse_json.py --samplesheet "${sheet}" \\
-  --pathway "${tempOutputDir}" \\
-  --jsonfile "${stats_json_file}" \\
-  --problemsamples "${samplesheetDir}problem_samples_list.txt"
+  --jsonfile "${json}" \\
+  --problemsamples "${problem_list}"
   """
 }
 
@@ -394,21 +358,17 @@ process parse_jsonfile {
  *     ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
+
 process recheck_samplesheet {
   tag 'recheck_samplesheet'
   module MODULE_PYTHON_DEFAULT
 
-  when:
-  updated_samplesheet.exists()
 
   input:
   file sheet from updated_samplesheet
 
   output:
   set stdout, file(updated_samplesheet) into samplesheet_check_2
-
-  when:
-  updated_samplesheet.exists()
 
   script:
   """
