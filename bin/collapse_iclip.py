@@ -8,11 +8,9 @@ import csv
 # need args for directory to put 10X samplesheet if applicable
 argparser = argparse.ArgumentParser()
 argparser.add_argument('--samplesheet', type=str)
-argparser.add_argument('--pathway', type=str)
 ARGS = argparser.parse_args()
 
 samplesheet = ARGS.samplesheet
-pathway = ARGS.pathway
 
 # function to get idx of Data tag
 data_tag_search = '[Data]'
