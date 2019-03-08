@@ -226,7 +226,7 @@ process reformat_samplesheet {
   module MODULE_PYTHON_DEFAULT
 
   input:
-  file sheet from samplesheet_f
+  file sheet from ss_sheet
 
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
@@ -336,16 +336,20 @@ process parse_jsonfile {
   input:
   file json from stats_json_file
   file sheet from standard_samplesheet3
+  file samp_probs from problem_samples_list1
+  file result from failChannel3
+
+  when:
+  result.name =~ /^fail.*/
 
   output:
-  file "*.csv" into updated_samplesheet
+  file "*.csv" into updated_samplesheet1, updated_samplesheet2
 
   script:
-  problem_list = new File(problem_samples_list).collect {it}
   """
   parse_json.py --samplesheet "${sheet}" \\
   --jsonfile "${json}" \\
-  --problemsamples "${problem_list}"
+  --problemsamples "${samp_probs}"
   """
 }
 
@@ -450,72 +454,7 @@ fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getNa
 fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
 
 /*
- * STEP 8 - FastQC
- */
-
-process fastqc {
-    tag "$name"
-    module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
-
-    output:
-    file "*/*_fastqc" into fqc_folder_ch
-
-    script:
-    """
-    mkdir ${params.outdir}${projectName}
-    fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
-    """
-}
-
-/*
- * STEP 9 - FastQ Screen
- */
-
-process fastq_screen {
-    tag "$name"
-    module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
-
-    output:
-    file "*/*_fastqc" into fqc_folder_ch
-
-    script:
-    """
-    fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
-    """
-}
-
-/*
- * STEP 10 - MultiQC
- */
-process multiqc {
-    module MODULE_MULTIQC_DEFAULT
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file fqc_folder from fqc_folder_ch.collect()
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    """
-    multiqc ${fqc_folder} --config $multiqc_config .
-    """
-}
-
-/*
- * STEP 11 - CellRanger MkFastQ
+ * STEP 8 - CellRanger MkFastQ
  * for the potential of a 10X samplesheet existing
  */
 
@@ -542,7 +481,7 @@ cr_sample_project_ch = Channel.fromPath(cellranger_input).splitCsv(header: true,
 cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_project_ch}
 
 /*
- * STEP 12 - CellRanger count
+ * STEP 9 - CellRanger count
  * for the potential of a 10X samplesheet existing
  */
 
@@ -560,6 +499,74 @@ process cellRangerCount {
   "cellranger count --id ${runName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
 
 }
+
+
+
+/*
+ * STEP 10 - FastQC
+ */
+
+process fastqc {
+    tag "$name"
+    module MODULE_FASTQC_DEFAULT
+    publishDir "${params.outdir}/fastqc", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+
+    input:
+    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
+
+    output:
+    file "*/*_fastqc" into fqc_folder_ch
+
+    script:
+    """
+    mkdir ${params.outdir}${projectName}
+    fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
+    """
+}
+
+/*
+ * STEP 11 - FastQ Screen
+ */
+
+process fastq_screen {
+    tag "$name"
+    module MODULE_FASTQC_DEFAULT
+    publishDir "${params.outdir}/fastqc", mode: 'copy',
+        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+
+    input:
+    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
+
+    output:
+    file "*/*_fastqc" into fqc_folder_ch
+
+    script:
+    """
+    fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
+    """
+}
+
+/*
+ * STEP 12 - MultiQC
+ */
+process multiqc {
+    module MODULE_MULTIQC_DEFAULT
+    publishDir "${params.outdir}/MultiQC", mode: 'copy'
+
+    input:
+    file fqc_folder from fqc_folder_ch.collect()
+
+    output:
+    file "*multiqc_report.html" into multiqc_report
+    file "*_data"
+
+    script:
+    """
+    multiqc ${fqc_folder} --config $multiqc_config .
+    """
+}
+
 
 /*
  * STEP 13 - delete all files output from bcl2fastq after pipeline is complete
