@@ -229,7 +229,7 @@ process reformat_samplesheet {
   file sheet from samplesheet_f
 
   output:
-  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3
+  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
   file "*.10x.csv" optional true into tenx_samplesheet
 
   script:
@@ -244,14 +244,14 @@ process reformat_samplesheet {
  */
 
 process check_samplesheet {
-  tag check_samplesheet
+  tag 'check_samplesheet'
   module MODULE_PYTHON_DEFAULT
 
   input:
   file sheet from standard_samplesheet1
 
   output:
-  stdout into samplesheet_check
+  file "*.txt" into failChannel1, failChannel2, failChannel3
 
   script:
   // output a value to  send to choice channel
@@ -262,10 +262,10 @@ process check_samplesheet {
 //get contents of result file to a string variable to pass to next process for the when directive
 //String samplesheet_check_results = new File(${tempOutputDir}"samplesheet_check_result.txt").text
 
-PROBLEM_SAMPLESHEET = Channel.create()
-BCL2FASTQ = Channel.create()
+//PROBLEM_SAMPLESHEET = Channel.create()
+//BCL2FASTQ = Channel.create()
 // put failed sample sheet into PROBLEM_SAMPLESHEET and pass into BCL2FASTQ
-samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }.val == 'fail'
+//samplesheet_check.choice( PROBLEM_SAMPLESHEET, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }.val == 'fail'
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -287,10 +287,14 @@ process make_fake_SS {
 
   input:
   file sheet from standard_samplesheet2
+  file result from failChannel1
+
+  when:
+  result.name =~ /^fail.*/
 
   output:
   file "*.csv" into fake_samplesheet
-  file "*.txt" into problem_samples_list
+  file "*.txt" into problem_samples_list1, problem_samples_list2
 
   script:
   """
