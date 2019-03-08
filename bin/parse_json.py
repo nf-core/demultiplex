@@ -12,7 +12,6 @@ argparser.add_argument('--jsonfile', type=str)
 argparser.add_argument('--problemsamples', type=str)
 
 ARGS = argparser.parse_args()
-pathway = ARGS.pathway
 samplesheet = ARGS.samplesheet
 json_file = ARGS.jsonfile
 problem_samples = ARGS.problemsamples

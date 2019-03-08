@@ -76,7 +76,6 @@ cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 #combine 10X and iCLIP lists to drop
 total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop
 
-
 if len(cellranger_10X_df) > 0:
     with open('10X_samplesheet.10x.csv', 'w+') as fp:
         fp.write('[Data]\n')

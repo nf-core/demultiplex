@@ -78,9 +78,5 @@ def check_samplesheet(samplesheet):
 
 results_ss = check_samplesheet(samplesheet)
 
-if results_ss == "fail":
-    with open(pathway + 'fail_check_result.txt', 'w+') as f:
-        f.write(results_ss)
-        f.close()
-
-print(pathway + "reformatted_samplesheet.csv")
+x = open (results_ss + ".txt", "w")
+x.close()
