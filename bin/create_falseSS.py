@@ -13,7 +13,6 @@ there will be no errors causing the process to stop
 argparser = argparse.ArgumentParser()
 argparser.add_argument('--samplesheet', type=str)
 
-
 ARGS = argparser.parse_args()
 samplesheet = ARGS.samplesheet
 

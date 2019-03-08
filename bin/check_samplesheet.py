@@ -13,9 +13,6 @@ ARGS = argparser.parse_args()
 samplesheet = ARGS.samplesheet
 pathway = ARGS.pathway
 
-# import sample sheet as not fixed path when in pipeline
-# samplesheet = "/camp/stp/sequencing/inputs/instruments/sequencers/190201_K00102_0307_AH3KTVBBXY/H3KTVBBXY.csv"
-
 # get idx of Data tag
 data_tag_search = '[Data]'
 data_index = 0

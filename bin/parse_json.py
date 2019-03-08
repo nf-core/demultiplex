@@ -78,7 +78,6 @@ for index, row in SS_new_problem_ids.iterrows():
                 elif "+" not in unknown_idx:
                     # find partial matches for short index 1 that is single indexed
                     if unknown_idx.startswith(row['index']) is True and pd.isnull(row['index2']) is True:
-                        #print(unknown_count, row['read_count'])
                         if unknown_count > row['read_count']:
                             sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID'], 'index'] = unknown_idx
                             SS_new_problem_ids.loc[SS_new_problem_ids['Sample_ID'] == row['Sample_ID'], 'read_count'] = unknown_count
