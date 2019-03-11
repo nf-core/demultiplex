@@ -231,6 +231,7 @@ process reformat_samplesheet {
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
   file "*.10x.csv" optional true into tenx_samplesheet
+  file "*.txt" into tenx_results1, tenx_results2
 
   script:
   """
@@ -464,6 +465,10 @@ process cellRangerMkFastQ {
 
     input:
     file sheet from tenx_samplesheet
+    file result from tenx_results1
+
+    when:
+    result.name =~ /^true.*/
 
     output:
     file "*/*_fastqc" into cr_fq_folder_ch mode flatten
@@ -489,18 +494,17 @@ process cellRangerCount {
   tag 'cellRangerCount'
   module MODULE_CELLRANGER_DEFAULT
 
-  when:
-  cellranger_input.exists()
-
   input:
   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
+  file result from tenx_results1
+
+  when:
+  result.name =~ /^true.*/
 
   script:
   "cellranger count --id ${runName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
 
 }
-
-
 
 /*
  * STEP 10 - FastQC

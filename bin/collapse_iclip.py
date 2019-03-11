@@ -76,11 +76,16 @@ cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 #combine 10X and iCLIP lists to drop
 total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop
 
+cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
     with open('10X_samplesheet.10x.csv', 'w+') as fp:
         fp.write('[Data]\n')
         cellranger_10X_df.to_csv(fp, index=False)
         fp.close()
+    cellranger_needed = 'true'
+
+x = open(cellranger_needed + ".txt", "w")
+x.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
