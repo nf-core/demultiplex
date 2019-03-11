@@ -47,7 +47,9 @@ def check_samplesheet(samplesheet):
 
     elif not result:
         lane_length_dict = {}
+        samplesheet_check = "pass"
         for x in iclip_lanes_removed_set:
+
             # select lane that match current lane
             lane_select = sample_pd.loc[sample_pd['Lane'] == x]
 
@@ -64,14 +66,11 @@ def check_samplesheet(samplesheet):
                         if v != len(row['index']):
                             samplesheet_check = "fail"
                             return samplesheet_check
-                        # second index short
+                        # second index short and not single indexed
                         elif v != len(row['index2']) and row['index2'] != 'nan':
                             samplesheet_check = "fail"
                             return samplesheet_check
-                        # if no problems are detected
-                        else:
-                            samplesheet_check = "pass"
-                            return samplesheet_check
+        return samplesheet_check
 
 results_ss = check_samplesheet(samplesheet)
 
