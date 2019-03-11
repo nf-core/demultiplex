@@ -1,5 +1,6 @@
 # nf-core/demultiplex
 **Demultiplexing pipeline for Illumina data**
+**IN PROGRESS**
 
 [![Build Status](https://travis-ci.org/nf-core/demultiplex.svg?branch=master)](https://travis-ci.org/nf-core/demultiplex)
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A50.32.0-brightgreen.svg)](https://www.nextflow.io/)
