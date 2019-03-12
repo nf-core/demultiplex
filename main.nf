@@ -317,6 +317,10 @@ process bcl2fastq_problem_SS {
       --runfolder-dir ${runName_dir} \\
       --output-dir ${tempOutputDir} \\
       --sample-sheet ${sheet} \\
+      --ignore-missing-bcls \\
+      --ignore-missing-filter \\
+      --with-failed-reads \\
+      --barcode-mismatches 0 \\
       --loading-threads 8 \\
       --processing-threads 24 \\
       --writing-threads 6 \\
@@ -360,7 +364,7 @@ process parse_jsonfile {
  *     ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
-
+PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
   tag 'recheck_samplesheet'
   module MODULE_PYTHON_DEFAULT
@@ -369,8 +373,11 @@ process recheck_samplesheet {
   input:
   file sheet from updated_samplesheet
 
+  when:
+  result.name =~ /^fail.*/
+
   output:
-  set stdout, file(updated_samplesheet) into samplesheet_check_2
+  stdout into PROBLEM_SS_CHECK2
 
   script:
   """
@@ -379,10 +386,10 @@ process recheck_samplesheet {
 
 }
 
-PROBLEM_SS_CHECK2 = Channel.create()
+
 // Take sample check result and merge into same variable as passed samplesheet
-samplesheet_check_2.choice( PROBLEM_SS_CHECK2, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
-BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet recheck failed" }
+//samplesheet_check_2.choice( PROBLEM_SS_CHECK2, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
+//BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet recheck failed" }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -401,6 +408,7 @@ BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet reche
 process bcl2fastq_default {
     tag 'bcl2fastq'
     module MODULE_BCL2FASTQ_DEFAULT
+    publishDir "${params.outdir}/FastQ", mode: 'copy'
 
     input:
     set val(v), file(updated_samplesheet) from BCL2FASTQ
@@ -412,26 +420,27 @@ process bcl2fastq_default {
     file "Stats" into b2fq_default_stats_ch
 
     script:
+
     """
     bcl2fastq \\
         --runfolder-dir ${runName_dir} \\
-        --output-dir ${params.outdir} \\
+        --output-dir . \\
         --sample-sheet ${updated_samplesheet} \\
         --adapter-stringency ${params.adapter_stringency} \\
-        --create-fastq-for-indexreads ${params.create_fastq_for_indexreads}\\
-        --ignore-missing-bcls ${params.ignore_missing_bcls}\\
-        --ignore-missing-filter ${params.ignore_missing_filter}\\
-        --ignore-missing-positions ${params.ignore_missing_positions}\\
-        --minimum-trimmed-readlength ${params.minimum_trimmed_readlength}\\
-        --mask-short-adapter-reads ${params.mask_short_adapter_reads}\\
-        --tiles ${params.tiles}\\
-        --use-bases-mask ${params.use_bases_mask}\\
-        --with-failed-reads ${params.with_failed_reads}\\
-        --write-fastq-reversecomplement ${params.write_fastq_reversecomplement}\\
-        --no-bgzf-compression ${params.no_bgzf_compression}\\
-        --fastq-compression-level ${params.fastq_compression_level}\\
-        --no-lane-splitting ${params.no_lane_splitting}\\
-        --find-adapters-withsliding-window ${params.find_adapters_withsliding} \\
+        --create-fastq-for-index-reads ${params.create_fastq_for_indexreads} \\
+        --ignore-missing-bcls ${params.ignore_missing_bcls} \\
+        --ignore-missing-filter ${params.ignore_missing_filter} \\
+        --ignore-missing-positions ${params.ignore_missing_positions} \\
+        --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+        --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
+        --tiles ${params.tiles} \\
+        --use-bases-mask ${params.use_bases_mask} \\
+        --with-failed-reads ${params.with_failed_reads} \\
+        --write-fastq-reverse-complement ${params.write_fastq_reversecomplement} \\
+        --no-bgzf-compression ${params.no_bgzf_compression} \\
+        --fastq-compression-level ${params.fastq_compression_level} \\
+        --no-lane-splitting ${params.no_lane_splitting}  \\
+        --find-adapters-with-sliding-window ${params.find_adapters_withsliding} \\
         --barcode-mismatches ${params.barcode_mismatches} \\
     """
 }
@@ -462,6 +471,7 @@ fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_f
 process cellRangerMkFastQ {
     tag 'cellRangerMkFastQ'
     module MODULE_CELLRANGER_DEFAULT
+    publishDir "${params.outdir}/FastQ", mode: 'copy'
 
     input:
     file sheet from tenx_samplesheet
@@ -493,6 +503,7 @@ cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_
 process cellRangerCount {
   tag 'cellRangerCount'
   module MODULE_CELLRANGER_DEFAULT
+  publishDir "${params.outdir}/CellRangerCount", mode: 'copy'
 
   input:
   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
@@ -502,7 +513,7 @@ process cellRangerCount {
   result.name =~ /^true.*/
 
   script:
-  "cellranger count --id ${runName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
+  "cellranger count --id ${projectName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
 
 }
 
@@ -513,11 +524,12 @@ process cellRangerCount {
 process fastqc {
     tag "$name"
     module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
+    publishDir "${params.outdir}/FastQC", mode: 'copy',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 
     input:
     set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
+    //combine in results if 10X samples are present
 
     output:
     file "*/*_fastqc" into fqc_folder_ch
@@ -536,7 +548,7 @@ process fastqc {
 process fastq_screen {
     tag "$name"
     module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/fastqc", mode: 'copy',
+    publishDir "${params.outdir}/FastQScreen", mode: 'copy',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 
     input:
@@ -573,22 +585,7 @@ process multiqc {
 
 
 /*
- * STEP 13 - delete all files output from bcl2fastq after pipeline is complete
- *
-
-process delete_bcl2fastq_problem_files {
-  when:
-
-
-  script:
-  """
-  rm -rf ${temp_bcl2fastq_output_dir}
-  """
-
-}/
-
-/*
- * STEP 14 - Output Description HTML
+ * STEP 13 - Output Description HTML
  */
 
 process output_documentation {
