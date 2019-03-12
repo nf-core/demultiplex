@@ -201,7 +201,7 @@ if (params.samplesheet){
     runName =  params.samplesheet.substring(51,lastPath)
     samplesheet_string = params.samplesheet.getName()
 }
-// make channel for file
+
 
 //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
 outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
@@ -230,8 +230,8 @@ process reformat_samplesheet {
 
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
-  file "*.10x.csv" optional true into tenx_samplesheet
   file "*.txt" into tenx_results1, tenx_results2
+  file "*.10x.csv" optional true into tenx_samplesheet
 
   script:
   """
@@ -252,7 +252,7 @@ process check_samplesheet {
   file sheet from standard_samplesheet1
 
   output:
-  file "*.txt" into failChannel1, failChannel2, failChannel3
+  file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
 
   script:
   // output a value to  send to choice channel
@@ -281,7 +281,7 @@ process make_fake_SS {
 
   input:
   file sheet from standard_samplesheet2
-  file result from failChannel1
+  file result from resultChannel1
 
   when:
   result.name =~ /^fail.*/
@@ -307,6 +307,10 @@ process bcl2fastq_problem_SS {
 
   input:
   file sheet from fake_samplesheet
+  file result from resultChannel2
+
+  when:
+  result.name =~ /^fail.*/
 
   output:
   file "Stats/Stats.json" into stats_json_file
@@ -315,7 +319,7 @@ process bcl2fastq_problem_SS {
   """
   bcl2fastq \\
       --runfolder-dir ${runName_dir} \\
-      --output-dir ${tempOutputDir} \\
+      --output-dir . \\
       --sample-sheet ${sheet} \\
       --ignore-missing-bcls \\
       --ignore-missing-filter \\
@@ -369,19 +373,21 @@ process recheck_samplesheet {
   tag "$name"
   module MODULE_PYTHON_DEFAULT
 
-
   input:
-  file sheet from updated_samplesheet
+  file sheet from samplesheet_f
+  file ud_sheet from updated_samplesheet1
+  file prob_samps from problem_samples_list2
+  file result from resultChannel4
 
   when:
   result.name =~ /^fail.*/
 
   output:
-  stdout into PROBLEM_SS_CHECK2
+  file "*.txt" into PROBLEM_SS_CHECK2
 
   script:
   """
-  check_samplesheet.py --samplesheet "${sheet}"
+  recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
   """
 
 }
@@ -411,7 +417,10 @@ process bcl2fastq_default {
     publishDir "${params.outdir}/FastQ", mode: 'copy'
 
     input:
-    set val(v), file(updated_samplesheet) from BCL2FASTQ
+    file result2 from PROBLEM_SS_CHECK2
+    file result from resultChannel5
+    file std_samplesheet from standard_samplesheet4
+    file updated_samplesheet2
 
     output:
     file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
@@ -423,7 +432,7 @@ process bcl2fastq_default {
     ignore_miss_bcls = params.ignore_missing_bcls ? "--ignore-missing-bcls " : ""
     ignore_miss_filt = params.ignore_missing_filter ? "--ignore-missing-filter " : ""
     ignore_miss_pos = params.ignore_missing_positions ? "--ignore-missing-positions " : ""
-    bases_mask = params.use_bases_mask ? "" : "--use-bases-mask ${params.use_bases_mask} "
+    bases_mask = params.use_bases_mask ? "--use-bases-mask ${params.use_bases_mask} " : ""
     fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
     failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
     mask_short_adapt = params.mask_short_adapter_reads ? "--mask-short-adapter-reads " : ""
