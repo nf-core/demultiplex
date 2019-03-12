@@ -420,29 +420,55 @@ process bcl2fastq_default {
     file "Stats" into b2fq_default_stats_ch
 
     script:
+    ignore_miss_bcls = params.ignore_missing_bcls ? "--ignore-missing-bcls " : ""
+    ignore_miss_filt = params.ignore_missing_filter ? "--ignore-missing-filter " : ""
+    ignore_miss_pos = params.ignore_missing_positions ? "--ignore-missing-positions " : ""
+    bases_mask = params.use_bases_mask ? "" : "--use-bases-mask ${params.use_bases_mask} "
+    fq_index_rds = params.create_fastq_for_indexreads ? "" : "--create-fastq-for-index-reads "
+    failed_rds = params.with_failed_reads ? "" : "--with-failed-reads "
+    mask_short_adapt = params.mask_short_adapter_reads ? "" : "--mask-short-adapter-reads "
+    fq_rev_comp = params.write_fastq_reversecomplement ? "" : "--write-fastq-reverse-complement "
+    no_bgzf_comp = params.no_bgzf_compression ? "" : "--no-bgzf-compression "
+    no_lane_split = params.no_lane_splitting ? "" : "--no-lane-splitting "
+    slide_window_adapt =  params.find_adapters_withsliding ? "" : "--find-adapters-with-sliding-window "
 
-    """
-    bcl2fastq \\
-        --runfolder-dir ${runName_dir} \\
-        --output-dir . \\
-        --sample-sheet ${updated_samplesheet} \\
-        --adapter-stringency ${params.adapter_stringency} \\
-        --create-fastq-for-index-reads ${params.create_fastq_for_indexreads} \\
-        --ignore-missing-bcls ${params.ignore_missing_bcls} \\
-        --ignore-missing-filter ${params.ignore_missing_filter} \\
-        --ignore-missing-positions ${params.ignore_missing_positions} \\
-        --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-        --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-        --tiles ${params.tiles} \\
-        --use-bases-mask ${params.use_bases_mask} \\
-        --with-failed-reads ${params.with_failed_reads} \\
-        --write-fastq-reverse-complement ${params.write_fastq_reversecomplement} \\
-        --no-bgzf-compression ${params.no_bgzf_compression} \\
-        --fastq-compression-level ${params.fastq_compression_level} \\
-        --no-lane-splitting ${params.no_lane_splitting}  \\
-        --find-adapters-with-sliding-window ${params.find_adapters_withsliding} \\
-        --barcode-mismatches ${params.barcode_mismatches} \\
-    """
+    if (result2.name =~ /^fail.*/){
+      exit 1, "Remade sample sheet still contains problem samples"
+    }
+    else if (result.name =~ /^pass.*/){
+      """
+      bcl2fastq \\
+          --runfolder-dir ${runName_dir} \\
+          --output-dir . \\
+          --sample-sheet ${std_samplesheet} \\
+          --adapter-stringency ${params.adapter_stringency} \\
+          $ignore_miss_bcls \\
+          $ignore_miss_filt \\
+          $ignore_miss_pos \\
+          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+          --fastq-compression-level ${params.fastq_compression_level} \\
+          --barcode-mismatches ${params.barcode_mismatches} \\
+          $bases_mask $fq_index_rds $failed_rds $mask_short_adapt \\
+          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+      """
+    }
+    else if (result.name =~ /^fail.*/){
+      """
+      bcl2fastq \\
+          --runfolder-dir ${runName_dir} \\
+          --output-dir . \\
+          --sample-sheet ${updated_samplesheet2} \\
+          --adapter-stringency ${params.adapter_stringency} \\
+          $ignore_miss_bcls \\
+          $ignore_miss_filt \\
+          $ignore_miss_pos \\
+          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+          --fastq-compression-level ${params.fastq_compression_level} \\
+          --barcode-mismatches ${params.barcode_mismatches}
+          $bases_mask $fq_index_rds $failed_rds $mask_short_adapt \\
+          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+      """
+    }
 }
 
 // Capture Sample ID from FastQ file name
