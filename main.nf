@@ -222,7 +222,7 @@ outDir_result = outputDir.mkdir()
  */
 
 process reformat_samplesheet {
-  tag 'reformat_samplesheet'
+  tag "$name"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -245,7 +245,7 @@ process reformat_samplesheet {
  */
 
 process check_samplesheet {
-  tag 'check_samplesheet'
+  tag "$name"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -276,7 +276,7 @@ process check_samplesheet {
  */
 
 process make_fake_SS {
-  tag 'fake_samplesheet'
+  tag "$name"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -302,7 +302,7 @@ process make_fake_SS {
  */
 
 process bcl2fastq_problem_SS {
-  tag 'bcl2fastq_problem_SS'
+  tag "$name"
   module MODULE_BCL2FASTQ_DEFAULT
 
   input:
@@ -335,7 +335,7 @@ process bcl2fastq_problem_SS {
  *     ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 process parse_jsonfile {
-  tag 'parse_jsonfile'
+  tag "$name"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -366,7 +366,7 @@ process parse_jsonfile {
 
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
-  tag 'recheck_samplesheet'
+  tag "$name"
   module MODULE_PYTHON_DEFAULT
 
 
@@ -406,7 +406,7 @@ process recheck_samplesheet {
  */
 
 process bcl2fastq_default {
-    tag 'bcl2fastq'
+    tag "$name"
     module MODULE_BCL2FASTQ_DEFAULT
     publishDir "${params.outdir}/FastQ", mode: 'copy'
 
@@ -424,13 +424,13 @@ process bcl2fastq_default {
     ignore_miss_filt = params.ignore_missing_filter ? "--ignore-missing-filter " : ""
     ignore_miss_pos = params.ignore_missing_positions ? "--ignore-missing-positions " : ""
     bases_mask = params.use_bases_mask ? "" : "--use-bases-mask ${params.use_bases_mask} "
-    fq_index_rds = params.create_fastq_for_indexreads ? "" : "--create-fastq-for-index-reads "
-    failed_rds = params.with_failed_reads ? "" : "--with-failed-reads "
-    mask_short_adapt = params.mask_short_adapter_reads ? "" : "--mask-short-adapter-reads "
-    fq_rev_comp = params.write_fastq_reversecomplement ? "" : "--write-fastq-reverse-complement "
-    no_bgzf_comp = params.no_bgzf_compression ? "" : "--no-bgzf-compression "
-    no_lane_split = params.no_lane_splitting ? "" : "--no-lane-splitting "
-    slide_window_adapt =  params.find_adapters_withsliding ? "" : "--find-adapters-with-sliding-window "
+    fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
+    failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
+    mask_short_adapt = params.mask_short_adapter_reads ? "--mask-short-adapter-reads " : ""
+    fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement " : ""
+    no_bgzf_comp = params.no_bgzf_compression ? "--no-bgzf-compression " : ""
+    no_lane_split = params.no_lane_splitting ? "--no-lane-splitting " : ""
+    slide_window_adapt =  params.find_adapters_withsliding ? "--find-adapters-with-sliding-window " : ""
 
     if (result2.name =~ /^fail.*/){
       exit 1, "Remade sample sheet still contains problem samples"
@@ -480,134 +480,135 @@ def getFastqNameFile(fqfile) {
     }
 }
 
-sample_project_ch = Channel.fromPath(reformatted_samplesheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
-
-// This channel will be a tuple associating a sample ID and a fastq file
-fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
-
-// This creates two channels containing tuples associating a sample ID, a fastq file and a project name
-// One channel will be used for fastqc and the other one for fastq screen
-fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
-
-/*
- * STEP 8 - CellRanger MkFastQ
- * for the potential of a 10X samplesheet existing
- */
-
-process cellRangerMkFastQ {
-    tag 'cellRangerMkFastQ'
-    module MODULE_CELLRANGER_DEFAULT
-    publishDir "${params.outdir}/FastQ", mode: 'copy'
-
-    input:
-    file sheet from tenx_samplesheet
-    file result from tenx_results1
-
-    when:
-    result.name =~ /^true.*/
-
-    output:
-    file "*/*_fastqc" into cr_fq_folder_ch mode flatten
-
-    script:
-    "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
-}
-
-// This channel will be a tuple associating a sample ID and a fastq file
-cr_fqname_fqfile_ch = cr_fq_folder_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
-
-// This creates a channel containing tuples associating a sample ID, a fastq file and a project name
-// This channel will be used for CellRanger Count
-cr_sample_project_ch = Channel.fromPath(cellranger_input).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
-cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_project_ch}
-
-/*
- * STEP 9 - CellRanger count
- * for the potential of a 10X samplesheet existing
- */
-
-process cellRangerCount {
-  tag 'cellRangerCount'
-  module MODULE_CELLRANGER_DEFAULT
-  publishDir "${params.outdir}/CellRangerCount", mode: 'copy'
-
-  input:
-  set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
-  file result from tenx_results1
-
-  when:
-  result.name =~ /^true.*/
-
-  script:
-  "cellranger count --id ${projectName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
-
-}
-
-/*
- * STEP 10 - FastQC
- */
-
-process fastqc {
-    tag "$name"
-    module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/FastQC", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
-    //combine in results if 10X samples are present
-
-    output:
-    file "*/*_fastqc" into fqc_folder_ch
-
-    script:
-    """
-    mkdir ${params.outdir}${projectName}
-    fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
-    """
-}
-
-/*
- * STEP 11 - FastQ Screen
- */
-
-process fastq_screen {
-    tag "$name"
-    module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/FastQScreen", mode: 'copy',
-        saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-
-    input:
-    set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
-
-    output:
-    file "*/*_fastqc" into fqc_folder_ch
-
-    script:
-    """
-    fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
-    """
-}
-
-/*
- * STEP 12 - MultiQC
- */
-process multiqc {
-    module MODULE_MULTIQC_DEFAULT
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
-    input:
-    file fqc_folder from fqc_folder_ch.collect()
-
-    output:
-    file "*multiqc_report.html" into multiqc_report
-    file "*_data"
-
-    script:
-    """
-    multiqc ${fqc_folder} --config $multiqc_config .
-    """
-}
+// sample_project_ch = Channel.fromPath(reformatted_samplesheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
+//
+// // This channel will be a tuple associating a sample ID and a fastq file
+// fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
+//
+// // This creates two channels containing tuples associating a sample ID, a fastq file and a project name
+// // One channel will be used for fastqc and the other one for fastq screen
+// fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
+//
+// /*
+//  * STEP 8 - CellRanger MkFastQ
+//  * for the potential of a 10X samplesheet existing
+//  */
+//
+// process cellRangerMkFastQ {
+//     tag "$name"
+//     module MODULE_CELLRANGER_DEFAULT
+//     publishDir "${params.outdir}/FastQ", mode: 'copy'
+//
+//     input:
+//     file sheet from tenx_samplesheet
+//     file result from tenx_results1
+//
+//     when:
+//     result.name =~ /^true.*/
+//
+//     output:
+//     file "*/*_fastqc" into cr_fq_folder_ch mode flatten
+//
+//     script:
+//     "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
+// }
+//
+// // This channel will be a tuple associating a sample ID and a fastq file
+// cr_fqname_fqfile_ch = cr_fq_folder_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
+//
+// // This creates a channel containing tuples associating a sample ID, a fastq file and a project name
+// // This channel will be used for CellRanger Count
+// cr_sample_project_ch = Channel.fromPath(cellranger_input).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
+// cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_project_ch}
+//
+// /*
+//  * STEP 9 - CellRanger count
+//  * for the potential of a 10X samplesheet existing
+//  */
+//
+// process cellRangerCount {
+//   tag "$name"
+//   module MODULE_CELLRANGER_DEFAULT
+//   publishDir "${params.outdir}/CellRangerCount", mode: 'copy'
+//
+//   input:
+//   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
+//   file result from tenx_results1
+//
+//   when:
+//   result.name =~ /^true.*/
+//
+//   script:
+//   "cellranger count --id ${projectName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
+//
+// }
+//
+// /*
+//  * STEP 10 - FastQC
+//  */
+//
+// process fastqc {
+//     tag "$name"
+//     module MODULE_FASTQC_DEFAULT
+//     publishDir "${params.outdir}/FastQC", mode: 'copy',
+//         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+//
+//     input:
+//     set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
+//     //combine in results if 10X samples are present
+//
+//     output:
+//     file "*/*_fastqc" into fqc_folder_ch
+//
+//     script:
+//     """
+//     mkdir ${params.outdir}${projectName}
+//     fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
+//     """
+// }
+//
+// /*
+//  * STEP 11 - FastQ Screen
+//  */
+//
+// process fastq_screen {
+//     tag "$name"
+//     module MODULE_FASTQC_DEFAULT
+//     publishDir "${params.outdir}/FastQScreen", mode: 'copy',
+//         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+//
+//     input:
+//     set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
+//
+//     output:
+//     file "*/*_fastqc" into fqc_folder_ch
+//
+//     script:
+//     """
+//     fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
+//     """
+// }
+//
+// /*
+//  * STEP 12 - MultiQC
+//  */
+// process multiqc {
+//     tag "$name"
+//     module MODULE_MULTIQC_DEFAULT
+//     publishDir "${params.outdir}/MultiQC", mode: 'copy'
+//
+//     input:
+//     file fqc_folder from fqc_folder_ch.collect()
+//
+//     output:
+//     file "*multiqc_report.html" into multiqc_report
+//     file "*_data"
+//
+//     script:
+//     """
+//     multiqc ${fqc_folder} --config $multiqc_config .
+//     """
+// }
 
 
 /*
