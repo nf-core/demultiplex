@@ -56,5 +56,7 @@ for index, row in SS_new_problem_ids.iterrows():
             if update_idx_val['index2'].values == row['index2'] or (numpy.isnan(update_idx_val['index2'].values) and numpy.isnan(row['index2'])):
                 test_result = 'fail'
 
-print(test_result)
+x = open(test_result + ".txt", "w")
+x.close()
+
 
