@@ -2,5 +2,8 @@
 work/
 data/
 results/
+pipeline_info/
+Documentation/
 .DS_Store
 tests/test_data
+*.pyc
