@@ -4,7 +4,6 @@ import pandas as pd
 import argparse
 import csv
 
-
 """
 Script to parse a sample sheet and make a fake samplesheet so that during demultiplexing 
 there will be no errors causing the process to stop
@@ -47,6 +46,7 @@ samplesheet_new['index2_len'] = ""
 
 samplesheet_new['index'] = samplesheet_new['index'].astype('str')
 samplesheet_new['index2'] = samplesheet_new['index2'].astype('str')
+samplesheet_new = samplesheet_new.fillna('')
 
 for idx, item in samplesheet_new.iterrows():
     if item['Sample_ID'] in ss_check['Sample_ID'].values:
@@ -79,32 +79,27 @@ for k, v in lane_length_dict.items():
             # get index of current sample ID on original sample sheet
             update_idx_val = sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID']].index[0]
             # sample with idx the same len as the max idx len
-            if v == row['index1_len'] and v == row['index2_len']:
+            if v == row['index1_len'] and v == row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
                 continue
             # samples with single idx not on same lane as dual
-            elif v == row['index1_len'] and row['index2_len'] == 0 and row['Lane'] not in sample_pd_empty_remove['Lane']:
+            elif v == row['index1_len'] and row['Lane'] in ss_check.Lane.values:
                 continue
-            # samples with single idx shorter than max len idx and not on same lane as dual
-            elif v != row['index1_len'] and row['index2_len'] == 0 and row['Lane'] not in sample_pd_empty_remove['Lane']:
+            # samples with single idx shorter than max len idx and not dual
+            elif v != row['index1_len'] and row['Lane'] in ss_check.Lane.values:
                 problem_sample_ids.append(row['Sample_ID'])
                 indexes_to_drop.append(update_idx_val)
-                #sample_pd.at[update_idx_val, 'index'] = 'N' * v
-            # samples with dual shorter idx lens than max idx len
-            elif v != row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove['Lane']:
+            # dual samples with both idxs shorter lens than max idx len
+            elif v != row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
                 problem_sample_ids.append(row['Sample_ID'])
                 indexes_to_drop.append(update_idx_val)
-                #sample_pd.at[update_idx_val, 'index'] = 'N' * v
-                #sample_pd.at[update_idx_val, 'index2'] = 'N' * v
-            # samples with idx1 shorter than max idx len
-            elif v != row['index1_len'] and v == row['index2_len'] and row['Lane'] in sample_pd_empty_remove['Lane']:
+            # dual samples with idx1 shorter than max idx len
+            elif v != row['index1_len'] and v == row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
                 problem_sample_ids.append(row['Sample_ID'])
                 indexes_to_drop.append(update_idx_val)
-                #sample_pd.at[update_idx_val, 'index'] = 'N' * v
-            # samples with idx2 shorter than max idx len
-            elif v == row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove['Lane']:
+            # dual samples with idx2 shorter than max idx len
+            elif v == row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
                 problem_sample_ids.append(row['Sample_ID'])
                 indexes_to_drop.append(update_idx_val)
-                #sample_pd.at[update_idx_val, 'index2'] = 'N' * v
 
 sample_pd.drop(sample_pd.index[indexes_to_drop], inplace=True )
 
