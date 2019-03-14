@@ -29,13 +29,13 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/fastq/RUNFOLDER/SAMPLESHEET.csv
+    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv
 
     Mandatory arguments:
 
       --samplesheet                 Full pathway to samplesheet
       -profile                      Configuration profile to use. Can use multiple (comma separated)
-                                    Available: conda, docker, singularity, awsbatch, test and more.
+                                    Available: conda, docker, crick, singularity, awsbatch, test and more.
 
     Options:
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
@@ -58,7 +58,7 @@ def helpMessage() {
       --no_bgzf_compression             Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
       --fastq_compression_level         Zlib compression level (1–9) used for FASTQ files.
       --no_lane_splitting               Do not split FASTQ files by lane.
-      --find_adapters_withsliding-window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+      --find_adapters_withsliding_window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
 
     AWSBatch options:
       --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
@@ -70,22 +70,22 @@ def helpMessage() {
  * SET UP CONFIGURATION VARIABLES
  */
 
-// Show help emssage
+//Show help message
 if (params.help){
     helpMessage()
     exit 0
 }
 
-// Has the run name been specified by the user?
-//  this has the bonus effect of catching both -name and --name
+// // Has the run name been specified by the user?
+// //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
 if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
 
-////////////////////////////////////////////////////
-/* --          VALIDATE INPUTS                 -- */
-////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////
+// /* --          VALIDATE INPUTS                 -- */
+// ////////////////////////////////////////////////////
 if ( params.samplesheet ){
     ss_sheet = file(params.samplesheet)
     if( !ss_sheet.exists() ) exit 1, "Sample sheet not found: ${params.samplesheet}"
@@ -113,13 +113,28 @@ log.info """=======================================================
     | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                           `._,._,\'
 
-nf-core/demultiplex v${workflow.manifest.version}"
+nf-core/demultiplex v${workflow.manifest.version}
 ======================================================="""
 def summary = [:]
 summary['Pipeline Name']  = 'nf-core/demultiplex'
 summary['Pipeline Version'] = workflow.manifest.version
 summary['Run Name']     = custom_runName ?: workflow.runName
-// TODO nf-core: Report custom parameters here
+summary['Adapter Stringency'] = params.adapter_stringency
+summary['Barcode Mismatches'] = params.barcode_mismatches
+summary['FastQ for IDX'] = params.create_fastq_for_indexreads
+summary['Ignore Missing BCLs'] = params.ignore_missing_bcls
+summary['Ignore Missing Filter'] = params.ignore_missing_filter
+summary['Ignore Missing Positions'] = params.ignore_missing_positions
+summary['Min Trim Read Length'] = params.minimum_trimmed_readlength
+summary['Mask Short Adapter Reads'] = params.mask_short_adapter_reads
+summary['No BGZF Compression'] = params.no_bgzf_compression
+summary['Tiles'] = params.tiles
+summary['Use Bases Mask'] = params.use_bases_mask
+summary['With Failed Reads'] = params.with_failed_reads
+summary['Write FastQ Rev Comp'] = params.write_fastq_reversecomplement
+summary['FastQ Compression Level'] = params.fastq_compression_level
+summary['No Lane Splitting'] = params.no_lane_splitting
+summary['Find Adapt Sliding Window'] = params.find_adapters_withsliding_window
 summary['Max Memory']   = params.max_memory
 summary['Max CPUs']     = params.max_cpus
 summary['Max Time']     = params.max_time
@@ -138,7 +153,7 @@ if(workflow.profile == 'awsbatch'){
    summary['AWS Region'] = params.awsregion
    summary['AWS Queue'] = params.awsqueue
 }
-if(params.email) summary['E-mail Address'] = params.email
+if (params.email) summary['E-mail Address'] = params.email
 log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
 log.info "========================================="
 
@@ -163,23 +178,24 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 /*
  * Parse software version numbers
  */
-process get_software_versions {
-
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-
-    script:
-    // TODO nf-core: Get all tools to print their version number here
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    bcl2fastq --version > v_bcl2fastq.txt
-    fastqc --version > v_fastqc.txt
-    fastq_screen --version > v_fastq_screen.txt
-    multiqc --version > v_multiqc.txt
-    scrape_software_versions.py > software_versions_mqc.yaml
-    """
-}
+// process get_software_versions {
+//     validExitStatus 0
+//
+//     output:
+//     file 'software_versions_mqc.yaml' into software_versions_yaml
+//
+//     script:
+//     // TODO nf-core: Get all tools to print their version number here
+//     """
+//     echo $workflow.manifest.version > v_pipeline.txt
+//     echo $workflow.nextflow.version > v_nextflow.txt
+//     bcl2fastq --version > v_bcl2fastq.txt
+//     FastQC --version > v_fastqc.txt
+//     FastQ_Screen --version > v_fastq_screen.txt
+//     MultiQC --version > v_multiqc.txt
+//     scrape_software_versions.py > software_versions_mqc.yaml
+//     """
+// }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,13 +215,13 @@ if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
     runName_dir =  params.samplesheet.substring(0,lastPath+1)
     runName =  params.samplesheet.substring(51,lastPath)
-    samplesheet_string = params.samplesheet.getName()
+    samplesheet_string = params.samplesheet.substring(lastPath+1)
 }
 
 
-//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
-outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
-outDir_result = outputDir.mkdir()
+// //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
+// outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
+// outDir_result = outputDir.mkdir()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -346,7 +362,7 @@ process parse_jsonfile {
   file json from stats_json_file
   file sheet from standard_samplesheet3
   file samp_probs from problem_samples_list1
-  file result from failChannel3
+  file result from resultChannel3
 
   when:
   result.name =~ /^fail.*/
@@ -374,7 +390,7 @@ process recheck_samplesheet {
   module MODULE_PYTHON_DEFAULT
 
   input:
-  file sheet from samplesheet_f
+  file sheet from ss_sheet
   file ud_sheet from updated_samplesheet1
   file prob_samps from problem_samples_list2
   file result from resultChannel4
@@ -391,11 +407,6 @@ process recheck_samplesheet {
   """
 
 }
-
-
-// Take sample check result and merge into same variable as passed samplesheet
-//samplesheet_check_2.choice( PROBLEM_SS_CHECK2, BCL2FASTQ ) { a -> a[0] =~ /^fail.*/ ? 0 : 1 }
-//BCL2FASTQ_CHECK2= Channel.value(BCL2FASTQ).ifEmpty { exit 1, "Sample sheet recheck failed" }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -435,16 +446,13 @@ process bcl2fastq_default {
     bases_mask = params.use_bases_mask ? "--use-bases-mask ${params.use_bases_mask} " : ""
     fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
     failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
-    mask_short_adapt = params.mask_short_adapter_reads ? "--mask-short-adapter-reads " : ""
+    mask_short_adapt = params.mask_short_adapter_reads ? "--mask-short-adapter-reads ${params.mask_short_adapter_reads}" : ""
     fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement " : ""
     no_bgzf_comp = params.no_bgzf_compression ? "--no-bgzf-compression " : ""
     no_lane_split = params.no_lane_splitting ? "--no-lane-splitting " : ""
     slide_window_adapt =  params.find_adapters_withsliding ? "--find-adapters-with-sliding-window " : ""
 
-    if (result2.name =~ /^fail.*/){
-      exit 1, "Remade sample sheet still contains problem samples"
-    }
-    else if (result.name =~ /^pass.*/){
+    if (result.name =~ /^pass.*/){
       """
       bcl2fastq \\
           --runfolder-dir ${runName_dir} \\
@@ -461,6 +469,11 @@ process bcl2fastq_default {
           $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
       """
     }
+
+    else if (result2.name =~ /^fail.*/){
+      exit 1, "Remade sample sheet still contains problem samples"
+    }
+
     else if (result.name =~ /^fail.*/){
       """
       bcl2fastq \\
@@ -480,14 +493,14 @@ process bcl2fastq_default {
     }
 }
 
-// Capture Sample ID from FastQ file name
-def getFastqNameFile(fqfile) {
-    //println fqfile
-    def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
-    if (m.getCount()) {
-        return m[0][1]
-    }
-}
+// // Capture Sample ID from FastQ file name
+// def getFastqNameFile(fqfile) {
+//     //println fqfile
+//     def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
+//     if (m.getCount()) {
+//         return m[0][1]
+//     }
+// }
 
 // sample_project_ch = Channel.fromPath(reformatted_samplesheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
 //
@@ -624,20 +637,20 @@ def getFastqNameFile(fqfile) {
  * STEP 13 - Output Description HTML
  */
 
-process output_documentation {
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs from ch_output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
+// process output_documentation {
+//     publishDir "${params.outdir}/Documentation", mode: 'copy'
+//
+//     input:
+//     file output_docs from ch_output_docs
+//
+//     output:
+//     file "results_description.html"
+//
+//     script:
+//     """
+//     markdown_to_html.r $output_docs results_description.html
+//     """
+// }
 
 /*
  * Completion e-mail notification
