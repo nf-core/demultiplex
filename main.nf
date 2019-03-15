@@ -446,11 +446,10 @@ process bcl2fastq_default {
     bases_mask = params.use_bases_mask ? "--use-bases-mask ${params.use_bases_mask} " : ""
     fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
     failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
-    mask_short_adapt = params.mask_short_adapter_reads ? "--mask-short-adapter-reads ${params.mask_short_adapter_reads}" : ""
     fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement " : ""
     no_bgzf_comp = params.no_bgzf_compression ? "--no-bgzf-compression " : ""
     no_lane_split = params.no_lane_splitting ? "--no-lane-splitting " : ""
-    slide_window_adapt =  params.find_adapters_withsliding ? "--find-adapters-with-sliding-window " : ""
+    slide_window_adapt =  params.find_adapters_withsliding_window ? "--find-adapters-with-sliding-window " : ""
 
     if (result.name =~ /^pass.*/){
       """
@@ -463,9 +462,10 @@ process bcl2fastq_default {
           $ignore_miss_filt \\
           $ignore_miss_pos \\
           --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
           --fastq-compression-level ${params.fastq_compression_level} \\
           --barcode-mismatches ${params.barcode_mismatches} \\
-          $bases_mask $fq_index_rds $failed_rds $mask_short_adapt \\
+          $bases_mask $fq_index_rds $failed_rds  \\
           $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
       """
     }
@@ -485,32 +485,17 @@ process bcl2fastq_default {
           $ignore_miss_filt \\
           $ignore_miss_pos \\
           --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
           --fastq-compression-level ${params.fastq_compression_level} \\
           --barcode-mismatches ${params.barcode_mismatches}
-          $bases_mask $fq_index_rds $failed_rds $mask_short_adapt \\
+          $bases_mask $fq_index_rds $failed_rds  \\
           $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
       """
     }
 }
 
-// // Capture Sample ID from FastQ file name
-// def getFastqNameFile(fqfile) {
-//     //println fqfile
-//     def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
-//     if (m.getCount()) {
-//         return m[0][1]
-//     }
-// }
 
-// sample_project_ch = Channel.fromPath(reformatted_samplesheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
-//
-// // This channel will be a tuple associating a sample ID and a fastq file
-// fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
-//
-// // This creates two channels containing tuples associating a sample ID, a fastq file and a project name
-// // One channel will be used for fastqc and the other one for fastq screen
-// fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
-//
+
 // /*
 //  * STEP 8 - CellRanger MkFastQ
 //  * for the potential of a 10X samplesheet existing
@@ -529,7 +514,10 @@ process bcl2fastq_default {
 //     result.name =~ /^true.*/
 //
 //     output:
-//     file "*/*_fastqc" into cr_fq_folder_ch mode flatten
+//     file "*/**.fastq.gz" into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
+//     file "*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+//     file "Reports" into cr_b2fq_default_reports_ch
+//     file "Stats" into cr_b2fq_default_stats_ch
 //
 //     script:
 //     "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
@@ -564,31 +552,47 @@ process bcl2fastq_default {
 //   "cellranger count --id ${projectName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
 //
 // }
-//
-// /*
-//  * STEP 10 - FastQC
-//  */
-//
-// process fastqc {
-//     tag "$name"
-//     module MODULE_FASTQC_DEFAULT
-//     publishDir "${params.outdir}/FastQC", mode: 'copy',
-//         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
-//
-//     input:
-//     set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
-//     //combine in results if 10X samples are present
-//
-//     output:
-//     file "*/*_fastqc" into fqc_folder_ch
-//
-//     script:
-//     """
-//     mkdir ${params.outdir}${projectName}
-//     fastqc --outdir ${params.outdir}${projectName} --extract ${fqFile}
-//     """
-// }
-//
+
+/*
+ * STEP 10 - FastQC
+ */
+
+ // Capture Sample ID from FastQ file name
+ def getFastqNameFile(fqfile) {
+     //println fqfile
+     def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
+     if (m.getCount()) {
+         return m[0][1]
+     }
+ }
+
+process fastqc {
+    tag "$name"
+    module MODULE_FASTQC_DEFAULT
+    publishDir "${params.outdir}/FastQC", mode: 'copy'
+
+    input:
+    file fqFile from fastqs_fqc_ch
+    //combine in results if 10X samples are present
+
+    output:
+    file "*/*_fastqc" into fqc_folder_ch
+    file "*/*.html" into fqc_html_ch
+
+    script:
+    //sample_project_ch = Channel.fromPath(ss_sheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
+
+    // This channel will be a tuple associating a sample ID and a fastq file
+    //fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
+
+    // This creates two channels containing tuples associating a sample ID, a fastq file and a project name
+    // One channel will be used for fastqc and the other one for fastq screen
+    //fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
+    """
+    fastqc --extract ${fqFile}
+    """
+}
+
 // /*
 //  * STEP 11 - FastQ Screen
 //  */
