@@ -3,6 +3,8 @@ work/
 data/
 results/
 pipeline_info/
+FastQ/
+FastQC/
 Documentation/
 .DS_Store
 tests/test_data
