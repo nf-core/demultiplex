@@ -24,6 +24,7 @@ with open(samplesheet, 'r') as f:
 iclip = 'iCLIP'
 
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
+sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
 
@@ -89,6 +90,7 @@ x.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
+#sample_pd = sample_pd.replace('nan',"")
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')
     sample_pd.to_csv(f, index=False)
