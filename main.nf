@@ -245,7 +245,7 @@ process reformat_samplesheet {
   file sheet from ss_sheet
 
   output:
-  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
+  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4, standard_samplesheet5
   file "*.txt" into tenx_results1, tenx_results2
   file "*.10x.csv" optional true into tenx_samplesheet
 
@@ -354,6 +354,7 @@ process bcl2fastq_problem_SS {
  *           sheet so that bcl2fastq can run properly
  *     ONLY RUNS WHEN SAMPLESHEET FAILS
  */
+updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
   tag "$name"
   module MODULE_PYTHON_DEFAULT
@@ -428,10 +429,10 @@ process bcl2fastq_default {
     publishDir "${params.outdir}/FastQ", mode: 'copy'
 
     input:
-    file result2 from PROBLEM_SS_CHECK2
+    file result2 from PROBLEM_SS_CHECK2.ifEmpty { true }
     file result from resultChannel5
     file std_samplesheet from standard_samplesheet4
-    file updated_samplesheet2
+    file sheet from updated_samplesheet2.ifEmpty { true }
 
     output:
     file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
@@ -479,7 +480,7 @@ process bcl2fastq_default {
       bcl2fastq \\
           --runfolder-dir ${runName_dir} \\
           --output-dir . \\
-          --sample-sheet ${updated_samplesheet2} \\
+          --sample-sheet ${sheet} \\
           --adapter-stringency ${params.adapter_stringency} \\
           $ignore_miss_bcls \\
           $ignore_miss_filt \\
@@ -543,13 +544,13 @@ process bcl2fastq_default {
 //
 //   input:
 //   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
-//   file result from tenx_results1
+//   file result from tenx_results2
 //
 //   when:
 //   result.name =~ /^true.*/
 //
 //   script:
-//   "cellranger count --id ${projectName} --transcriptome --fastqs ${fqFile} --sample ${sampleName}"
+//   "cellranger count --id= ${projectName} --transcriptome= --fastqs= ${fqFile} --sample= ${sampleName}  --expect-cells="
 //
 // }
 
