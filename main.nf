@@ -496,47 +496,38 @@ process bcl2fastq_default {
 }
 
 
+/*
+ * STEP 8 - CellRanger MkFastQ
+ * for the potential of a 10X samplesheet existing
+ */
 
-// /*
-//  * STEP 8 - CellRanger MkFastQ
-//  * for the potential of a 10X samplesheet existing
-//  */
-//
-// process cellRangerMkFastQ {
-//     tag "$name"
-//     module MODULE_CELLRANGER_DEFAULT
-//     publishDir "${params.outdir}/FastQ", mode: 'copy'
-//
-//     input:
-//     file sheet from tenx_samplesheet
-//     file result from tenx_results1
-//
-//     when:
-//     result.name =~ /^true.*/
-//
-//     output:
-//     file "*/**.fastq.gz" into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-//     file "*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
-//     file "Reports" into cr_b2fq_default_reports_ch
-//     file "Stats" into cr_b2fq_default_stats_ch
-//
-//     script:
-//     "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
-// }
-//
-// // This channel will be a tuple associating a sample ID and a fastq file
-// cr_fqname_fqfile_ch = cr_fq_folder_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
-//
-// // This creates a channel containing tuples associating a sample ID, a fastq file and a project name
-// // This channel will be used for CellRanger Count
-// cr_sample_project_ch = Channel.fromPath(cellranger_input).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
-// cr_fqname_fqfile_ch.combine(cr_sample_project_ch, by: 0).into{ cr_fqname_fqfile_project_ch}
-//
-// /*
-//  * STEP 9 - CellRanger count
-//  * for the potential of a 10X samplesheet existing
-//  */
-//
+process cellRangerMkFastQ {
+    tag "$name"
+    module MODULE_CELLRANGER_DEFAULT
+    publishDir "${params.outdir}/FastQ", mode: 'copy'
+
+    input:
+    file sheet from tenx_samplesheet
+    file result from tenx_results1
+
+    when:
+    result.name =~ /^true.*/
+
+    output:
+    file "*/**.fastq.gz" into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
+    file "*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+    file "Reports" into cr_b2fq_default_reports_ch
+    file "Stats" into cr_b2fq_default_stats_ch
+
+    script:
+    "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
+}
+
+/*
+ * STEP 9 - CellRanger count
+ * for the potential of a 10X samplesheet existing
+ */
+
 // process cellRangerCount {
 //   tag "$name"
 //   module MODULE_CELLRANGER_DEFAULT
@@ -573,25 +564,23 @@ process fastqc {
     publishDir "${params.outdir}/FastQC", mode: 'copy'
 
     input:
-    file fqFile from fastqs_fqc_ch
+    //set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
     //combine in results if 10X samples are present
+    file fqFile from fastqs_fqc_ch.mix(cr_fastqs_fqc_ch)
 
     output:
     file "*/*_fastqc" into fqc_folder_ch
     file "*/*.html" into fqc_html_ch
 
-    script:
-    //sample_project_ch = Channel.fromPath(ss_sheet).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project ] }
-
-    // This channel will be a tuple associating a sample ID and a fastq file
-    //fqname_fqfile_ch = fastqs_fqc_ch.map { fqfile -> [ getFastqNameFile(fqfile.getName()), fqfile ] }
-
-    // This creates two channels containing tuples associating a sample ID, a fastq file and a project name
-    // One channel will be used for fastqc and the other one for fastq screen
-    //fqname_fqfile_ch.combine(sample_project_ch, by: 0).into{ fqname_fqfile_project_fqc_ch; fqname_fqfile_project_fastqscreen_ch }
-    """
-    fastqc --extract ${fqFile}
-    """
+    shell:
+    //mkdir "${params.outdir}/${projectName}/FastQC"
+    //fqname_fqfile_ch = Channel.fromPath(fqFile).map { fqFile -> tuple(fqFile.toRealPath().getParent().getName(), fqFile) }
+    //project_name = fqname_fqfile_ch[0]
+    '''
+    dir= dirname !{fqFile}
+    projectName=$(basename ${dir})
+    fastqc --outdir !{params.outdir}/FastQC/${projectName} --extract !{fqFile}
+    '''
 }
 
 // /*
