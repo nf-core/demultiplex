@@ -102,6 +102,7 @@ if( workflow.profile == 'awsbatch') {
 
 // Stage config files
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
+ch_fastqscreen_config = Channel.fromPath(params.fastq_screen_config)
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 
@@ -426,7 +427,7 @@ process recheck_samplesheet {
 process bcl2fastq_default {
     tag "$name"
     module MODULE_BCL2FASTQ_DEFAULT
-    publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
+    publishDir path: "${outputDir}", mode: 'copy'
 
     input:
     file result2 from PROBLEM_SS_CHECK2.ifEmpty { true }
@@ -494,7 +495,6 @@ process bcl2fastq_default {
       """
     }
 }
-
 
 /*
  * STEP 8 - CellRanger MkFastQ
@@ -571,47 +571,48 @@ process fastqc {
     """
 }
 
-// /*
-//  * STEP 11 - FastQ Screen
-//  */
-// fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
-// process fastq_screen {
-//     tag "$name"
-//     module MODULE_FASTQC_DEFAULT
-//     publishDir "${outputDir}/${projectName}/FastQScreen", mode: 'copy'
-//
-//     input:
-//     set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch
-//
-//     output:
-//     file "*/*_fastqc" into fqc_folder_ch
-//
-//     script:
-//     """
-//     fastq_screen ${fqFile}
-//     """
-// }
-//
-// /*
-//  * STEP 12 - MultiQC
-//  */
-// process multiqc {
-//     tag "$name"
-//     module MODULE_MULTIQC_DEFAULT
-//     publishDir "${params.outdir}/MultiQC", mode: 'copy'
-//
-//     input:
-//     file fqc_folder from fqc_folder_ch.collect()
-//
-//     output:
-//     file "*multiqc_report.html" into multiqc_report
-//     file "*_data"
-//
-//     script:
-//     """
-//     multiqc ${fqc_folder} --config $multiqc_config .
-//     """
-// }
+/*
+ * STEP 11 - FastQ Screen
+ */
+fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+process fastq_screen {
+    tag "$name"
+    module MODULE_FASTQC_DEFAULT
+    publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
+
+    input:
+    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch
+
+    output:
+    file("*.html") into fastq_screen_html
+    file("*.txt") into fastq_screen_txt
+
+    script:
+    """
+    fastq_screen ${fqFile} --conf $fastqscreen_config
+    """
+}
+
+/*
+ * STEP 12 - MultiQC
+ */
+process multiqc {
+    tag "$name"
+    module MODULE_MULTIQC_DEFAULT
+    publishDir "${outputDir}/${projectName}/MultiQC", mode: 'copy'
+
+    input:
+    file fqc_folder from fqc_folder_ch.collect()
+
+    output:
+    file "*multiqc_report.html" into multiqc_report
+    file "*_data"
+
+    script:
+    """
+    multiqc ${fqc_folder} --config $multiqc_config .
+    """
+}
 
 
 /*
