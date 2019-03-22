@@ -102,7 +102,7 @@ if( workflow.profile == 'awsbatch') {
 
 // Stage config files
 ch_multiqc_config = Channel.fromPath(params.multiqc_config)
-ch_fastqscreen_config = Channel.fromPath(params.fastq_screen_config)
+FSCREEN_CONF_FILEPATH = new File(params.fastq_screen_conf).getAbsolutePath()
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 
@@ -587,9 +587,9 @@ process fastq_screen {
     file("*.html") into fastq_screen_html
     file("*.txt") into fastq_screen_txt
 
-    script:
+    shell:
     """
-    fastq_screen ${fqFile} --conf $fastqscreen_config
+    fastq_screen ${fqFile} --conf ${FSCREEN_CONF_FILEPATH}
     """
 }
 
