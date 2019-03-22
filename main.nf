@@ -426,7 +426,7 @@ process recheck_samplesheet {
 process bcl2fastq_default {
     tag "$name"
     module MODULE_BCL2FASTQ_DEFAULT
-    publishDir "${params.outdir}/FastQ", mode: 'copy'
+    publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
 
     input:
     file result2 from PROBLEM_SS_CHECK2.ifEmpty { true }
@@ -504,7 +504,7 @@ process bcl2fastq_default {
 process cellRangerMkFastQ {
     tag "$name"
     module MODULE_CELLRANGER_DEFAULT
-    publishDir "${params.outdir}/FastQ", mode: 'copy'
+    publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
 
     input:
     file sheet from tenx_samplesheet
@@ -515,7 +515,7 @@ process cellRangerMkFastQ {
 
     output:
     file "*/**.fastq.gz" into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-    file "*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+    file "/*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
     file "Reports" into cr_b2fq_default_reports_ch
     file "Stats" into cr_b2fq_default_stats_ch
 
@@ -549,38 +549,26 @@ process cellRangerMkFastQ {
  * STEP 10 - FastQC
  */
 
- // Capture Sample ID from FastQ file name
- def getFastqNameFile(fqfile) {
-     //println fqfile
-     def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
-     if (m.getCount()) {
-         return m[0][1]
-     }
- }
-
+fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+//fqname_fqfile_ch.view()
 process fastqc {
     tag "$name"
     module MODULE_FASTQC_DEFAULT
-    publishDir "${params.outdir}/FastQC", mode: 'copy'
+    publishDir path: "${outputDir}/${projectName}/FastQC", mode: 'copy'
 
     input:
-    //set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fqc_ch
+    //set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fastqs_fqc_ch)
     //combine in results if 10X samples are present
-    file fqFile from fastqs_fqc_ch.mix(cr_fastqs_fqc_ch)
+    set val(projectName), file(fqFile) from fqname_fqfile_ch
 
     output:
-    file "*/*_fastqc" into fqc_folder_ch
-    file "*/*.html" into fqc_html_ch
+    file "*_fastqc" into fqc_folder_ch
+    file "*.html" into fqc_html_ch
 
-    shell:
-    //mkdir "${params.outdir}/${projectName}/FastQC"
-    //fqname_fqfile_ch = Channel.fromPath(fqFile).map { fqFile -> tuple(fqFile.toRealPath().getParent().getName(), fqFile) }
-    //project_name = fqname_fqfile_ch[0]
-    '''
-    dir= dirname !{fqFile}
-    projectName=$(basename ${dir})
-    fastqc --outdir !{params.outdir}/FastQC/${projectName} --extract !{fqFile}
-    '''
+    script:
+    """
+    fastqc --extract ${fqFile}
+    """
 }
 
 // /*
@@ -590,7 +578,7 @@ process fastqc {
 // process fastq_screen {
 //     tag "$name"
 //     module MODULE_FASTQC_DEFAULT
-//     publishDir "${params.outdir}/FastQScreen", mode: 'copy',
+//     publishDir "${params.outdir}/${projectName}/FastQScreen", mode: 'copy',
 //         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 //
 //     input:
