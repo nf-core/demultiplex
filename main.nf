@@ -574,22 +574,21 @@ process fastqc {
 // /*
 //  * STEP 11 - FastQ Screen
 //  */
-//
+// fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 // process fastq_screen {
 //     tag "$name"
 //     module MODULE_FASTQC_DEFAULT
-//     publishDir "${params.outdir}/${projectName}/FastQScreen", mode: 'copy',
-//         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
+//     publishDir "${outputDir}/${projectName}/FastQScreen", mode: 'copy'
 //
 //     input:
-//     set val(sampleName), file(fqFile), val(projectName) from fqname_fqfile_project_fastqscreen_ch
+//     set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch
 //
 //     output:
 //     file "*/*_fastqc" into fqc_folder_ch
 //
 //     script:
 //     """
-//     fastq_screen ${fqFile} --outdir ${params.outdir}${projectName}
+//     fastq_screen ${fqFile}
 //     """
 // }
 //
