@@ -589,7 +589,7 @@ process fastq_screen {
 
     shell:
     """
-    fastq_screen ${fqFile} --conf ${FSCREEN_CONF_FILEPATH}
+    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner bowtie2 ${fqFile}
     """
 }
 
@@ -608,7 +608,7 @@ process multiqc {
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
 
-    script:
+    shell:
     """
     multiqc ${fqc_folder} --config $multiqc_config .
     """
