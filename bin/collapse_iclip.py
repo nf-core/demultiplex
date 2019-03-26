@@ -68,14 +68,19 @@ for lane in iclip_lanes_set:
                   ['Sample_ID', 'Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
 
 # remove rows and create new samplesheet with 10X samples
-sc_list = ['10X-3prime', '10X-ATAC', '10X-CNV']
+sc_list = ['10X-3prime', '10X-CNV']
+sc_ATAC_list = ['10X-ATAC']
 
 # create new csv for just 10X samples
 cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)]
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 
+# create new csv for just 10X samples
+cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)]
+cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
+
 #combine 10X and iCLIP lists to drop
-total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop
+total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + cellranger_idx_ATAClist_to_drop
 
 cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
@@ -85,12 +90,18 @@ if len(cellranger_10X_df) > 0:
         fp.close()
     cellranger_needed = 'true'
 
+if len(cellranger_10XATAC_df) > 0:
+    with open('10X_samplesheet.10xATAC.csv', 'w+') as file:
+        file.write('[Data]\n')
+        cellranger_10XATAC_df.to_csv(file, index=False)
+        file.close()
+    cellranger_needed = 'true'
+
 x = open(cellranger_needed + ".txt", "w")
 x.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
-#sample_pd = sample_pd.replace('nan',"")
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')
     sample_pd.to_csv(f, index=False)

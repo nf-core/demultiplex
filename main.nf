@@ -190,14 +190,14 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     """
 //     echo $workflow.manifest.version > v_pipeline.txt
 //     echo $workflow.nextflow.version > v_nextflow.txt
-//     bcl2fastq --version > v_bcl2fastq.txt
-//     FastQC --version > v_fastqc.txt
-//     FastQ_Screen --version > v_fastq_screen.txt
-//     MultiQC --version > v_multiqc.txt
+//     multiqc --version > v_multiqc.txt
+//     fastqc --version > v_fastqc.txt
 //     scrape_software_versions.py > software_versions_mqc.yaml
 //     """
 // }
-
+//bcl2fastq2 --version > v_bcl2fastq.txt
+//FastQC --version > v_fastqc.txt
+//FastQ_Screen --version > v_fastq_screen.txt
 
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -220,9 +220,16 @@ if (params.samplesheet){
 }
 
 
-// //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
-// outputDir = file("/camp/stp/babs/working/sawyerc/nf_demux_test/${runName}/")
-// outDir_result = outputDir.mkdir()
+//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
+outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
+outDir_result = outputDir.mkdir()
+
+
+def getSampleName(fqfile) {
+    //println fqfile
+    def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
+    return m
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -500,7 +507,7 @@ process bcl2fastq_default {
  * STEP 8 - CellRanger MkFastQ
  * for the potential of a 10X samplesheet existing
  */
-
+//need to parse samplesheet for project name and genome
 process cellRangerMkFastQ {
     tag "$name"
     module MODULE_CELLRANGER_DEFAULT
@@ -528,20 +535,21 @@ process cellRangerMkFastQ {
  * for the potential of a 10X samplesheet existing
  */
 
+//cr_fqname_fqfile_project_ch = cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), getSampleName(fqFile.getName()), fqFile ] }
 // process cellRangerCount {
 //   tag "$name"
 //   module MODULE_CELLRANGER_DEFAULT
-//   publishDir "${params.outdir}/CellRangerCount", mode: 'copy'
+//   publishDir "${params.outdir}/${projectName}/CellRangerCount", mode: 'copy'
 //
 //   input:
-//   set val(sampleName), file(fqFile), val(projectName) from cr_fqname_fqfile_project_ch
+//   set val(projectName), val(sampleName), file(fqFile) from cr_fqname_fqfile_project_ch
 //   file result from tenx_results2
 //
 //   when:
 //   result.name =~ /^true.*/
 //
 //   script:
-//   "cellranger count --id= ${projectName} --transcriptome= --fastqs= ${fqFile} --sample= ${sampleName}  --expect-cells="
+//   "cellranger count --id= ${projectName} --transcriptome=${params.tenx_genomes_base} --fastqs= ${fqFile} --sample= ${sampleName}"
 //
 // }
 
@@ -566,6 +574,7 @@ process fastqc {
     file "*.html" into fqc_html_ch
 
     script:
+    //projectName = fqFile.getParent().getName()
     """
     fastqc --extract ${fqFile}
     """
@@ -577,7 +586,7 @@ process fastqc {
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 process fastq_screen {
     tag "$name"
-    module MODULE_FASTQC_DEFAULT
+    errorStrategy 'terminate'
     publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
 
     input:
@@ -589,7 +598,7 @@ process fastq_screen {
 
     shell:
     """
-    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner bowtie2 ${fqFile}
+    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner \$ROOTBOWTIE2/bowtie2 ${fqFile}
     """
 }
 
