@@ -75,7 +75,7 @@ sc_ATAC_list = ['10X-ATAC']
 cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)]
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 
-# create new csv for just 10X samples
+# create new csv for just 10X-ATAC samples
 cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)]
 cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
 
@@ -90,15 +90,19 @@ if len(cellranger_10X_df) > 0:
         fp.close()
     cellranger_needed = 'true'
 
+cellrangerATAC_needed = 'false'
 if len(cellranger_10XATAC_df) > 0:
     with open('10X_samplesheet.10xATAC.csv', 'w+') as file:
         file.write('[Data]\n')
         cellranger_10XATAC_df.to_csv(file, index=False)
         file.close()
-    cellranger_needed = 'true'
+    cellrangerATAC_needed = 'true'
 
-x = open(cellranger_needed + ".txt", "w")
+x = open(cellranger_needed + ".10x.txt", "w")
 x.close()
+
+z = open(cellrangerATAC_needed + ".10xATAC.txt", "w")
+z.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 

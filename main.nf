@@ -210,6 +210,7 @@ def MODULE_FASTQC_DEFAULT = "FastQC/0.11.7-Java-1.8.0_172"
 def MODULE_FSCREEN_DEFAULT = "FastQ_Screen/0.12.1-foss-2018a-Perl-5.26.1"
 def MODULE_MULTIQC_DEFAULT = "MultiQC/1.6-Python-2.7.15-foss-2018a"
 def MODULE_CELLRANGER_DEFAULT = "CellRanger/3.0.2-bcl2fastq-2.20.0"
+def MODULE_CELLRANGERATAC_DEFAULT = "CellRangerATAC/1.0.1-bcl2fastq-2.20.0"
 
 
 if (params.samplesheet){
@@ -254,8 +255,10 @@ process reformat_samplesheet {
 
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4, standard_samplesheet5
-  file "*.txt" into tenx_results1, tenx_results2
+  file "*.10x.txt" into tenx_results1, tenx_results2
+  file "*.10xATAC.txt" into tenxATAC_results1, tenxATAC_results2
   file "*.10x.csv" optional true into tenx_samplesheet
+  file "*.10xATAC.csv" optional true into tenxATAC_samplesheet
 
   script:
   """
@@ -504,6 +507,34 @@ process bcl2fastq_default {
 }
 
 /*
+ * STEP 8 - CellRanger-atac MkFastQ
+ * for the potential of a 10X-ATAC samplesheet existing
+ */
+//need to parse samplesheet for project name and genome
+process cellRangerATACMkFastQ {
+    tag "$name"
+    module MODULE_CELLRANGERATAC_DEFAULT
+    publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
+
+    input:
+    file sheet from tenxATAC_samplesheet
+    file result from tenxATAC_results1
+
+    when:
+    result.name =~ /^true.*/
+
+    output:
+    file "*/**.fastq.gz" into crATAC_fastqs_fqc_ch, crATAC_fastqs_screen_ch mode flatten
+    file "/*.fastq.gz" into crATAC_undetermined_default_fq_ch mode flatten
+    file "Reports" into crATAC_b2fq_default_reports_ch
+    file "Stats" into crATAC_b2fq_default_stats_ch
+
+    script:
+    //if 10XATAC
+    "cellranger-atac mkfastq --run ${runName_dir} --samplesheet ${sheet}"
+}
+
+/*
  * STEP 8 - CellRanger MkFastQ
  * for the potential of a 10X samplesheet existing
  */
@@ -527,9 +558,9 @@ process cellRangerMkFastQ {
     file "Stats" into cr_b2fq_default_stats_ch
 
     script:
+    //if 10XATAC
     "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
 }
-
 /*
  * STEP 9 - CellRanger count
  * for the potential of a 10X samplesheet existing
