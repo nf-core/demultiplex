@@ -507,8 +507,8 @@ process bcl2fastq_default {
 }
 
 /*
- * STEP 8 - CellRanger-atac MkFastQ
- *      ONLY RUNS WHEN 10X-ATAC SAMPLESHEET EXISTS
+ * STEP 8 - CellRanger MkFastQ
+ *      ONLY RUNS WHEN 10X SAMPLESHEET EXISTS
  */
 //need to parse samplesheet for project name and genome
 process cellRangerMkFastQ {
@@ -542,8 +542,8 @@ process cellRangerMkFastQ {
 }
 
 /*
- * STEP 9 - CellRanger-ATAC count
- * ONLY RUNS WHEN 10X-ATAC SAMPLESHEET EXISTS
+ * STEP 9 - CellRanger count
+ * ONLY RUNS WHEN 10X SAMPLESHEET EXISTS
  *
  */
  //need to parse samplesheet for project name and genome
