@@ -84,7 +84,7 @@ total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + cellranger_
 
 cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
-    with open('10X_samplesheet.10x.csv', 'w+') as fp:
+    with open('tenX_samplesheet.tenx.csv', 'w+') as fp:
         fp.write('[Data]\n')
         cellranger_10X_df.to_csv(fp, index=False)
         fp.close()
@@ -92,17 +92,14 @@ if len(cellranger_10X_df) > 0:
 
 cellrangerATAC_needed = 'false'
 if len(cellranger_10XATAC_df) > 0:
-    with open('10X_samplesheet.10xATAC.csv', 'w+') as file:
+    with open('tenX_samplesheet.ATACtenx.csv', 'w+') as file:
         file.write('[Data]\n')
         cellranger_10XATAC_df.to_csv(file, index=False)
         file.close()
     cellrangerATAC_needed = 'true'
 
-x = open(cellranger_needed + ".10x.txt", "w")
+x = open(cellranger_needed + ".tenx.txt", "w")
 x.close()
-
-z = open(cellrangerATAC_needed + ".10xATAC.txt", "w")
-z.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
