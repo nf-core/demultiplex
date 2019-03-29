@@ -101,8 +101,10 @@ if( workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-ch_multiqc_config = Channel.fromPath(params.multiqc_config)
+//ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 FSCREEN_CONF_FILEPATH = new File(params.fastq_screen_conf).getAbsolutePath()
+MULTIQC_CONF_FILEPATH = new File(params.multiqc_config).getAbsolutePath()
+
 ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
 
 
@@ -247,7 +249,7 @@ def getSampleName(fqfile) {
  */
 
 process reformat_samplesheet {
-  tag "$name"
+  tag "reformat_samplesheet"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -272,7 +274,7 @@ process reformat_samplesheet {
  */
 
 process check_samplesheet {
-  tag "$name"
+  tag "check_samplesheet"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -303,7 +305,7 @@ process check_samplesheet {
  */
 
 process make_fake_SS {
-  tag "$name"
+  tag "make_fake_SS"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -329,7 +331,7 @@ process make_fake_SS {
  */
 
 process bcl2fastq_problem_SS {
-  tag "$name"
+  tag "bcl2fastq_problem_SS"
   module MODULE_BCL2FASTQ_DEFAULT
 
   input:
@@ -367,7 +369,7 @@ process bcl2fastq_problem_SS {
  */
 updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
-  tag "$name"
+  tag "parse_jsonfile"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -398,7 +400,7 @@ process parse_jsonfile {
 
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
-  tag "$name"
+  tag "recheck_samplesheet"
   module MODULE_PYTHON_DEFAULT
 
   input:
@@ -435,7 +437,7 @@ process recheck_samplesheet {
  */
 
 process bcl2fastq_default {
-    tag "$name"
+    tag "bcl2fastq_default"
     module MODULE_BCL2FASTQ_DEFAULT
     publishDir path: "${outputDir}", mode: 'copy'
 
@@ -512,7 +514,7 @@ process bcl2fastq_default {
  */
 //need to parse samplesheet for project name and genome
 process cellRangerATACMkFastQ {
-    tag "$name"
+    tag "cellRangerATACMkFastQ"
     module MODULE_CELLRANGERATAC_DEFAULT
     publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
 
@@ -533,6 +535,7 @@ process cellRangerATACMkFastQ {
     //if 10XATAC
     "cellranger-atac mkfastq --run ${runName_dir} --samplesheet ${sheet}"
 }
+//cellranger mkfastq --id=190322_D00446_0283_ACD19GANXX --run=/camp/stp/sequencing/inputs/instruments/sequencers/190322_D00446_0283_ACD19GANXX/CD19GANXX.csv --samplesheet=/camp/stp/babs/working/sawyerc/nextflow_test/tenx_samplesheet.csv --output-dir .
 
 /*
  * STEP 8 - CellRanger MkFastQ
@@ -540,7 +543,7 @@ process cellRangerATACMkFastQ {
  */
 //need to parse samplesheet for project name and genome
 process cellRangerMkFastQ {
-    tag "$name"
+    tag "cellRangerMkFastQ"
     module MODULE_CELLRANGER_DEFAULT
     publishDir path: "${outputDir}/${projectName}/FastQ", mode: 'copy'
 
@@ -561,6 +564,29 @@ process cellRangerMkFastQ {
     //if 10XATAC
     "cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}"
 }
+/*
+ * STEP 9 - CellRanger-ATAC count
+ * for the potential of a 10X-ATAC samplesheet existing
+ */
+
+//crATAC_fqname_fqfile_project_ch = crATAC_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), getSampleName(fqFile.getName()), fqFile ] }
+// process cellRangerATACCount {
+//   tag "$name"
+//   module MODULE_CELLRANGERATAC_DEFAULT
+//   publishDir "${params.outdir}/${projectName}/CellRangerCount", mode: 'copy'
+//
+//   input:
+//   set val(projectName), val(sampleName), file(fqFile) from crATAC_fqname_fqfile_project_ch
+//   file result from tenxATAC_results2
+//
+//   when:
+//   result.name =~ /^true.*/
+//
+//   script:
+//   "cellranger-atac count --id= ${projectName} --transcriptome=${params.tenx_genomes_base} --fastqs= ${fqFile} --sample= ${sampleName}"
+//
+// }
+
 /*
  * STEP 9 - CellRanger count
  * for the potential of a 10X samplesheet existing
@@ -589,9 +615,8 @@ process cellRangerMkFastQ {
  */
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
-//fqname_fqfile_ch.view()
 process fastqc {
-    tag "$name"
+    tag "fastqc"
     module MODULE_FASTQC_DEFAULT
     publishDir path: "${outputDir}/${projectName}/FastQC", mode: 'copy'
 
@@ -601,11 +626,10 @@ process fastqc {
     set val(projectName), file(fqFile) from fqname_fqfile_ch
 
     output:
-    file "*_fastqc" into fqc_folder_ch
+    set val(projectName), file("*_fastqc") into fqc_folder_ch
     file "*.html" into fqc_html_ch
 
     script:
-    //projectName = fqFile.getParent().getName()
     """
     fastqc --extract ${fqFile}
     """
@@ -616,8 +640,7 @@ process fastqc {
  */
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 process fastq_screen {
-    tag "$name"
-    errorStrategy 'terminate'
+    tag "fastq_screen"
     publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
 
     input:
@@ -629,20 +652,23 @@ process fastq_screen {
 
     shell:
     """
-    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner \$ROOTBOWTIE2/bowtie2 ${fqFile}
+    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner bowtie2 ${fqFile}
     """
 }
 
 /*
  * STEP 12 - MultiQC
  */
+
+//fqc_folder_ch.map { fqcFile -> [fqcFile.getParent().getParent().getName(), fqcFile ] }.groupTuple().set{ groups_ch }
+groups_ch = fqc_folder_ch.groupTuple()
 process multiqc {
-    tag "$name"
+    tag "multiqc"
     module MODULE_MULTIQC_DEFAULT
     publishDir "${outputDir}/${projectName}/MultiQC", mode: 'copy'
 
     input:
-    file fqc_folder from fqc_folder_ch.collect()
+    set val(projectName), file(fqFiles) from groups_ch
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -650,7 +676,7 @@ process multiqc {
 
     shell:
     """
-    multiqc ${fqc_folder} --config $multiqc_config .
+    multiqc ${fqFiles} --config ${MULTIQC_CONF_FILEPATH} .
     """
 }
 
