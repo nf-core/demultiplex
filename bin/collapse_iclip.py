@@ -101,6 +101,9 @@ if len(cellranger_10XATAC_df) > 0:
 x = open(cellranger_needed + ".tenx.txt", "w")
 x.close()
 
+y = open(cellrangerATAC_needed + ".ATACtenx.txt", "w")
+y.close()
+
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
