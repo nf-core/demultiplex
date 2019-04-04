@@ -71,21 +71,22 @@ for lane in iclip_lanes_set:
 sc_list = ['10X-3prime']
 sc_ATAC_list = ['10X-ATAC']
 sc_DNA_list = ['10X-CNV']
-cellranger_ref_genome_dict = {'GRCh38':'Homo sapiens', 'mm10':'Mus musculus', 'GRCz10':'Danio rerio', 'Gallus_gallus':'Gallus gallus' }
+cellranger_ref_genome_dict = {'Homo sapiens':'GRCh38', 'Mus musculus':'mm10', 'Danio rerio':'GRCz10',
+                              'Gallus gallus':'Gallus_gallus'}
 
 # create new csv for just 10X samples
 cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)]
-cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
+cellranger_10X_df['ReferenceGenome'] = cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 
 # create new csv for just 10X-ATAC samples
 cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)]
-cellranger_10XATAC_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['ReferenceGenome'])
+cellranger_10XATAC_df['ReferenceGenome']= cellranger_10XATAC_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['ReferenceGenome'])
 cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
 
 # create new csv for just 10X-DNA samples
 cellranger_10XDNA_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_DNA_list)]
-cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
+cellranger_10XDNA_df['ReferenceGenome'] = cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
 cellranger_idx_DNAlist_to_drop = cellranger_10XATAC_df.index.values.tolist()
 
 #combine 10X and iCLIP lists to drop
