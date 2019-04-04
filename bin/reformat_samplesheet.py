@@ -68,19 +68,29 @@ for lane in iclip_lanes_set:
                   ['Sample_ID', 'Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
 
 # remove rows and create new samplesheet with 10X samples
-sc_list = ['10X-3prime', '10X-CNV']
+sc_list = ['10X-3prime']
 sc_ATAC_list = ['10X-ATAC']
+sc_DNA_list = ['10X-CNV']
+cellranger_ref_genome_dict = {'GRCh38':'Homo sapiens', 'mm10':'Mus musculus', 'GRCz10':'Danio rerio', 'Gallus_gallus':'Gallus gallus' }
 
 # create new csv for just 10X samples
 cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)]
+cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 
 # create new csv for just 10X-ATAC samples
 cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)]
+cellranger_10XATAC_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['ReferenceGenome'])
 cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
 
+# create new csv for just 10X-DNA samples
+cellranger_10XDNA_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_DNA_list)]
+cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
+cellranger_idx_DNAlist_to_drop = cellranger_10XATAC_df.index.values.tolist()
+
 #combine 10X and iCLIP lists to drop
-total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + cellranger_idx_ATAClist_to_drop
+total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + \
+                    cellranger_idx_ATAClist_to_drop + cellranger_idx_DNAlist_to_drop
 
 cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
@@ -96,15 +106,26 @@ if len(cellranger_10XATAC_df) > 0:
         file.write('[Data]\n')
         cellranger_10XATAC_df.to_csv(file, index=False)
         file.close()
-    cellrangerATAC_needed = 'true'
+    cellranger_needed = 'true'
 
-x = open(cellranger_needed + ".tenx.txt", "w")
-x.close()
+cellrangerDNA_needed = 'false'
+if len(cellranger_10XDNA_df) > 0:
+    with open('tenX_samplesheet.DNAtenx.csv', 'w+') as file:
+        file.write('[Data]\n')
+        cellranger_10XDNA_df.to_csv(file, index=False)
+        file.close()
+    cellranger_needed = 'true'
 
-y = open(cellrangerATAC_needed + ".ATACtenx.txt", "w")
-y.close()
+reg = open(cellranger_needed + ".tenx.txt", "w")
+reg.close()
 
 sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
+
+bcl2fastq = 'true'
+if len(sample_pd) == 0:
+    bcl2fastq = 'false'
+    bcl2fastq_needed = open(bcl2fastq + ".bcl2fastq.txt", "w")
+    bcl2fastq_needed.close()
 
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')

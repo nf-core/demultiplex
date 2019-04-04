@@ -194,25 +194,12 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     echo $workflow.nextflow.version > v_nextflow.txt
 //     multiqc --version > v_multiqc.txt
 //     fastqc --version > v_fastqc.txt
+//     bcl2fastq2 --version > v_bcl2fastq.txt
 //     scrape_software_versions.py > software_versions_mqc.yaml
 //     """
 // }
-//bcl2fastq2 --version > v_bcl2fastq.txt
-//FastQC --version > v_fastqc.txt
-//FastQ_Screen --version > v_fastq_screen.txt
 
-///////////////////////////////////////////////////////////////////////////////
-/* --                                                                     -- */
-/* --                              MODULES                                -- */
-/* --                                                                     -- */
-///////////////////////////////////////////////////////////////////////////////
-def MODULE_PYTHON_DEFAULT = "Python/3.6.4-foss-2018a"
-def MODULE_BCL2FASTQ_DEFAULT = "bcl2fastq2/2.20.0-foss-2018a"
-def MODULE_FASTQC_DEFAULT = "FastQC/0.11.7-Java-1.8.0_172"
-def MODULE_FSCREEN_DEFAULT = "FastQ_Screen/0.12.1-foss-2018a-Perl-5.26.1"
-def MODULE_MULTIQC_DEFAULT = "MultiQC/1.6-Python-2.7.15-foss-2018a"
-def MODULE_CELLRANGER_DEFAULT = "CellRanger/3.0.2-bcl2fastq-2.20.0"
-def MODULE_CELLRANGERATAC_DEFAULT = "CellRangerATAC/1.0.1-bcl2fastq-2.20.0"
+//FastQ_Screen --version > v_fastq_screen.txt
 
 
 if (params.samplesheet){
@@ -222,17 +209,11 @@ if (params.samplesheet){
     samplesheet_string = params.samplesheet.substring(lastPath+1)
 }
 
-
 //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
 outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
 outDir_result = outputDir.mkdir()
 
-
-def getSampleName(fqfile) {
-    //println fqfile
-    def m = fqfile =~ /(.+)_S\d+_L00\d_R(1|2)_001\.fastq\.gz/
-    return m
-}
+genome_map { 'Mus musculus' = 'mm10', 'Homo sapiens' = 'GRCh38', 'Gallus gallus' = 'Gallus_gallus',  'Danio rerio' = 'GRCz10' }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -249,22 +230,21 @@ def getSampleName(fqfile) {
  */
 
 process reformat_samplesheet {
-  tag "reformat_samplesheet"
-  module MODULE_PYTHON_DEFAULT
+  tag "${sheet.name}"
+  label 'process_medium'
 
   input:
   file sheet from ss_sheet
 
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4, standard_samplesheet5
+  file "*.bcl2fastq.txt" into bcl2fastq_results1
   file "*.tenx.txt" into tenx_results1, tenx_results2
-  file "*.tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2, tenx_samplesheet3
-  file "*.ATACtenx.txt" into tenxATAC_results1, tenxATAC_results2
-  file "*.ATACtenx.csv" optional true into tenxATAC_samplesheet1, tenxATAC_samplesheet2, tenxATAC_samplesheet3
+  file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2, tenx_samplesheet
 
   script:
   """
-  collapse_iclip.py --samplesheet "${sheet}"
+  reformat_samplesheet.py --samplesheet "${sheet}"
   """
 }
 
@@ -274,8 +254,8 @@ process reformat_samplesheet {
  */
 
 process check_samplesheet {
-  tag "check_samplesheet"
-  module MODULE_PYTHON_DEFAULT
+  tag "${sheet.name}"
+  label 'process_medium'
 
   input:
   file sheet from standard_samplesheet1
@@ -304,8 +284,8 @@ process check_samplesheet {
  */
 
 process make_fake_SS {
-  tag "make_fake_SS"
-  module MODULE_PYTHON_DEFAULT
+  tag "problem_samplesheet"
+  label 'process_medium'
 
   input:
   file sheet from standard_samplesheet2
@@ -330,8 +310,8 @@ process make_fake_SS {
  */
 
 process bcl2fastq_problem_SS {
-  tag "bcl2fastq_problem_SS"
-  module MODULE_BCL2FASTQ_DEFAULT
+  tag "problem_samplesheet"
+  label 'process_big'
 
   input:
   file sheet from fake_samplesheet
@@ -369,8 +349,8 @@ process bcl2fastq_problem_SS {
 
 updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
-  tag "parse_jsonfile"
-  module MODULE_PYTHON_DEFAULT
+  tag "problem_samplesheet"
+  label 'process_medium'
 
   input:
   file json from stats_json_file
@@ -400,8 +380,8 @@ process parse_jsonfile {
 
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
-  tag "recheck_samplesheet"
-  module MODULE_PYTHON_DEFAULT
+  tag "problem_samplesheet"
+  label 'process_medium'
 
   input:
   file sheet from ss_sheet
@@ -437,15 +417,19 @@ process recheck_samplesheet {
  */
 
 process bcl2fastq_default {
-    tag "bcl2fastq_default"
-    module MODULE_BCL2FASTQ_DEFAULT
+    tag "${result.name}"
     publishDir path: "${outputDir}", mode: 'copy'
+    label 'process_big'
 
     input:
     file result2 from PROBLEM_SS_CHECK2.ifEmpty { true }
     file result from resultChannel5
     file std_samplesheet from standard_samplesheet4
     file sheet from updated_samplesheet2.ifEmpty { true }
+    file bcl_result from bcl2fastq_results1
+
+    when:
+    bcl_result.name =~ /^true.txt/
 
     output:
     file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
@@ -514,8 +498,9 @@ process bcl2fastq_default {
  */
 
 process cellRangerMkFastQ {
-    tag "cellRangerMkFastQ"
+    tag "${result.name}"
     publishDir path: "${outputDir}", mode: 'copy'
+    label 'process_big'
 
     input:
     file sheet from tenx_samplesheet1
@@ -525,56 +510,72 @@ process cellRangerMkFastQ {
     result.name =~ /^true.*/
 
     output:
-    file("*/fastq_path/${runName}/*", type: dir) into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-    file "*/fastq_path/*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
-    file "Reports" into cr_b2fq_default_reports_ch
-    file "Stats" into cr_b2fq_default_stats_ch
-
-    script:
-    """
-    cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-}
-
-/*
- * STEP 8B - CellRanger ATAC MkFastQ
- *      ONLY RUNS WHEN 10X ATAC SAMPLESHEET EXISTS
- */
-process cellRangerATACMkFastQ {
-    tag "cellRangerMkFastQ"
-    publishDir path: "${outputDir}", mode: 'copy'
-
-    input:
-    file sheet from tenxATAC_samplesheet1
-    file result from tenxATAC_results1
-
-    when:
-    result.name =~ /^true.*/
-
-    output:
-    file("*/fastq_path/${runName}/*") into cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
+    file("*/fastq_path/*/*/**.fastq.gz") into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
     file("*/fastq_path/*.fastq.gz") into cr_undetermined_default_fq_ch mode flatten
     file("Reports") into cr_b2fq_default_reports_ch
     file("Stats") into cr_b2fq_default_stats_ch
 
     script:
+    if sheet.name =~ /^*.tenx.csv/{
+    """
+    cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    """
+  }
+    else if sheet.name =~ /^*.ATACtenx.csv/{
     """
     cellranger-atac mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
   }
+    else if sheet.name =~ /^*.DNAtenx.csv/{
+    """
+    cellranger-dna mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    """
+  }
 }
 
+
+
 /*
- * STEP 9A - CellRanger count
- * ONLY RUNS WHEN 10X SAMPLESHEET EXISTS
+ * STEP 9 - CellRanger count
+ * ONLY RUNS WHEN ANY 10X SAMPLESHEET EXISTS
  *
  */
- cr_samplesheet_info_ch = Channel.fromPath(tenx_samplesheet1).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
- cr_fqname_fqfile_ch = cr_fastqs_fqc_ch.map { fqDir -> [fqDir.getName(), fqDir ] }
+all_tenx_samples_ch = Channel.create()
+cr_samplesheet_info_ch = Channel.fromPath(tenx_samplesheet2).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
+cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
 
- cr_fqname_fqfile_ch
-     .groupTuple()
-     .phase(cr_sample_info_ch)
+cr_fqname_fqfile_ch
+   .phase(cr_samplesheet_info_ch)
+   .map{ left, right ->
+     def sampleID = left[0]
+     def sampleProject = right[1]
+     def refGenome = right[2]
+     def dataType = right[3]
+     def fastqDir = left[1]
+     tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
+   }
+   .set { cr_grouped_fastq_dir_sample_ch }
+
+ cr_ATAC_samplesheet_info_ch = Channel.fromPath(tenxATAC_samplesheet1).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
+ cr_ATAC_fqname_fqfile_ch = cr_ATAC_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
+
+ cr_ATAC_fqname_fqfile_ch
+    .phase(cr_ATAC_samplesheet_info_ch)
+    .map{ left, right ->
+      def sampleID = left[0]
+      def sampleProject = right[1]
+      def refGenome = right[2]
+      def dataType = right[3]
+      def fastqDir = left[1]
+      tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
+    }
+    .set { cr_ATAC_grouped_fastq_dir_sample_ch }
+
+  cr_DNA_samplesheet_info_ch = Channel.fromPath(tenxDNA_samplesheet1).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
+  cr_DNA_fqname_fqfile_ch = cr_DNA_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
+
+  cr_DNA_fqname_fqfile_ch
+     .phase(cr_DNA_samplesheet_info_ch)
      .map{ left, right ->
        def sampleID = left[0]
        def sampleProject = right[1]
@@ -583,85 +584,57 @@ process cellRangerATACMkFastQ {
        def fastqDir = left[1]
        tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
      }
-     .set { cr_grouped_fastq_dir_sample_ch }
+     .set { cr_DNA_grouped_fastq_dir_sample_ch }
+
+all_tenx_samples_ch.mix(cr_grouped_fastq_dir_sample_ch, cr_ATAC_grouped_fastq_dir_sample_ch, cr_DNA_grouped_fastq_dir_sample_ch, )
 
 process cellRangerCount {
-   tag "cellRangerCount"
+   tag "${sampleProject}"
    publishDir "${params.outdir}/${sampleProject}/Count", mode: 'copy'
+   label 'process_big'
+
+   echo true
 
    input:
-   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
-   file result from tenxATAC_results2
+   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from all_tenx_samples_ch
+   file result from tenx_results2
 
    when:
    result.name =~ /^true.*/
 
    script:
    if (dataType =~ /10X-3prime/){
-
    """
-   cellranger count --transcriptome=${params.genomes.10x_transcriptomes.}/ --fastqs= ${fqFile} --sample= ${sampleName}
+   cellranger count --transcriptome=${params.cellranger_genomes[$refGenome].10x_transcriptomes}/ --fastqs= $fastqDir --sample= $sampleName
    """
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger count --transcriptome=${params.genomes.10x_cnv.}/ --fastqs= ${fqFile} --sample= ${sampleName}
+  cellranger-dna count --transcriptome=${params.cellranger_genomes[$refGenome].10x_cnv}/ --fastqs= $fastqDir --sample= $sampleName
   """
- }
+  }
+  else if (dataType =~ /10X-ATAC/){
+  """
+  echo cellranger-atac count --transcriptome=${params.cellranger_genomes[$refGenome].10x_atac}/ --fastqs= $fastqDir --sample= $sampleName
+  """
+  }
 }
 
-/*
- * STEP 9B - CellRanger ATAC count
- * ONLY RUNS WHEN 10X ATAC SAMPLESHEET EXISTS
- *
- */
- cr_ATAC_sample_info_ch = tenxATAC_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
- cr_ATAC_fqname_fqfile_ch = cr_fastqs_fqc_ch.map { fqDir -> [fqDir.getName(), fqDir ] }
-
- cr_ATAC_fqname_fqfile_ch
-     .groupTuple()
-     .phase(cr_ATAC_sample_info_ch)
-     .map{ left, right ->
-       def sampleID = left[0]
-       def sampleProject = right[1]
-       def refGenome = right[2]
-       def dataType = right[3]
-       def fastqDir = left[1]
-       tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
-     }
-     .set { cr_ATAC_grouped_fastq_dir_sample_ch }
-
-process cellRangerATACCount {
-   tag "cellRangerATACCount"
-   publishDir "${params.outdir}/${sampleProject}/Count", mode: 'copy'
-
-   input:
-   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from cr_ATAC_grouped_fastq_dir_sample_ch
-   file result from tenxATAC_results2
-
-   when:
-   result.name =~ /^true.*/
-
-   script:
-   """
-   cellranger-atac count --transcriptome=${params.genomes.10x_transcriptomes.} --fastqs= ${fqFile} --sample=${sampleName}
-   """
-
-}
+//println(params.cellranger_genomes['10x_atac'])
+//println(params.cellranger_genomes['mm10'].10x_atac)
 
 /*
  * STEP 10 - FastQC
  */
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 process fastqc {
-    tag "fastqc"
-    module MODULE_FASTQC_DEFAULT
+    tag "${projectName}"
     publishDir path: "${outputDir}/${projectName}/FastQC", mode: 'copy'
+    label 'process_big'
 
     input:
-    //set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fastqs_fqc_ch)
-    //combine in results if 10X samples are present
     set val(projectName), file(fqFile) from fqname_fqfile_ch
 
     output:
@@ -677,11 +650,12 @@ process fastqc {
 /*
  * STEP 11 - FastQ Screen
  */
- 
+
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 process fastq_screen {
-    tag "fastq_screen"
+    tag "${projectName}"
     publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
+    label 'process_big'
 
     input:
     //set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fastqs_screen_ch, crATAC_fastqs_screen_ch)
@@ -702,9 +676,9 @@ process fastq_screen {
  */
 
 process multiqc {
-    tag "multiqc"
-    module MODULE_MULTIQC_DEFAULT
+    tag "${projectName}"
     publishDir "${outputDir}/${projectName}/MultiQC", mode: 'copy'
+    label 'process_big'
 
     input:
     set val(projectName), file(fqFiles) from fqc_folder_ch.groupTuple()
