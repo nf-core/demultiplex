@@ -79,7 +79,6 @@ cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)].copy(
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 cellranger_10X_df['ReferenceGenome'] = cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
 
-
 # create new csv for just 10X-ATAC samples
 cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)].copy()
 cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
@@ -102,7 +101,6 @@ if len(cellranger_10X_df) > 0:
         fp.close()
     cellranger_needed = 'true'
 
-cellrangerATAC_needed = 'false'
 if len(cellranger_10XATAC_df) > 0:
     with open('tenX_samplesheet.ATACtenx.csv', 'w+') as file:
         file.write('[Data]\n')
@@ -110,7 +108,6 @@ if len(cellranger_10XATAC_df) > 0:
         file.close()
     cellranger_needed = 'true'
 
-cellrangerDNA_needed = 'false'
 if len(cellranger_10XDNA_df) > 0:
     with open('tenX_samplesheet.DNAtenx.csv', 'w+') as file:
         file.write('[Data]\n')
