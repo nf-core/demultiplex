@@ -213,8 +213,6 @@ if (params.samplesheet){
 outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
 outDir_result = outputDir.mkdir()
 
-genome_map { 'Mus musculus' = 'mm10', 'Homo sapiens' = 'GRCh38', 'Gallus gallus' = 'Gallus_gallus',  'Danio rerio' = 'GRCz10' }
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -415,7 +413,8 @@ process recheck_samplesheet {
  * STEP 7 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
  *           passed the initial check. bcl2fastq parameters can be changed
  */
-
+fastqs_fqc_ch = Channel.create()
+fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${result.name}"
     publishDir path: "${outputDir}", mode: 'copy'
@@ -540,8 +539,8 @@ process cellRangerMkFastQ {
  * ONLY RUNS WHEN ANY 10X SAMPLESHEET EXISTS
  *
  */
-all_tenx_samples_ch = Channel.create()
-cr_samplesheet_info_ch = Channel.fromPath(tenx_samplesheet2).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
+
+cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
 
 cr_fqname_fqfile_ch
@@ -555,38 +554,6 @@ cr_fqname_fqfile_ch
      tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
    }
    .set { cr_grouped_fastq_dir_sample_ch }
-
- cr_ATAC_samplesheet_info_ch = Channel.fromPath(tenxATAC_samplesheet1).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
- cr_ATAC_fqname_fqfile_ch = cr_ATAC_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
-
- cr_ATAC_fqname_fqfile_ch
-    .phase(cr_ATAC_samplesheet_info_ch)
-    .map{ left, right ->
-      def sampleID = left[0]
-      def sampleProject = right[1]
-      def refGenome = right[2]
-      def dataType = right[3]
-      def fastqDir = left[1]
-      tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
-    }
-    .set { cr_ATAC_grouped_fastq_dir_sample_ch }
-
-  cr_DNA_samplesheet_info_ch = Channel.fromPath(tenxDNA_samplesheet1).splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-  cr_DNA_fqname_fqfile_ch = cr_DNA_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
-
-  cr_DNA_fqname_fqfile_ch
-     .phase(cr_DNA_samplesheet_info_ch)
-     .map{ left, right ->
-       def sampleID = left[0]
-       def sampleProject = right[1]
-       def refGenome = right[2]
-       def dataType = right[3]
-       def fastqDir = left[1]
-       tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
-     }
-     .set { cr_DNA_grouped_fastq_dir_sample_ch }
-
-all_tenx_samples_ch.mix(cr_grouped_fastq_dir_sample_ch, cr_ATAC_grouped_fastq_dir_sample_ch, cr_DNA_grouped_fastq_dir_sample_ch, )
 
 process cellRangerCount {
    tag "${sampleProject}"
@@ -628,14 +595,14 @@ process cellRangerCount {
  */
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
-cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastqc {
     tag "${projectName}"
     publishDir path: "${outputDir}/${projectName}/FastQC", mode: 'copy'
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fqname_fqfile_ch
+    set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch)
 
     output:
     set val(projectName), file("*_fastqc") into fqc_folder_ch
