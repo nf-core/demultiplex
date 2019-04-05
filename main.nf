@@ -270,14 +270,15 @@ process check_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
-/* --               Problem Sample Sheet Processes`                       -- */
+/* --               Problem Sample Sheet Processes                       -- */
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 3 - If previous process fails remove problem samples from entire sample
- *          and create a new one
+ * STEP 3 - If previous process finds samples that will cause problems, this
+ *          process will remove problem samples from entire sample and create
+ *          a new one
  *          ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
@@ -303,8 +304,9 @@ process make_fake_SS {
 }
 
 /*
- * STEP 4 -  Running bcl2fastq on the false_samplesheet
- *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples
+ *           removed
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
 process bcl2fastq_problem_SS {
@@ -342,7 +344,7 @@ process bcl2fastq_problem_SS {
  *           unknown barcodes section. The barcodes that match the short indexes
  *           and/or missing index 2 with the highest count to remake the sample
  *           sheet so that bcl2fastq can run properly
- *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
 updated_samplesheet2 = Channel.create()
@@ -373,7 +375,7 @@ process parse_jsonfile {
 /*
  * STEP 6 -  Checking the remade sample sheet. If this fails again the pipeline
  *           will exit and fail
- *     ONLY RUNS WHEN SAMPLESHEET FAILS
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS
  */
 
 PROBLEM_SS_CHECK2 = Channel.create()
@@ -400,7 +402,6 @@ process recheck_samplesheet {
 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -411,7 +412,10 @@ process recheck_samplesheet {
 
 /*
  * STEP 7 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
- *           passed the initial check. bcl2fastq parameters can be changed
+ *           passed the initial check. bcl2fastq parameters can be changed when
+ *           staring up the pipeline.
+ *           ONLY RUNS WHEN SOME SAMPLES REMAIN AFTER 10X SAMPLES ARE SPLIT OFF
+ *           INTO SEPARATE SAMPLE SHEETS
  */
 fastqs_fqc_ch = Channel.create()
 fastqs_screen_ch = Channel.create()
@@ -493,7 +497,7 @@ process bcl2fastq_default {
 
 /*
  * STEP 8A - CellRanger MkFastQ
- *      ONLY RUNS WHEN 10X SAMPLESHEET EXISTS
+ *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  */
 
 process cellRangerMkFastQ {
@@ -536,7 +540,7 @@ process cellRangerMkFastQ {
 
 /*
  * STEP 9 - CellRanger count
- * ONLY RUNS WHEN ANY 10X SAMPLESHEET EXISTS
+ * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  *
  */
 
@@ -619,14 +623,14 @@ process fastqc {
  */
 
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastq_screen {
     tag "${projectName}"
     publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
     label 'process_big'
 
     input:
-    //set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fastqs_screen_ch, crATAC_fastqs_screen_ch)
-    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch
+    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fqname_fqfile_screen_ch)
 
     output:
     file("*.html") into fastq_screen_html
