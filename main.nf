@@ -235,10 +235,10 @@ process reformat_samplesheet {
   file sheet from ss_sheet
 
   output:
-  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4, standard_samplesheet5
+  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
   file "*.bcl2fastq.txt" into bcl2fastq_results1
   file "*.tenx.txt" into tenx_results1, tenx_results2
-  file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2, tenx_samplesheet
+  file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
 
   script:
   """
@@ -417,6 +417,7 @@ process recheck_samplesheet {
  *           ONLY RUNS WHEN SOME SAMPLES REMAIN AFTER 10X SAMPLES ARE SPLIT OFF
  *           INTO SEPARATE SAMPLE SHEETS
  */
+
 fastqs_fqc_ch = Channel.create()
 fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
@@ -496,7 +497,7 @@ process bcl2fastq_default {
 }
 
 /*
- * STEP 8A - CellRanger MkFastQ
+ * STEP 8 - CellRanger MkFastQ
  *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  */
 
@@ -513,23 +514,23 @@ process cellRangerMkFastQ {
     result.name =~ /^true.*/
 
     output:
-    file("*/fastq_path/*/*/**.fastq.gz") into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-    file("*/fastq_path/*.fastq.gz") into cr_undetermined_default_fq_ch mode flatten
-    file("Reports") into cr_b2fq_default_reports_ch
-    file("Stats") into cr_b2fq_default_stats_ch
+    file "*/fastq_path/*/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
+    file "*/fastq_path/*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+    file "Reports" into cr_b2fq_default_reports_ch
+    file "Stats" into cr_b2fq_default_stats_ch
 
     script:
-    if sheet.name =~ /^*.tenx.csv/{
+    if (sheet.name =~ /^*.tenx.csv/){
     """
     cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
   }
-    else if sheet.name =~ /^*.ATACtenx.csv/{
+    else if (sheet.name =~ /^*.ATACtenx.csv/){
     """
     cellranger-atac mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
   }
-    else if sheet.name =~ /^*.DNAtenx.csv/{
+    else if (sheet.name =~ /^*.DNAtenx.csv/){
     """
     cellranger-dna mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
@@ -567,32 +568,30 @@ process cellRangerCount {
    echo true
 
    input:
-   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from all_tenx_samples_ch
+   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
    file result from tenx_results2
 
    when:
    result.name =~ /^true.*/
 
    script:
+   genome_ref_conf_filepath = params.cellranger_genomes.get($refGenome, false)
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --transcriptome=${params.cellranger_genomes[$refGenome].10x_transcriptomes}/ --fastqs= $fastqDir --sample= $sampleName
+   cellranger count --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleName
    """
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger-dna count --transcriptome=${params.cellranger_genomes[$refGenome].10x_cnv}/ --fastqs= $fastqDir --sample= $sampleName
+  cellranger-dna count --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleName
   """
   }
   else if (dataType =~ /10X-ATAC/){
   """
-  echo cellranger-atac count --transcriptome=${params.cellranger_genomes[$refGenome].10x_atac}/ --fastqs= $fastqDir --sample= $sampleName
+  echo cellranger-atac count --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleName
   """
   }
 }
-
-//println(params.cellranger_genomes['10x_atac'])
-//println(params.cellranger_genomes['mm10'].10x_atac)
 
 /*
  * STEP 10 - FastQC
