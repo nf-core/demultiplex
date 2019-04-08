@@ -29,7 +29,6 @@ def check_samplesheet(samplesheet):
     sample_pd['index2'] = sample_pd['index2'].astype('str')
 
     # find unique lanes and remove lanes that only have one sample (iClip lanes)
-    # will have to change and find iclip in data type col and collapse them 
     iclip_lanes_removed = sample_pd.groupby('Lane').filter(lambda x: len(x) > 1)
     iclip_lanes_removed_set = iclip_lanes_removed['Lane'].unique()
 

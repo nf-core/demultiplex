@@ -71,6 +71,7 @@ for lane in iclip_lanes_set:
 sc_list = ['10X-3prime']
 sc_ATAC_list = ['10X-ATAC']
 sc_DNA_list = ['10X-CNV']
+# dictionary to map latin name with cell ranger genome ref name
 cellranger_ref_genome_dict = {'Homo sapiens':'GRCh38', 'Mus musculus':'mm10', 'Danio rerio':'GRCz10',
                               'Gallus gallus':'Gallus_gallus'}
 
