@@ -124,8 +124,9 @@ sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 bcl2fastq = 'true'
 if len(sample_pd) == 0:
     bcl2fastq = 'false'
-    bcl2fastq_needed = open(bcl2fastq + ".bcl2fastq.txt", "w")
-    bcl2fastq_needed.close()
+    
+bcl2fastq_needed = open(bcl2fastq + ".bcl2fastq.txt", "w")
+bcl2fastq_needed.close()
 
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')
