@@ -17,7 +17,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 ### Pipeline summary
 1. Reformatting the input sample sheet
     * Collapses iCLIP samples into one per lane
-    * Splits 10X samples into 10X, 10X-ATAC and 10X-DNA
+    * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA
     * Outputs the results of needing to run specific processes in the pipeline (only 10X single cell samples, mix of 10X single cell with non single cell samples and no 10X samples)
 2. Checking the sample sheet for downstream error causing samples such as:
     * a mix of short and long indexes on the same lane
@@ -30,10 +30,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 4. Run [`bcl2fastq`](http://emea.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) on either the original sample sheet that had no error prone samples or on the newly created sample sheet created from the extra steps. This is only run when there are samples left on the sample sheet after removing the single cell samples. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline.
 5. Single cell 10X sample processes (CONDITIONAL):
       1. Cell Ranger mkfastq runs only when 10X samples exist. This will run the process with [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger), [`CellRanger ATAC`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/what-is-cell-ranger-atac), and [`Cell Ranger DNA`](https://support.10xgenomics.com/single-cell-dna/software/pipelines/latest/what-is-cell-ranger-dna) depending on which sample sheet has been created.
-      2. Cell Ranger Count runs only when 10X samples exist. This will run the process with [`Cell Ranger Count`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count), [`Cell Ranger ATAC Count`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count), and [`Cell Ranger DNA Count`] depending on the output from Cell Ranger mkfastq.
+      2. Cell Ranger Count runs only when 10X samples exist. This will run the process with [`Cell Ranger Count`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count), [`Cell Ranger ATAC Count`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/using/count), and Cell Ranger DNA Count depending on the output from Cell Ranger mkfastq.
 10. [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) runs on the pooled fastq files from all the conditional processes.
 11. [`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) runs on the pooled results from all the conditional processes.
-12. [`MultiQC`](https://multiqc.info/docs/) takes the results from FastQC and amalgamates the results
+12. [`MultiQC`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
 
 ### Documentation

@@ -423,6 +423,7 @@ fastqs_fqc_ch = Channel.create()
 fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${result.name}"
+    errorStrategy 'finish'
     publishDir path: "${outputDir}", mode: 'copy'
     label 'process_big'
 
@@ -515,8 +516,8 @@ process cellRangerMkFastQ {
     result.name =~ /^true.*/
 
     output:
-    file "*/fastq_path/*/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-    file "*/fastq_path/*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+    file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
+    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
     file "Reports" into cr_b2fq_default_reports_ch
     file "Stats" into cr_b2fq_default_stats_ch
 
