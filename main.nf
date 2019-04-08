@@ -210,8 +210,8 @@ if (params.samplesheet){
 }
 
 //outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
-outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
-outDir_result = outputDir.mkdir()
+//outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
+//outDir_result = outputDir.mkdir()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -502,7 +502,7 @@ process bcl2fastq_default {
  */
 
 process cellRangerMkFastQ {
-    tag "${result.name}"
+    tag "${sheet.name}"
     publishDir path: "${outputDir}", mode: 'copy'
     label 'process_big'
 
@@ -668,20 +668,20 @@ process multiqc {
  * STEP 13 - Output Description HTML
  */
 
-// process output_documentation {
-//     publishDir "${params.outdir}/Documentation", mode: 'copy'
-//
-//     input:
-//     file output_docs from ch_output_docs
-//
-//     output:
-//     file "results_description.html"
-//
-//     script:
-//     """
-//     markdown_to_html.r $output_docs results_description.html
-//     """
-// }
+process output_documentation {
+    publishDir "${params.outdir}/Documentation", mode: 'copy'
+
+    input:
+    file output_docs from ch_output_docs
+
+    output:
+    file "results_description.html"
+
+    script:
+    """
+    markdown_to_html.r $output_docs results_description.html
+    """
+}
 
 /*
  * Completion e-mail notification
