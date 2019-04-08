@@ -17,13 +17,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 ### Pipeline summary
 1. Reformatting the input sample sheet
     * Collapses iCLIP samples into one per lane
-    * Splits 10X samples into 10X, 10XATAC and 10XDNA
-    * Outputs the results of needing to run specific processes in the pipeline (only 10X samples, mix of 10X and no 10X samples)
+    * Splits 10X samples into 10X, 10X-ATAC and 10X-DNA
+    * Outputs the results of needing to run specific processes in the pipeline (only 10X single cell samples, mix of 10X single cell with non single cell samples and no 10X samples)
 2. Checking the sample sheet for downstream error causing samples such as:
     * a mix of short and long indexes on the same lane
     * a mix of single and dual indexes on the same lane
 3. Processes that only run if there are issues within the sample sheet found by the sample sheet check process (CONDITIONAL):
-      1. Create a new sample sheet with any samples that would cause an error removed and create a a txt file of a list of the removed problem samples
+      1. Creates a new sample sheet with any samples that would cause an error removed and create a a txt file of a list of the removed problem samples
       2. Run [`bcl2fastq`](http://emea.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) on the newly created sample sheet and output the Stats.json file
       3. Parsing the Stats.json file for the indexes that were in the problem samples list.
       4. Recheck newly made sample sheet for any errors or problem samples that did not match any indexes in the Stats.json file. If there is still an issue the pipeline will exit at this stage.
