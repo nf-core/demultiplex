@@ -517,8 +517,8 @@ process cellRangerMkFastQ {
     output:
     file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
     file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
-    file "Reports" into cr_b2fq_default_reports_ch
-    file "Stats" into cr_b2fq_default_stats_ch
+    file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
+    file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
     script:
     if (sheet.name =~ /^*.tenx.csv/){
@@ -547,7 +547,7 @@ process cellRangerMkFastQ {
  */
 
 cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
+cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
 
 cr_fqname_fqfile_ch
    .phase(cr_samplesheet_info_ch)
@@ -576,7 +576,7 @@ process cellRangerCount {
    result.name =~ /^true.*/
 
    script:
-   genome_ref_conf_filepath = params.cellranger_genomes.get($refGenome, false)
+   genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
    if (dataType =~ /10X-3prime/){
    """
    cellranger count --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleName
@@ -602,7 +602,7 @@ fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), 
 cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastqc {
     tag "${projectName}"
-    publishDir path: "${outputDir}/${projectName}/FastQC", mode: 'copy'
+    publishDir path: "${params.outdir}/${projectName}/FastQC", mode: 'copy'
     label 'process_big'
 
     input:
@@ -626,7 +626,7 @@ fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().g
 cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastq_screen {
     tag "${projectName}"
-    publishDir "${outputDir}/${projectName}/FastQ_Screen", mode: 'copy'
+    publishDir "${params.outdir}/${projectName}/FastQ_Screen", mode: 'copy'
     label 'process_big'
 
     input:
@@ -648,7 +648,7 @@ process fastq_screen {
 
 process multiqc {
     tag "${projectName}"
-    publishDir "${outputDir}/${projectName}/MultiQC", mode: 'copy'
+    publishDir "${params.outdir}/${projectName}/MultiQC", mode: 'copy'
     label 'process_big'
 
     input:
