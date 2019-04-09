@@ -181,27 +181,26 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 /*
  * Parse software version numbers
  */
-process get_software_versions {
-    validExitStatus 0
+// process get_software_versions {
+//     validExitStatus 0
+//
+//     output:
+//     file 'software_versions_mqc.yaml' into software_versions_yaml
+//
+//     script:
+//     """
+//     echo $workflow.manifest.version > v_pipeline.txt
+//     echo $workflow.nextflow.version > v_nextflow.txt
+//     fastqc --version > v_fastqc.txt
+//     multiqc --version > v_multiqc.txt
+//     scrape_software_versions.py > software_versions_mqc.yaml
+//     """
+// }
 
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-
-    script:
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    bcl2fastq2 --version > v_bcl2fastq.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
-    fastq-screen --version > v_fastq_screen.txt
-    python --version > v_python.txt
-    scrape_software_versions.py > software_versions_mqc.yaml
-    """
-}
-
-
-
+// bcl2fastq --version > v_bcl2fastq.txt
+// fastq-screen --version > v_fastq_screen.txt
+// python --version > v_python.txt
+//
 
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
@@ -670,20 +669,20 @@ process multiqc {
  * STEP 13 - Output Description HTML
  */
 
-process output_documentation {
-    publishDir "${params.outdir}/Documentation", mode: 'copy'
-
-    input:
-    file output_docs from ch_output_docs
-
-    output:
-    file "results_description.html"
-
-    script:
-    """
-    markdown_to_html.r $output_docs results_description.html
-    """
-}
+// process output_documentation {
+//     publishDir "${params.outdir}/Documentation", mode: 'copy'
+//
+//     input:
+//     file output_docs from ch_output_docs
+//
+//     output:
+//     file "results_description.html"
+//
+//     script:
+//     """
+//     markdown_to_html.r $output_docs results_description.html
+//     """
+// }
 
 /*
  * Completion e-mail notification

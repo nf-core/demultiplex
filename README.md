@@ -48,9 +48,7 @@ The nf-core/demultiplex pipeline comes with documentation about the pipeline, fo
 4. [Output and how to interpret the results](docs/output.md)
 5. [Troubleshooting](docs/troubleshooting.md)
 
-<!-- TODO nf-core: Add a brief overview of what the pipeline does and how it works -->
-
 ### Credits
 Credits
 The nf-core/demultiplex pipeline was written by Chelsea Sawyer of the The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.
-Many thanks to others who have helped out along the way too, including (but not limited to): [`ChristopherBarrington`](https://github.com/ChristopherBarrington), [`@drpatelh`](https://github.com/drpatelh), [`@danielecook`](https://github.com/danielecook), [`@micans`](https://github.com/micans), [`crickbabs`](https://github.com/crickbabs)
+Many thanks to others who have helped out along the way too, including (but not limited to): [`@ChristopherBarrington`](https://github.com/ChristopherBarrington), [`@drpatelh`](https://github.com/drpatelh), [`@danielecook`](https://github.com/danielecook), [`@micans`](https://github.com/micans), [`crickbabs`](https://github.com/crickbabs)
