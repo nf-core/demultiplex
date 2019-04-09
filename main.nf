@@ -423,7 +423,13 @@ fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${result.name}"
     errorStrategy 'finish'
-    publishDir path: "${outputDir}", mode: 'copy'
+    publishDir path: "${params.outdir}", mode: 'copy',
+             saveAs: { filename ->
+               if (filename.endsWith("*/**.fastq.gz")) "FastQ/${filename.getParent().getName()}/$filename" 
+               else if (filename.endsWith("*.fastq.gz")) "FastQ/$filename"
+               else if (filename.endsWith("Reports")) "FastQ/$filename"
+               else if (filename.endsWith("Stats")) "FastQ/$filename"
+            }
     label 'process_big'
 
     input:
@@ -504,9 +510,14 @@ process bcl2fastq_default {
 
 process cellRangerMkFastQ {
     tag "${sheet.name}"
-    publishDir path: "${outputDir}", mode: 'copy'
     label 'process_big'
-
+    publishDir path: "${params.outdir}", mode: 'copy',
+             saveAs: { filename ->
+               if (filename.endsWith("*/outs/fastq_path/*/**.fastq.gz")) "FastQ/${filename.getParent().getParent().getName()}/${filename.getParent().getName()}/$filename"
+               else if (filename.endsWith("*/outs/fastq_path/Undetermined_*.fastq.gz")) "FastQ/$filename"
+               else if (filename.endsWith("*/outs/fastq_path/Reports")) "FastQ/$filename"
+               else if (filename.endsWith("*/outs/fastq_path/Stats")) "FastQ/$filename"
+            }
     input:
     file sheet from tenx_samplesheet1
     file result from tenx_results1
