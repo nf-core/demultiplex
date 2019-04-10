@@ -5,7 +5,7 @@ This document describes the output produced by the pipeline. Most of the plots a
 ## Pipeline overview
 The pipeline is built using [Nextflow](https://www.nextflow.io/)
 and processes data using the following steps:
-* Reformatting the input sample sheet to collapse iCLIP samples into one lane and separate single cell 10X samples into separate sample sheets
+* Reformatting the input sample sheet to collapse [iCLIP](https://emea.illumina.com/science/sequencing-method-explorer/kits-and-arrays/iclip.html) samples into one lane and separate single cell 10X samples into separate sample sheets
 * Checking the sample sheet for downstream error causing samples such as:
     * a mix of short and long indexes on the same lane
     * a mix of single and dual indexes on the same lane
