@@ -510,10 +510,10 @@ process cellRangerMkFastQ {
     label 'process_big'
     publishDir path: "${params.outdir}", mode: 'copy',
        saveAs: { filename ->
-         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "FastQ/${filename.getParent().getParent().getName()}/${filename.getParent().getName()}/$filename"
-         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "FastQ/Undetermined/$filename"
-         else if (filename =~ /outs\/fastq_path\/Reports/) "FastQ/$filename"
-         else if (filename=~ /outs\/fastq_path\/Stats/) "FastQ/$filename"
+         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "${filename.getParent().getParent().getName()}/FastQ/${filename.getParent().getName()}/$filename"
+         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/Undetermined/FastQ/$filename"
+         else if (filename =~ /outs\/fastq_path\/Reports/) "$filename"
+         else if (filename=~ /outs\/fastq_path\/Stats/) "$filename"
       }
 
     input:
