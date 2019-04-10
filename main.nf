@@ -425,13 +425,8 @@ fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${result.name}"
     errorStrategy 'finish'
-    publishDir path: "${params.outdir}", mode: 'copy',
-             saveAs: { filename ->
-               if (filename.endsWith("*/**.fastq.gz")) "FastQ/${filename.getParent().getName()}/$filename"
-               else if (filename.endsWith("*.fastq.gz")) "FastQ/$filename"
-               else if (filename.endsWith("Reports")) "FastQ/$filename"
-               else if (filename.endsWith("Stats")) "FastQ/$filename"
-            }
+    publishDir path: "${params.outdir}", mode: 'copy'
+
     label 'process_big'
 
     input:
@@ -514,12 +509,13 @@ process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
     publishDir path: "${params.outdir}", mode: 'copy',
-             saveAs: { filename ->
-               if (filename.endsWith("*/outs/fastq_path/*/**.fastq.gz")) "FastQ/${filename.getParent().getParent().getName()}/${filename.getParent().getName()}/$filename"
-               else if (filename.endsWith("*/outs/fastq_path/Undetermined_*.fastq.gz")) "FastQ/$filename"
-               else if (filename.endsWith("*/outs/fastq_path/Reports")) "FastQ/$filename"
-               else if (filename.endsWith("*/outs/fastq_path/Stats")) "FastQ/$filename"
-            }
+       saveAs: { filename ->
+         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "FastQ/${filename.getParent().getParent().getName()}/${filename.getParent().getName()}/$filename"
+         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "FastQ/Undetermined/$filename"
+         else if (filename =~ /outs\/fastq_path\/Reports/) "FastQ/$filename"
+         else if (filename=~ /outs\/fastq_path\/Stats/) "FastQ/$filename"
+      }
+
     input:
     file sheet from tenx_samplesheet1
     file result from tenx_results1
@@ -551,8 +547,6 @@ process cellRangerMkFastQ {
   }
 }
 
-
-
 /*
  * STEP 9 - CellRanger count
  * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
@@ -560,7 +554,7 @@ process cellRangerMkFastQ {
  */
 
 cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent() ] }.unique()
+cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
 
 cr_fqname_fqfile_ch
    .phase(cr_samplesheet_info_ch)
@@ -592,17 +586,17 @@ process cellRangerCount {
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
    """
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger-dna count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir
+  cellranger-dna count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
   """
   }
   else if (dataType =~ /10X-ATAC/){
   """
-  echo cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir 
+  echo cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
   """
   }
 }
