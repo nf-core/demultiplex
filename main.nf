@@ -192,15 +192,17 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     echo $workflow.manifest.version > v_pipeline.txt
 //     echo $workflow.nextflow.version > v_nextflow.txt
 //     fastqc --version > v_fastqc.txt
+//     fastq_screen --version > v_fastq_screen.txt
 //     multiqc --version > v_multiqc.txt
+//     bcl2fastq --version > v_bcl2fastq.txt
+//     cellranger --version > v_cellranger.txt
+//     cellranger-atac --version > v_cellrangeratac.txt
+//     cellranger-dna --version > v_cellrangerdna.txt
 //     scrape_software_versions.py > software_versions_mqc.yaml
 //     """
 // }
-
-// bcl2fastq --version > v_bcl2fastq.txt
-// fastq-screen --version > v_fastq_screen.txt
 // python --version > v_python.txt
-//
+
 
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
@@ -425,7 +427,7 @@ process bcl2fastq_default {
     errorStrategy 'finish'
     publishDir path: "${params.outdir}", mode: 'copy',
              saveAs: { filename ->
-               if (filename.endsWith("*/**.fastq.gz")) "FastQ/${filename.getParent().getName()}/$filename" 
+               if (filename.endsWith("*/**.fastq.gz")) "FastQ/${filename.getParent().getName()}/$filename"
                else if (filename.endsWith("*.fastq.gz")) "FastQ/$filename"
                else if (filename.endsWith("Reports")) "FastQ/$filename"
                else if (filename.endsWith("Stats")) "FastQ/$filename"
@@ -590,17 +592,17 @@ process cellRangerCount {
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleName
+   cellranger count --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
    """
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger-dna count --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleName
+  cellranger-dna count --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
   """
   }
   else if (dataType =~ /10X-ATAC/){
   """
-  echo cellranger-atac count --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleName
+  echo cellranger-atac count --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
   """
   }
 }
