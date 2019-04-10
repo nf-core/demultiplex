@@ -592,17 +592,17 @@ process cellRangerCount {
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir
    """
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger-dna count --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
+  cellranger-dna count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir
   """
   }
   else if (dataType =~ /10X-ATAC/){
   """
-  echo cellranger-atac count --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
+  echo cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir 
   """
   }
 }
