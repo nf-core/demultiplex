@@ -423,8 +423,7 @@ process recheck_samplesheet {
 fastqs_fqc_ch = Channel.create()
 fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
-    tag "${result.name}"
-    errorStrategy 'finish'
+    tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}", mode: 'copy'
 
     label 'process_big'
@@ -437,7 +436,7 @@ process bcl2fastq_default {
     file bcl_result from bcl2fastq_results1
 
     when:
-    bcl_result.name =~ /^true.txt/
+    bcl_result.name =~ /^true.bcl2fastq.txt/
 
     output:
     file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
@@ -560,23 +559,23 @@ cr_fqname_fqfile_ch
    .phase(cr_samplesheet_info_ch)
    .map{ left, right ->
      def sampleID = left[0]
-     def sampleProject = right[1]
+     def projectName = right[1]
      def refGenome = right[2]
      def dataType = right[3]
      def fastqDir = left[1]
-     tuple(sampleID, sampleProject, refGenome, dataType, fastqDir)
+     tuple(sampleID, projectName, refGenome, dataType, fastqDir)
    }
    .set { cr_grouped_fastq_dir_sample_ch }
 
 process cellRangerCount {
    tag "${sampleProject}"
-   publishDir "${params.outdir}/${sampleProject}/Count", mode: 'copy'
+   publishDir "${params.outdir}/${projectName}/CellRangerCount", mode: 'copy'
    label 'process_big'
 
    echo true
 
    input:
-   set sampleID, sampleProject, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
+   set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
    file result from tenx_results2
 
    when:
