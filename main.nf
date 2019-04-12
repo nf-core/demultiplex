@@ -29,7 +29,7 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv
+    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick
 
     Mandatory arguments:
 
@@ -424,7 +424,7 @@ fastqs_fqc_ch = Channel.create()
 fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
-    publishDir path: "${params.outdir}", mode: 'copy'
+    publishDir path: "${params.outdir}/fastq", mode: 'copy'
 
     label 'process_big'
 
@@ -503,14 +503,21 @@ process bcl2fastq_default {
  * STEP 8 - CellRanger MkFastQ
  *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  */
+ def getCellRangerProjectName(fqfile) {
+     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/)
+     if (projectName.find()) {
+       return projectName.group(1)
+     }
+     return fqfile
+ }
 
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
-    publishDir path: "${params.outdir}", mode: 'copy',
+    publishDir path: "${params.outdir}/fastq", mode: 'copy',
        saveAs: { filename ->
-         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "${filename.getParent().getParent().getName()}/FastQ/${filename.getParent().getName()}/$filename"
-         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/Undetermined/FastQ/$filename"
+         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/${getCellRangerProjectName(filename)}/$filename"
+         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/Undetermined/$filename"
          else if (filename =~ /outs\/fastq_path\/Reports/) "$filename"
          else if (filename=~ /outs\/fastq_path\/Stats/) "$filename"
       }
@@ -568,8 +575,8 @@ cr_fqname_fqfile_ch
    .set { cr_grouped_fastq_dir_sample_ch }
 
 process cellRangerCount {
-   tag "${sampleProject}"
-   publishDir "${params.outdir}/${projectName}/CellRangerCount", mode: 'copy'
+   tag "${projectName}"
+   publishDir "${params.outdir}/cellrangercount/${projectName}", mode: 'copy'
    label 'process_big'
 
    echo true
@@ -590,12 +597,12 @@ process cellRangerCount {
   }
   else if (dataType =~ /10X-CNV/){
   """
-  cellranger-dna count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
+  cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
   """
   }
   else if (dataType =~ /10X-ATAC/){
   """
-  echo cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
+  cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
   """
   }
 }
@@ -608,14 +615,14 @@ fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), 
 cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastqc {
     tag "${projectName}"
-    publishDir path: "${params.outdir}/${projectName}/FastQC", mode: 'copy'
+    publishDir path: "${params.outdir}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
     set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch)
 
     output:
-    set val(projectName), file("*_fastqc") into fqc_folder_ch
+    set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
     file "*.html" into fqc_html_ch
 
     script:
@@ -632,7 +639,7 @@ fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().g
 cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 process fastq_screen {
     tag "${projectName}"
-    publishDir "${params.outdir}/${projectName}/FastQ_Screen", mode: 'copy'
+    publishDir "${params.outdir}/fastq_screen/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
@@ -651,14 +658,19 @@ process fastq_screen {
 /*
  * STEP 12 - MultiQC
  */
-
+all_fcq_files = all_fcq_files_tuple.collect { k,v -> v }
 process multiqc {
     tag "${projectName}"
-    publishDir "${params.outdir}/${projectName}/MultiQC", mode: 'copy'
+    publishDir path: "${params.outdir}/multiqc", mode: 'copy',
+       saveAs: { filename ->
+         if (filename.contains( "${projectName}" )) "/${projectName}/$filename"
+         else filename
+      }
     label 'process_big'
 
     input:
     set val(projectName), file(fqFiles) from fqc_folder_ch.groupTuple()
+    all_fcq_files
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -667,6 +679,7 @@ process multiqc {
     shell:
     """
     multiqc ${fqFiles} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${all_fcq_files} --config ${MULTIQC_CONF_FILEPATH} .
     """
 }
 
