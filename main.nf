@@ -449,6 +449,7 @@ process bcl2fastq_default {
     ignore_miss_filt = params.ignore_missing_filter ? "--ignore-missing-filter " : ""
     ignore_miss_pos = params.ignore_missing_positions ? "--ignore-missing-positions " : ""
     bases_mask = params.use_bases_mask ? "--use-bases-mask ${params.use_bases_mask} " : ""
+    tiles = params.tiles ? "--tiles ${params.tiles} " : ""
     fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
     failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
     fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement " : ""
@@ -463,6 +464,7 @@ process bcl2fastq_default {
           --output-dir . \\
           --sample-sheet ${std_samplesheet} \\
           --adapter-stringency ${params.adapter_stringency} \\
+          $tiles \\
           $ignore_miss_bcls \\
           $ignore_miss_filt \\
           $ignore_miss_pos \\
@@ -486,6 +488,7 @@ process bcl2fastq_default {
           --output-dir . \\
           --sample-sheet ${sheet} \\
           --adapter-stringency ${params.adapter_stringency} \\
+          $tiles \\
           $ignore_miss_bcls \\
           $ignore_miss_filt \\
           $ignore_miss_pos \\
@@ -504,7 +507,7 @@ process bcl2fastq_default {
  *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  */
  def getCellRangerProjectName(fqfile) {
-     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/)
+     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/)
      if (projectName.find()) {
        return projectName.group(1)
      }
@@ -514,10 +517,10 @@ process bcl2fastq_default {
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
-    publishDir path: "${params.outdir}/fastq", mode: 'copy',
+    publishDir path: "${params.outdir}/fastq/", mode: 'copy',
        saveAs: { filename ->
-         if (filename =~ /\/outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/${getCellRangerProjectName(filename)}/$filename"
-         else if (filename =~ /Undetermined_S\d+_L00\d_(I|R)(1|2)_001\.fastq\.gz/) "/Undetermined/$filename"
+         if (filename =~ /outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/) "${getCellRangerProjectName(filename)}/$filename"
+         else if (filename =~ /outs\/fastq_path\/Undetermined_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/) "/Undetermined/$filename"
          else if (filename =~ /outs\/fastq_path\/Reports/) "$filename"
          else if (filename=~ /outs\/fastq_path\/Stats/) "$filename"
       }
@@ -590,6 +593,7 @@ process cellRangerCount {
 
    script:
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
+
    if (dataType =~ /10X-3prime/){
    """
    cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
@@ -622,7 +626,7 @@ process fastqc {
     set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch)
 
     output:
-    set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
+    set val(projectName), file("*_fastqc") into fqc_folder_ch
     file "*.html" into fqc_html_ch
 
     script:
@@ -658,28 +662,42 @@ process fastq_screen {
 /*
  * STEP 12 - MultiQC
  */
-all_fcq_files = all_fcq_files_tuple.collect { k,v -> v }
+
 process multiqc {
     tag "${projectName}"
-    publishDir path: "${params.outdir}/multiqc", mode: 'copy',
-       saveAs: { filename ->
-         if (filename.contains( "${projectName}" )) "/${projectName}/$filename"
-         else filename
-      }
+    publishDir path: "${params.outdir}/multiqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
     set val(projectName), file(fqFiles) from fqc_folder_ch.groupTuple()
-    all_fcq_files
 
     output:
     file "*multiqc_report.html" into multiqc_report
+    file fqFiles into all_fcq_files
     file "*_data"
 
     shell:
     """
     multiqc ${fqFiles} --config ${MULTIQC_CONF_FILEPATH} .
-    multiqc ${all_fcq_files} --config ${MULTIQC_CONF_FILEPATH} .
+    """
+}
+
+
+process multiqcAll {
+    tag "${runName}"
+    publishDir path: "${params.outdir}/multiqc", mode: 'copy'
+    label 'process_medium'
+
+    input:
+    file fqFile from all_fcq_files.flatten().collect()
+
+    output:
+    file "*multiqc_report.html" into multiqc_report_all
+    file "*_data"
+
+    shell:
+    """
+    multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
     """
 }
 
