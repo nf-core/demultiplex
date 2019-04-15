@@ -542,6 +542,7 @@ process cellRangerMkFastQ {
     if (sheet.name =~ /^*.tenx.csv/){
     """
     cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
     """
   }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
