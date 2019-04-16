@@ -440,7 +440,7 @@ process bcl2fastq_default {
 
     output:
     file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
-    file "*.fastq.gz" into undetermined_default_fq_ch mode flatten
+    file "*.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
     file "Reports" into b2fq_default_reports_ch
     file "Stats" into b2fq_default_stats_ch
 
@@ -517,12 +517,13 @@ process bcl2fastq_default {
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
-    publishDir path: "${params.outdir}/fastq/", mode: 'copy',
-       saveAs: { filename ->
-         if (filename =~ /outs\/fastq_path\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/) "${getCellRangerProjectName(filename)}/$filename"
-         else if (filename =~ /outs\/fastq_path\/Undetermined_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/) "/Undetermined/$filename"
-         else if (filename =~ /outs\/fastq_path\/Reports/) "$filename"
-         else if (filename=~ /outs\/fastq_path\/Stats/) "$filename"
+    publishDir path: "${params.outdir}", mode: 'copy'
+    publishDir path: "${params.outdir}/fastq", mode: 'copy',
+    saveAs: { filename ->
+      if (filename =~ /outs\/fastq_path\/Undetermined_.*\.fastq\.gz/) null
+      else if (filename =~ /outs\/fastq_path\/.*\/.*_001\.fastq\.gz/) "${getCellRangerProjectName(filename)}/$filename"
+      else if (filename =~ /outs\/fastq_path\/Reports/) null
+      else if (filename=~ /outs\/fastq_path\/Stats/) null
       }
 
     input:
@@ -534,25 +535,24 @@ process cellRangerMkFastQ {
 
     output:
     file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
-    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch mode flatten
+    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch mode flatten
     file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
     script:
     if (sheet.name =~ /^*.tenx.csv/){
     """
-    cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    cellranger mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
     """
   }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
     """
-    cellranger-atac mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
   }
     else if (sheet.name =~ /^*.DNAtenx.csv/){
     """
-    cellranger-dna mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
   }
 }
@@ -580,7 +580,7 @@ cr_fqname_fqfile_ch
 
 process cellRangerCount {
    tag "${projectName}"
-   publishDir "${params.outdir}/cellrangercount/${projectName}", mode: 'copy'
+   publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
    label 'process_big'
 
    echo true
@@ -591,6 +591,9 @@ process cellRangerCount {
 
    when:
    result.name =~ /^true.*/
+
+   output:
+   file "${sampleID}/" into count_output
 
    script:
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
@@ -617,17 +620,19 @@ process cellRangerCount {
  */
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
+cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 process fastqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch)
+    set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch, undetermined_default_fqfile_tuple_ch)
 
     output:
-    set val(projectName), file("*_fastqc") into fqc_folder_ch
+    set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
     file "*.html" into fqc_html_ch
 
     script:
@@ -641,14 +646,16 @@ process fastqc {
  */
 
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
+undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
+cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 process fastq_screen {
     tag "${projectName}"
     publishDir "${params.outdir}/fastq_screen/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fqname_fqfile_screen_ch)
+    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
     output:
     file("*.html") into fastq_screen_html
@@ -674,7 +681,6 @@ process multiqc {
 
     output:
     file "*multiqc_report.html" into multiqc_report
-    file fqFiles into all_fcq_files
     file "*_data"
 
     shell:
@@ -683,14 +689,14 @@ process multiqc {
     """
 }
 
-
+all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
     label 'process_medium'
 
     input:
-    file fqFile from all_fcq_files.flatten().collect()
+    file fqFile from all_fcq_files
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
