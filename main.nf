@@ -564,7 +564,7 @@ process cellRangerMoveFqs {
 
   script:
   """
-  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 1m; done
+  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 30s; done
   mkdir -p "${params.outdir}/fastq/${projectName}" && cp ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/fastq/${projectName}
   """
 }
@@ -596,6 +596,7 @@ process cellRangerCount {
    tag "${projectName}"
    publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
    label 'process_big'
+   errorStrategy 'ignore'
 
    echo true
 
@@ -614,7 +615,7 @@ process cellRangerCount {
 
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID --chemistry threeprime
    """
   }
   else if (dataType =~ /10X-CNV/){
@@ -705,24 +706,24 @@ process multiqc {
     """
 }
 
-// all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
-// process multiqcAll {
-//     tag "${runName}"
-//     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
-//     label 'process_medium'
-//
-//     input:
-//     file fqFile from all_fcq_files
-//
-//     output:
-//     file "*multiqc_report.html" into multiqc_report_all
-//     file "*_data"
-//
-//     shell:
-//     """
-//     multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
-//     """
-// }
+all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
+process multiqcAll {
+    tag "${runName}"
+    publishDir path: "${params.outdir}/multiqc", mode: 'copy'
+    label 'process_medium'
+
+    input:
+    file fqFile from all_fcq_files
+
+    output:
+    file "*multiqc_report.html" into multiqc_report_all
+    file "*_data"
+
+    shell:
+    """
+    multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
+    """
+}
 
 
 /*
