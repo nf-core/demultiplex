@@ -615,7 +615,7 @@ process cellRangerCount {
 
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID --chemistry threeprime
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID 
    """
   }
   else if (dataType =~ /10X-CNV/){
