@@ -239,7 +239,7 @@ process reformat_samplesheet {
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
   file "*.bcl2fastq.txt" into bcl2fastq_results1
-  file "*.tenx.txt" into tenx_results1, tenx_results2
+  file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3
   file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
 
   script:
@@ -518,13 +518,6 @@ process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
     publishDir path: "${params.outdir}", mode: 'copy'
-    publishDir path: "${params.outdir}/fastq", mode: 'copy',
-    saveAs: { filename ->
-      if (filename =~ /outs\/fastq_path\/Undetermined_.*\.fastq\.gz/) null
-      else if (filename =~ /outs\/fastq_path\/.*\/.*_001\.fastq\.gz/) "${getCellRangerProjectName(filename)}/$filename"
-      else if (filename =~ /outs\/fastq_path\/Reports/) null
-      else if (filename=~ /outs\/fastq_path\/Stats/) null
-      }
 
     input:
     file sheet from tenx_samplesheet1
@@ -534,8 +527,8 @@ process cellRangerMkFastQ {
     result.name =~ /^true.*/
 
     output:
-    file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch mode flatten
     file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch mode flatten
+    file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
     file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
@@ -544,18 +537,38 @@ process cellRangerMkFastQ {
     """
     cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
     """
-  }
+    }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
     """
     cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
-  }
+    }
     else if (sheet.name =~ /^*.DNAtenx.csv/){
     """
     cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
-  }
+    }
 }
+
+cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ fqfile.getParent().getParent().getName(), fqfile.getParent().getName(), fqfile.getFileName() ] }
+
+process cellRangerMoveFqs {
+  tag "${fastq}"
+
+  input:
+  set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
+  file result from tenx_results2
+
+  when:
+  result.name =~ /^true.*/
+
+  script:
+  """
+  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 1m; done
+  mkdir -p "${params.outdir}/fastq/${projectName}" && cp ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/fastq/${projectName}
+  """
+}
+
 
 /*
  * STEP 9 - CellRanger count
@@ -578,6 +591,7 @@ cr_fqname_fqfile_ch
    }
    .set { cr_grouped_fastq_dir_sample_ch }
 
+
 process cellRangerCount {
    tag "${projectName}"
    publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
@@ -587,7 +601,7 @@ process cellRangerCount {
 
    input:
    set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
-   file result from tenx_results2
+   file result from tenx_results3
 
    when:
    result.name =~ /^true.*/
@@ -622,7 +636,9 @@ process cellRangerCount {
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
-cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
+cr_undetermined_default_fq_renamed_ch = cr_undetermined_default_fq_ch
+cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_renamed_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
+
 process fastqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/fastqc/${projectName}", mode: 'copy'
@@ -689,24 +705,24 @@ process multiqc {
     """
 }
 
-all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
-process multiqcAll {
-    tag "${runName}"
-    publishDir path: "${params.outdir}/multiqc", mode: 'copy'
-    label 'process_medium'
-
-    input:
-    file fqFile from all_fcq_files
-
-    output:
-    file "*multiqc_report.html" into multiqc_report_all
-    file "*_data"
-
-    shell:
-    """
-    multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
-    """
-}
+// all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
+// process multiqcAll {
+//     tag "${runName}"
+//     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
+//     label 'process_medium'
+//
+//     input:
+//     file fqFile from all_fcq_files
+//
+//     output:
+//     file "*multiqc_report.html" into multiqc_report_all
+//     file "*_data"
+//
+//     shell:
+//     """
+//     multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
+//     """
+// }
 
 
 /*
