@@ -28,8 +28,8 @@ with open(samplesheet, 'r') as f:
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
 
 # find unique lanes and remove lanes that only have one sample (iClip lanes)
-iclip_lanes_removed = sample_pd.groupby('Lane').filter(lambda x: len(x) > 1)
-iclip_lanes_removed_set = iclip_lanes_removed['Lane'].unique()
+iclip_lanes_removed = sample_pd.groupby('lane').filter(lambda x: len(x) > 1)
+iclip_lanes_removed_set = iclip_lanes_removed['lane'].unique()
 
 samplesheet_new = sample_pd.copy()
 
@@ -49,10 +49,10 @@ samplesheet_new['index2'] = samplesheet_new['index2'].astype('str')
 samplesheet_new = samplesheet_new.fillna('')
 
 for idx, item in samplesheet_new.iterrows():
-    if item['Sample_ID'] in ss_check['Sample_ID'].values:
+    if item['sample_id'] in ss_check['sample_id'].values:
         samplesheet_new.at[idx,'index1_len'] = len(item['index'])
         samplesheet_new.at[idx, 'index2_len'] = 0
-    elif item['Sample_ID'] in sample_pd_empty_remove['Sample_ID'].values:
+    elif item['sample_id'] in sample_pd_empty_remove['sample_id'].values:
         samplesheet_new.at[idx,'index1_len'] = len(item['index'])
         samplesheet_new.at[idx,'index2_len'] = len(item['index2'])
 
@@ -60,7 +60,7 @@ short_long_lane_mixed_ids = []
 lane_length_dict ={}
 for x in iclip_lanes_removed_set:
     # select lane that match current lane
-    lane_select = samplesheet_new.loc[samplesheet_new['Lane'] == x]
+    lane_select = samplesheet_new.loc[samplesheet_new['lane'] == x]
 
     # get longest index length on each lane
     index1_len = list(lane_select['index'].str.len())
@@ -75,30 +75,30 @@ indexes_to_drop = []
 # compare index len and missing vals and make them as the same as max idx len
 for k, v in lane_length_dict.items():
     for index, row in samplesheet_new.iterrows():
-        if k == row['Lane']:
+        if k == row['lane']:
             # get index of current sample ID on original sample sheet
-            update_idx_val = sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID']].index[0]
+            update_idx_val = sample_pd.loc[sample_pd['sample_id'] == row['sample_id']].index[0]
             # sample with idx the same len as the max idx len
-            if v == row['index1_len'] and v == row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
+            if v == row['index1_len'] and v == row['index2_len'] and row['lane'] in sample_pd_empty_remove.Lane.values:
                 continue
             # samples with single idx not on same lane as dual
-            elif v == row['index1_len'] and row['Lane'] in ss_check.Lane.values:
+            elif v == row['index1_len'] and row['lane'] in ss_check.Lane.values:
                 continue
             # samples with single idx shorter than max len idx and not dual
-            elif v != row['index1_len'] and row['Lane'] in ss_check.Lane.values:
-                problem_sample_ids.append(row['Sample_ID'])
+            elif v != row['index1_len'] and row['lane'] in ss_check.Lane.values:
+                problem_sample_ids.append(row['sample_id'])
                 indexes_to_drop.append(update_idx_val)
             # dual samples with both idxs shorter lens than max idx len
-            elif v != row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
-                problem_sample_ids.append(row['Sample_ID'])
+            elif v != row['index1_len'] and v != row['index2_len'] and row['lane'] in sample_pd_empty_remove.Lane.values:
+                problem_sample_ids.append(row['sample_id'])
                 indexes_to_drop.append(update_idx_val)
             # dual samples with idx1 shorter than max idx len
-            elif v != row['index1_len'] and v == row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
-                problem_sample_ids.append(row['Sample_ID'])
+            elif v != row['index1_len'] and v == row['index2_len'] and row['lane'] in sample_pd_empty_remove.Lane.values:
+                problem_sample_ids.append(row['sample_id'])
                 indexes_to_drop.append(update_idx_val)
             # dual samples with idx2 shorter than max idx len
-            elif v == row['index1_len'] and v != row['index2_len'] and row['Lane'] in sample_pd_empty_remove.Lane.values:
-                problem_sample_ids.append(row['Sample_ID'])
+            elif v == row['index1_len'] and v != row['index2_len'] and row['lane'] in sample_pd_empty_remove.Lane.values:
+                problem_sample_ids.append(row['sample_id'])
                 indexes_to_drop.append(update_idx_val)
 
 sample_pd.drop(sample_pd.index[indexes_to_drop], inplace=True )

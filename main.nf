@@ -444,11 +444,10 @@ process cellRangerMkFastQ {
     file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
-
     script:
     if (sheet.name =~ /^*.tenx.csv/){
     """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
     """
     }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
@@ -511,7 +510,7 @@ cr_fqname_fqfile_ch
 
 
 process cellRangerCount {
-   tag "${projectName}"
+   tag "${projectName}/${sampleID}"
    publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
    label 'process_big'
    errorStrategy 'ignore'
