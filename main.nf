@@ -29,7 +29,7 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick
+    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick -with-trace
 
     Mandatory arguments:
 
@@ -527,30 +527,24 @@ process cellRangerCount {
 
    output:
    file "${sampleID}/" into count_output
-   file "CR_Count_error.log" optional true into count_error_output
+
 
    script:
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
 
    if (dataType =~ /10X-3prime/){
    """
-   if !cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID; then
-      echo 'Error in Cell Ranger Count with sample $sampleID from project $projectName' > CR_Count_error.log
-    fi
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
    """
    }
    else if (dataType =~ /10X-CNV/){
    """
-   if !cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID; then
-     echo 'Error in Cell Ranger CNV Count with sample $sampleID from project $projectName' > CR_Count_error.log
-    fi
+   cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
    """
    }
    else if (dataType =~ /10X-ATAC/){
    """
-   if !cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID; then
-     echo 'Error in Cell Ranger ATAC Count with sample $sampleID from project $projectName' > CR_Count_error.log
-    fi
+   cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
    """
    }
 }
