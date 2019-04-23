@@ -404,6 +404,149 @@ process recheck_samplesheet {
 
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --               Single Cell Processes`                        -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/*
+ * STEP 7 - CellRanger MkFastQ
+ *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
+ */
+
+def getCellRangerProjectName(fqfile) {
+     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/)
+     if (projectName.find()) {
+       return projectName.group(1)
+     }
+     return fqfile
+ }
+
+process cellRangerMkFastQ {
+    tag "${sheet.name}"
+    label 'process_big'
+    publishDir path: "${params.outdir}", mode: 'copy'
+
+    input:
+    file sheet from tenx_samplesheet1
+    file result from tenx_results1
+
+    when:
+    result.name =~ /^true.*/
+
+    output:
+    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch mode flatten
+    file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
+    file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
+    file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
+
+    script:
+    if (sheet.name =~ /^*.tenx.csv/){
+    """
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
+    """
+    }
+    else if (sheet.name =~ /^*.ATACtenx.csv/){
+    """
+    cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    """
+    }
+    else if (sheet.name =~ /^*.DNAtenx.csv/){
+    """
+    cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    """
+    }
+}
+
+/*
+ * STEP 8 - Copy CellRanger FastQ files to new folder
+ *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS
+ */
+
+cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ fqfile.getParent().getParent().getName(), fqfile.getParent().getName(), fqfile.getFileName() ] }
+
+process cellRangerMoveFqs {
+  tag "${fastq}"
+
+  input:
+  set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
+  file result from tenx_results2
+
+  when:
+  result.name =~ /^true.*/
+
+  script:
+  """
+  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 30s; done
+  mkdir -p "${params.outdir}/fastq/${projectName}" && cp ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/fastq/${projectName}
+  """
+}
+
+
+/*
+ * STEP 9 - CellRanger count
+ * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
+ *
+ */
+
+cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
+cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
+
+cr_fqname_fqfile_ch
+   .phase(cr_samplesheet_info_ch)
+   .map{ left, right ->
+     def sampleID = left[0]
+     def projectName = right[1]
+     def refGenome = right[2]
+     def dataType = right[3]
+     def fastqDir = left[1]
+     tuple(sampleID, projectName, refGenome, dataType, fastqDir)
+   }
+   .set { cr_grouped_fastq_dir_sample_ch }
+
+
+process cellRangerCount {
+   tag "${projectName}"
+   publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
+   label 'process_big'
+   errorStrategy 'ignore'
+
+   echo true
+
+   input:
+   set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
+   file result from tenx_results3
+
+   when:
+   result.name =~ /^true.*/
+
+   output:
+   file "${sampleID}/" into count_output
+
+   script:
+   genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
+
+   if (dataType =~ /10X-3prime/){
+   """
+   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+   """
+  }
+  else if (dataType =~ /10X-CNV/){
+  """
+  cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
+  """
+  }
+  else if (dataType =~ /10X-ATAC/){
+  """
+  cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
+  """
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -413,10 +556,10 @@ process recheck_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 7 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
+ * STEP 10 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
  *           passed the initial check. bcl2fastq parameters can be changed when
  *           staring up the pipeline.
- *           ONLY RUNS WHEN SOME SAMPLES REMAIN AFTER 10X SAMPLES ARE SPLIT OFF
+ *           ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
  *           INTO SEPARATE SAMPLE SHEETS
  */
 
@@ -503,135 +646,7 @@ process bcl2fastq_default {
 }
 
 /*
- * STEP 8 - CellRanger MkFastQ
- *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
- */
- def getCellRangerProjectName(fqfile) {
-     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/)
-     if (projectName.find()) {
-       return projectName.group(1)
-     }
-     return fqfile
- }
-
-process cellRangerMkFastQ {
-    tag "${sheet.name}"
-    label 'process_big'
-    publishDir path: "${params.outdir}", mode: 'copy'
-
-    input:
-    file sheet from tenx_samplesheet1
-    file result from tenx_results1
-
-    when:
-    result.name =~ /^true.*/
-
-    output:
-    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch mode flatten
-    file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
-    file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
-    file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
-
-    script:
-    if (sheet.name =~ /^*.tenx.csv/){
-    """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} --tiles s_[1]
-    """
-    }
-    else if (sheet.name =~ /^*.ATACtenx.csv/){
-    """
-    cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-    }
-    else if (sheet.name =~ /^*.DNAtenx.csv/){
-    """
-    cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-    }
-}
-
-cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ fqfile.getParent().getParent().getName(), fqfile.getParent().getName(), fqfile.getFileName() ] }
-
-process cellRangerMoveFqs {
-  tag "${fastq}"
-
-  input:
-  set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
-  file result from tenx_results2
-
-  when:
-  result.name =~ /^true.*/
-
-  script:
-  """
-  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 30s; done
-  mkdir -p "${params.outdir}/fastq/${projectName}" && cp ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/fastq/${projectName}
-  """
-}
-
-
-/*
- * STEP 9 - CellRanger count
- * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
- *
- */
-
-cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
-
-cr_fqname_fqfile_ch
-   .phase(cr_samplesheet_info_ch)
-   .map{ left, right ->
-     def sampleID = left[0]
-     def projectName = right[1]
-     def refGenome = right[2]
-     def dataType = right[3]
-     def fastqDir = left[1]
-     tuple(sampleID, projectName, refGenome, dataType, fastqDir)
-   }
-   .set { cr_grouped_fastq_dir_sample_ch }
-
-
-process cellRangerCount {
-   tag "${projectName}"
-   publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
-   label 'process_big'
-   errorStrategy 'ignore'
-
-   echo true
-
-   input:
-   set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
-   file result from tenx_results3
-
-   when:
-   result.name =~ /^true.*/
-
-   output:
-   file "${sampleID}/" into count_output
-
-   script:
-   genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
-
-   if (dataType =~ /10X-3prime/){
-   """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID 
-   """
-  }
-  else if (dataType =~ /10X-CNV/){
-  """
-  cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
-  """
-  }
-  else if (dataType =~ /10X-ATAC/){
-  """
-  cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
-  """
-  }
-}
-
-/*
- * STEP 10 - FastQC
+ * STEP 11 - FastQC
  */
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
@@ -666,6 +681,7 @@ fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().g
 undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
+
 process fastq_screen {
     tag "${projectName}"
     publishDir "${params.outdir}/fastq_screen/${projectName}", mode: 'copy'
@@ -685,7 +701,7 @@ process fastq_screen {
 }
 
 /*
- * STEP 12 - MultiQC
+ * STEP 12A - MultiQC per project
  */
 
 process multiqc {
@@ -706,11 +722,15 @@ process multiqc {
     """
 }
 
+/*
+ * STEP 12B- MultiQC for all projects
+ */
+
 all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
-    label 'process_medium'
+    label 'process_big'
 
     input:
     file fqFile from all_fcq_files
