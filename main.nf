@@ -444,6 +444,7 @@ process cellRangerMkFastQ {
     file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
+
     script:
     if (sheet.name =~ /^*.tenx.csv/){
     """
@@ -481,7 +482,7 @@ process cellRangerMoveFqs {
 
   script:
   """
-  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 30s; done
+  while [ ! -f ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 15s; done
   mkdir -p "${params.outdir}/fastq/${projectName}" && cp ${params.outdir}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/fastq/${projectName}
   """
 }
@@ -526,25 +527,32 @@ process cellRangerCount {
 
    output:
    file "${sampleID}/" into count_output
+   file "CR_Count_error.log" optional true into count_error_output
 
    script:
    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
 
    if (dataType =~ /10X-3prime/){
    """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+   if !cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID; then
+      echo 'Error in Cell Ranger Count with sample $sampleID from project $projectName' > CR_Count_error.log
+    fi
    """
-  }
-  else if (dataType =~ /10X-CNV/){
-  """
-  cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
-  """
-  }
-  else if (dataType =~ /10X-ATAC/){
-  """
-  cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
-  """
-  }
+   }
+   else if (dataType =~ /10X-CNV/){
+   """
+   if !cellranger-dna cnv --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID; then
+     echo 'Error in Cell Ranger CNV Count with sample $sampleID from project $projectName' > CR_Count_error.log
+    fi
+   """
+   }
+   else if (dataType =~ /10X-ATAC/){
+   """
+   if !cellranger-atac count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID; then
+     echo 'Error in Cell Ranger ATAC Count with sample $sampleID from project $projectName' > CR_Count_error.log
+    fi
+   """
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
