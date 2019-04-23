@@ -7,7 +7,7 @@
  #### Homepage / Documentation
  https://github.com/nf-core/demultiplex
  #### Authors
- Chelsea Sawyer <chelsea.sawyer@crick.ac.uk> - https://github.com/csawye01/demultiplex
+ Chelsea Sawyer <chelsea.sawyer@crick.ac.uk> - https://github.com/csawye01/nf-core-demultiplex
 ----------------------------------------------------------------------------------------
 */
 
