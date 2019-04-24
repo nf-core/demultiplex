@@ -24,14 +24,13 @@ with open(samplesheet, 'r') as f:
 iclip = 'iCLIP'
 
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
-sample_pd.columns = sample_pd.columns.str.lower()
 sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
 
 # find iclip in data type col and collapse them into one each lane
 iclip_select = sample_pd.loc[sample_pd['index'] == iclip].copy()
-iclip_lanes_set = iclip_select['lane'].unique().tolist()
+iclip_lanes_set = iclip_select['Lane'].unique().tolist()
 
 idx_list_to_drop = []
 for lane in iclip_lanes_set:
@@ -41,9 +40,9 @@ for lane in iclip_lanes_set:
     iclip_sample_name = ''
     count = 0
     for index, row in iclip_select.iterrows():
-        if lane == row['lane']:
+        if lane == row['Lane']:
             # regex to find project limsid and number
-            sample_num = re.search("(.*?)A([0-9]+$)", row['sample_id'])
+            sample_num = re.search("(.*?)A([0-9]+$)", row['Sample_ID'])
             iclip_sample_num = sample_num.group(2)
 
             if int(iclip_sample_num) > max_value:
@@ -53,7 +52,7 @@ for lane in iclip_lanes_set:
 
             if count == 0:
                 # regex to find sample_name without number attached
-                iclip_sample_name_search = re.search("(.* ?_). *", row['sample_name'])
+                iclip_sample_name_search = re.search("(.* ?_). *", row['User_Sample_Name'])
                 iclip_sample_name = iclip_sample_name_search.group(1)
                 sample_ID = sample_num.group(1)
             # get list to drop rows by idx after first row
@@ -65,8 +64,8 @@ for lane in iclip_lanes_set:
     new_sample_ID = sample_ID + 'A' + str(min_value) + '-A' + str(max_value)
     new_sample_name = iclip_sample_name + "pool"
     # change the Sample_ID and Sample_Name of first row with matching lane (not in idx list)
-    sample_pd.loc[(sample_pd['lane'] == lane) & (~sample_pd.index.isin(idx_list_to_drop)),
-                  ['sample_id', 'sample_name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
+    sample_pd.loc[(sample_pd['Lane'] == lane) & (~sample_pd.index.isin(idx_list_to_drop)),
+                  ['Sample_ID', 'User_Sample_Name','index', 'index2']] = new_sample_ID, new_sample_name, '', ''
 
 # remove rows and create new samplesheet with 10X samples
 sc_list = ['10X-3prime']
@@ -77,19 +76,19 @@ cellranger_ref_genome_dict = {'Homo sapiens':'GRCh38', 'Mus musculus':'mm10', 'D
                               'Gallus gallus':'Gallus_gallus'}
 
 # create new csv for just 10X samples
-cellranger_10X_df = sample_pd[sample_pd['dataanalysistype'].isin(sc_list)].copy()
+cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)].copy()
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
-cellranger_10X_df['referencegenome'] = cellranger_10X_df['referencegenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['referencegenome'])
+cellranger_10X_df['ReferenceGenome'] = cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
 
 # create new csv for just 10X-ATAC samples
-cellranger_10XATAC_df = sample_pd[sample_pd['dataanalysistype'].isin(sc_ATAC_list)].copy()
+cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)].copy()
 cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
-cellranger_10XATAC_df['referencegenome']= cellranger_10XATAC_df['referencegenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['referencerenome'])
+cellranger_10XATAC_df['ReferenceGenome']= cellranger_10XATAC_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['ReferenceGenome'])
 
 # create new csv for just 10X-DNA samples
-cellranger_10XDNA_df = sample_pd[sample_pd['dataanalysistype'].isin(sc_DNA_list)].copy()
+cellranger_10XDNA_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_DNA_list)].copy()
 cellranger_idx_DNAlist_to_drop = cellranger_10XDNA_df.index.values.tolist()
-cellranger_10XDNA_df['referencegenome'] = cellranger_10XDNA_df['referencegenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['referencegenome'])
+cellranger_10XDNA_df['ReferenceGenome'] = cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
 
 #combine 10X and iCLIP lists to drop
 total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + \

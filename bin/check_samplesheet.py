@@ -29,15 +29,15 @@ def check_samplesheet(samplesheet):
     sample_pd['index2'] = sample_pd['index2'].astype('str')
 
     # find unique lanes and remove lanes that only have one sample (iClip lanes)
-    iclip_lanes_removed = sample_pd.groupby('lane').filter(lambda x: len(x) > 1)
-    iclip_lanes_removed_set = iclip_lanes_removed['lane'].unique()
+    iclip_lanes_removed = sample_pd.groupby('Lane').filter(lambda x: len(x) > 1)
+    iclip_lanes_removed_set = iclip_lanes_removed['Lane'].unique()
 
     # check if single index samples  are on the same lane as dual index
     sample_pd_empty_remove = sample_pd[sample_pd["index2"].notnull()]
     empty_index2 = sample_pd[sample_pd["index"].notnull()]
     empty_index2 = empty_index2[empty_index2["index2"].isnull()]
 
-    result = set(empty_index2['lane']).intersection(set(sample_pd_empty_remove['lane']))
+    result = set(empty_index2['Lane']).intersection(set(sample_pd_empty_remove['Lane']))
 
     # single indexes on same lane as dual indexes
     if result:
@@ -50,7 +50,7 @@ def check_samplesheet(samplesheet):
         for x in iclip_lanes_removed_set:
 
             # select lane that match current lane
-            lane_select = sample_pd.loc[sample_pd['lane'] == x]
+            lane_select = sample_pd.loc[sample_pd['Lane'] == x]
 
             # if string length does not equal most common
             index1_len = list(lane_select['index'].str.len())
@@ -60,7 +60,7 @@ def check_samplesheet(samplesheet):
             # find which samples do not have same idx len as most common idx len in Lane
             for k, v in lane_length_dict.items():
                 for index, row in lane_select.iterrows():
-                    if k == row['lane']:
+                    if k == row['Lane']:
                         # first index short
                         if v != len(row['index']):
                             samplesheet_check = "fail"

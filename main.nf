@@ -238,8 +238,8 @@ process reformat_samplesheet {
 
   output:
   file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
-  file "*.bcl2fastq.txt" into bcl2fastq_results1
-  file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3
+  file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
+  file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
   file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
 
   script:
@@ -447,7 +447,7 @@ process cellRangerMkFastQ {
     script:
     if (sheet.name =~ /^*.tenx.csv/){
     """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
     }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
@@ -564,8 +564,8 @@ process cellRangerCount {
  *           INTO SEPARATE SAMPLE SHEETS
  */
 
-fastqs_fqc_ch = Channel.create()
-fastqs_screen_ch = Channel.create()
+// fastqs_fqc_ch = Channel.create()
+// fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/fastq", mode: 'copy'
@@ -656,13 +656,15 @@ cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().ge
 cr_undetermined_default_fq_renamed_ch = cr_undetermined_default_fq_ch
 cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_renamed_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 
+fastqcAll = Channel.create()
+
 process fastqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fqname_fqfile_ch.mix(cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch, undetermined_default_fqfile_tuple_ch)
+    set val(projectName), file(fqFile) from fastqcAll.mix(fqname_fqfile_ch, cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch, undetermined_default_fqfile_tuple_ch)
 
     output:
     set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
@@ -683,13 +685,15 @@ undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map
 cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 
+fastqcScreenAll = Channel.create()
+
 process fastq_screen {
     tag "${projectName}"
     publishDir "${params.outdir}/fastq_screen/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fastqs_screen_fqfile_ch.mix(cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
+    set val(projectName), file(fqFile) from fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
     output:
     file("*.html") into fastq_screen_html
