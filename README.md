@@ -14,10 +14,20 @@ https://img.shields.io/badge/singularity-available-7E4C74.svg)
 **nf-core/demultiplex** is a bioinformatics demultiplexing pipeline used for multiple types of data input from sequencing runs.
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker / singularity containers making installation trivial and results highly reproducible.
 
+### Sample Sheet Format
+The sample sheet must fall into the same format as seen below to adhere to the Illumina standards with the additional column of DataAnalysisType and ReferenceGenome to ensure 10X sample will be processed correctly. Order of columns does not matter but the case of column names does.
+
+| Lane        | Sample_ID   | User_Sample_Name | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType |
+|-------------|-------------|------------------|---------|--------|----------------|-----------------|------------------|
+|     1       |   ABC11A2   | U_ABC0_BS_GL_DNA |  CGATGT |        |     PM10000    |  Homo sapiens   |    Whole Exome   |
+|     2       |  SAG100A10  |     SAG100A10    | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |
+|     3       |  CAP200A11  |    UN1800_AE_6   |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |
+
+
 ### Pipeline summary
 1. Reformatting the input sample sheet
-    * Collapses iCLIP samples into one per lane
-    * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA
+    * Script looks for `iCLIP` in the index column of the sample sheet and collapses the iCLIP samples into one per lane.
+    * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA by searching in the sample sheet column DataAnalysisType for '10X-3prime', '10X-ATAC' and '10X-CNV'.
     * Outputs the results of needing to run specific processes in the pipeline (only 10X single cell samples, mix of 10X single cell with non single cell samples and no 10X samples)
 2. Checking the sample sheet for downstream error causing samples such as:
     * a mix of short and long indexes on the same lane

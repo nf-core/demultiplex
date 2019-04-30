@@ -29,7 +29,7 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick -with-trace
+    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick --outdir /path/to/output -with-trace
 
     Mandatory arguments:
 
@@ -210,10 +210,6 @@ if (params.samplesheet){
     runName =  params.samplesheet.substring(51,lastPath)
     samplesheet_string = params.samplesheet.substring(lastPath+1)
 }
-
-//outputDir = file("/camp/stp/sequencing/inputs/instruments/fastq/${runName}")
-//outputDir = file("/camp/stp/babs/working/sawyerc/nf_pipeline_test/${runName}/")
-//outDir_result = outputDir.mkdir()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -564,8 +560,6 @@ process cellRangerCount {
  *           INTO SEPARATE SAMPLE SHEETS
  */
 
-// fastqs_fqc_ch = Channel.create()
-// fastqs_screen_ch = Channel.create()
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/fastq", mode: 'copy'
