@@ -28,13 +28,21 @@
     <div style="color: #3c763d; background-color: #dff0d8; border-color: #d6e9c6; padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px;">
         nf-core/demultiplex execution completed successfully!
     </div>
+    <h3>MultiQC Reports:</h3>
+    <table style="width:100%; max-width:100%; border-spacing: 0; border-collapse: collapse; border:0; margin-bottom: 30px;">
+       <tbody style="border-bottom: 1px solid #ddd;">
+           mapped_project_multiqc.collect{ k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'>$k</th><td style='text-align:left; padding: 8px; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'><pre style='white-space: pre-wrap; overflow: visible;'>$v</pre></td></tr>" }.join("\n") 
+       </tbody>
+    </table>
     """
 }
 %>
-
+<p>Do not reply to this message.</p>
 <p>The workflow was completed at <strong>$dateComplete</strong> (duration: <strong>$duration</strong>)</p>
 <p>The command used to launch the workflow was as follows:</p>
 <pre style="white-space: pre-wrap; overflow: visible; background-color: #ededed; padding: 15px; border-radius: 4px; margin-bottom:30px;">$commandLine</pre>
+
+
 
 <h3>Pipeline Configuration:</h3>
 <table style="width:100%; max-width:100%; border-spacing: 0; border-collapse: collapse; border:0; margin-bottom: 30px;">
@@ -44,7 +52,7 @@
 </table>
 
 <p>nf-core/demultiplex</p>
-<p><a href="https://github.com/nf-core/demultiplex">https://github.com/nf-core/demultiplex</a></p>
+<p><a href="https://github.com/csawye01/nf-core-demultiplex">https://github.com/csawye01/nf-core-demultiplex</a></p>
 
 </div>
 

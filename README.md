@@ -27,8 +27,8 @@ The sample sheet must fall into the same format as seen below to adhere to the I
 ### Pipeline summary
 1. Reformatting the input sample sheet
     * Script looks for `iCLIP` in the index column of the sample sheet and collapses the iCLIP samples into one per lane.
-    * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA by searching in the sample sheet column DataAnalysisType for `10X-3prime`, `10X-ATAC` and `10X-CNV`.
-    * Outputs the results of needing to run specific processes in the pipeline (only 10X single cell samples, mix of 10X single cell with non single cell samples and no 10X samples)
+    * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA .csv files by searching in the sample sheet column DataAnalysisType for `10X-3prime`, `10X-ATAC` and `10X-CNV`.
+    * Outputs the results of needing to run specific processes in the pipeline (can be only 10X single cell samples, mix of 10X single cell with non single cell samples or all non single cell samples)
 2. Checking the sample sheet for downstream error causing samples such as:
     * a mix of short and long indexes on the same lane
     * a mix of single and dual indexes on the same lane

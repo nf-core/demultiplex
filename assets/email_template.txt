@@ -48,4 +48,4 @@ Pipeline Configuration:
 
 --
 nf-core/demultiplex
-https://github.com/nf-core/demultiplex
+https://github.com/csawye01/nf-core-demultiplex

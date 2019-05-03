@@ -29,11 +29,12 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/RUNFOLDER/SAMPLESHEET.csv -profile crick --outdir /path/to/output -with-trace
+    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv --run_name 190426_K00371_0282_AH5L2KBBXY -profile crick -with-trace
 
     Mandatory arguments:
 
       --samplesheet                 Full pathway to samplesheet
+      --run_name                    Runfolder name
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, crick, singularity, awsbatch, test and more.
 
@@ -101,7 +102,6 @@ if( workflow.profile == 'awsbatch') {
 }
 
 // Stage config files
-//ch_multiqc_config = Channel.fromPath(params.multiqc_config)
 FSCREEN_CONF_FILEPATH = new File(params.fastq_screen_conf).getAbsolutePath()
 MULTIQC_CONF_FILEPATH = new File(params.multiqc_config).getAbsolutePath()
 
@@ -201,7 +201,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     scrape_software_versions.py > software_versions_mqc.yaml
 //     """
 // }
-// python --version > v_python.txt
+
 
 
 if (params.samplesheet){
@@ -488,7 +488,7 @@ process cellRangerMoveFqs {
  * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  *
  */
-
+params.samplesheet
 cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
 
@@ -510,8 +510,6 @@ process cellRangerCount {
    publishDir "${params.outdir}/count/${projectName}", mode: 'copy'
    label 'process_big'
    errorStrategy 'ignore'
-
-   echo true
 
    input:
    set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
@@ -559,7 +557,7 @@ process cellRangerCount {
  *           ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
  *           INTO SEPARATE SAMPLE SHEETS
  */
-
+b2fq_default_stats_ch = Channel.create()
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/fastq", mode: 'copy'
@@ -690,8 +688,8 @@ process fastq_screen {
     set val(projectName), file(fqFile) from fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
     output:
-    file("*.html") into fastq_screen_html
-    file("*.txt") into fastq_screen_txt
+    set val(projectName), file("*.html") into fastq_screen_html, all_fq_screen_files_tuple
+    set val(projectName), file("*.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
 
     shell:
     """
@@ -702,6 +700,19 @@ process fastq_screen {
 /*
  * STEP 12A - MultiQC per project
  */
+fqc_folder_tuple = fqc_folder_ch.groupTuple()
+fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
+fqc_folder_tuple
+    .phase(fastq_screen_txt_tuple)
+    .map{ left, right ->
+      def projectName = left[0]
+      def fqFiles = left[1]
+      def fqScreen = right[1]
+      tuple(projectName, fqFiles, fqScreen)
+    }
+    .dump(tag:'grouped_fastq_fqscreen_ch')
+    .set { grouped_fastq_fqscreen_ch }
+
 
 process multiqc {
     tag "${projectName}"
@@ -709,15 +720,16 @@ process multiqc {
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFiles) from fqc_folder_ch.groupTuple()
+    set val(projectName), file(fqFiles), file(fqScreen) from grouped_fastq_fqscreen_ch
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
+    val(projectName) into projectList
 
     shell:
     """
-    multiqc ${fqFiles} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFiles} ${fqScreen} --config ${MULTIQC_CONF_FILEPATH} .
     """
 }
 
@@ -725,7 +737,8 @@ process multiqc {
  * STEP 12B- MultiQC for all projects
  */
 
-all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
+all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect().dump(tag:'all_fcq_files')
+all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect().dump(tag:'all_fq_screen_files')
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
@@ -733,6 +746,8 @@ process multiqcAll {
 
     input:
     file fqFile from all_fcq_files
+    file fqScreen from all_fq_screen_files
+    file bcl_stats from b2fq_default_stats_ch
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
@@ -740,9 +755,19 @@ process multiqcAll {
 
     shell:
     """
-    multiqc ${fqFile} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config ${MULTIQC_CONF_FILEPATH} .
     """
 }
+
+sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
+all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
+
+def mapped_project_multiqc = [:]
+all_multiqc_reports_ch.collect { project ->
+  mapped_project_multiqc[project[0]] =  project[1]
+}
+
 
 
 /*
@@ -775,6 +800,7 @@ workflow.onComplete {
       subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
     }
     def email_fields = [:]
+    if (workflow.success) email_fields['mqc_report'] = mapped_project_multiqc
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
@@ -796,6 +822,16 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+
+    //On success try attach the multiqc report
+    def mqc_report = null
+    try {
+        if (workflow.success) {
+            mqc_report = all_multiqc_reports_ch.getVal()
+        }
+    } catch (all) {
+        log.warn "[nf-core/nf-core-demultiplex] Could not attach MultiQC report links to summary email"
+    }
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
