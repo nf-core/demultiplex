@@ -9,3 +9,5 @@ Documentation/
 .DS_Store
 tests/test_data
 *.pyc
+*.log
+*demultiplex_trace.txt
