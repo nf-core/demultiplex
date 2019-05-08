@@ -227,7 +227,7 @@ if (params.samplesheet){
 
 process reformat_samplesheet {
   tag "${sheet.name}"
-  label 'process_medium'
+  label 'process_small'
 
   input:
   file sheet from ss_sheet
@@ -251,7 +251,7 @@ process reformat_samplesheet {
 
 process check_samplesheet {
   tag "${sheet.name}"
-  label 'process_medium'
+  label 'process_small'
 
   input:
   file sheet from standard_samplesheet1
@@ -282,7 +282,7 @@ process check_samplesheet {
 
 process make_fake_SS {
   tag "problem_samplesheet"
-  label 'process_medium'
+  label 'process_small'
 
   input:
   file sheet from standard_samplesheet2
@@ -348,7 +348,7 @@ process bcl2fastq_problem_SS {
 updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
   tag "problem_samplesheet"
-  label 'process_medium'
+  label 'process_small'
 
   input:
   file json from stats_json_file
@@ -379,7 +379,7 @@ process parse_jsonfile {
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
   tag "problem_samplesheet"
-  label 'process_medium'
+  label 'process_small'
 
   input:
   file sheet from ss_sheet
@@ -421,6 +421,7 @@ def getCellRangerProjectName(fqfile) {
      }
      return fqfile
  }
+
 
 process cellRangerMkFastQ {
     tag "${sheet.name}"
@@ -488,12 +489,12 @@ process cellRangerMoveFqs {
  * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  *
  */
-params.samplesheet
+
 cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
 
 cr_fqname_fqfile_ch
-   .phase(cr_samplesheet_info_ch)
+   .join(cr_samplesheet_info_ch)
    .map{ left, right ->
      def sampleID = left[0]
      def projectName = right[1]
@@ -557,7 +558,7 @@ process cellRangerCount {
  *           ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
  *           INTO SEPARATE SAMPLE SHEETS
  */
-b2fq_default_stats_ch = Channel.create()
+
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/fastq", mode: 'copy'
@@ -644,11 +645,11 @@ process bcl2fastq_default {
 
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-cr_fqname_fqfile_fqc_ch =cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
-cr_undetermined_default_fq_renamed_ch = cr_undetermined_default_fq_ch
-cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_renamed_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
+cr_fqname_fqfile_fqc_ch = cr_fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
+cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 
-fastqcAll = Channel.create()
+fastqcAll = Channel.empty()
+fastqcAll_ch = fastqcAll.mix(fqname_fqfile_ch, undetermined_default_fqfile_tuple_ch, cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch)
 
 process fastqc {
     tag "${projectName}"
@@ -656,7 +657,7 @@ process fastqc {
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fastqcAll.mix(fqname_fqfile_ch, cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch, undetermined_default_fqfile_tuple_ch)
+    set val(projectName), file(fqFile) from fastqcAll_ch
 
     output:
     set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
@@ -674,10 +675,11 @@ process fastqc {
 
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-cr_fqname_fqfile_screen_ch =cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
+cr_fqname_fqfile_screen_ch = cr_fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getParent().getName(), fqFile ] }
 cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 
-fastqcScreenAll = Channel.create()
+fastqcScreenAll = Channel.empty()
+grouped_fqscreen_ch = fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
 process fastq_screen {
     tag "${projectName}"
@@ -685,11 +687,11 @@ process fastq_screen {
     label 'process_big'
 
     input:
-    set val(projectName), file(fqFile) from fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
+    set val(projectName), file(fqFile) from grouped_fqscreen_ch
 
     output:
-    set val(projectName), file("*.html") into fastq_screen_html, all_fq_screen_files_tuple
-    set val(projectName), file("*.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
+    set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
+    file "*_screen.html" into fastq_screen_html
 
     shell:
     """
@@ -700,19 +702,16 @@ process fastq_screen {
 /*
  * STEP 12A - MultiQC per project
  */
+
+
 fqc_folder_tuple = fqc_folder_ch.groupTuple()
 fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
+
 fqc_folder_tuple
-    .phase(fastq_screen_txt_tuple)
-    .map{ left, right ->
-      def projectName = left[0]
-      def fqFiles = left[1]
-      def fqScreen = right[1]
-      tuple(projectName, fqFiles, fqScreen)
-    }
-    .dump(tag:'grouped_fastq_fqscreen_ch')
+    .join(fastq_screen_txt_tuple)
     .set { grouped_fastq_fqscreen_ch }
 
+// grouped_fastq_fqscreen_ch.subscribe { println "fastq with fastqscreen: $it" }
 
 process multiqc {
     tag "${projectName}"
@@ -737,8 +736,10 @@ process multiqc {
  * STEP 12B- MultiQC for all projects
  */
 
-all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect().dump(tag:'all_fcq_files')
-all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect().dump(tag:'all_fq_screen_files')
+all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
+all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
+bcl_stats_empty = Channel.empty()
+b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch, cr_b2fq_default_stats_ch)
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/multiqc", mode: 'copy'
@@ -747,7 +748,7 @@ process multiqcAll {
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
-    file bcl_stats from b2fq_default_stats_ch
+    file bcl_stats from b2fq_default_stats_all_ch
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
@@ -761,7 +762,7 @@ process multiqcAll {
 
 sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
 tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
+all_multiqc_reports_ch = tuple_ch.join(sample_selector)
 
 def mapped_project_multiqc = [:]
 all_multiqc_reports_ch.collect { project ->
