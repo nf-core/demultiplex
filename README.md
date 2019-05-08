@@ -43,7 +43,8 @@ The sample sheet must fall into the same format as seen below to adhere to the I
 5. Run [`bcl2fastq`](http://emea.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) on either the original sample sheet that had no error prone samples or on the newly created sample sheet created from the extra steps. This is only run when there are samples left on the sample sheet after removing the single cell samples. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline.
 6. [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) runs on the pooled fastq files from all the conditional processes.
 7. [`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) runs on the pooled results from all the conditional processes.
-8. [`MultiQC`](https://multiqc.info/docs/) runs on all FastQC results produced.
+8. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
+9. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
 
 ### Documentation
