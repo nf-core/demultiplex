@@ -7,7 +7,7 @@ report_section_order:
         order: -1000
 
 title: "ASF-BABS Demultiplexing Quality Control"
-custom_logo: "/camp/stp/babs/working/sawyerc/nextflow/nfcore/nf-core-demultiplex/200px-The_Francis_Crick_Institute_logo.png"
+custom_logo: "/camp/stp/babs/working/sawyerc/nextflow/nfcore/nf-core-demultiplex/assets/200px-The_Francis_Crick_Institute_logo.png"
 custom_logo_url: "https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics"
 custom_logo_title: "The Francis Crick Institute"
 
