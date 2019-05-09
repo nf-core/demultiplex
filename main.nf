@@ -29,12 +29,11 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv --run_name 190426_K00371_0282_AH5L2KBBXY -profile crick -with-trace
+    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv  -profile crick -with-trace
 
     Mandatory arguments:
 
       --samplesheet                 Full pathway to samplesheet
-      --run_name                    Runfolder name
       -profile                      Configuration profile to use. Can use multiple (comma separated)
                                     Available: conda, docker, crick, singularity, awsbatch, test and more.
 
@@ -46,7 +45,7 @@ def helpMessage() {
     bcl2fastq Options:
       --adapter_stringency              The minimum match rate that would trigger the masking or trimming process
       --barcode_mismatches              Number of allowed mismatches per index
-      --create_fastq_for_indexreads     Create FASTQ files also for Index Reads
+      --create_fastq_for_indexreads     Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
       --ignore_missing_bcls             Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
       --ignore_missing_filter           Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
       --ignore_missing_positions        Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
@@ -207,8 +206,9 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
     runName_dir =  params.samplesheet.substring(0,lastPath+1)
-    runName =  params.samplesheet.substring(51,lastPath)
-    samplesheet_string = params.samplesheet.substring(lastPath+1)
+    runName_dir_no_slash = samplesheet.substring(0,lastPath)
+    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
+    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -589,7 +589,7 @@ process bcl2fastq_default {
     tiles = params.tiles ? "--tiles ${params.tiles} " : ""
     fq_index_rds = params.create_fastq_for_indexreads ? "--create-fastq-for-index-reads " : ""
     failed_rds = params.with_failed_reads ? "--with-failed-reads " : ""
-    fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement " : ""
+    fq_rev_comp = params.write_fastq_reversecomplement ? "--write-fastq-reverse-complement" : ""
     no_bgzf_comp = params.no_bgzf_compression ? "--no-bgzf-compression " : ""
     no_lane_split = params.no_lane_splitting ? "--no-lane-splitting " : ""
     slide_window_adapt =  params.find_adapters_withsliding_window ? "--find-adapters-with-sliding-window " : ""
