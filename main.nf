@@ -748,7 +748,7 @@ process multiqcAll {
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
-    file bcl_stats from b2fq_default_stats_all_ch
+    file bcl_stats from b2fq_default_stats_all_ch.collect()
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
@@ -800,8 +800,16 @@ workflow.onComplete {
     if(!workflow.success){
       subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
     }
+
+    if(workflow.success || workflow.profile == 'crick'){
+      def mapped_project_multiqc = [:]
+       mapped_project_multiqc['MultiQC global'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"
+       mapped_project_multiqc['Demultiplexing default'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"
+
+       }
+
     def email_fields = [:]
-    if (workflow.success) email_fields['mqc_report'] = mapped_project_multiqc
+    if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report'] = mapped_project_multiqc
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
@@ -823,16 +831,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
-
-    //On success try attach the multiqc report
-    def mqc_report = null
-    try {
-        if (workflow.success) {
-            mqc_report = all_multiqc_reports_ch.getVal()
-        }
-    } catch (all) {
-        log.warn "[nf-core/nf-core-demultiplex] Could not attach MultiQC report links to summary email"
-    }
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
