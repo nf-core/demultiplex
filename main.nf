@@ -760,16 +760,17 @@ process multiqcAll {
     """
 }
 
-sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
-tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-all_multiqc_reports_ch = tuple_ch.join(sample_selector)
-
-def mapped_project_multiqc = [:]
-all_multiqc_reports_ch.collect { project ->
-  mapped_project_multiqc[project[0]] =  project[1]
-}
+// sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+// tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
+// all_multiqc_reports_ch = tuple_ch.join(sample_selector)
 
 
+// def mapped_project_multiqc = [:]
+// all_multiqc_reports_ch.collect { project ->
+//   mapped_project_multiqc[project[0]] =  project[1] }.subscribe{  println it  }
+// mapped_project_multiqc.each{ k, v -> println "${k}:${v}" }
+// all_multiqc_reports_ch.collect { project ->
+//   mapped_project_multiqc[project[0]] =  project[1] }
 
 /*
  * STEP 13 - Output Description HTML
