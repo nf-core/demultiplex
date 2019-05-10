@@ -211,6 +211,20 @@ if (params.samplesheet){
     runName =  runName_dir.substring(runName_last_sep+1,lastPath)
 }
 
+/*
+ * Send email to notify the demultiplexing pipeline has been initiated
+ */
+process send_start_email {
+  tag "$runName"
+  label 'process_small'
+
+  shell:
+  '''
+  echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -v !{params.email}
+  > /var/spool/mail/$USER
+  '''
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -224,6 +238,7 @@ if (params.samplesheet){
  *        - This will collapse iCLIP samples into one sample and pull out 10X
  *          samples into new samplesheet
  */
+
 
 process reformat_samplesheet {
   tag "${sheet.name}"
