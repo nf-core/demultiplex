@@ -214,16 +214,16 @@ if (params.samplesheet){
 /*
  * Send email to notify the demultiplexing pipeline has been initiated
  */
-process send_start_email {
-  tag "$runName"
-  label 'process_small'
-
-  shell:
-  '''
-  echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -v !{params.email}
-  > /var/spool/mail/$USER
-  '''
-}
+// process send_start_email {
+//   tag "$runName"
+//   label 'process_small'
+//
+//   shell:
+//   '''
+//   echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -v !{params.email}
+//   > /var/spool/mail/$USER
+//   '''
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -777,15 +777,13 @@ process multiqcAll {
 
 // sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
 // tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-// all_multiqc_reports_ch = tuple_ch.join(sample_selector)
-
-
+// // all_multiqc_reports_ch = tuple_ch.join(sample_selector)
 // def mapped_project_multiqc = [:]
-// all_multiqc_reports_ch.collect { project ->
-//   mapped_project_multiqc[project[0]] =  project[1] }.subscribe{  println it  }
+// tuple_ch.map { k, v ->
+//    mapped_project_multiqc[k] =  v }
 // mapped_project_multiqc.each{ k, v -> println "${k}:${v}" }
-// all_multiqc_reports_ch.collect { project ->
-//   mapped_project_multiqc[project[0]] =  project[1] }
+
+
 
 /*
  * STEP 13 - Output Description HTML
