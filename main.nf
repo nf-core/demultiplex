@@ -779,7 +779,7 @@ process multiqcAll {
 
 // sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
 // tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-// all_multiqc_reports_ch = tuple_ch.join(sample_selector)
+// all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
 // def mapped_project_multiqc = [:]
 // tuple_ch.map { k, v ->
 //    mapped_project_multiqc[k] =  v }
