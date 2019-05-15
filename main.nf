@@ -76,9 +76,18 @@ if (params.help){
     exit 0
 }
 
+if (params.samplesheet){
+    lastPath = params.samplesheet.lastIndexOf(File.separator)
+    runName_dir =  params.samplesheet.substring(0,lastPath+1)
+    runName_dir_no_slash = params.samplesheet.substring(0,lastPath)
+    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
+    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
+}
+
 // // Has the run name been specified by the user?
 // //  this has the bonus effect of catching both -name and --name
-custom_runName = params.name
+// custom_runName = params.name
+custom_runName = runName
 if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
@@ -182,10 +191,10 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  */
 // process get_software_versions {
 //     validExitStatus 0
-//
+
 //     output:
 //     file 'software_versions_mqc.yaml' into software_versions_yaml
-//
+
 //     script:
 //     """
 //     echo $workflow.manifest.version > v_pipeline.txt
@@ -201,15 +210,6 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     """
 // }
 
-
-
-if (params.samplesheet){
-    lastPath = params.samplesheet.lastIndexOf(File.separator)
-    runName_dir =  params.samplesheet.substring(0,lastPath+1)
-    runName_dir_no_slash = params.samplesheet.substring(0,lastPath)
-    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
-    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
-}
 
 /*
  * Send email to notify the demultiplexing pipeline has been initiated
@@ -441,7 +441,7 @@ def getCellRangerProjectName(fqfile) {
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
-    publishDir path: "${runName}", mode: 'copy'
+    publishDir path: "${params.outdir}/${runName}", mode: 'copy'
 
     input:
     file sheet from tenx_samplesheet1
@@ -451,7 +451,7 @@ process cellRangerMkFastQ {
     result.name =~ /^true.*/
 
     output:
-    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch mode flatten
+    file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch, cr_undetermined_move_fq_ch mode flatten
     file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
     file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
@@ -459,7 +459,7 @@ process cellRangerMkFastQ {
     script:
     if (sheet.name =~ /^*.tenx.csv/){
     """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
     """
     }
     else if (sheet.name =~ /^*.ATACtenx.csv/){
@@ -480,6 +480,7 @@ process cellRangerMkFastQ {
  */
 
 cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ fqfile.getParent().getParent().getName(), fqfile.getParent().getName(), fqfile.getFileName() ] }
+cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
 process cellRangerMoveFqs {
   tag "${fastq}"
@@ -493,8 +494,8 @@ process cellRangerMoveFqs {
 
   script:
   """
-  while [ ! -f ${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 15s; done
-  mkdir -p "${runName}/fastq/${projectName}" && cp ${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${runName}/fastq/${projectName}
+  while [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 15s; done
+  mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
   """
 }
 
@@ -509,7 +510,7 @@ cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map {
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
 
 cr_fqname_fqfile_ch
-   .join(cr_samplesheet_info_ch)
+   .phase(cr_samplesheet_info_ch)
    .map{ left, right ->
      def sampleID = left[0]
      def projectName = right[1]
@@ -523,7 +524,7 @@ cr_fqname_fqfile_ch
 
 process cellRangerCount {
    tag "${projectName}/${sampleID}"
-   publishDir "${runName}/count/${projectName}", mode: 'copy'
+   publishDir "${params.outdir}/${runName}/count/${projectName}", mode: 'copy'
    label 'process_big'
    errorStrategy 'ignore'
 
@@ -576,7 +577,7 @@ process cellRangerCount {
 
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
-    publishDir path: "${runName}/fastq", mode: 'copy'
+    publishDir path: "${params.outdir}/${runName}/fastq", mode: 'copy'
 
     label 'process_big'
 
@@ -668,7 +669,7 @@ fastqcAll_ch = fastqcAll.mix(fqname_fqfile_ch, undetermined_default_fqfile_tuple
 
 process fastqc {
     tag "${projectName}"
-    publishDir path: "${runName}/fastqc/${projectName}", mode: 'copy'
+    publishDir path: "${params.outdir}/${runName}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
@@ -698,7 +699,7 @@ grouped_fqscreen_ch = fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqf
 
 process fastq_screen {
     tag "${projectName}"
-    publishDir "${runName}/fastq_screen/${projectName}", mode: 'copy'
+    publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
@@ -730,7 +731,7 @@ fqc_folder_tuple
 
 process multiqc {
     tag "${projectName}"
-    publishDir path: "${runName}/multiqc/${projectName}", mode: 'copy'
+    publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
     label 'process_big'
 
     input:
@@ -754,16 +755,17 @@ process multiqc {
 all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
 bcl_stats_empty = Channel.empty()
-b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch, cr_b2fq_default_stats_ch)
+b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch)
 process multiqcAll {
     tag "${runName}"
-    publishDir path: "${runName}/multiqc", mode: 'copy'
+    publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
     label 'process_big'
 
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
-    file bcl_stats from b2fq_default_stats_all_ch.collect()
+    // file bcl_stats from b2fq_default_stats_all_ch.collect()
+    file bcl_stats from b2fq_default_stats_all_ch.ifEmpty('')
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
@@ -777,27 +779,25 @@ process multiqcAll {
 
 // sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
 // tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-// // all_multiqc_reports_ch = tuple_ch.join(sample_selector)
+// all_multiqc_reports_ch = tuple_ch.join(sample_selector)
 // def mapped_project_multiqc = [:]
 // tuple_ch.map { k, v ->
 //    mapped_project_multiqc[k] =  v }
 // mapped_project_multiqc.each{ k, v -> println "${k}:${v}" }
-
-
 
 /*
  * STEP 13 - Output Description HTML
  */
 
 // process output_documentation {
-//     publishDir "${runName}/Documentation", mode: 'copy'
-//
+//     publishDir "${params.outdir}/${runName}/Documentation", mode: 'copy'
+
 //     input:
 //     file output_docs from ch_output_docs
-//
+
 //     output:
 //     file "results_description.html"
-//
+
 //     script:
 //     """
 //     markdown_to_html.r $output_docs results_description.html
@@ -810,9 +810,9 @@ process multiqcAll {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/demultiplex] Successful: $workflow.runName"
+    def subject = "[nf-core/demultiplex] Successful: $custom_runName"
     if(!workflow.success){
-      subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
+      subject = "[nf-core/demultiplex] FAILED: $custom_runName"
     }
 
     // if(workflow.success || workflow.profile == 'crick'){
@@ -822,7 +822,9 @@ workflow.onComplete {
     //    }
 
     def email_fields = [:]
-    // if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report'] = mapped_project_multiqc
+    // if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report']['MultiQC global'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"
+    // if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report']['Demultiplexing default'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"
+    email_fields['profile'] = workflow.profile
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
@@ -877,7 +879,7 @@ workflow.onComplete {
     }
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/Documentation/" )
+    def output_d = new File( "${params.outdir}/${runName}/Documentation/" )
     if( !output_d.exists() ) {
       output_d.mkdirs()
     }
