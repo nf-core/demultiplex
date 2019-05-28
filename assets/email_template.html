@@ -36,6 +36,14 @@
 <p>The command used to launch the workflow was as follows:</p>
 <pre style="white-space: pre-wrap; overflow: visible; background-color: #ededed; padding: 15px; border-radius: 4px; margin-bottom:30px;">$commandLine</pre>
 
+<% if (success || profile == "crick"){
+    <h3>MultiQC:</h3>
+    <table style="width:100%; max-width:100%; border-spacing: 0; border-collapse: collapse; border:0; margin-bottom: 30px;">
+        <tbody style="border-bottom: 1px solid #ddd;">
+            <% out << summary["MultiQC Reports"].collect{ k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'>$k</th><td style='text-align:left; padding: 8px; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #ddd;'><pre style='white-space: pre-wrap; overflow: visible;'>$v</pre></td></tr>"}.join("\n") %>
+        </tbody>
+    </table>
+}
 
 <h3>Pipeline Configuration:</h3>
 <table style="width:100%; max-width:100%; border-spacing: 0; border-collapse: collapse; border:0; margin-bottom: 30px;">
