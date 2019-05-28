@@ -777,13 +777,17 @@ process multiqcAll {
     """
 }
 
-// sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
-// tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-// all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
-// def mapped_project_multiqc = [:]
-// tuple_ch.map { k, v ->
-//    mapped_project_multiqc[k] =  v }
-// mapped_project_multiqc.each{ k, v -> println "${k}:${v}" }
+if (workflow.profile == "crick") {
+  sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+  tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
+  all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
+
+  def all_multiqc_reports_map = []
+  all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
+  summary['MultiQC Reports'] = all_multiqc_reports_map
+
+}
+
 
 /*
  * STEP 13 - Output Description HTML
@@ -815,15 +819,7 @@ workflow.onComplete {
       subject = "[nf-core/demultiplex] FAILED: $custom_runName"
     }
 
-    // if(workflow.success || workflow.profile == 'crick'){
-    //   def mapped_project_multiqc = [:]
-    //    mapped_project_multiqc['MultiQC global'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"
-    //    mapped_project_multiqc['Demultiplexing default'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"
-    //    }
-
     def email_fields = [:]
-    // if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report']['MultiQC global'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"
-    // if (workflow.success || workflow.profile == 'crick') email_fields['mqc_report']['Demultiplexing default'] = "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"
     email_fields['profile'] = workflow.profile
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
