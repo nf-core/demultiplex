@@ -777,15 +777,15 @@ process multiqcAll {
     """
 }
 
-// if (workflow.profile == "crick") {
-//     def sample_selector = projectList.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
-//     tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-//     def tuple_map = []
-//     tuple_ch.subscribe { tuple_map.add("$it") }
-//     def all_multiqc = [sample_selector, tuple_map].transpose()
-//     // all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
-//     summary['MultiQC Reports'] = all_multiqc
-//   }
+if (workflow.profile == "crick") {
+    def sample_selector = projectList.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+    tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
+    def tuple_map = []
+    tuple_ch.subscribe { tuple_map.add("$it") }
+    def all_multiqc = [sample_selector, tuple_map].transpose()
+    // all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
+    summary['MultiQC Reports'] = all_multiqc
+  }
 
 
 /*
