@@ -243,6 +243,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 process reformat_samplesheet {
   tag "${sheet.name}"
   label 'process_small'
+  echo true 
 
   input:
   file sheet from ss_sheet
@@ -457,17 +458,17 @@ process cellRangerMkFastQ {
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
     script:
-    if (sheet.name =~ /^*.tenx.csv/){
+    if (sheet.name =~ /^*sheet.tenx.csv/){
     """
     cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
     """
     }
-    else if (sheet.name =~ /^*.ATACtenx.csv/){
+    else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
     """
     cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
     }
-    else if (sheet.name =~ /^*.DNAtenx.csv/){
+    else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
     """
     cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
@@ -727,8 +728,6 @@ fqc_folder_tuple
     .join(fastq_screen_txt_tuple)
     .set { grouped_fastq_fqscreen_ch }
 
-// grouped_fastq_fqscreen_ch.subscribe { println "fastq with fastqscreen: $it" }
-
 process multiqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
@@ -756,6 +755,7 @@ all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
 bcl_stats_empty = Channel.empty()
 b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch)
+
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
@@ -778,15 +778,14 @@ process multiqcAll {
 }
 
 if (workflow.profile == "crick") {
-  sample_selector = projectList.map{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
-  tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-  all_multiqc_reports_ch = tuple_ch.mix(sample_selector)
-
-  def all_multiqc_reports_map = []
-  all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
-  summary['MultiQC Reports'] = all_multiqc_reports_map
-
-}
+    def sample_selector = projectList.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+    tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
+    def tuple_map = []
+    tuple_ch.subscribe { tuple_map.add("$it") }
+    def all_multiqc = [sample_selector, tuple_map].transpose()
+    // all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
+    summary['MultiQC Reports'] = all_multiqc
+  }
 
 
 /*

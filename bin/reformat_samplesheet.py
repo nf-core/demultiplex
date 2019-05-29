@@ -28,6 +28,8 @@ sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
 
+
+
 # find iclip in data type col and collapse them into one each lane
 iclip_select = sample_pd.loc[sample_pd['index'] == iclip].copy()
 iclip_lanes_set = iclip_select['Lane'].unique().tolist()
@@ -91,8 +93,7 @@ cellranger_idx_DNAlist_to_drop = cellranger_10XDNA_df.index.values.tolist()
 cellranger_10XDNA_df['ReferenceGenome'] = cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
 
 #combine 10X and iCLIP lists to drop
-total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + \
-                    cellranger_idx_ATAClist_to_drop + cellranger_idx_DNAlist_to_drop
+total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + cellranger_idx_ATAClist_to_drop + cellranger_idx_DNAlist_to_drop
 
 cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
@@ -103,26 +104,34 @@ if len(cellranger_10X_df) > 0:
     cellranger_needed = 'true'
 
 if len(cellranger_10XATAC_df) > 0:
-    with open('tenX_samplesheet.ATACtenx.csv', 'w+') as file:
-        file.write('[Data]\n')
-        cellranger_10XATAC_df.to_csv(file, index=False)
-        file.close()
+    with open('tenX_samplesheet.ATACtenx.csv', 'w+') as ATACfile:
+        ATACfile.write('[Data]\n')
+        cellranger_10XATAC_df['Lane'] = cellranger_10XATAC_df['Lane'].astype(int)
+        cellranger_10XATAC_df.to_csv(ATACfile, index=False)
+        ATACfile.close()
     cellranger_needed = 'true'
 
 if len(cellranger_10XDNA_df) > 0:
-    with open('tenX_samplesheet.DNAtenx.csv', 'w+') as file:
-        file.write('[Data]\n')
-        cellranger_10XDNA_df.to_csv(file, index=False)
-        file.close()
+    with open('tenX_samplesheet.DNAtenx.csv', 'w+') as DNAfile:
+        DNAfile.write('[Data]\n')
+        cellranger_10XDNA_df['Lane'] = cellranger_10XDNA_df['Lane'].astype(int) 
+        cellranger_10XDNA_df.to_csv(DNAfile, index=False)
+        DNAfile.close()
     cellranger_needed = 'true'
 
 reg = open(cellranger_needed + ".tenx.txt", "w")
 reg.close()
 
-sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
+# check there are no empty rows counted as strings
+# checks if all columns are the same as first column
+results = sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)
+results_list = list(results.index.values.astype(int))
+
+if results_list:
+    sample_pd.drop(sample_pd.index[results_list], inplace=True)
 
 bcl2fastq = 'true'
-if len(sample_pd) == 0:
+if len(sample_pd) == 0 or sample_pd.empty:
     bcl2fastq = 'false'
     
 bcl2fastq_needed = open(bcl2fastq + ".bcl2fastq.txt", "w")
