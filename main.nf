@@ -777,9 +777,6 @@ process multiqcAll {
 }
 
 
-
-
-
 /*
  * STEP 13 - Output Description HTML
  */
@@ -815,7 +812,7 @@ workflow.onComplete {
         def projectList_2 = []
         projectList.subscribe { projectList_2.add("$it") }
 
-        all_multiqc = projectList_2.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+        all_multiqc = projectList_2.collect{ project -> ["${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
         extra_links.put("MultiQC Global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html")
         extra_links.put("Demultiplexing Default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html")
     }
