@@ -88,17 +88,14 @@
 
         <% if (success && profile == "crick"){
             out << 
-              """
+            """
                 <div class="qc">
                   <span style="font-size:1.3em" >MultiQC</span>
-                  <table style="">
-                    <tbody style="border-bottom: 1px solid #ddd;">
-              """ 
-            out <<
-              """
-                  </tbody>
-                  </table>
+            """
 
+
+            out <<
+            """
                   <div class="qcextras">
                     <p>
                       <a href="${extra_links.get('MultiQC Global')}" target=\"_blank\" >MultiQC Global</a>
@@ -108,17 +105,30 @@
                     </p>
                   </div>
 
-                </div>
-              """
-              out << project_QC_links.collect{ 
+            """
+
+            out<<
+            """
+                  <table style="">
+                    <tbody style="border-bottom: 1px solid #ddd;">
+            """ 
+
+            out << project_QC_links.collect{ 
               k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border: none;'>"+
-                "<a href='${k[1]}' target=\"_blank\" ><i class=\"fa fa-cubes\"></i> ${k[0]}</a>"+
+                "<a href='${v}' target=\"_blank\" ><i class=\"fa fa-cubes\"></i> ${k}</a>"+
                 "</th>"+
                 "<td style='text-align:left; padding: 8px; line-height: 1.42857143; vertical-align: top; border-top:none;'>"+
 
 
                 "</td></tr>"
-              }.join("\n") 
+              }.join("\n")
+
+            out <<
+            """
+                  </tbody>
+                  </table>
+                </div>
+            """ 
         }
         %>
 
@@ -152,6 +162,5 @@
         </div>
 
     </div>
-
 </body>
 </html>
