@@ -29,7 +29,7 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv  -profile crick -with-trace
+    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv  -profile crick 
 
     Mandatory arguments:
 
@@ -217,11 +217,10 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 // process send_start_email {
 //   tag "$runName"
 //   label 'process_small'
-//
+
 //   shell:
 //   '''
 //   echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -v !{params.email}
-//   > /var/spool/mail/$USER
 //   '''
 // }
 
@@ -527,7 +526,7 @@ process cellRangerCount {
    tag "${projectName}/${sampleID}"
    publishDir "${params.outdir}/${runName}/count/${projectName}", mode: 'copy'
    label 'process_big'
-   // errorStrategy 'ignore'
+   errorStrategy 'ignore'
 
    input:
    set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
@@ -777,15 +776,8 @@ process multiqcAll {
     """
 }
 
-if (workflow.profile == "crick") {
-    def sample_selector = projectList.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
-    tuple_ch = Channel.from( ["MultiQC global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html"], ["Demultiplexing default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html"] )
-    def tuple_map = []
-    tuple_ch.subscribe { tuple_map.add("$it") }
-    def all_multiqc = [sample_selector, tuple_map].transpose()
-    // all_multiqc_reports_ch.subscribe { all_multiqc_reports_map.add("$it") }
-    summary['MultiQC Reports'] = all_multiqc
-  }
+
+
 
 
 /*
@@ -817,8 +809,19 @@ workflow.onComplete {
     if(!workflow.success){
       subject = "[nf-core/demultiplex] FAILED: $custom_runName"
     }
+    def extra_links =[:]
+    if(workflow.success || workflow.profile == 'crick') {
+        def projectList_2 = []
+        projectList.subscribe { projectList_2.add("$it") }
+        def all_multiqc = projectList_2.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
+
+        extra_links.put("MultiQC Global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html")
+        extra_links.put("Demultiplexing Default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html")
+    }
 
     def email_fields = [:]
+    if(workflow.success || workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
+    if(workflow.success || workflow.profile == 'crick') email_fields['extra_links'] = extra_links
     email_fields['profile'] = workflow.profile
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
