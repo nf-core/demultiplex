@@ -124,11 +124,10 @@ reg.close()
 
 # check there are no empty rows counted as strings
 # checks if all columns are the same as first column
-results = sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)
-results_list = list(results.index.values.astype(int))
+results = sample_pd[sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)].index.values.astype(int)
 
-if results_list:
-    sample_pd.drop(sample_pd.index[results_list], inplace=True)
+if results:
+    sample_pd.drop(sample_pd.index[results], inplace=True)
 
 bcl2fastq = 'true'
 if len(sample_pd) == 0 or sample_pd.empty:
