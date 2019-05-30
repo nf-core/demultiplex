@@ -810,18 +810,19 @@ workflow.onComplete {
       subject = "[nf-core/demultiplex] FAILED: $custom_runName"
     }
     def extra_links =[:]
-    if(workflow.success || workflow.profile == 'crick') {
+    def all_multiqc
+    if(workflow.success && workflow.profile == 'crick') {
         def projectList_2 = []
         projectList.subscribe { projectList_2.add("$it") }
-        def all_multiqc = projectList_2.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
 
+        all_multiqc = projectList_2.collect{ project -> ["MultiQC ${project}", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/${project}/multiqc_report.html"] }
         extra_links.put("MultiQC Global", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/multiqc/multiqc_report.html")
         extra_links.put("Demultiplexing Default", "https://sample-selector-bioinformatics.crick.ac.uk/sequencing/${runName}/fastq/Reports/html/index.html")
     }
 
     def email_fields = [:]
-    if(workflow.success || workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
-    if(workflow.success || workflow.profile == 'crick') email_fields['extra_links'] = extra_links
+    if(workflow.success && workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
+    if(workflow.success && workflow.profile == 'crick') email_fields['extra_links'] = extra_links
     email_fields['profile'] = workflow.profile
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
