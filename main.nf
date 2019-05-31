@@ -40,6 +40,7 @@ def helpMessage() {
     Options:
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       --outdir                      The output directory where the results will be saved
+      --sender                      Email address for starting demultiplexing email to be sent from
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
     bcl2fastq Options:
@@ -214,15 +215,15 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 /*
  * Send email to notify the demultiplexing pipeline has been initiated
  */
-// process send_start_email {
-//   tag "$runName"
-//   label 'process_small'
+process send_start_email {
+  tag "$runName"
+  label 'process_small'
 
-//   shell:
-//   '''
-//   echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -v !{params.email}
-//   '''
-// }
+  shell:
+  '''
+  echo "Subject: Starting demultiplexing for run !{runName}" | sendmail -f !{params.sender} !{params.email} 
+  '''
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -524,7 +525,13 @@ cr_fqname_fqfile_ch
 
 process cellRangerCount {
    tag "${projectName}/${sampleID}"
-   publishDir "${params.outdir}/${runName}/count/${projectName}", mode: 'copy'
+   // publishDir "${params.outdir}/${runName}/count/${projectName}", mode: 'copy'
+   publishDir "${params.outdir}/${runName}", mode: 'copy',
+   saveAs: { dataType ->
+    if (dataType =~ /10X-3prime/) "count/${projectName}"
+    else if (dataType =~ /10X-CNV/) "CNV/${projectName}"
+    else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}"
+   }
    label 'process_big'
    errorStrategy 'ignore'
 
