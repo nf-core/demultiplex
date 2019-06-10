@@ -4,6 +4,7 @@ import re
 import pandas as pd
 import argparse
 import csv
+import numpy as np
 
 # need args for directory to put 10X samplesheet if applicable
 argparser = argparse.ArgumentParser()
@@ -122,12 +123,15 @@ if len(cellranger_10XDNA_df) > 0:
 reg = open(cellranger_needed + ".tenx.txt", "w")
 reg.close()
 
+
 # check there are no empty rows counted as strings
-# checks if all columns are the same as first column
-results = sample_pd[sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)].index.values.astype(int)
+# checks if all columns are the same as first column indicating blanks counted as strings
+results = list(sample_pd[sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)].index.values.astype(int))
 
 if results:
-    sample_pd.drop(sample_pd.index[results], inplace=True)
+    total_idx_to_drop = total_idx_to_drop + results 
+
+sample_pd.drop(sample_pd.index[total_idx_to_drop], inplace=True)
 
 bcl2fastq = 'true'
 if len(sample_pd) == 0 or sample_pd.empty:
@@ -138,5 +142,6 @@ bcl2fastq_needed.close()
 
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
     f.write('[Data]\n')
+    sample_pd['Lane'] = sample_pd['Lane'].astype(int)
     sample_pd.to_csv(f, index=False)
     f.close()
