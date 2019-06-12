@@ -587,8 +587,10 @@ process bcl2fastq_default {
     bcl_result.name =~ /^true.bcl2fastq.txt/
 
     output:
-    file "*/**.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
-    file "*.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
+    file "*/**{R1,R2}_001.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
+    file "*/**{I1,I2}_001.fastq.gz" optional true into fastqs_idx_ch
+    file "*{R1,R2}_001.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
+    file "*{I1,I2}_001.fastq.gz" optional true into undetermined_idx_fq_ch
     file "Reports" into b2fq_default_reports_ch
     file "Stats" into b2fq_default_stats_ch
 
