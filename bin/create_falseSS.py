@@ -3,6 +3,7 @@
 import pandas as pd
 import argparse
 import csv
+import sys
 
 """
 Script to parse a sample sheet and make a fake samplesheet so that during demultiplexing 
@@ -101,7 +102,11 @@ for k, v in lane_length_dict.items():
                 problem_sample_ids.append(row['Sample_ID'])
                 indexes_to_drop.append(update_idx_val)
 
-sample_pd.drop(sample_pd.index[indexes_to_drop], inplace=True )
+sample_pd = sample_pd.drop(sample_pd.index[indexes_to_drop], inplace=True)
+
+#check if there are samples still left on samplesheet
+if not sample_pd:
+    sys.exit("Removed all samples from sample sheet as all considered problematic, left with empty sheet")
 
 with open('fake_samplesheet.csv', 'w+') as fp:
     fp.write('[Data]\n')

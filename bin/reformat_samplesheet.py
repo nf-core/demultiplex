@@ -29,8 +29,6 @@ sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
 
-
-
 # find iclip in data type col and collapse them into one each lane
 iclip_select = sample_pd.loc[sample_pd['index'] == iclip].copy()
 iclip_lanes_set = iclip_select['Lane'].unique().tolist()
