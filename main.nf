@@ -40,7 +40,6 @@ def helpMessage() {
     Options:
       --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
       --outdir                      The output directory where the results will be saved
-      --sender                      Email address for starting demultiplexing email to be sent from
       -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
     bcl2fastq Options:
@@ -417,14 +416,6 @@ process recheck_samplesheet {
  *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
  */
 
-def getCellRangerProjectName(fqfile) {
-     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/(.*)\/.*\/.+_S\d+_L00\d_(I|R)(1|2|3)_001\.fastq\.gz/)
-     if (projectName.find()) {
-       return projectName.group(1)
-     }
-     return fqfile
- }
-
 
 process cellRangerMkFastQ {
     tag "${sheet.name}"
@@ -467,7 +458,23 @@ process cellRangerMkFastQ {
  *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS
  */
 
-cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ fqfile.getParent().getParent().getName(), fqfile.getParent().getName(), fqfile.getFileName() ] }
+def getCellRangerSampleName(fqfile) {
+     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
+     if (projectName.find()) {
+       return sampleName.group(1)
+     }
+     return fqfile
+}
+
+def getCellRangerProjectName(fqfile) {
+    def projectName = (fqfile =~ /.*\/outs\/fastq_path\/([a-zA-Z0-9_]*)\//)
+    if (projectName.find()) {
+      return projectName.group(1)
+    }
+    return fqfile
+}
+
+cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerProjectName(fqfile), getCellRangerSampleName(fqfile), fqfile.getFileName() ] }
 cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
 process cellRangerMoveFqs {
@@ -482,8 +489,14 @@ process cellRangerMoveFqs {
 
   script:
   """
-  while [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; do sleep 15s; done
-  mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+  while [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ] || [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; do sleep 15s; done
+  if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]
+  then
+    mkdir -p "${params.outdir}/${runName}/fastq${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+  elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]
+  then
+    mkdir -p "${params.outdir}/${runName}/fastq${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+  fi
   """
 }
 
@@ -494,8 +507,16 @@ process cellRangerMoveFqs {
  *
  */
 
+def getCellRangerFastqPath(fqfile) {
+    def projectName = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
+    if (projectName.find()) {
+      return projectName.group(1)
+    }
+    return fqfile
+}
+
 cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ fqfile.getParent().getName(), fqfile.getParent().getParent() ] }.unique()
+cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ getCellRangerSampleName(fqfile), getCellRangerFastqPath(fqfile) ] }.unique()
 
 cr_fqname_fqfile_ch
    .phase(cr_samplesheet_info_ch)
@@ -587,9 +608,9 @@ process bcl2fastq_default {
     bcl_result.name =~ /^true.bcl2fastq.txt/
 
     output:
-    file "*/**{R1,R2}_001.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
+    file "*/**{R1,R2,R3}_001.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
     file "*/**{I1,I2}_001.fastq.gz" optional true into fastqs_idx_ch
-    file "*{R1,R2}_001.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
+    file "*{R1,R2,R3}_001.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
     file "*{I1,I2}_001.fastq.gz" optional true into undetermined_idx_fq_ch
     file "Reports" into b2fq_default_reports_ch
     file "Stats" into b2fq_default_stats_ch
@@ -760,7 +781,6 @@ process multiqcAll {
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
-    // file bcl_stats from b2fq_default_stats_all_ch.collect()
     file bcl_stats from b2fq_default_stats_all_ch.ifEmpty('')
 
     output:
