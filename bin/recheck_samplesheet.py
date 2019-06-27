@@ -23,9 +23,6 @@ problem_samples = ARGS.problemsamples
 prob_file = open(problem_samples, 'r')
 problem_samples_list = prob_file.read().splitlines()
 
-# import sample sheet as not fixed path when in pipeline
-# samplesheet = "/camp/stp/sequencing/inputs/instruments/sequencers/190201_K00102_0307_AH3KTVBBXY/H3KTVBBXY.csv"
-
 # get idx of Data tag
 def getdatatag(samplesheet):
     data_tag_search = '[Data]'
@@ -38,23 +35,24 @@ def getdatatag(samplesheet):
     return data_index
 
 # if parameters are met return value indicating mixed batch on rechecked sample sheet
-#read in original samplesheet and get idx of Data tag
+# read in original samplesheet and get idx of Data tag
 ss_idx = getdatatag(samplesheet)
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, ss_idx + 1))
 
 #read in newly made samplesheet and get idx of Data tag
 new_ss_idx = getdatatag(newsamplesheet)
 newsample_pd = pd.read_csv(newsamplesheet, skiprows=range(0, new_ss_idx + 1))
-SS_new_problem_ids = sample_pd.iloc[problem_samples_list]
+SS_new_problem_ids = newsample_pd.iloc[problem_samples_list]
 # SS_new_problem_ids = newsample_pd.loc[newsample_pd['Sample_ID'].isin(problem_samples_list)].copy()
 
 test_result = 'pass'
 
 # compare problem sample rows and if the same return fail
 for index, row in SS_new_problem_ids.iterrows():
-    update_idx_val = sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID']]
+    update_idx_val =sample_pd.iloc[index]
+    # update_idx_val = sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID']]
     if update_idx_val['Sample_ID'].values == row['Sample_ID'] and update_idx_val['index'].values == row['index'] and update_idx_val['Lane'].values == row['Lane']:
-            if update_idx_val['index2'].values == row['index2'] or (numpy.isnan(update_idx_val['index2'].values) and numpy.isnan(row['index2'])):
+            if update_idx_val['index2'].values == row['index2'] or (pd.isna(update_idx_val['index2']) and pd.isna(row['index2'])):
                 test_result = 'fail'
 
 x = open(test_result + ".txt", "w")
