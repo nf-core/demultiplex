@@ -45,14 +45,15 @@ sample_pd = pd.read_csv(samplesheet, skiprows=range(0, ss_idx + 1))
 #read in newly made samplesheet and get idx of Data tag
 new_ss_idx = getdatatag(newsamplesheet)
 newsample_pd = pd.read_csv(newsamplesheet, skiprows=range(0, new_ss_idx + 1))
-SS_new_problem_ids = newsample_pd.loc[newsample_pd['Sample_ID'].isin(problem_samples_list)].copy()
+SS_new_problem_ids = sample_pd.iloc[problem_samples_list]
+# SS_new_problem_ids = newsample_pd.loc[newsample_pd['Sample_ID'].isin(problem_samples_list)].copy()
 
 test_result = 'pass'
 
 # compare problem sample rows and if the same return fail
 for index, row in SS_new_problem_ids.iterrows():
     update_idx_val = sample_pd.loc[sample_pd['Sample_ID'] == row['Sample_ID']]
-    if update_idx_val['Sample_ID'].values == row['Sample_ID'] and update_idx_val['index'].values == row['index']:
+    if update_idx_val['Sample_ID'].values == row['Sample_ID'] and update_idx_val['index'].values == row['index'] and update_idx_val['Lane'].values == row['Lane']:
             if update_idx_val['index2'].values == row['index2'] or (numpy.isnan(update_idx_val['index2'].values) and numpy.isnan(row['index2'])):
                 test_result = 'fail'
 
