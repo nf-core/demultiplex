@@ -489,13 +489,11 @@ process cellRangerMoveFqs {
 
   script:
   """
-  while [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ] || [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; do sleep 15s; done
-  if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]
-  then
-    mkdir -p "${params.outdir}/${runName}/fastq${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-  elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]
-  then
-    mkdir -p "${params.outdir}/${runName}/fastq${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+  while [ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} -o ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; do sleep 15s; done
+  if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
+    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+  elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
+    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
   fi
   """
 }
