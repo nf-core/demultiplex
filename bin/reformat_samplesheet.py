@@ -29,6 +29,10 @@ sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
 
+# ensure no leading or trailing whitespace
+sample_pd['index'] = sample_pd['index'].str.strip()
+sample_pd['index2'] = sample_pd['index2'].str.strip()
+
 # find iclip in data type col and collapse them into one each lane
 iclip_select = sample_pd.loc[sample_pd['index'] == iclip].copy()
 iclip_lanes_set = iclip_select['Lane'].unique().tolist()
@@ -125,7 +129,6 @@ reg.close()
 # check there are no empty rows counted as strings
 # checks if all columns are the same as first column indicating blanks counted as strings
 results = list(sample_pd[sample_pd.eq(sample_pd.iloc[:, 0], axis=0).all(axis=1)].index.values.astype(int))
-
 if results:
     total_idx_to_drop = total_idx_to_drop + results 
 
