@@ -459,8 +459,8 @@ process cellRangerMkFastQ {
  */
 
 def getCellRangerSampleName(fqfile) {
-     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
-     if (projectName.find()) {
+     def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
+     if (sampleName.find()) {
        return sampleName.group(1)
      }
      return fqfile
@@ -508,9 +508,9 @@ process cellRangerMoveFqs {
  */
 
 def getCellRangerFastqPath(fqfile) {
-    def projectName = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
-    if (projectName.find()) {
-      return projectName.group(1)
+    def fastqPath = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
+    if (fastqPath.find()) {
+      return fastqPath.group(1)
     }
     return fqfile
 }
