@@ -33,9 +33,11 @@ with open(samplesheet, 'r') as f:
             data_index = idx
 
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
+sample_pd['index'] = sample_pd['index'].astype('str')
+sample_pd['index2'] = sample_pd['index2'].astype('str')
 
 # slice sample sheet for only problem rows
-SS_new_problem_ids = sample_pd.iloc[problem_samples_list]
+SS_new_problem_ids = sample_pd.iloc[problem_samples_list].copy()
 prob_lanes = SS_new_problem_ids.Lane.unique()
 
 # create new column for read counts
