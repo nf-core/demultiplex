@@ -47,9 +47,10 @@ sample_pd_empty_remove_idx = sample_pd[sample_pd["index2"].notnull()].index.toli
 samplesheet_new['index1_len'] = ""
 samplesheet_new['index2_len'] = ""
 
+samplesheet_new = samplesheet_new.fillna('')
 samplesheet_new['index'] = samplesheet_new['index'].astype('str')
 samplesheet_new['index2'] = samplesheet_new['index2'].astype('str')
-samplesheet_new = samplesheet_new.fillna('')
+
 
 for idx, item in samplesheet_new.iterrows():
     if idx in ss_check_idx:
