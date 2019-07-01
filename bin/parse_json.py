@@ -33,11 +33,12 @@ with open(samplesheet, 'r') as f:
             data_index = idx
 
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
-sample_pd['index'] = sample_pd['index'].astype('str')
-sample_pd['index2'] = sample_pd['index2'].astype('str')
 
 # slice sample sheet for only problem rows
 SS_new_problem_ids = sample_pd.iloc[problem_samples_list].copy()
+SS_new_problem_ids = SS_new_problem_ids.fillna('')
+SS_new_problem_ids['index'] = SS_new_problem_ids['index'].astype('str')
+SS_new_problem_ids['index2'] = SS_new_problem_ids['index2'].astype('str')
 prob_lanes = SS_new_problem_ids.Lane.unique()
 
 # create new column for read counts
@@ -50,8 +51,8 @@ list_dict_matches = []
 
 for result in json_file:
     if result['Lane'] in prob_lanes:
-        for unknown_idx, unknown_count in result['Barcodes'].items():
-            for index, row in SS_new_problem_ids.iterrows():
+        for index, row in SS_new_problem_ids.iterrows():    
+            for unknown_idx, unknown_count in result['Barcodes'].items():
                 if result['Lane'] == row['Lane']:
                     # dual indexed lane
                     if "+" in unknown_idx:
@@ -70,7 +71,7 @@ for result in json_file:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = index1
                                 SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
                         # find partial matches for short index 1 that is single indexed
-                        elif index1.startswith(row['index']) is True and pd.isnull(row['index2']) is True:
+                        elif index1.startswith(row['index']) is True and row['index2'] == '':
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index2'] = index2
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = index1
@@ -83,11 +84,10 @@ for result in json_file:
                     # single indexed lane
                     elif "+" not in unknown_idx:
                         # find partial matches for short index 1 that is single indexed
-                        if unknown_idx.startswith(row['index']) is True and pd.isnull(row['index2']) is True:
+                        if unknown_idx.startswith(row['index']) is True and row['index2'] == '':
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = unknown_idx
                                 SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
-
 
 # delete read count column from dataframe
 SS_new_problem_ids.drop('read_count', 1, inplace=True)
