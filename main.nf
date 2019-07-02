@@ -530,7 +530,6 @@ cr_fqname_fqfile_ch
 
 process cellRangerCount {
    tag "${projectName}/${sampleID}"
-   // publishDir "${params.outdir}/${runName}/count/${projectName}", mode: 'copy'
    publishDir "${params.outdir}/${runName}", mode: 'copy',
    saveAs: { filename ->
     if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
@@ -542,7 +541,7 @@ process cellRangerCount {
    errorStrategy 'ignore'
 
    input:
-   set sampleID, projectName, refGenome, dataType, file(fastqDir) from cr_grouped_fastq_dir_sample_ch
+   set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
    file result from tenx_results3
 
    when:
