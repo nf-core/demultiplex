@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="nf-core/demultiplex: Demultiplexing pipeline for Illumina data">
+  <meta name="description" content="nf-core/demultiplex: Demultiplexing pipeline for Illumina sequencing data">
   <title>nf-core/demultiplex Pipeline Report</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -15,10 +15,10 @@
       color: #146470;
     }
     .qc{
-      color: #196f84; 
-      background-color: #ccf5ff; 
-      border-color: #ebccd1; 
-      padding: 15px; 
+      color: #196f84;
+      background-color: #ccf5ff;
+      border-color: #ebccd1;
+      padding: 15px;
       border-radius: 4px;
     }
     .title{
@@ -32,16 +32,16 @@
       color: #4da9b7;
     }
     .notification{
-      border-color: #ebccd1; 
-      padding: 15px; 
-      margin-bottom: 20px; 
-      border: 1px solid transparent; 
+      border-color: #ebccd1;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
       border-radius: 4px;
     }
     .main_div{
-        font-family: Helvetica, Arial, sans-serif; 
-        padding: 30px; 
-        max-width: 900px; 
+        font-family: Helvetica, Arial, sans-serif;
+        padding: 30px;
+        max-width: 900px;
         margin: 0 auto;
     }
   </style>
@@ -62,7 +62,7 @@
         <h2>Run Name: $runName</h2>
 
         <% if (!success){
-            out << 
+            out <<
             """
             <div class="notification" style="color: #a94442; background-color: #f2dede; ">
                 <i class="fa fa-window-close"></i>
@@ -73,7 +73,7 @@
             </div>
             """
         } else {
-            out << 
+            out <<
             """
             <div class="notification" style="color: #3c763d; background-color: #dff0d8; ">
               <i class="fa fa-check-square fa-1x"> </i>
@@ -87,7 +87,7 @@
 
 
         <% if (success && profile == "crick"){
-            out << 
+            out <<
             """
                 <div class="qc">
                   <span style="font-size:1.3em" >MultiQC</span>
@@ -111,9 +111,9 @@
             """
                   <table style="">
                     <tbody style="border-bottom: 1px solid #ddd;">
-            """ 
+            """
 
-            out << project_QC_links.collect{ 
+            out << project_QC_links.collect{
               k,v -> "<tr><th style='text-align:left; padding: 8px 0; line-height: 1.42857143; vertical-align: top; border: none;'>"+
                 "<a href='${v}' target=\"_blank\" ><i class=\"fa fa-cubes\"></i> ${k}</a>"+
                 "</th>"+
@@ -128,7 +128,7 @@
                   </tbody>
                   </table>
                 </div>
-            """ 
+            """
         }
         %>
 
@@ -156,7 +156,7 @@
           <span style="">
             <i class="fa fa-github fa-2x" ></i>
           </span>
-          
+
           <a style="margin-left:10px; vertical-align: middle;" href="https://github.com/csawye01/nf-core-demultiplex">nf-core/demultiplex</a>
 
         </div>

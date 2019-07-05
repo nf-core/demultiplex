@@ -1,9 +1,14 @@
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment.yml
 name: nf-core-demultiplex-1.0dev
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
+  ## conda-forge packages
+  - python=3.7.3
+
   ## bioconda packages
   - fastqc=0.11.8
   - multiqc=1.7
@@ -11,4 +16,3 @@ dependencies:
   - fastq-screen=0.13.0
   ##- cellrangermkfastq=3.0.2
   ##- cellrangercount=3.0.2
-  - python=3.7.3
