@@ -6,63 +6,57 @@
  nf-core/demultiplex Analysis Pipeline.
  #### Homepage / Documentation
  https://github.com/nf-core/demultiplex
- #### Authors
- Chelsea Sawyer <chelsea.sawyer@crick.ac.uk> - https://github.com/csawye01/nf-core-demultiplex
 ----------------------------------------------------------------------------------------
 */
 
 
 def helpMessage() {
     // TODO nf-core: Add to this help message with new command line parameters
+    log.info nfcoreHeader()
     log.info"""
-    =======================================================
-                                              ,--./,-.
-              ___     __   __   __   ___     /,-._.--~\'
-        |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-        | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                              `._,._,\'
-
-     nf-core/demultiplex v${workflow.manifest.version}
-    =======================================================
 
     Usage:
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv  -profile crick 
+    nextflow run nf-core/demultiplex --samplesheet samplesheet.csv  -profile docker
 
     Mandatory arguments:
+      --samplesheet                       Full path to samplesheet
+      -profile                            Configuration profile to use. Can use multiple (comma separated)
+                                          Available: conda, docker, singularity, awsbatch, test and more.
 
-      --samplesheet                 Full pathway to samplesheet
-      -profile                      Configuration profile to use. Can use multiple (comma separated)
-                                    Available: conda, docker, crick, singularity, awsbatch, test and more.
-
-    Options:
-      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --outdir                      The output directory where the results will be saved
-      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+    References                            If not specified in the configuration file or you wish to overwrite any of the references.
+      --fastq_screen_conf                 Full path to fastq_screen genome config file
+      --tenx_genomes_base                 Base directory for 10x genomes
 
     bcl2fastq Options:
-      --adapter_stringency              The minimum match rate that would trigger the masking or trimming process
-      --barcode_mismatches              Number of allowed mismatches per index
-      --create_fastq_for_indexreads     Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
-      --ignore_missing_bcls             Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
-      --ignore_missing_filter           Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
-      --ignore_missing_positions        Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
-      --minimum_trimmed_readlength      Minimum read length after adapter trimming.
-      --mask_short_adapter_reads        This option applies when a read is shorter than the length specified by --minimum-trimmed-read-length (note that the read does not specifically have to be trimmed for this option to trigger, it need only fall below the —minimum-trimmed-read-length for any reason).
-      --tiles                           The --tiles argument takes a regular expression to select for processing only a subset of the tiles available in the flow cell Multiple selections can be made by separating the regular expressions with commas
-      --use_bases_mask                  The --use-bases-mask string specifies how to use each cycle
-      --with_failed_reads               Include all clusters in the output, even clusters that are non-PF. These clusters would have been excluded by default
-      --write_fastq_reversecomplement   Generate FASTQ files containing reverse complements of actual data.
-      --no_bgzf_compression             Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
-      --fastq_compression_level         Zlib compression level (1–9) used for FASTQ files.
-      --no_lane_splitting               Do not split FASTQ files by lane.
-      --find_adapters_withsliding_window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+      --adapter_stringency                The minimum match rate that would trigger the masking or trimming process
+      --barcode_mismatches                Number of allowed mismatches per index
+      --create_fastq_for_indexreads       Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
+      --ignore_missing_bcls               Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
+      --ignore_missing_filter             Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
+      --ignore_missing_positions          Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
+      --minimum_trimmed_readlength        Minimum read length after adapter trimming.
+      --mask_short_adapter_reads          This option applies when a read is shorter than the length specified by --minimum-trimmed-read-length (note that the read does not specifically have to be trimmed for this option to trigger, it need only fall below the —minimum-trimmed-read-length for any reason).
+      --tiles                             The --tiles argument takes a regular expression to select for processing only a subset of the tiles available in the flow cell Multiple selections can be made by separating the regular expressions with commas
+      --use_bases_mask                    The --use-bases-mask string specifies how to use each cycle
+      --with_failed_reads                 Include all clusters in the output, even clusters that are non-PF. These clusters would have been excluded by default
+      --write_fastq_reversecomplement     Generate FASTQ files containing reverse complements of actual data.
+      --no_bgzf_compression               Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
+      --fastq_compression_level           Zlib compression level (1–9) used for FASTQ files.
+      --no_lane_splitting                 Do not split FASTQ files by lane.
+      --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+
+    Other options:
+      --outdir                            The output directory where the results will be saved
+      --email                             Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --maxMultiqcEmailFileSize           Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
+      -name                               Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
     AWSBatch options:
-      --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   The AWS Region for your AWS Batch job to run on
+      --awsqueue                          The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion                         The AWS Region for your AWS Batch job to run on
     """.stripIndent()
 }
 
@@ -84,10 +78,9 @@ if (params.samplesheet){
     runName =  runName_dir.substring(runName_last_sep+1,lastPath)
 }
 
-// // Has the run name been specified by the user?
-// //  this has the bonus effect of catching both -name and --name
-// custom_runName = params.name
-custom_runName = runName
+// Has the run name been specified by the user?
+//  this has the bonus effect of catching both -name and --name
+custom_runName = params.name
 if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
   custom_runName = workflow.runName
 }
@@ -95,79 +88,73 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 // ////////////////////////////////////////////////////
 // /* --          VALIDATE INPUTS                 -- */
 // ////////////////////////////////////////////////////
-if ( params.samplesheet ){
-    ss_sheet = file(params.samplesheet)
-    if( !ss_sheet.exists() ) exit 1, "Sample sheet not found: ${params.samplesheet}"
-}
+
+if (params.samplesheet)    { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
+
 
 if( workflow.profile == 'awsbatch') {
   // AWSBatch sanity checking
   if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-  if (!workflow.workDir.startsWith('s3') || !params.outdir.startsWith('s3')) exit 1, "Specify S3 URLs for workDir and outdir parameters on AWSBatch!"
-  // Check workDir/outdir paths to be S3 buckets if running on AWSBatch
+  // Check outdir paths to be S3 buckets if running on AWSBatch
   // related: https://github.com/nextflow-io/nextflow/issues/813
-  if (!workflow.workDir.startsWith('s3:') || !params.outdir.startsWith('s3:')) exit 1, "Workdir or Outdir not on S3 - specify S3 Buckets for each to run on AWSBatch!"
+  if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+  // Prevent trace files to be stored on S3 since S3 does not support rolling files.
+  if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
 // Stage config files
-FSCREEN_CONF_FILEPATH = new File(params.fastq_screen_conf).getAbsolutePath()
-MULTIQC_CONF_FILEPATH = new File(params.multiqc_config).getAbsolutePath()
-
-ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
-
+ch_fastq_screen_config = file(params.fastq_screen_conf, checkIfExists: true)
+ch_multiqc_config = file(params.multiqc_config, checkIfExists: true)
+ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
 // Header log info
-log.info """=======================================================
-                                          ,--./,-.
-          ___     __   __   __   ___     /,-._.--~\'
-    |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-    | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                          `._,._,\'
-
-nf-core/demultiplex v${workflow.manifest.version}
-======================================================="""
+log.info nfcoreHeader()
 def summary = [:]
-summary['Pipeline Name']  = 'nf-core/demultiplex'
-summary['Pipeline Version'] = workflow.manifest.version
-summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Adapter Stringency'] = params.adapter_stringency
-summary['Barcode Mismatches'] = params.barcode_mismatches
-summary['FastQ for IDX'] = params.create_fastq_for_indexreads
-summary['Ignore Missing BCLs'] = params.ignore_missing_bcls
-summary['Ignore Missing Filter'] = params.ignore_missing_filter
-summary['Ignore Missing Positions'] = params.ignore_missing_positions
-summary['Min Trim Read Length'] = params.minimum_trimmed_readlength
-summary['Mask Short Adapter Reads'] = params.mask_short_adapter_reads
-summary['No BGZF Compression'] = params.no_bgzf_compression
-summary['Tiles'] = params.tiles
-summary['Use Bases Mask'] = params.use_bases_mask
-summary['With Failed Reads'] = params.with_failed_reads
-summary['Write FastQ Rev Comp'] = params.write_fastq_reversecomplement
-summary['FastQ Compression Level'] = params.fastq_compression_level
-summary['No Lane Splitting'] = params.no_lane_splitting
-summary['Find Adapt Sliding Window'] = params.find_adapters_withsliding_window
-summary['Max Memory']   = params.max_memory
-summary['Max CPUs']     = params.max_cpus
-summary['Max Time']     = params.max_time
-summary['Output dir']   = params.outdir
-summary['Working dir']  = workflow.workDir
-summary['Container Engine'] = workflow.containerEngine
-if(workflow.containerEngine) summary['Container'] = workflow.container
-summary['Current home']   = "$HOME"
-summary['Current user']   = "$USER"
-summary['Current path']   = "$PWD"
-summary['Working dir']    = workflow.workDir
-summary['Output dir']     = params.outdir
-summary['Script dir']     = workflow.projectDir
-summary['Config Profile'] = workflow.profile
-if(workflow.profile == 'awsbatch'){
-   summary['AWS Region'] = params.awsregion
-   summary['AWS Queue'] = params.awsqueue
-}
-if (params.email) summary['E-mail Address'] = params.email
-log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
-log.info "========================================="
+if(workflow.revision) summary['Pipeline Release'] = workflow.revision
+summary['Run Name']                   = custom_runName ?: workflow.runName
 
+// TODO nf-core: Report custom parameters here
+summary['Adapter Stringency']         = params.adapter_stringency
+summary['Barcode Mismatches']         = params.barcode_mismatches
+summary['FastQ for IDX']              = params.create_fastq_for_indexreads
+summary['Ignore Missing BCLs']        = params.ignore_missing_bcls
+summary['Ignore Missing Filter']      = params.ignore_missing_filter
+summary['Ignore Missing Positions']   = params.ignore_missing_positions
+summary['Min Trim Read Length']       = params.minimum_trimmed_readlength
+summary['Mask Short Adapter Reads']   = params.mask_short_adapter_reads
+summary['No BGZF Compression']        = params.no_bgzf_compression
+summary['Tiles']                      = params.tiles
+summary['Use Bases Mask']             = params.use_bases_mask
+summary['With Failed Reads']          = params.with_failed_reads
+summary['Write FastQ Rev Comp']       = params.write_fastq_reversecomplement
+summary['FastQ Compression Level']    = params.fastq_compression_level
+summary['No Lane Splitting']          = params.no_lane_splitting
+summary['Find Adapt Sliding Window']  = params.find_adapters_withsliding_window
+
+summary['Max Resources']              = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+summary['Output dir']                 = params.outdir
+summary['Launch dir']                 = workflow.launchDir
+summary['Working dir']                = workflow.workDir
+summary['Script dir']                 = workflow.projectDir
+summary['User']                       = workflow.userName
+if(workflow.profile == 'awsbatch'){
+   summary['AWS Region']              = params.awsregion
+   summary['AWS Queue']               = params.awsqueue
+}
+summary['Config Profile']             = workflow.profile
+if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
+if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
+if(params.config_profile_url)         summary['Config URL']         = params.config_profile_url
+if(params.email) {
+  summary['E-mail Address']           = params.email
+  summary['MultiQC maxsize']          = params.maxMultiqcEmailFileSize
+}
+log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
+log.info "\033[2m----------------------------------------------------\033[0m"
+
+// Check the hostnames against configured profiles
+checkHostname()
 
 def create_workflow_summary(summary) {
     def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
@@ -186,16 +173,23 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
    return yaml_file
 }
 
-/*
- * Parse software version numbers
- */
+// /*
+//  * Parse software version numbers
+//  */
 // process get_software_versions {
-//     validExitStatus 0
-
+//     // validExitStatus 0
+//     publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+//     saveAs: {filename ->
+//         if (filename.indexOf(".csv") > 0) filename
+//         else null
+//     }
+//
 //     output:
 //     file 'software_versions_mqc.yaml' into software_versions_yaml
-
+//     file "software_versions.csv"
+//
 //     script:
+//     // TODO nf-core: Get all tools to print their version number here
 //     """
 //     echo $workflow.manifest.version > v_pipeline.txt
 //     echo $workflow.nextflow.version > v_nextflow.txt
@@ -206,10 +200,9 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 //     cellranger --version > v_cellranger.txt
 //     cellranger-atac --version > v_cellrangeratac.txt
 //     cellranger-dna --version > v_cellrangerdna.txt
-//     scrape_software_versions.py > software_versions_mqc.yaml
+//     scrape_software_versions.py &> software_versions_mqc.yaml
 //     """
 // }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -229,7 +222,7 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 process reformat_samplesheet {
   tag "${sheet.name}"
   label 'process_small'
-  echo true 
+  echo true
 
   input:
   file sheet from ss_sheet
@@ -402,7 +395,6 @@ process recheck_samplesheet {
 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -438,7 +430,7 @@ process cellRangerMkFastQ {
     script:
     if (sheet.name =~ /^*sheet.tenx.csv/){
     """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
+    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
     """
     }
     else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
@@ -536,7 +528,7 @@ process cellRangerCount {
     else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
     else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
    }
-   
+
    label 'process_big'
    errorStrategy 'ignore'
 
@@ -718,6 +710,7 @@ process fastq_screen {
 
     input:
     set val(projectName), file(fqFile) from grouped_fqscreen_ch
+    file fastq_screen_config from ch_fastq_screen_config
 
     output:
     set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
@@ -725,7 +718,7 @@ process fastq_screen {
 
     shell:
     """
-    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner bowtie2 ${fqFile}
+    fastq_screen --force --subset 200000 --conf $ch_fastq_screen_config --aligner bowtie2 ${fqFile}
     """
 }
 
@@ -748,6 +741,7 @@ process multiqc {
 
     input:
     set val(projectName), file(fqFiles), file(fqScreen) from grouped_fastq_fqscreen_ch
+    file multiqc_config from ch_multiqc_config
 
     output:
     file "*multiqc_report.html" into multiqc_report
@@ -756,7 +750,7 @@ process multiqc {
 
     shell:
     """
-    multiqc ${fqFiles} ${fqScreen} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFiles} ${fqScreen} --config $multiqc_config .
     """
 }
 
@@ -778,6 +772,7 @@ process multiqcAll {
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
     file bcl_stats from b2fq_default_stats_all_ch.ifEmpty('')
+    file multiqc_config from ch_multiqc_config
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
@@ -785,24 +780,22 @@ process multiqcAll {
 
     shell:
     """
-    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config ch_multiqc_config .
     """
 }
 
-
-/*
- * STEP 13 - Output Description HTML
- */
-
+// /*
+//  * STEP 3 - Output Description HTML
+//  */
 // process output_documentation {
-//     publishDir "${params.outdir}/${runName}/Documentation", mode: 'copy'
-
+//     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
+//
 //     input:
 //     file output_docs from ch_output_docs
-
+//
 //     output:
 //     file "results_description.html"
-
+//
 //     script:
 //     """
 //     markdown_to_html.r $output_docs results_description.html
@@ -815,10 +808,11 @@ process multiqcAll {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/demultiplex] Successful: $custom_runName"
+    def subject = "[nf-core/demultiplex] Successful: $workflow.runName"
     if(!workflow.success){
-      subject = "[nf-core/demultiplex] FAILED: $custom_runName"
+      subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
     }
+
     def extra_links =[:]
     def all_multiqc
     if(workflow.success && workflow.profile == 'crick') {
@@ -833,7 +827,7 @@ workflow.onComplete {
     def email_fields = [:]
     if(workflow.success && workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
     if(workflow.success && workflow.profile == 'crick') email_fields['extra_links'] = extra_links
-    email_fields['profile'] = workflow.profile
+    def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
@@ -852,9 +846,25 @@ workflow.onComplete {
     if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
     if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+
+    // TODO nf-core: If not using MultiQC, strip out this code (including params.maxMultiqcEmailFileSize)
+    // On success try attach the multiqc report
+    def mqc_report = null
+    try {
+        if (workflow.success) {
+            mqc_report = multiqc_report.getVal()
+            if (mqc_report.getClass() == ArrayList){
+                log.warn "[nf-core/demultiplex] Found multiple reports from process 'multiqc', will use only one"
+                mqc_report = mqc_report[0]
+            }
+        }
+    } catch (all) {
+        log.warn "[nf-core/demultiplex] Could not attach MultiQC report to summary email"
+    }
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -868,7 +878,7 @@ workflow.onComplete {
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
+    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
     def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
@@ -888,7 +898,7 @@ workflow.onComplete {
     }
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/${runName}/Documentation/" )
+    def output_d = new File( "${params.outdir}/pipeline_info/" )
     if( !output_d.exists() ) {
       output_d.mkdirs()
     }
@@ -897,6 +907,65 @@ workflow.onComplete {
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
 
-    log.info "[nf-core/demultiplex] Pipeline Complete"
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
+    if (workflow.stats.ignoredCount > 0 && workflow.success) {
+      log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+      log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+      log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+    }
+
+    if(workflow.success){
+        log.info "${c_purple}[nf-core/demultiplex]${c_green} Pipeline completed successfully${c_reset}"
+    } else {
+        checkHostname()
+        log.info "${c_purple}[nf-core/demultiplex]${c_red} Pipeline completed with errors${c_reset}"
+    }
+}
+
+def nfcoreHeader(){
+    // Log colors ANSI codes
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_dim = params.monochrome_logs ? '' : "\033[2m";
+    c_black = params.monochrome_logs ? '' : "\033[0;30m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
+    c_blue = params.monochrome_logs ? '' : "\033[0;34m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
+    c_white = params.monochrome_logs ? '' : "\033[0;37m";
+
+    return """    ${c_dim}----------------------------------------------------${c_reset}
+                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
+    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
+    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
+    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
+                                            ${c_green}`._,._,\'${c_reset}
+    ${c_purple}  nf-core/demultiplex v${workflow.manifest.version}${c_reset}
+    ${c_dim}----------------------------------------------------${c_reset}
+    """.stripIndent()
+}
+
+def checkHostname(){
+    def c_reset = params.monochrome_logs ? '' : "\033[0m"
+    def c_white = params.monochrome_logs ? '' : "\033[0;37m"
+    def c_red = params.monochrome_logs ? '' : "\033[1;91m"
+    def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
+    if(params.hostnames){
+        def hostname = "hostname".execute().text.trim()
+        params.hostnames.each { prof, hnames ->
+            hnames.each { hname ->
+                if(hostname.contains(hname) && !workflow.profile.contains(prof)){
+                    log.error "====================================================\n" +
+                            "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
+                            "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
+                            "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
+                            "============================================================"
+                }
+            }
+        }
+    }
 }
