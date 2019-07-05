@@ -1,0 +1,10 @@
+# You can use this file to create a conda environment for this pipeline:
+#   conda env create -f environment_cellranger.yml
+name: nf-core-demultiplex-cellranger-1.0dev
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - HCC
+dependencies:
+  - HCC::cellranger=3.0.2
