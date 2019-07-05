@@ -737,7 +737,6 @@ fqc_folder_tuple
 process multiqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
-    label 'process_big'
 
     input:
     set val(projectName), file(fqFiles), file(fqScreen) from grouped_fastq_fqscreen_ch
@@ -746,6 +745,7 @@ process multiqc {
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
+    file "multiqc_plots"
     val(projectName) into projectList
 
     shell:
@@ -766,7 +766,6 @@ b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch)
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
-    label 'process_big'
 
     input:
     file fqFile from all_fcq_files
@@ -777,10 +776,11 @@ process multiqcAll {
     output:
     file "*multiqc_report.html" into multiqc_report_all
     file "*_data"
+    file "multiqc_plots"
 
     shell:
     """
-    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config ch_multiqc_config .
+    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config $multiqc_config .
     """
 }
 
