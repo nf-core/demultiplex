@@ -634,6 +634,35 @@ process fastqc {
     """
 }
 
+// process kraken2 {
+//     tag "${projectName}"
+//     publishDir path: "${params.outdir}/${runName}/kraken2/${projectName}", mode: 'copy'
+//     label 'process_big'
+//
+//     when:
+//     !params.skipFastQC
+//
+//     input:
+//     set val(projectName), file(fqFile) from fastqcAll_ch
+//
+//     output:
+//     set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
+//     file "*.html" into fqc_html_ch
+//
+//     script:
+//     single_end = singleEnd ? "" : "--paired"
+//     """
+//     kraken2 \\
+//         --db $kraken_db \\
+//         --threads $task.cpus \\
+//         --output %s.out.txt \\
+//         --report %s.report.txt
+//         $single_end \\
+//         --gzip-compressed %s \\
+//         $fastq_files
+//     """
+// }
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
