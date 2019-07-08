@@ -82,7 +82,7 @@ if (params.samplesheet){
 //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
 if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
-  custom_runName = workflow.runName
+    custom_runName = workflow.runName
 }
 
 // ////////////////////////////////////////////////////
@@ -91,15 +91,14 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 
 if (params.samplesheet)    { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
 
-
 if( workflow.profile == 'awsbatch') {
-  // AWSBatch sanity checking
-  if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-  // Check outdir paths to be S3 buckets if running on AWSBatch
-  // related: https://github.com/nextflow-io/nextflow/issues/813
-  if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
-  // Prevent trace files to be stored on S3 since S3 does not support rolling files.
-  if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+    // AWSBatch sanity checking
+    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+    // Check outdir paths to be S3 buckets if running on AWSBatch
+    // related: https://github.com/nextflow-io/nextflow/issues/813
+    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+    // Prevent trace files to be stored on S3 since S3 does not support rolling files.
+    if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
 // Stage config files
@@ -173,36 +172,36 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
    return yaml_file
 }
 
-// /*
-//  * Parse software version numbers
-//  */
-// process get_software_versions {
-//     // validExitStatus 0
-//     publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-//     saveAs: {filename ->
-//         if (filename.indexOf(".csv") > 0) filename
-//         else null
-//     }
-//
-//     output:
-//     file 'software_versions_mqc.yaml' into software_versions_yaml
-//     file "software_versions.csv"
-//
-//     script:
-//     // TODO nf-core: Get all tools to print their version number here
-//     """
-//     echo $workflow.manifest.version > v_pipeline.txt
-//     echo $workflow.nextflow.version > v_nextflow.txt
-//     fastqc --version > v_fastqc.txt
-//     fastq_screen --version > v_fastq_screen.txt
-//     multiqc --version > v_multiqc.txt
-//     bcl2fastq --version > v_bcl2fastq.txt
-//     cellranger --version > v_cellranger.txt
-//     cellranger-atac --version > v_cellrangeratac.txt
-//     cellranger-dna --version > v_cellrangerdna.txt
-//     scrape_software_versions.py &> software_versions_mqc.yaml
-//     """
-// }
+/*
+ * Parse software version numbers
+ */
+process get_software_versions {
+    // validExitStatus 0
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".csv") > 0) filename
+        else null
+    }
+
+    output:
+    file 'software_versions_mqc.yaml' into software_versions_yaml
+    file "software_versions.csv"
+
+    script:
+    // TODO nf-core: Get all tools to print their version number here
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    fastqc --version > v_fastqc.txt
+    fastq_screen --version > v_fastq_screen.txt
+    multiqc --version > v_multiqc.txt
+    bcl2fastq --version > v_bcl2fastq.txt
+    cellranger --version > v_cellranger.txt
+    #cellranger-atac --version > v_cellrangeratac.txt
+    #cellranger-dna --version > v_cellrangerdna.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -213,51 +212,48 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 1 - Check sample sheet for iCLIP samples and 10X samples
+ * STEP 1 - Check sample sheet for iCLIP samples and 10X samples.
  *        - This will collapse iCLIP samples into one sample and pull out 10X
- *          samples into new samplesheet
+ *          samples into new samplesheet.
  */
-
-
 process reformat_samplesheet {
-  tag "${sheet.name}"
-  label 'process_small'
-  echo true
+    tag "${sheet.name}"
+    label 'process_small'
+    //echo true
 
-  input:
-  file sheet from ss_sheet
+    input:
+    file sheet from ss_sheet
 
-  output:
-  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
-  file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
-  file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
-  file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
+    output:
+    file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
+    file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
+    file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
+    file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
 
-  script:
-  """
-  reformat_samplesheet.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    reformat_samplesheet.py --samplesheet "${sheet}"
+    """
 }
 
 /*
  * STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
- *          indexes on same lanes and output pass or fail file to next processes
+ *          indexes on same lanes and output pass or fail file to next processes.
  */
-
 process check_samplesheet {
-  tag "${sheet.name}"
-  label 'process_small'
+    tag "${sheet.name}"
+    label 'process_small'
 
-  input:
-  file sheet from standard_samplesheet1
+    input:
+    file sheet from standard_samplesheet1
 
-  output:
-  file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
+    output:
+    file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
 
-  script:
-  """
-  check_samplesheet.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    check_samplesheet.py --samplesheet "${sheet}"
+    """
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -269,130 +265,120 @@ process check_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 3 - If previous process finds samples that will cause problems, this
- *          process will remove problem samples from entire sample and create
- *          a new one
- *          ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 3 - If previous process finds samples that will cause problems, this process
+ *          will remove problem samples from entire sample and create a new one.
+ *          ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 process make_fake_SS {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file sheet from standard_samplesheet2
-  file result from resultChannel1
+    input:
+    file sheet from standard_samplesheet2
+    file result from resultChannel1
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.csv" into fake_samplesheet
-  file "*.txt" into problem_samples_list1, problem_samples_list2
+    output:
+    file "*.csv" into fake_samplesheet
+    file "*.txt" into problem_samples_list1, problem_samples_list2
 
-  script:
-  """
-  create_falseSS.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    create_falseSS.py --samplesheet "${sheet}"
+    """
 }
 
 /*
- * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples
- *           removed
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 process bcl2fastq_problem_SS {
-  tag "problem_samplesheet"
-  label 'process_big'
+    tag "problem_samplesheet"
+    label 'process_big'
 
-  input:
-  file sheet from fake_samplesheet
-  file result from resultChannel2
+    input:
+    file sheet from fake_samplesheet
+    file result from resultChannel2
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "Stats/Stats.json" into stats_json_file
+    output:
+    file "Stats/Stats.json" into stats_json_file
 
-  script:
-  """
-  bcl2fastq \\
-      --runfolder-dir ${runName_dir} \\
-      --output-dir . \\
-      --sample-sheet ${sheet} \\
-      --ignore-missing-bcls \\
-      --ignore-missing-filter \\
-      --with-failed-reads \\
-      --barcode-mismatches 0 \\
-      --loading-threads 8 \\
-      --processing-threads 24 \\
-      --writing-threads 6 \\
-  """
+    script:
+    """
+    bcl2fastq \\
+        --runfolder-dir ${runName_dir} \\
+        --output-dir . \\
+        --sample-sheet ${sheet} \\
+        --ignore-missing-bcls \\
+        --ignore-missing-filter \\
+        --with-failed-reads \\
+        --barcode-mismatches 0 \\
+        --loading-threads 8 \\
+        --processing-threads 24 \\
+        --writing-threads 6
+    """
 }
 
 /*
- * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the
- *           unknown barcodes section. The barcodes that match the short indexes
- *           and/or missing index 2 with the highest count to remake the sample
- *           sheet so that bcl2fastq can run properly
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the unknown barcodes section.
+ *           The barcodes that match the short indexes and/or missing index 2 with the highest count
+ *           to remake the sample sheet so that bcl2fastq can run properly.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file json from stats_json_file
-  file sheet from standard_samplesheet3
-  file samp_probs from problem_samples_list1
-  file result from resultChannel3
+    input:
+    file json from stats_json_file
+    file sheet from standard_samplesheet3
+    file samp_probs from problem_samples_list1
+    file result from resultChannel3
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.csv" into updated_samplesheet1, updated_samplesheet2
+    output:
+    file "*.csv" into updated_samplesheet1, updated_samplesheet2
 
-  script:
-  """
-  parse_json.py --samplesheet "${sheet}" \\
-  --jsonfile "${json}" \\
-  --problemsamples "${samp_probs}"
-  """
+    script:
+    """
+    parse_json.py --samplesheet "${sheet}" --jsonfile "${json}" --problemsamples "${samp_probs}"
+    """
 }
 
 /*
- * STEP 6 -  Checking the remade sample sheet. If this fails again the pipeline
- *           will exit and fail
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 6 -  Checking the remade sample sheet.
+ *           If this fails again the pipeline will exit and fail.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file sheet from ss_sheet
-  file ud_sheet from updated_samplesheet1
-  file prob_samps from problem_samples_list2
-  file result from resultChannel4
+    input:
+    file sheet from ss_sheet
+    file ud_sheet from updated_samplesheet1
+    file prob_samps from problem_samples_list2
+    file result from resultChannel4
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.txt" into PROBLEM_SS_CHECK2
+    output:
+    file "*.txt" into PROBLEM_SS_CHECK2
 
-  script:
-  """
-  recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
-  """
-
+    script:
+    """
+    recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
+    """
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -404,11 +390,9 @@ process recheck_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 7 - CellRanger MkFastQ
- *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
+ * STEP 7 - CellRanger MkFastQ.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
  */
-
-
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
@@ -429,39 +413,36 @@ process cellRangerMkFastQ {
 
     script:
     if (sheet.name =~ /^*sheet.tenx.csv/){
-    """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-    }
-    else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
-    """
-    cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-    }
-    else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
-    """
-    cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
+        """
+        cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
+    } else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
+        """
+        cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
+    } else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
+        """
+        cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
     }
 }
 
 /*
- * STEP 8 - Copy CellRanger FastQ files to new folder
- *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS
+ * STEP 8 - Copy CellRanger FastQ files to new folder.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS.
  */
-
 def getCellRangerSampleName(fqfile) {
-     def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
-     if (sampleName.find()) {
-       return sampleName.group(1)
-     }
-     return fqfile
+    def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
+    if (sampleName.find()) {
+        return sampleName.group(1)
+    }
+    return fqfile
 }
 
 def getCellRangerProjectName(fqfile) {
     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/([a-zA-Z0-9_]*)\//)
     if (projectName.find()) {
-      return projectName.group(1)
+        return projectName.group(1)
     }
     return fqfile
 }
@@ -470,37 +451,34 @@ cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerP
 cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
 process cellRangerMoveFqs {
-  tag "${fastq}"
+    tag "${fastq}"
 
-  input:
-  set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
-  file result from tenx_results2
+    input:
+    set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
+    file result from tenx_results2
 
-  when:
-  result.name =~ /^true.*/
+    when:
+    result.name =~ /^true.*/
 
-  script:
-  """
-  while [[ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} && ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]]; do sleep 15s; done
-  if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
-    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-  elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
-    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-  fi
-  """
+    script:
+    """
+    while [[ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} && ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]]; do sleep 15s; done
+    if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
+        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+    elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
+        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+    fi
+    """
 }
 
-
 /*
- * STEP 9 - CellRanger count
- * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
- *
+ * STEP 9 - CellRanger count.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
  */
-
 def getCellRangerFastqPath(fqfile) {
     def fastqPath = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
     if (fastqPath.find()) {
-      return fastqPath.group(1)
+        return fastqPath.group(1)
     }
     return fqfile
 }
@@ -509,58 +487,53 @@ cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map {
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ getCellRangerSampleName(fqfile), getCellRangerFastqPath(fqfile) ] }.unique()
 
 cr_fqname_fqfile_ch
-   .phase(cr_samplesheet_info_ch)
-   .map{ left, right ->
-     def sampleID = left[0]
-     def projectName = right[1]
-     def refGenome = right[2]
-     def dataType = right[3]
-     def fastqDir = left[1]
-     tuple(sampleID, projectName, refGenome, dataType, fastqDir)
-   }
+    .phase(cr_samplesheet_info_ch)
+    .map{ left, right ->
+        def sampleID = left[0]
+        def projectName = right[1]
+        def refGenome = right[2]
+        def dataType = right[3]
+        def fastqDir = left[1]
+        tuple(sampleID, projectName, refGenome, dataType, fastqDir) }
    .set { cr_grouped_fastq_dir_sample_ch }
 
 process cellRangerCount {
-   tag "${projectName}/${sampleID}"
-   publishDir "${params.outdir}/${runName}", mode: 'copy',
-   saveAs: { filename ->
-    if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
-    else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
-    else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
-   }
+    tag "${projectName}/${sampleID}"
+    publishDir "${params.outdir}/${runName}", mode: 'copy',
+    saveAs: { filename ->
+        if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
+        else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
+        else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
+    }
 
-   label 'process_big'
-   errorStrategy 'ignore'
+    label 'process_big'
+    errorStrategy 'ignore'
 
-   input:
-   set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
-   file result from tenx_results3
+    input:
+    set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
+    file result from tenx_results3
 
-   when:
-   result.name =~ /^true.*/
+    when:
+    result.name =~ /^true.*/
 
-   output:
-   file "${sampleID}/" into count_output
+    output:
+    file "${sampleID}/" into count_output
 
-
-   script:
-   genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
-
-   if (dataType =~ /10X-3prime/){
-   """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
-   else if (dataType =~ /10X-CNV/){
-   """
-   cellranger-dna cnv --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
-   else if (dataType =~ /10X-ATAC/){
-   """
-   cellranger-atac count --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
+    script:
+    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
+    if (dataType =~ /10X-3prime/){
+        """
+        cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+        """
+    } else if (dataType =~ /10X-CNV/){
+        """
+        cellranger-dna cnv --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
+        """
+    } else if (dataType =~ /10X-ATAC/){
+        """
+        cellranger-atac count --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
+        """
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -572,13 +545,12 @@ process cellRangerCount {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 10 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
+ * STEP 10 - Running bcl2fastq on the remade samplesheet or a sample sheet that
  *           passed the initial check. bcl2fastq parameters can be changed when
  *           staring up the pipeline.
  *           ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
- *           INTO SEPARATE SAMPLE SHEETS
+ *           INTO SEPARATE SAMPLE SHEETS.
  */
-
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/${runName}/fastq", mode: 'copy'
@@ -617,54 +589,49 @@ process bcl2fastq_default {
     slide_window_adapt =  params.find_adapters_withsliding_window ? "--find-adapters-with-sliding-window " : ""
 
     if (result.name =~ /^pass.*/){
-      """
-      bcl2fastq \\
-          --runfolder-dir ${runName_dir} \\
-          --output-dir . \\
-          --sample-sheet ${std_samplesheet} \\
-          --adapter-stringency ${params.adapter_stringency} \\
-          $tiles \\
-          $ignore_miss_bcls \\
-          $ignore_miss_filt \\
-          $ignore_miss_pos \\
-          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-          --fastq-compression-level ${params.fastq_compression_level} \\
-          --barcode-mismatches ${params.barcode_mismatches} \\
-          $bases_mask $fq_index_rds $failed_rds  \\
-          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
-      """
-    }
-
-    else if (result2.name =~ /^fail.*/){
-      exit 1, "Remade sample sheet still contains problem samples"
-    }
-
-    else if (result.name =~ /^fail.*/){
-      """
-      bcl2fastq \\
-          --runfolder-dir ${runName_dir} \\
-          --output-dir . \\
-          --sample-sheet ${sheet} \\
-          --adapter-stringency ${params.adapter_stringency} \\
-          $tiles \\
-          $ignore_miss_bcls \\
-          $ignore_miss_filt \\
-          $ignore_miss_pos \\
-          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-          --fastq-compression-level ${params.fastq_compression_level} \\
-          --barcode-mismatches ${params.barcode_mismatches}
-          $bases_mask $fq_index_rds $failed_rds  \\
-          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
-      """
+        """
+        bcl2fastq \\
+            --runfolder-dir ${runName_dir} \\
+            --output-dir . \\
+            --sample-sheet ${std_samplesheet} \\
+            --adapter-stringency ${params.adapter_stringency} \\
+            $tiles \\
+            $ignore_miss_bcls \\
+            $ignore_miss_filt \\
+            $ignore_miss_pos \\
+            --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+            --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
+            --fastq-compression-level ${params.fastq_compression_level} \\
+            --barcode-mismatches ${params.barcode_mismatches} \\
+            $bases_mask $fq_index_rds $failed_rds  \\
+            $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+        """
+    } else if (result2.name =~ /^fail.*/){
+        exit 1, "Remade sample sheet still contains problem samples"
+    } else if (result.name =~ /^fail.*/){
+        """
+        bcl2fastq \\
+            --runfolder-dir ${runName_dir} \\
+            --output-dir . \\
+            --sample-sheet ${sheet} \\
+            --adapter-stringency ${params.adapter_stringency} \\
+            $tiles \\
+            $ignore_miss_bcls \\
+            $ignore_miss_filt \\
+            $ignore_miss_pos \\
+            --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+            --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
+            --fastq-compression-level ${params.fastq_compression_level} \\
+            --barcode-mismatches ${params.barcode_mismatches}
+            $bases_mask $fq_index_rds $failed_rds  \\
+            $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+        """
     }
 }
 
 /*
  * STEP 11 - FastQC
  */
-
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_fqc_ch = cr_fastqs_fqc_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
@@ -694,7 +661,6 @@ process fastqc {
 /*
  * STEP 11 - FastQ Screen
  */
-
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_screen_ch = cr_fastqs_screen_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
@@ -725,8 +691,6 @@ process fastq_screen {
 /*
  * STEP 12A - MultiQC per project
  */
-
-
 fqc_folder_tuple = fqc_folder_ch.groupTuple()
 fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
 
@@ -757,7 +721,6 @@ process multiqc {
 /*
  * STEP 12B- MultiQC for all projects
  */
-
 all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
 bcl_stats_empty = Channel.empty()
@@ -784,23 +747,23 @@ process multiqcAll {
     """
 }
 
-// /*
-//  * STEP 3 - Output Description HTML
-//  */
-// process output_documentation {
-//     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
-//
-//     input:
-//     file output_docs from ch_output_docs
-//
-//     output:
-//     file "results_description.html"
-//
-//     script:
-//     """
-//     markdown_to_html.r $output_docs results_description.html
-//     """
-// }
+/*
+ * STEP 3 - Output Description HTML
+ */
+process output_documentation {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
+
+    input:
+    file output_docs from ch_output_docs
+
+    output:
+    file "results_description.html"
+
+    script:
+    """
+    markdown_to_html.r $output_docs results_description.html
+    """
+}
 
 /*
  * Completion e-mail notification
@@ -810,7 +773,7 @@ workflow.onComplete {
     // Set up the e-mail variables
     def subject = "[nf-core/demultiplex] Successful: $workflow.runName"
     if(!workflow.success){
-      subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
+        subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
     }
 
     def extra_links =[:]
