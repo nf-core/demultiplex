@@ -155,54 +155,6 @@ log.info "\033[2m----------------------------------------------------\033[0m"
 // Check the hostnames against configured profiles
 checkHostname()
 
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-demultiplex-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/demultiplex Workflow Summary'
-    section_href: 'https://github.com/nf-core/demultiplex'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
-
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    // validExitStatus 0
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
-
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-    file "software_versions.csv"
-
-    script:
-    // TODO nf-core: Get all tools to print their version number here
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    fastq_screen --version > v_fastq_screen.txt
-    multiqc --version > v_multiqc.txt
-    bcl2fastq --version > v_bcl2fastq.txt
-    cellranger --version > v_cellranger.txt
-    #cellranger-atac --version > v_cellrangeratac.txt
-    #cellranger-dna --version > v_cellrangerdna.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
@@ -629,6 +581,14 @@ process bcl2fastq_default {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                           FastQC                                    -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 /*
  * STEP 11 - FastQC
  */
@@ -658,8 +618,16 @@ process fastqc {
     """
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                         FastQ Screen                                -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 /*
- * STEP 11 - FastQ Screen
+ * STEP 12 - FastQ Screen
  */
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
@@ -688,8 +656,64 @@ process fastq_screen {
     """
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                           MultiQC                                   -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+def create_workflow_summary(summary) {
+    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'nf-core-demultiplex-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/demultiplex Workflow Summary'
+    section_href: 'https://github.com/nf-core/demultiplex'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+
+   return yaml_file
+}
+
 /*
- * STEP 12A - MultiQC per project
+ * Parse software version numbers
+ */
+process get_software_versions {
+    // validExitStatus 0
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+    saveAs: {filename ->
+        if (filename.indexOf(".csv") > 0) filename
+        else null
+    }
+
+    output:
+    file 'software_versions_mqc.yaml' into software_versions_yaml
+    file "software_versions.csv"
+
+    script:
+    // TODO nf-core: Get all tools to print their version number here
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    fastqc --version > v_fastqc.txt
+    fastq_screen --version > v_fastq_screen.txt
+    multiqc --version > v_multiqc.txt
+    bcl2fastq --version > v_bcl2fastq.txt
+    cellranger --version > v_cellranger.txt
+    #cellranger-atac --version > v_cellrangeratac.txt
+    #cellranger-dna --version > v_cellrangerdna.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
+
+/*
+ * STEP 13.1 - MultiQC per project
  */
 fqc_folder_tuple = fqc_folder_ch.groupTuple()
 fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
@@ -719,7 +743,7 @@ process multiqc {
 }
 
 /*
- * STEP 12B- MultiQC for all projects
+ * STEP 13.2- MultiQC for all projects
  */
 all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
@@ -747,8 +771,16 @@ process multiqcAll {
     """
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                     Reports/Documentation                           -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 /*
- * STEP 3 - Output Description HTML
+ * STEP 14 - Output Description HTML
  */
 process output_documentation {
     publishDir "${params.outdir}/pipeline_info", mode: 'copy'
