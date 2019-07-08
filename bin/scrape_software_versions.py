@@ -7,11 +7,11 @@ import re
 regexes = {
     'nf-core/demultiplex': ['v_pipeline.txt', r"(\S+)"],
     'Nextflow': ['v_nextflow.txt', r"(\S+)"],
-    'bcl2fastq': ['v_bcl2fastq.txt', r"bcl2fastq v(\S+)"],
     'FastQC': ['v_fastqc.txt', r"FastQC v(\S+)"],
     'FastQ_Screen': ['v_fastqscreen.txt', r"FastQ Screen v(\S+)"],
-    'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"]
-    #'CellRanger': ['v_cellranger.txt', r"CellRanger, version (\S+)"]
+    'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
+    'bcl2fastq': ['v_bcl2fastq.txt', r"bcl2fastq v(\S+)"],
+    'CellRanger': ['v_cellranger.txt', r"cellranger mkfastq (\S+)"]
     #'CellRangerATAC': ['v_cellrangeratac.txt', r"CellRangerATAC, version (\S+)"],
     #'CellRangerDNA': ['v_cellrangerdna.txt', r"CellRangerDNA, version (\S+)"],
 }
@@ -19,11 +19,11 @@ regexes = {
 results = OrderedDict()
 results['nf-core/demultiplex'] = '<span style="color:#999999;\">N/A</span>'
 results['Nextflow'] = '<span style="color:#999999;\">N/A</span>'
-results['bcl2fastq'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQC'] = '<span style="color:#999999;\">N/A</span>'
 results['FastQ_Screen'] = '<span style="color:#999999;\">N/A</span>'
 results['MultiQC'] = '<span style="color:#999999;\">N/A</span>'
-#results['CellRanger'] = '<span style="color:#999999;\">N/A</span>'
+results['bcl2fastq'] = '<span style="color:#999999;\">N/A</span>'
+results['CellRanger'] = False
 #results['CellRangerATAC'] = '<span style="color:#999999;\">N/A</span>'
 #results['CellRangerDNA'] = '<span style="color:#999999;\">N/A</span>'
 

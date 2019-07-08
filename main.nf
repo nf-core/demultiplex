@@ -735,12 +735,11 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
  * Parse software version numbers
  */
 process get_software_versions {
-    // validExitStatus 0
     publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-    saveAs: {filename ->
-        if (filename.indexOf(".csv") > 0) filename
-        else null
-    }
+        saveAs: {filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
 
     output:
     file 'software_versions_mqc.yaml' into software_versions_yaml
@@ -752,10 +751,10 @@ process get_software_versions {
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
-    fastq_screen --version > v_fastq_screen.txt
+    fastq_screen --version > v_fastqscreen.txt
     multiqc --version > v_multiqc.txt
-    bcl2fastq --version > v_bcl2fastq.txt
-    cellranger --version > v_cellranger.txt
+    echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
+    cellranger mkfastq --version > v_cellranger.txt
     #cellranger-atac --version > v_cellrangeratac.txt
     #cellranger-dna --version > v_cellrangerdna.txt
     scrape_software_versions.py &> software_versions_mqc.yaml
