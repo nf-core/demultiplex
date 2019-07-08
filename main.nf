@@ -70,14 +70,6 @@ if (params.help){
     exit 0
 }
 
-if (params.samplesheet){
-    lastPath = params.samplesheet.lastIndexOf(File.separator)
-    runName_dir =  params.samplesheet.substring(0,lastPath+1)
-    runName_dir_no_slash = params.samplesheet.substring(0,lastPath)
-    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
-    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
-}
-
 // Has the run name been specified by the user?
 //  this has the bonus effect of catching both -name and --name
 custom_runName = params.name
@@ -90,6 +82,14 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 // ////////////////////////////////////////////////////
 
 if (params.samplesheet)    { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
+
+if (params.samplesheet){
+    lastPath = params.samplesheet.lastIndexOf(File.separator)
+    runName_dir =  params.samplesheet.substring(0,lastPath+1)
+    runName_dir_no_slash = params.samplesheet.substring(0,lastPath)
+    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
+    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
+}
 
 if( workflow.profile == 'awsbatch') {
     // AWSBatch sanity checking
@@ -109,47 +109,47 @@ ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
-if(workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Run Name']                   = custom_runName ?: workflow.runName
+if (workflow.revision)                       summary['Pipeline Release'] = workflow.revision
+summary['Run Name']                          = custom_runName ?: workflow.runName
 
 // TODO nf-core: Report custom parameters here
-summary['Adapter Stringency']         = params.adapter_stringency
-summary['Barcode Mismatches']         = params.barcode_mismatches
-summary['FastQ for IDX']              = params.create_fastq_for_indexreads
-summary['Ignore Missing BCLs']        = params.ignore_missing_bcls
-summary['Ignore Missing Filter']      = params.ignore_missing_filter
-summary['Ignore Missing Positions']   = params.ignore_missing_positions
-summary['Min Trim Read Length']       = params.minimum_trimmed_readlength
-summary['Mask Short Adapter Reads']   = params.mask_short_adapter_reads
-summary['No BGZF Compression']        = params.no_bgzf_compression
-summary['Tiles']                      = params.tiles
-summary['Use Bases Mask']             = params.use_bases_mask
-summary['With Failed Reads']          = params.with_failed_reads
-summary['Write FastQ Rev Comp']       = params.write_fastq_reversecomplement
-summary['FastQ Compression Level']    = params.fastq_compression_level
-summary['No Lane Splitting']          = params.no_lane_splitting
-summary['Find Adapt Sliding Window']  = params.find_adapters_withsliding_window
+summary['Adapter Stringency']                = params.adapter_stringency
+summary['Barcode Mismatch']                  = params.barcode_mismatches
+if (params.create_fastq_for_indexreads)      summary['FastQ Index Reads'] = params.create_fastq_for_indexreads
+if (params.ignore_missing_bcls)              summary['Skip Missing BCLs'] = params.ignore_missing_bcls
+if (params.ignore_missing_filter)            summary['Skip Missing Filter'] = params.ignore_missing_filter
+if (params.ignore_missing_positions)         summary['Skip Missing Positions'] = params.ignore_missing_positions
+summary['Min Trim Read Length']              = params.minimum_trimmed_readlength
+summary['Mask Short Adapt Reads']            = params.mask_short_adapter_reads
+if (params.no_bgzf_compression)              summary['No BGZF Compress'] = params.no_bgzf_compression
+if (params.tiles) summary['Tiles']           = params.tiles
+if (params.use_bases_mask)                   summary['Bases Mask'] = params.use_bases_mask
+if (params.with_failed_reads)                summary['With Failed Reads'] = params.with_failed_reads
+if (params.write_fastq_reversecomplement)    summary['Write FastQ Rev Comp'] = params.write_fastq_reversecomplement
+summary['FastQ Compress Level']              = params.fastq_compression_level
+if (params.no_lane_splitting)                summary['No Lane Splitting'] = params.no_lane_splitting
+if (params.find_adapters_withsliding_window) summary['Adapt Sliding Window'] = params.find_adapters_withsliding_window
 
-summary['Max Resources']              = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
-if(workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
-summary['Output dir']                 = params.outdir
-summary['Launch dir']                 = workflow.launchDir
-summary['Working dir']                = workflow.workDir
-summary['Script dir']                 = workflow.projectDir
-summary['User']                       = workflow.userName
-if(workflow.profile == 'awsbatch'){
-   summary['AWS Region']              = params.awsregion
-   summary['AWS Queue']               = params.awsqueue
+summary['Max Resources']                     = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+summary['Output dir']                        = params.outdir
+summary['Launch dir']                        = workflow.launchDir
+summary['Working dir']                       = workflow.workDir
+summary['Script dir']                        = workflow.projectDir
+summary['User']                              = workflow.userName
+if (workflow.profile == 'awsbatch'){
+   summary['AWS Region']                     = params.awsregion
+   summary['AWS Queue']                      = params.awsqueue
 }
-summary['Config Profile']             = workflow.profile
-if(params.config_profile_description) summary['Config Description'] = params.config_profile_description
-if(params.config_profile_contact)     summary['Config Contact']     = params.config_profile_contact
-if(params.config_profile_url)         summary['Config URL']         = params.config_profile_url
-if(params.email) {
-  summary['E-mail Address']           = params.email
-  summary['MultiQC maxsize']          = params.maxMultiqcEmailFileSize
+summary['Config Profile']                    = workflow.profile
+if (params.config_profile_description)       summary['Config Description'] = params.config_profile_description
+if (params.config_profile_contact)           summary['Config Contact']     = params.config_profile_contact
+if (params.config_profile_url)               summary['Config URL']         = params.config_profile_url
+if (params.email) {
+  summary['E-mail Address']                  = params.email
+  summary['MultiQC maxsize']                 = params.maxMultiqcEmailFileSize
 }
-log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
+log.info summary.collect { k,v -> "${k.padRight(22)}: $v" }.join("\n")
 log.info "\033[2m----------------------------------------------------\033[0m"
 
 // Check the hostnames against configured profiles
@@ -822,7 +822,6 @@ workflow.onComplete {
     def email_fields = [:]
     if(workflow.success && workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
     if(workflow.success && workflow.profile == 'crick') email_fields['extra_links'] = extra_links
-    def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
