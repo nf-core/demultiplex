@@ -27,10 +27,9 @@ def helpMessage() {
                                           Available: conda, docker, singularity, awsbatch, test and more.
 
     References                            If not specified in the configuration file or you wish to overwrite any of the references.
-      --fastq_screen_conf                 Full path to fastq_screen genome config file
       --tenx_genomes_base                 Base directory for 10x genomes
 
-    bcl2fastq Options:
+    bcl2fastq
       --adapter_stringency                The minimum match rate that would trigger the masking or trimming process
       --barcode_mismatches                Number of allowed mismatches per index
       --create_fastq_for_indexreads       Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
@@ -47,6 +46,13 @@ def helpMessage() {
       --fastq_compression_level           Zlib compression level (1–9) used for FASTQ files.
       --no_lane_splitting                 Do not split FASTQ files by lane.
       --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+
+    QC
+      --fastq_screen_conf                 Full path to fastq_screen genome config file
+      --kraken_db                         Full path to Kraken2 DB for contaminant screeening
+      --skipFastQC                        Skip FastQC
+      --skipMultiQC                       Skip MultiQC
+      --skipMultiQCStats                  Exclude general statistics table from MultiQC report
 
     Other options:
       --outdir                            The output directory where the results will be saved
@@ -81,7 +87,7 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 // /* --          VALIDATE INPUTS                 -- */
 // ////////////////////////////////////////////////////
 
-if (params.samplesheet)    { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
+if (params.samplesheet) { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
 
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
@@ -91,7 +97,13 @@ if (params.samplesheet){
     runName =  runName_dir.substring(runName_last_sep+1,lastPath)
 }
 
-if( workflow.profile == 'awsbatch') {
+// Stage config files
+if (params.fastq_screen_conf) { ch_fastq_screen_config = file(params.fastq_screen_conf, checkIfExists: true) }
+ch_multiqc_config = file(params.multiqc_config, checkIfExists: true)
+ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
+
+// AWS batch settings
+if ( workflow.profile == 'awsbatch') {
     // AWSBatch sanity checking
     if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
     // Check outdir paths to be S3 buckets if running on AWSBatch
@@ -101,11 +113,6 @@ if( workflow.profile == 'awsbatch') {
     if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
 }
 
-// Stage config files
-ch_fastq_screen_config = file(params.fastq_screen_conf, checkIfExists: true)
-ch_multiqc_config = file(params.multiqc_config, checkIfExists: true)
-ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
-
 // Header log info
 log.info nfcoreHeader()
 def summary = [:]
@@ -113,6 +120,7 @@ if (workflow.revision)                       summary['Pipeline Release'] = workf
 summary['Run Name']                          = custom_runName ?: workflow.runName
 
 // TODO nf-core: Report custom parameters here
+summary['10X Genome Dir']                    = params.tenx_genomes_base
 summary['Adapter Stringency']                = params.adapter_stringency
 summary['Barcode Mismatch']                  = params.barcode_mismatches
 if (params.create_fastq_for_indexreads)      summary['FastQ Index Reads'] = params.create_fastq_for_indexreads
@@ -129,6 +137,11 @@ if (params.write_fastq_reversecomplement)    summary['Write FastQ Rev Comp'] = p
 summary['FastQ Compress Level']              = params.fastq_compression_level
 if (params.no_lane_splitting)                summary['No Lane Splitting'] = params.no_lane_splitting
 if (params.find_adapters_withsliding_window) summary['Adapt Sliding Window'] = params.find_adapters_withsliding_window
+if (params.fastq_screen_conf)                summary['FastQ Screen Conf'] = params.fastq_screen_conf
+if (params.kraken_db)                        summary['Kraken2 DB'] = params.kraken_db
+if (params.skipFastQC)                       summary['Skip FastQC'] = params.skipFastQC
+if (params.skipMultiQC)                      summary['Skip MultiQC'] = params.skipMultiQC
+if (params.skipMultiQCStats)                 summary['Skip MultiQC Stats'] = params.skipMultiQCStats
 
 summary['Max Resources']                     = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
@@ -605,6 +618,9 @@ process fastqc {
     publishDir path: "${params.outdir}/${runName}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
 
+    when:
+    !params.skipFastQC
+
     input:
     set val(projectName), file(fqFile) from fastqcAll_ch
 
@@ -637,23 +653,28 @@ cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { 
 fastqcScreenAll = Channel.empty()
 grouped_fqscreen_ch = fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
-process fastq_screen {
-    tag "${projectName}"
-    publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
-    label 'process_big'
+if (params.fastq_screen_conf) {
+    process fastq_screen {
+        tag "${projectName}"
+        publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
+        label 'process_big'
 
-    input:
-    set val(projectName), file(fqFile) from grouped_fqscreen_ch
-    file fastq_screen_config from ch_fastq_screen_config
+        input:
+        set val(projectName), file(fqFile) from grouped_fqscreen_ch
+        file fastq_screen_config from ch_fastq_screen_config
 
-    output:
-    set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
-    file "*_screen.html" into fastq_screen_html
+        output:
+        set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
+        file "*_screen.html" into fastq_screen_html
 
-    shell:
-    """
-    fastq_screen --force --subset 200000 --conf $ch_fastq_screen_config --aligner bowtie2 ${fqFile}
-    """
+        script:
+        """
+        fastq_screen --force --subset 200000 --conf $ch_fastq_screen_config --aligner bowtie2 ${fqFile}
+        """
+    }
+} else {
+    fastq_screen_txt = Channel.create()
+    all_fq_screen_txt_tuple = Channel.create()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -715,19 +736,16 @@ process get_software_versions {
 /*
  * STEP 13.1 - MultiQC per project
  */
-fqc_folder_tuple = fqc_folder_ch.groupTuple()
-fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
-
-fqc_folder_tuple
-    .join(fastq_screen_txt_tuple)
-    .set { grouped_fastq_fqscreen_ch }
-
 process multiqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
 
+    when:
+    !params.skipMultiQC
+
     input:
-    set val(projectName), file(fqFiles), file(fqScreen) from grouped_fastq_fqscreen_ch
+    file ('fastqc/*') from fqc_folder_ch.collect{it[1]}.ifEmpty([])
+    file ('fastq_screen/*') from fastq_screen_txt.collect{it[1]}.ifEmpty([])
     file multiqc_config from ch_multiqc_config
 
     output:
@@ -736,9 +754,10 @@ process multiqc {
     file "multiqc_plots"
     val(projectName) into projectList
 
-    shell:
+    script:
+    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
     """
-    multiqc ${fqFiles} ${fqScreen} --config $multiqc_config .
+    multiqc ${fqFiles} ${fqScreen} --config $multiqc_config $mqcstats .
     """
 }
 
@@ -754,6 +773,9 @@ process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
 
+    when:
+    !params.skipMultiQC
+
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
@@ -765,9 +787,10 @@ process multiqcAll {
     file "*_data"
     file "multiqc_plots"
 
-    shell:
+    script:
+    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
     """
-    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config $multiqc_config .
+    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config $multiqc_config $mqcstats .
     """
 }
 
