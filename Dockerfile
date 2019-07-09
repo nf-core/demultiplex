@@ -5,3 +5,4 @@ LABEL authors="Chelsea Sawyer" \
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 ENV PATH /opt/conda/envs/nf-core-demultiplex-1.0dev/bin:$PATH
+ENV TENX_SCRIPTDIR /opt/conda/envs/nf-core-demultiplex-1.0dev/bin

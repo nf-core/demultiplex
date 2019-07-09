@@ -6,63 +6,63 @@
  nf-core/demultiplex Analysis Pipeline.
  #### Homepage / Documentation
  https://github.com/nf-core/demultiplex
- #### Authors
- Chelsea Sawyer <chelsea.sawyer@crick.ac.uk> - https://github.com/csawye01/nf-core-demultiplex
 ----------------------------------------------------------------------------------------
 */
 
 
 def helpMessage() {
     // TODO nf-core: Add to this help message with new command line parameters
+    log.info nfcoreHeader()
     log.info"""
-    =======================================================
-                                              ,--./,-.
-              ___     __   __   __   ___     /,-._.--~\'
-        |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-        | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                              `._,._,\'
-
-     nf-core/demultiplex v${workflow.manifest.version}
-    =======================================================
 
     Usage:
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run main.nf --samplesheet /camp/stp/sequencing/inputs/instruments/sequencers/190426_K00371_0282_AH5L2KBBXY/H5L2KBBXY.csv  -profile crick 
+    nextflow run nf-core/demultiplex --samplesheet samplesheet.csv  -profile docker
 
     Mandatory arguments:
+      --samplesheet                       Full path to samplesheet
+      -profile                            Configuration profile to use. Can use multiple (comma separated)
+                                          Available: conda, docker, singularity, awsbatch, test and more.
 
-      --samplesheet                 Full pathway to samplesheet
-      -profile                      Configuration profile to use. Can use multiple (comma separated)
-                                    Available: conda, docker, crick, singularity, awsbatch, test and more.
+    References                            If not specified in the configuration file or you wish to overwrite any of the references.
+      --tenx_genomes_base                 Base directory for 10x genomes
 
-    Options:
-      --email                       Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
-      --outdir                      The output directory where the results will be saved
-      -name                         Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
+    bcl2fastq
+      --adapter_stringency                The minimum match rate that would trigger the masking or trimming process
+      --barcode_mismatches                Number of allowed mismatches per index
+      --create_fastq_for_indexreads       Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
+      --ignore_missing_bcls               Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
+      --ignore_missing_filter             Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
+      --ignore_missing_positions          Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
+      --minimum_trimmed_readlength        Minimum read length after adapter trimming.
+      --mask_short_adapter_reads          This option applies when a read is shorter than the length specified by --minimum-trimmed-read-length (note that the read does not specifically have to be trimmed for this option to trigger, it need only fall below the —minimum-trimmed-read-length for any reason).
+      --tiles                             The --tiles argument takes a regular expression to select for processing only a subset of the tiles available in the flow cell Multiple selections can be made by separating the regular expressions with commas
+      --use_bases_mask                    The --use-bases-mask string specifies how to use each cycle
+      --with_failed_reads                 Include all clusters in the output, even clusters that are non-PF. These clusters would have been excluded by default
+      --write_fastq_reversecomplement     Generate FASTQ files containing reverse complements of actual data.
+      --no_bgzf_compression               Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
+      --fastq_compression_level           Zlib compression level (1–9) used for FASTQ files.
+      --no_lane_splitting                 Do not split FASTQ files by lane.
+      --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
 
-    bcl2fastq Options:
-      --adapter_stringency              The minimum match rate that would trigger the masking or trimming process
-      --barcode_mismatches              Number of allowed mismatches per index
-      --create_fastq_for_indexreads     Create FASTQ files also for Index Reads. 0 (False default) 1 (True).
-      --ignore_missing_bcls             Missing or corrupt BCL files are ignored. Assumes 'N'/'#' for missing calls
-      --ignore_missing_filter           Missing or corrupt filter files are ignored. Assumes Passing Filter for all clusters in tiles where filter files are missing
-      --ignore_missing_positions        Missing or corrupt positions files are ignored. If corresponding position files are missing, bcl2fastq writes unique coordinate positions in FASTQ header.
-      --minimum_trimmed_readlength      Minimum read length after adapter trimming.
-      --mask_short_adapter_reads        This option applies when a read is shorter than the length specified by --minimum-trimmed-read-length (note that the read does not specifically have to be trimmed for this option to trigger, it need only fall below the —minimum-trimmed-read-length for any reason).
-      --tiles                           The --tiles argument takes a regular expression to select for processing only a subset of the tiles available in the flow cell Multiple selections can be made by separating the regular expressions with commas
-      --use_bases_mask                  The --use-bases-mask string specifies how to use each cycle
-      --with_failed_reads               Include all clusters in the output, even clusters that are non-PF. These clusters would have been excluded by default
-      --write_fastq_reversecomplement   Generate FASTQ files containing reverse complements of actual data.
-      --no_bgzf_compression             Turn off BGZF compression, and use GZIP for FASTQ files. BGZF compression allows downstream applications to decompress in parallel.
-      --fastq_compression_level         Zlib compression level (1–9) used for FASTQ files.
-      --no_lane_splitting               Do not split FASTQ files by lane.
-      --find_adapters_withsliding_window    Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
+    QC
+      --fastq_screen_conf                 Full path to fastq_screen genome config file
+      --kraken_db                         Full path to Kraken2 DB for contaminant screeening
+      --skipFastQC                        Skip FastQC
+      --skipMultiQC                       Skip MultiQC
+      --skipMultiQCStats                  Exclude general statistics table from MultiQC report
+
+    Other options:
+      --outdir                            The output directory where the results will be saved
+      --email                             Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits
+      --maxMultiqcEmailFileSize           Theshold size for MultiQC report to be attached in notification email. If file generated by pipeline exceeds the threshold, it will not be attached (Default: 25MB)
+      -name                               Name for the pipeline run. If not specified, Nextflow will automatically generate a random mnemonic.
 
     AWSBatch options:
-      --awsqueue                    The AWSBatch JobQueue that needs to be set when running on AWSBatch
-      --awsregion                   The AWS Region for your AWS Batch job to run on
+      --awsqueue                          The AWSBatch JobQueue that needs to be set when running on AWSBatch
+      --awsregion                         The AWS Region for your AWS Batch job to run on
     """.stripIndent()
 }
 
@@ -76,6 +76,19 @@ if (params.help){
     exit 0
 }
 
+// Has the run name been specified by the user?
+//  this has the bonus effect of catching both -name and --name
+custom_runName = params.name
+if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
+    custom_runName = workflow.runName
+}
+
+// ////////////////////////////////////////////////////
+// /* --          VALIDATE INPUTS                 -- */
+// ////////////////////////////////////////////////////
+
+if (params.samplesheet) { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
+
 if (params.samplesheet){
     lastPath = params.samplesheet.lastIndexOf(File.separator)
     runName_dir =  params.samplesheet.substring(0,lastPath+1)
@@ -84,132 +97,76 @@ if (params.samplesheet){
     runName =  runName_dir.substring(runName_last_sep+1,lastPath)
 }
 
-// // Has the run name been specified by the user?
-// //  this has the bonus effect of catching both -name and --name
-// custom_runName = params.name
-custom_runName = runName
-if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
-  custom_runName = workflow.runName
-}
-
-// ////////////////////////////////////////////////////
-// /* --          VALIDATE INPUTS                 -- */
-// ////////////////////////////////////////////////////
-if ( params.samplesheet ){
-    ss_sheet = file(params.samplesheet)
-    if( !ss_sheet.exists() ) exit 1, "Sample sheet not found: ${params.samplesheet}"
-}
-
-if( workflow.profile == 'awsbatch') {
-  // AWSBatch sanity checking
-  if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
-  if (!workflow.workDir.startsWith('s3') || !params.outdir.startsWith('s3')) exit 1, "Specify S3 URLs for workDir and outdir parameters on AWSBatch!"
-  // Check workDir/outdir paths to be S3 buckets if running on AWSBatch
-  // related: https://github.com/nextflow-io/nextflow/issues/813
-  if (!workflow.workDir.startsWith('s3:') || !params.outdir.startsWith('s3:')) exit 1, "Workdir or Outdir not on S3 - specify S3 Buckets for each to run on AWSBatch!"
-}
-
 // Stage config files
-FSCREEN_CONF_FILEPATH = new File(params.fastq_screen_conf).getAbsolutePath()
-MULTIQC_CONF_FILEPATH = new File(params.multiqc_config).getAbsolutePath()
+if (params.fastq_screen_conf) { ch_fastq_screen_config = file(params.fastq_screen_conf, checkIfExists: true) }
+ch_multiqc_config = file(params.multiqc_config, checkIfExists: true)
+ch_output_docs = file("$baseDir/docs/output.md", checkIfExists: true)
 
-ch_output_docs = Channel.fromPath("$baseDir/docs/output.md")
-
+// AWS batch settings
+if ( workflow.profile == 'awsbatch') {
+    // AWSBatch sanity checking
+    if (!params.awsqueue || !params.awsregion) exit 1, "Specify correct --awsqueue and --awsregion parameters on AWSBatch!"
+    // Check outdir paths to be S3 buckets if running on AWSBatch
+    // related: https://github.com/nextflow-io/nextflow/issues/813
+    if (!params.outdir.startsWith('s3:')) exit 1, "Outdir not on S3 - specify S3 Bucket to run on AWSBatch!"
+    // Prevent trace files to be stored on S3 since S3 does not support rolling files.
+    if (workflow.tracedir.startsWith('s3:')) exit 1, "Specify a local tracedir or run without trace! S3 cannot be used for tracefiles."
+}
 
 // Header log info
-log.info """=======================================================
-                                          ,--./,-.
-          ___     __   __   __   ___     /,-._.--~\'
-    |\\ | |__  __ /  ` /  \\ |__) |__         }  {
-    | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
-                                          `._,._,\'
-
-nf-core/demultiplex v${workflow.manifest.version}
-======================================================="""
+log.info nfcoreHeader()
 def summary = [:]
-summary['Pipeline Name']  = 'nf-core/demultiplex'
-summary['Pipeline Version'] = workflow.manifest.version
-summary['Run Name']     = custom_runName ?: workflow.runName
-summary['Adapter Stringency'] = params.adapter_stringency
-summary['Barcode Mismatches'] = params.barcode_mismatches
-summary['FastQ for IDX'] = params.create_fastq_for_indexreads
-summary['Ignore Missing BCLs'] = params.ignore_missing_bcls
-summary['Ignore Missing Filter'] = params.ignore_missing_filter
-summary['Ignore Missing Positions'] = params.ignore_missing_positions
-summary['Min Trim Read Length'] = params.minimum_trimmed_readlength
-summary['Mask Short Adapter Reads'] = params.mask_short_adapter_reads
-summary['No BGZF Compression'] = params.no_bgzf_compression
-summary['Tiles'] = params.tiles
-summary['Use Bases Mask'] = params.use_bases_mask
-summary['With Failed Reads'] = params.with_failed_reads
-summary['Write FastQ Rev Comp'] = params.write_fastq_reversecomplement
-summary['FastQ Compression Level'] = params.fastq_compression_level
-summary['No Lane Splitting'] = params.no_lane_splitting
-summary['Find Adapt Sliding Window'] = params.find_adapters_withsliding_window
-summary['Max Memory']   = params.max_memory
-summary['Max CPUs']     = params.max_cpus
-summary['Max Time']     = params.max_time
-summary['Output dir']   = params.outdir
-summary['Working dir']  = workflow.workDir
-summary['Container Engine'] = workflow.containerEngine
-if(workflow.containerEngine) summary['Container'] = workflow.container
-summary['Current home']   = "$HOME"
-summary['Current user']   = "$USER"
-summary['Current path']   = "$PWD"
-summary['Working dir']    = workflow.workDir
-summary['Output dir']     = params.outdir
-summary['Script dir']     = workflow.projectDir
-summary['Config Profile'] = workflow.profile
-if(workflow.profile == 'awsbatch'){
-   summary['AWS Region'] = params.awsregion
-   summary['AWS Queue'] = params.awsqueue
+if (workflow.revision)                       summary['Pipeline Release'] = workflow.revision
+summary['Run Name']                          = custom_runName ?: workflow.runName
+
+// TODO nf-core: Report custom parameters here
+summary['10X Genome Dir']                    = params.tenx_genomes_base
+summary['Adapter Stringency']                = params.adapter_stringency
+summary['Barcode Mismatch']                  = params.barcode_mismatches
+if (params.create_fastq_for_indexreads)      summary['FastQ Index Reads'] = params.create_fastq_for_indexreads
+if (params.ignore_missing_bcls)              summary['Skip Missing BCLs'] = params.ignore_missing_bcls
+if (params.ignore_missing_filter)            summary['Skip Missing Filter'] = params.ignore_missing_filter
+if (params.ignore_missing_positions)         summary['Skip Missing Positions'] = params.ignore_missing_positions
+summary['Min Trim Read Length']              = params.minimum_trimmed_readlength
+summary['Mask Short Adapt Reads']            = params.mask_short_adapter_reads
+if (params.no_bgzf_compression)              summary['No BGZF Compress'] = params.no_bgzf_compression
+if (params.tiles) summary['Tiles']           = params.tiles
+if (params.use_bases_mask)                   summary['Bases Mask'] = params.use_bases_mask
+if (params.with_failed_reads)                summary['With Failed Reads'] = params.with_failed_reads
+if (params.write_fastq_reversecomplement)    summary['Write FastQ Rev Comp'] = params.write_fastq_reversecomplement
+summary['FastQ Compress Level']              = params.fastq_compression_level
+if (params.no_lane_splitting)                summary['No Lane Splitting'] = params.no_lane_splitting
+if (params.find_adapters_withsliding_window) summary['Adapt Sliding Window'] = params.find_adapters_withsliding_window
+if (params.fastq_screen_conf)                summary['FastQ Screen Conf'] = params.fastq_screen_conf
+if (params.kraken_db)                        summary['Kraken2 DB'] = params.kraken_db
+if (params.skipFastQC)                       summary['Skip FastQC'] = params.skipFastQC
+if (params.skipMultiQC)                      summary['Skip MultiQC'] = params.skipMultiQC
+if (params.skipMultiQCStats)                 summary['Skip MultiQC Stats'] = params.skipMultiQCStats
+
+summary['Max Resources']                     = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
+if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
+summary['Output dir']                        = params.outdir
+summary['Launch dir']                        = workflow.launchDir
+summary['Working dir']                       = workflow.workDir
+summary['Script dir']                        = workflow.projectDir
+summary['User']                              = workflow.userName
+if (workflow.profile == 'awsbatch'){
+   summary['AWS Region']                     = params.awsregion
+   summary['AWS Queue']                      = params.awsqueue
 }
-if (params.email) summary['E-mail Address'] = params.email
-log.info summary.collect { k,v -> "${k.padRight(15)}: $v" }.join("\n")
-log.info "========================================="
-
-
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-demultiplex-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/demultiplex Workflow Summary'
-    section_href: 'https://github.com/nf-core/demultiplex'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
+summary['Config Profile']                    = workflow.profile
+if (params.config_profile_description)       summary['Config Description'] = params.config_profile_description
+if (params.config_profile_contact)           summary['Config Contact']     = params.config_profile_contact
+if (params.config_profile_url)               summary['Config URL']         = params.config_profile_url
+if (params.email) {
+  summary['E-mail Address']                  = params.email
+  summary['MultiQC maxsize']                 = params.maxMultiqcEmailFileSize
 }
+log.info summary.collect { k,v -> "${k.padRight(22)}: $v" }.join("\n")
+log.info "\033[2m----------------------------------------------------\033[0m"
 
-/*
- * Parse software version numbers
- */
-// process get_software_versions {
-//     validExitStatus 0
-
-//     output:
-//     file 'software_versions_mqc.yaml' into software_versions_yaml
-
-//     script:
-//     """
-//     echo $workflow.manifest.version > v_pipeline.txt
-//     echo $workflow.nextflow.version > v_nextflow.txt
-//     fastqc --version > v_fastqc.txt
-//     fastq_screen --version > v_fastq_screen.txt
-//     multiqc --version > v_multiqc.txt
-//     bcl2fastq --version > v_bcl2fastq.txt
-//     cellranger --version > v_cellranger.txt
-//     cellranger-atac --version > v_cellrangeratac.txt
-//     cellranger-dna --version > v_cellrangerdna.txt
-//     scrape_software_versions.py > software_versions_mqc.yaml
-//     """
-// }
-
+// Check the hostnames against configured profiles
+checkHostname()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -220,51 +177,48 @@ ${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 1 - Check sample sheet for iCLIP samples and 10X samples
+ * STEP 1 - Check sample sheet for iCLIP samples and 10X samples.
  *        - This will collapse iCLIP samples into one sample and pull out 10X
- *          samples into new samplesheet
+ *          samples into new samplesheet.
  */
-
-
 process reformat_samplesheet {
-  tag "${sheet.name}"
-  label 'process_small'
-  echo true 
+    tag "${sheet.name}"
+    label 'process_small'
+    //echo true
 
-  input:
-  file sheet from ss_sheet
+    input:
+    file sheet from ss_sheet
 
-  output:
-  file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
-  file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
-  file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
-  file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
+    output:
+    file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
+    file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
+    file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
+    file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
 
-  script:
-  """
-  reformat_samplesheet.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    reformat_samplesheet.py --samplesheet "${sheet}"
+    """
 }
 
 /*
  * STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
- *          indexes on same lanes and output pass or fail file to next processes
+ *          indexes on same lanes and output pass or fail file to next processes.
  */
-
 process check_samplesheet {
-  tag "${sheet.name}"
-  label 'process_small'
+    tag "${sheet.name}"
+    label 'process_small'
 
-  input:
-  file sheet from standard_samplesheet1
+    input:
+    file sheet from standard_samplesheet1
 
-  output:
-  file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
+    output:
+    file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
 
-  script:
-  """
-  check_samplesheet.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    check_samplesheet.py --samplesheet "${sheet}"
+    """
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -276,132 +230,121 @@ process check_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 3 - If previous process finds samples that will cause problems, this
- *          process will remove problem samples from entire sample and create
- *          a new one
- *          ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 3 - If previous process finds samples that will cause problems, this process
+ *          will remove problem samples from entire sample and create a new one.
+ *          ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 process make_fake_SS {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file sheet from standard_samplesheet2
-  file result from resultChannel1
+    input:
+    file sheet from standard_samplesheet2
+    file result from resultChannel1
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.csv" into fake_samplesheet
-  file "*.txt" into problem_samples_list1, problem_samples_list2
+    output:
+    file "*.csv" into fake_samplesheet
+    file "*.txt" into problem_samples_list1, problem_samples_list2
 
-  script:
-  """
-  create_falseSS.py --samplesheet "${sheet}"
-  """
+    script:
+    """
+    create_falseSS.py --samplesheet "${sheet}"
+    """
 }
 
 /*
- * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples
- *           removed
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 process bcl2fastq_problem_SS {
-  tag "problem_samplesheet"
-  label 'process_big'
+    tag "problem_samplesheet"
+    label 'process_big'
 
-  input:
-  file sheet from fake_samplesheet
-  file result from resultChannel2
+    input:
+    file sheet from fake_samplesheet
+    file result from resultChannel2
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "Stats/Stats.json" into stats_json_file
+    output:
+    file "Stats/Stats.json" into stats_json_file
 
-  script:
-  """
-  bcl2fastq \\
-      --runfolder-dir ${runName_dir} \\
-      --output-dir . \\
-      --sample-sheet ${sheet} \\
-      --ignore-missing-bcls \\
-      --ignore-missing-filter \\
-      --with-failed-reads \\
-      --barcode-mismatches 0 \\
-      --loading-threads 8 \\
-      --processing-threads 24 \\
-      --writing-threads 6 \\
-  """
+    script:
+    """
+    bcl2fastq \\
+        --runfolder-dir ${runName_dir} \\
+        --output-dir . \\
+        --sample-sheet ${sheet} \\
+        --ignore-missing-bcls \\
+        --ignore-missing-filter \\
+        --with-failed-reads \\
+        --barcode-mismatches 0 \\
+        --loading-threads 8 \\
+        --processing-threads 24 \\
+        --writing-threads 6
+    """
 }
 
 /*
- * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the
- *           unknown barcodes section. The barcodes that match the short indexes
- *           and/or missing index 2 with the highest count to remake the sample
- *           sheet so that bcl2fastq can run properly
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the unknown barcodes section.
+ *           The barcodes that match the short indexes and/or missing index 2 with the highest count
+ *           to remake the sample sheet so that bcl2fastq can run properly.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 updated_samplesheet2 = Channel.create()
 process parse_jsonfile {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file json from stats_json_file
-  file sheet from standard_samplesheet3
-  file samp_probs from problem_samples_list1
-  file result from resultChannel3
+    input:
+    file json from stats_json_file
+    file sheet from standard_samplesheet3
+    file samp_probs from problem_samples_list1
+    file result from resultChannel3
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.csv" into updated_samplesheet1, updated_samplesheet2
+    output:
+    file "*.csv" into updated_samplesheet1, updated_samplesheet2
 
-  script:
-  """
-  parse_json.py --samplesheet "${sheet}" \\
-  --jsonfile "${json}" \\
-  --problemsamples "${samp_probs}"
-  """
+    script:
+    """
+    parse_json.py --samplesheet "${sheet}" --jsonfile "${json}" --problemsamples "${samp_probs}"
+    """
 }
 
 /*
- * STEP 6 -  Checking the remade sample sheet. If this fails again the pipeline
- *           will exit and fail
- *           ONLY RUNS WHEN SAMPLESHEET FAILS
+ * STEP 6 -  Checking the remade sample sheet.
+ *           If this fails again the pipeline will exit and fail.
+ *           ONLY RUNS WHEN SAMPLESHEET FAILS.
  */
-
 PROBLEM_SS_CHECK2 = Channel.create()
 process recheck_samplesheet {
-  tag "problem_samplesheet"
-  label 'process_small'
+    tag "problem_samplesheet"
+    label 'process_small'
 
-  input:
-  file sheet from ss_sheet
-  file ud_sheet from updated_samplesheet1
-  file prob_samps from problem_samples_list2
-  file result from resultChannel4
+    input:
+    file sheet from ss_sheet
+    file ud_sheet from updated_samplesheet1
+    file prob_samps from problem_samples_list2
+    file result from resultChannel4
 
-  when:
-  result.name =~ /^fail.*/
+    when:
+    result.name =~ /^fail.*/
 
-  output:
-  file "*.txt" into PROBLEM_SS_CHECK2
+    output:
+    file "*.txt" into PROBLEM_SS_CHECK2
 
-  script:
-  """
-  recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
-  """
-
+    script:
+    """
+    recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
+    """
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -412,11 +355,9 @@ process recheck_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 7 - CellRanger MkFastQ
- *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
+ * STEP 7 - CellRanger MkFastQ.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
  */
-
-
 process cellRangerMkFastQ {
     tag "${sheet.name}"
     label 'process_big'
@@ -437,39 +378,36 @@ process cellRangerMkFastQ {
 
     script:
     if (sheet.name =~ /^*sheet.tenx.csv/){
-    """
-    cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet} 
-    """
-    }
-    else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
-    """
-    cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
-    }
-    else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
-    """
-    cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
-    """
+        """
+        cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
+    } else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
+        """
+        cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
+    } else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
+        """
+        cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        """
     }
 }
 
 /*
- * STEP 8 - Copy CellRanger FastQ files to new folder
- *      ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS
+ * STEP 8 - Copy CellRanger FastQ files to new folder.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS.
  */
-
 def getCellRangerSampleName(fqfile) {
-     def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
-     if (sampleName.find()) {
-       return sampleName.group(1)
-     }
-     return fqfile
+    def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
+    if (sampleName.find()) {
+        return sampleName.group(1)
+    }
+    return fqfile
 }
 
 def getCellRangerProjectName(fqfile) {
     def projectName = (fqfile =~ /.*\/outs\/fastq_path\/([a-zA-Z0-9_]*)\//)
     if (projectName.find()) {
-      return projectName.group(1)
+        return projectName.group(1)
     }
     return fqfile
 }
@@ -478,37 +416,34 @@ cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerP
 cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
 process cellRangerMoveFqs {
-  tag "${fastq}"
+    tag "${fastq}"
 
-  input:
-  set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
-  file result from tenx_results2
+    input:
+    set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
+    file result from tenx_results2
 
-  when:
-  result.name =~ /^true.*/
+    when:
+    result.name =~ /^true.*/
 
-  script:
-  """
-  while [[ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} && ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]]; do sleep 15s; done
-  if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
-    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-  elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
-    mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-  fi
-  """
+    script:
+    """
+    while [[ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} && ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]]; do sleep 15s; done
+    if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
+        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+    elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
+        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
+    fi
+    """
 }
 
-
 /*
- * STEP 9 - CellRanger count
- * ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS
- *
+ * STEP 9 - CellRanger count.
+ *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
  */
-
 def getCellRangerFastqPath(fqfile) {
     def fastqPath = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
     if (fastqPath.find()) {
-      return fastqPath.group(1)
+        return fastqPath.group(1)
     }
     return fqfile
 }
@@ -517,58 +452,53 @@ cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map {
 cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ getCellRangerSampleName(fqfile), getCellRangerFastqPath(fqfile) ] }.unique()
 
 cr_fqname_fqfile_ch
-   .phase(cr_samplesheet_info_ch)
-   .map{ left, right ->
-     def sampleID = left[0]
-     def projectName = right[1]
-     def refGenome = right[2]
-     def dataType = right[3]
-     def fastqDir = left[1]
-     tuple(sampleID, projectName, refGenome, dataType, fastqDir)
-   }
+    .phase(cr_samplesheet_info_ch)
+    .map{ left, right ->
+        def sampleID = left[0]
+        def projectName = right[1]
+        def refGenome = right[2]
+        def dataType = right[3]
+        def fastqDir = left[1]
+        tuple(sampleID, projectName, refGenome, dataType, fastqDir) }
    .set { cr_grouped_fastq_dir_sample_ch }
 
 process cellRangerCount {
-   tag "${projectName}/${sampleID}"
-   publishDir "${params.outdir}/${runName}", mode: 'copy',
-   saveAs: { filename ->
-    if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
-    else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
-    else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
-   }
-   
-   label 'process_big'
-   errorStrategy 'ignore'
+    tag "${projectName}/${sampleID}"
+    publishDir "${params.outdir}/${runName}", mode: 'copy',
+    saveAs: { filename ->
+        if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
+        else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
+        else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
+    }
 
-   input:
-   set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
-   file result from tenx_results3
+    label 'process_big'
+    errorStrategy 'ignore'
 
-   when:
-   result.name =~ /^true.*/
+    input:
+    set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
+    file result from tenx_results3
 
-   output:
-   file "${sampleID}/" into count_output
+    when:
+    result.name =~ /^true.*/
 
+    output:
+    file "${sampleID}/" into count_output
 
-   script:
-   genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
-
-   if (dataType =~ /10X-3prime/){
-   """
-   cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
-   else if (dataType =~ /10X-CNV/){
-   """
-   cellranger-dna cnv --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
-   else if (dataType =~ /10X-ATAC/){
-   """
-   cellranger-atac count --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
-   """
-   }
+    script:
+    genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
+    if (dataType =~ /10X-3prime/){
+        """
+        cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+        """
+    } else if (dataType =~ /10X-CNV/){
+        """
+        cellranger-dna cnv --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
+        """
+    } else if (dataType =~ /10X-ATAC/){
+        """
+        cellranger-atac count --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
+        """
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -580,13 +510,12 @@ process cellRangerCount {
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 10 -  Running bcl2fastq on the remade samplesheet or a sample sheet that
+ * STEP 10 - Running bcl2fastq on the remade samplesheet or a sample sheet that
  *           passed the initial check. bcl2fastq parameters can be changed when
  *           staring up the pipeline.
  *           ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
- *           INTO SEPARATE SAMPLE SHEETS
+ *           INTO SEPARATE SAMPLE SHEETS.
  */
-
 process bcl2fastq_default {
     tag "${std_samplesheet.name}"
     publishDir path: "${params.outdir}/${runName}/fastq", mode: 'copy'
@@ -625,54 +554,57 @@ process bcl2fastq_default {
     slide_window_adapt =  params.find_adapters_withsliding_window ? "--find-adapters-with-sliding-window " : ""
 
     if (result.name =~ /^pass.*/){
-      """
-      bcl2fastq \\
-          --runfolder-dir ${runName_dir} \\
-          --output-dir . \\
-          --sample-sheet ${std_samplesheet} \\
-          --adapter-stringency ${params.adapter_stringency} \\
-          $tiles \\
-          $ignore_miss_bcls \\
-          $ignore_miss_filt \\
-          $ignore_miss_pos \\
-          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-          --fastq-compression-level ${params.fastq_compression_level} \\
-          --barcode-mismatches ${params.barcode_mismatches} \\
-          $bases_mask $fq_index_rds $failed_rds  \\
-          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
-      """
-    }
-
-    else if (result2.name =~ /^fail.*/){
-      exit 1, "Remade sample sheet still contains problem samples"
-    }
-
-    else if (result.name =~ /^fail.*/){
-      """
-      bcl2fastq \\
-          --runfolder-dir ${runName_dir} \\
-          --output-dir . \\
-          --sample-sheet ${sheet} \\
-          --adapter-stringency ${params.adapter_stringency} \\
-          $tiles \\
-          $ignore_miss_bcls \\
-          $ignore_miss_filt \\
-          $ignore_miss_pos \\
-          --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-          --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-          --fastq-compression-level ${params.fastq_compression_level} \\
-          --barcode-mismatches ${params.barcode_mismatches}
-          $bases_mask $fq_index_rds $failed_rds  \\
-          $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
-      """
+        """
+        bcl2fastq \\
+            --runfolder-dir ${runName_dir} \\
+            --output-dir . \\
+            --sample-sheet ${std_samplesheet} \\
+            --adapter-stringency ${params.adapter_stringency} \\
+            $tiles \\
+            $ignore_miss_bcls \\
+            $ignore_miss_filt \\
+            $ignore_miss_pos \\
+            --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+            --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
+            --fastq-compression-level ${params.fastq_compression_level} \\
+            --barcode-mismatches ${params.barcode_mismatches} \\
+            $bases_mask $fq_index_rds $failed_rds  \\
+            $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+        """
+    } else if (result2.name =~ /^fail.*/){
+        exit 1, "Remade sample sheet still contains problem samples"
+    } else if (result.name =~ /^fail.*/){
+        """
+        bcl2fastq \\
+            --runfolder-dir ${runName_dir} \\
+            --output-dir . \\
+            --sample-sheet ${sheet} \\
+            --adapter-stringency ${params.adapter_stringency} \\
+            $tiles \\
+            $ignore_miss_bcls \\
+            $ignore_miss_filt \\
+            $ignore_miss_pos \\
+            --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
+            --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
+            --fastq-compression-level ${params.fastq_compression_level} \\
+            --barcode-mismatches ${params.barcode_mismatches}
+            $bases_mask $fq_index_rds $failed_rds  \\
+            $fq_rev_comp $no_bgzf_comp $no_lane_split $slide_window_adapt
+        """
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                           FastQC                                    -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /*
  * STEP 11 - FastQC
  */
-
 fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_fqc_ch = cr_fastqs_fqc_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
@@ -685,6 +617,9 @@ process fastqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/${runName}/fastqc/${projectName}", mode: 'copy'
     label 'process_big'
+
+    when:
+    !params.skipFastQC
 
     input:
     set val(projectName), file(fqFile) from fastqcAll_ch
@@ -699,10 +634,46 @@ process fastqc {
     """
 }
 
-/*
- * STEP 11 - FastQ Screen
- */
+// process kraken2 {
+//     tag "${projectName}"
+//     publishDir path: "${params.outdir}/${runName}/kraken2/${projectName}", mode: 'copy'
+//     label 'process_big'
+//
+//     when:
+//     !params.skipFastQC
+//
+//     input:
+//     set val(projectName), file(fqFile) from fastqcAll_ch
+//
+//     output:
+//     set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
+//     file "*.html" into fqc_html_ch
+//
+//     script:
+//     single_end = singleEnd ? "" : "--paired"
+//     """
+//     kraken2 \\
+//         --db $kraken_db \\
+//         --threads $task.cpus \\
+//         --output %s.out.txt \\
+//         --report %s.report.txt
+//         $single_end \\
+//         --gzip-compressed %s \\
+//         $fastq_files
+//     """
+// }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                         FastQ Screen                                -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+/*
+ * STEP 12 - FastQ Screen
+ */
 fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
 undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
 cr_fqname_fqfile_screen_ch = cr_fastqs_screen_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
@@ -711,59 +682,116 @@ cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { 
 fastqcScreenAll = Channel.empty()
 grouped_fqscreen_ch = fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
 
-process fastq_screen {
-    tag "${projectName}"
-    publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
-    label 'process_big'
+if (params.fastq_screen_conf) {
+    process fastq_screen {
+        tag "${projectName}"
+        publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
+        label 'process_big'
 
-    input:
-    set val(projectName), file(fqFile) from grouped_fqscreen_ch
+        input:
+        set val(projectName), file(fqFile) from grouped_fqscreen_ch
+        file fastq_screen_config from ch_fastq_screen_config
+
+        output:
+        set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
+        file "*_screen.html" into fastq_screen_html
+
+        script:
+        """
+        fastq_screen --force --subset 200000 --conf $ch_fastq_screen_config --aligner bowtie2 ${fqFile}
+        """
+    }
+} else {
+    fastq_screen_txt = Channel.create()
+    all_fq_screen_txt_tuple = Channel.create()
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                           MultiQC                                   -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+def create_workflow_summary(summary) {
+    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'nf-core-demultiplex-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/demultiplex Workflow Summary'
+    section_href: 'https://github.com/nf-core/demultiplex'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+
+   return yaml_file
+}
+
+/*
+ * Parse software version numbers
+ */
+process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
 
     output:
-    set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
-    file "*_screen.html" into fastq_screen_html
+    file 'software_versions_mqc.yaml' into software_versions_yaml
+    file "software_versions.csv"
 
-    shell:
+    script:
+    // TODO nf-core: Get all tools to print their version number here
     """
-    fastq_screen --force --subset 200000 --conf ${FSCREEN_CONF_FILEPATH} --aligner bowtie2 ${fqFile}
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    fastqc --version > v_fastqc.txt
+    fastq_screen --version > v_fastqscreen.txt
+    multiqc --version > v_multiqc.txt
+    echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
+    cellranger mkfastq --version > v_cellranger.txt
+    #cellranger-atac --version > v_cellrangeratac.txt
+    #cellranger-dna --version > v_cellrangerdna.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
 
 /*
- * STEP 12A - MultiQC per project
+ * STEP 13.1 - MultiQC per project
  */
-
-
-fqc_folder_tuple = fqc_folder_ch.groupTuple()
-fastq_screen_txt_tuple = fastq_screen_txt.groupTuple()
-
-fqc_folder_tuple
-    .join(fastq_screen_txt_tuple)
-    .set { grouped_fastq_fqscreen_ch }
-
 process multiqc {
     tag "${projectName}"
     publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
-    label 'process_big'
+
+    when:
+    !params.skipMultiQC
 
     input:
-    set val(projectName), file(fqFiles), file(fqScreen) from grouped_fastq_fqscreen_ch
+    file ('fastqc/*') from fqc_folder_ch.collect{it[1]}.ifEmpty([])
+    file ('fastq_screen/*') from fastq_screen_txt.collect{it[1]}.ifEmpty([])
+    file multiqc_config from ch_multiqc_config
 
     output:
     file "*multiqc_report.html" into multiqc_report
     file "*_data"
+    file "multiqc_plots"
     val(projectName) into projectList
 
-    shell:
+    script:
+    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
     """
-    multiqc ${fqFiles} ${fqScreen} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFiles} ${fqScreen} --config $multiqc_config $mqcstats .
     """
 }
 
 /*
- * STEP 12B- MultiQC for all projects
+ * STEP 13.2- MultiQC for all projects
  */
-
 all_fcq_files = all_fcq_files_tuple.map { k,v -> v }.flatten().collect()
 all_fq_screen_files = all_fq_screen_txt_tuple.map { k,v -> v }.flatten().collect()
 bcl_stats_empty = Channel.empty()
@@ -772,42 +800,53 @@ b2fq_default_stats_all_ch = bcl_stats_empty.mix(b2fq_default_stats_ch)
 process multiqcAll {
     tag "${runName}"
     publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
-    label 'process_big'
+
+    when:
+    !params.skipMultiQC
 
     input:
     file fqFile from all_fcq_files
     file fqScreen from all_fq_screen_files
     file bcl_stats from b2fq_default_stats_all_ch.ifEmpty('')
+    file multiqc_config from ch_multiqc_config
 
     output:
     file "*multiqc_report.html" into multiqc_report_all
     file "*_data"
+    file "multiqc_plots"
 
-    shell:
+    script:
+    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
     """
-    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config ${MULTIQC_CONF_FILEPATH} .
+    multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config $multiqc_config $mqcstats .
     """
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/* --                                                                     -- */
+/* --                     Reports/Documentation                           -- */
+/* --                                                                     -- */
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 13 - Output Description HTML
+ * STEP 14 - Output Description HTML
  */
+process output_documentation {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy'
 
-// process output_documentation {
-//     publishDir "${params.outdir}/${runName}/Documentation", mode: 'copy'
+    input:
+    file output_docs from ch_output_docs
 
-//     input:
-//     file output_docs from ch_output_docs
+    output:
+    file "results_description.html"
 
-//     output:
-//     file "results_description.html"
-
-//     script:
-//     """
-//     markdown_to_html.r $output_docs results_description.html
-//     """
-// }
+    script:
+    """
+    markdown_to_html.r $output_docs results_description.html
+    """
+}
 
 /*
  * Completion e-mail notification
@@ -815,10 +854,11 @@ process multiqcAll {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/demultiplex] Successful: $custom_runName"
+    def subject = "[nf-core/demultiplex] Successful: $workflow.runName"
     if(!workflow.success){
-      subject = "[nf-core/demultiplex] FAILED: $custom_runName"
+        subject = "[nf-core/demultiplex] FAILED: $workflow.runName"
     }
+
     def extra_links =[:]
     def all_multiqc
     if(workflow.success && workflow.profile == 'crick') {
@@ -833,7 +873,6 @@ workflow.onComplete {
     def email_fields = [:]
     if(workflow.success && workflow.profile == 'crick') email_fields['project_QC_links'] = all_multiqc
     if(workflow.success && workflow.profile == 'crick') email_fields['extra_links'] = extra_links
-    email_fields['profile'] = workflow.profile
     email_fields['version'] = workflow.manifest.version
     email_fields['runName'] = custom_runName ?: workflow.runName
     email_fields['success'] = workflow.success
@@ -852,9 +891,25 @@ workflow.onComplete {
     if(workflow.repository) email_fields['summary']['Pipeline repository Git URL'] = workflow.repository
     if(workflow.commitId) email_fields['summary']['Pipeline repository Git Commit'] = workflow.commitId
     if(workflow.revision) email_fields['summary']['Pipeline Git branch/tag'] = workflow.revision
+    if(workflow.container) email_fields['summary']['Docker image'] = workflow.container
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
+
+    // TODO nf-core: If not using MultiQC, strip out this code (including params.maxMultiqcEmailFileSize)
+    // On success try attach the multiqc report
+    def mqc_report = null
+    try {
+        if (workflow.success) {
+            mqc_report = multiqc_report.getVal()
+            if (mqc_report.getClass() == ArrayList){
+                log.warn "[nf-core/demultiplex] Found multiple reports from process 'multiqc', will use only one"
+                mqc_report = mqc_report[0]
+            }
+        }
+    } catch (all) {
+        log.warn "[nf-core/demultiplex] Could not attach MultiQC report to summary email"
+    }
 
     // Render the TXT template
     def engine = new groovy.text.GStringTemplateEngine()
@@ -868,7 +923,7 @@ workflow.onComplete {
     def email_html = html_template.toString()
 
     // Render the sendmail template
-    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir" ]
+    def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
     def sf = new File("$baseDir/assets/sendmail_template.txt")
     def sendmail_template = engine.createTemplate(sf).make(smail_fields)
     def sendmail_html = sendmail_template.toString()
@@ -888,7 +943,7 @@ workflow.onComplete {
     }
 
     // Write summary e-mail HTML to a file
-    def output_d = new File( "${params.outdir}/${runName}/Documentation/" )
+    def output_d = new File( "${params.outdir}/pipeline_info/" )
     if( !output_d.exists() ) {
       output_d.mkdirs()
     }
@@ -897,6 +952,65 @@ workflow.onComplete {
     def output_tf = new File( output_d, "pipeline_report.txt" )
     output_tf.withWriter { w -> w << email_txt }
 
-    log.info "[nf-core/demultiplex] Pipeline Complete"
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_red = params.monochrome_logs ? '' : "\033[0;31m";
 
+    if (workflow.stats.ignoredCount > 0 && workflow.success) {
+      log.info "${c_purple}Warning, pipeline completed, but with errored process(es) ${c_reset}"
+      log.info "${c_red}Number of ignored errored process(es) : ${workflow.stats.ignoredCount} ${c_reset}"
+      log.info "${c_green}Number of successfully ran process(es) : ${workflow.stats.succeedCount} ${c_reset}"
+    }
+
+    if(workflow.success){
+        log.info "${c_purple}[nf-core/demultiplex]${c_green} Pipeline completed successfully${c_reset}"
+    } else {
+        checkHostname()
+        log.info "${c_purple}[nf-core/demultiplex]${c_red} Pipeline completed with errors${c_reset}"
+    }
+}
+
+def nfcoreHeader(){
+    // Log colors ANSI codes
+    c_reset = params.monochrome_logs ? '' : "\033[0m";
+    c_dim = params.monochrome_logs ? '' : "\033[2m";
+    c_black = params.monochrome_logs ? '' : "\033[0;30m";
+    c_green = params.monochrome_logs ? '' : "\033[0;32m";
+    c_yellow = params.monochrome_logs ? '' : "\033[0;33m";
+    c_blue = params.monochrome_logs ? '' : "\033[0;34m";
+    c_purple = params.monochrome_logs ? '' : "\033[0;35m";
+    c_cyan = params.monochrome_logs ? '' : "\033[0;36m";
+    c_white = params.monochrome_logs ? '' : "\033[0;37m";
+
+    return """    ${c_dim}----------------------------------------------------${c_reset}
+                                            ${c_green},--.${c_black}/${c_green},-.${c_reset}
+    ${c_blue}        ___     __   __   __   ___     ${c_green}/,-._.--~\'${c_reset}
+    ${c_blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${c_yellow}}  {${c_reset}
+    ${c_blue}  | \\| |       \\__, \\__/ |  \\ |___     ${c_green}\\`-._,-`-,${c_reset}
+                                            ${c_green}`._,._,\'${c_reset}
+    ${c_purple}  nf-core/demultiplex v${workflow.manifest.version}${c_reset}
+    ${c_dim}----------------------------------------------------${c_reset}
+    """.stripIndent()
+}
+
+def checkHostname(){
+    def c_reset = params.monochrome_logs ? '' : "\033[0m"
+    def c_white = params.monochrome_logs ? '' : "\033[0;37m"
+    def c_red = params.monochrome_logs ? '' : "\033[1;91m"
+    def c_yellow_bold = params.monochrome_logs ? '' : "\033[1;93m"
+    if(params.hostnames){
+        def hostname = "hostname".execute().text.trim()
+        params.hostnames.each { prof, hnames ->
+            hnames.each { hname ->
+                if(hostname.contains(hname) && !workflow.profile.contains(prof)){
+                    log.error "====================================================\n" +
+                            "  ${c_red}WARNING!${c_reset} You are running with `-profile $workflow.profile`\n" +
+                            "  but your machine hostname is ${c_white}'$hostname'${c_reset}\n" +
+                            "  ${c_yellow_bold}It's highly recommended that you use `-profile $prof${c_reset}`\n" +
+                            "============================================================"
+                }
+            }
+        }
+    }
 }
