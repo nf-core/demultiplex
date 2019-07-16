@@ -39,7 +39,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 ### Sample sheet format
 The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does. 
-
+| [Data]      |
 | Lane        | Sample_ID   | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType |
 |-------------|-------------|---------|--------|----------------|-----------------|------------------|
 |     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |
