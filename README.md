@@ -42,7 +42,7 @@ The input sample sheet must adhere to Illumina standards as outlined in the tabl
 
 | Lane        | Sample_ID   | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType |
 |-------------|-------------|---------|--------|----------------|-----------------|------------------|
-|     1       |   ABC11A2   |  CGATGT |        |     PM10000    |  Homo sapiens   |    Whole Exome   |
+|     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |
 |     2       |  SAG100A10  | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |
 |     3       |  CAP200A11  |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |
 
