@@ -5,6 +5,7 @@ import pandas as pd
 import argparse
 import csv
 import numpy as np
+import sys
 
 # need args for directory to put 10X samplesheet if applicable
 argparser = argparse.ArgumentParser()
@@ -25,6 +26,11 @@ with open(samplesheet, 'r') as f:
 iclip = 'iCLIP'
 
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
+
+# check samplesheet has all columns needed
+if not set(['Lane', 'Sample_ID', 'index', 'index2', 'Sample_Project', 'ReferenceGenome', 'DataAnalysisType']).issubset(sample_pd.columns):
+    sys.exit("The column headers in the samplesheet do not match the expected headings")
+    
 sample_pd = sample_pd.fillna('')
 sample_pd['index'] = sample_pd['index'].astype('str')
 sample_pd['index2'] = sample_pd['index2'].astype('str')
