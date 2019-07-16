@@ -13,7 +13,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 ## Pipeline summary
 1. Reformatting the input sample sheet
-    * Script looks for `iCLIP` in the index column of the sample sheet and collapses the iCLIP samples into one per lane.
     * Splits 10X single cell samples into 10X, 10X-ATAC and 10X-DNA .csv files by searching in the sample sheet column DataAnalysisType for `10X-3prime`, `10X-ATAC` and `10X-CNV`.
     * Outputs the results of needing to run specific processes in the pipeline (can be only 10X single cell samples, mix of 10X single cell with non single cell samples or all non single cell samples)
 2. Checking the sample sheet for downstream error causing samples such as:
@@ -38,13 +37,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 9. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
 ### Sample sheet format
-The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does. `User_Sample_Name` is only used when collapsing iCLIP samples.
+The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does. 
 
-| Lane        | Sample_ID   | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType | User_Sample_Name |
-|-------------|-------------|---------|--------|----------------|-----------------|------------------|------------------|
-|     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |   EX-TH-M_ST05   |
-|     2       |  SAG100A10  | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |    SAG_10_25     |
-|     3       |  CAP200A11  |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |   CAP2_A11_25    |
+| Lane        | Sample_ID   | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType |
+|-------------|-------------|---------|--------|----------------|-----------------|------------------|
+|     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |
+|     2       |  SAG100A10  | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |
+|     3       |  CAP200A11  |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |
 
 ## Documentation
 The nf-core/demultiplex pipeline comes with documentation about the pipeline, found in the `docs/` directory:
