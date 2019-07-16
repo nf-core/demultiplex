@@ -44,7 +44,7 @@ The input sample sheet must adhere to Illumina standards as outlined in the tabl
 |-------------|-------------|---------|--------|----------------|-----------------|------------------|------------------|
 |     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |   EX-TH-M_ST05   |
 |     2       |  SAG100A10  | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |    SAG_10_25     |
-|     3       |  CAP200A11  |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |                  |
+|     3       |  CAP200A11  |  iCLIP  |        |     PM18200    |  Homo sapiens   |       Other      |   CAP2_A11_25    |
 
 ## Documentation
 The nf-core/demultiplex pipeline comes with documentation about the pipeline, found in the `docs/` directory:
