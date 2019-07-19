@@ -64,31 +64,30 @@ for result in json_file:
                             # ensure its the highest read count of the matches
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index2'] = index2
-                                SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
+                                row["read_count"]=unknown_count
                         # find partial matches for short index 1 that is dual indexed
                         elif index1.startswith(row['index']) is True and index2 == row['index2']:
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = index1
-                                SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
+                                row["read_count"]=unknown_count
                         # find partial matches for short index 1 that is single indexed
                         elif index1.startswith(row['index']) is True and row['index2'] == '':
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index2'] = index2
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = index1
-                                SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
+                                row["read_count"]=unknown_count
                         # find partial matches for short index 2 that is dual indexed
                         elif index2.startswith(row['index2']) is True and index1 == row['index']:
-                            if unknown_count > row['read_count']:
+                            if unknown_count > row['read_count']:     
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index2'] = index2
-                                SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
+                                row["read_count"]=unknown_count
                     # single indexed lane
                     elif "+" not in unknown_idx:
                         # find partial matches for short index 1 that is single indexed
                         if unknown_idx.startswith(row['index']) is True and row['index2'] == '':
                             if unknown_count > row['read_count']:
                                 sample_pd.loc[(sample_pd['Sample_ID'] == row['Sample_ID']) & (sample_pd['Lane'] == row['Lane']), 'index'] = unknown_idx
-                                SS_new_problem_ids.loc[(SS_new_problem_ids['Sample_ID'] == row['Sample_ID']) & (SS_new_problem_ids['Lane'] == row['Lane']), 'read_count'] = unknown_count
-
+                                row["read_count"]=unknown_count
 # delete read count column from dataframe
 SS_new_problem_ids.drop('read_count', 1, inplace=True)
 
