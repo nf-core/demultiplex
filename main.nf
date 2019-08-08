@@ -19,10 +19,11 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet samplesheet.csv  -profile docker
+    nextflow run nf-core/demultiplex --samplesheet samplesheet.csv  --runfolder /path/to/run/directory/ -profile docker
 
     Mandatory arguments:
       --samplesheet                       Full path to samplesheet
+      --runfolder                         Full path to run directory
       -profile                            Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, awsbatch, test and more.
 
@@ -88,14 +89,8 @@ if( !(workflow.runName ==~ /[a-z]+_[a-z]+/) ){
 // ////////////////////////////////////////////////////
 
 if (params.samplesheet) { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
-
-if (params.samplesheet){
-    lastPath = params.samplesheet.lastIndexOf(File.separator)
-    runName_dir =  params.samplesheet.substring(0,lastPath+1)
-    runName_dir_no_slash = params.samplesheet.substring(0,lastPath)
-    runName_last_sep=  runName_dir_no_slash.lastIndexOf(File.separator)
-    runName =  runName_dir.substring(runName_last_sep+1,lastPath)
-}
+if (params.runfolder) { runDir = file(params.runfolder, checkIfExists: true) } else { exit 1, "Run directory not found!" }
+runName = runDir.getName()
 
 // Stage config files
 if (params.fastq_screen_conf) { ch_fastq_screen_config = file(params.fastq_screen_conf, checkIfExists: true) }
@@ -276,7 +271,7 @@ process bcl2fastq_problem_SS {
     script:
     """
     bcl2fastq \\
-        --runfolder-dir ${runName_dir} \\
+        --runfolder-dir ${params.runfolder} \\
         --output-dir . \\
         --sample-sheet ${sheet} \\
         --ignore-missing-bcls \\
@@ -379,15 +374,15 @@ process cellRangerMkFastQ {
     script:
     if (sheet.name =~ /^*sheet.tenx.csv/){
         """
-        cellranger mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        cellranger mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
         """
     } else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
         """
-        cellranger-atac mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        cellranger-atac mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
         """
     } else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
         """
-        cellranger-dna mkfastq --id mkfastq --run ${runName_dir} --samplesheet ${sheet}
+        cellranger-dna mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
         """
     }
 }
@@ -556,7 +551,7 @@ process bcl2fastq_default {
     if (result.name =~ /^pass.*/){
         """
         bcl2fastq \\
-            --runfolder-dir ${runName_dir} \\
+            --runfolder-dir ${params.runfolder} \\
             --output-dir . \\
             --sample-sheet ${std_samplesheet} \\
             --adapter-stringency ${params.adapter_stringency} \\
@@ -576,7 +571,7 @@ process bcl2fastq_default {
     } else if (result.name =~ /^fail.*/){
         """
         bcl2fastq \\
-            --runfolder-dir ${runName_dir} \\
+            --runfolder-dir ${params.runfolder} \\
             --output-dir . \\
             --sample-sheet ${sheet} \\
             --adapter-stringency ${params.adapter_stringency} \\
