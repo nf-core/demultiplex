@@ -41,6 +41,7 @@ sample_pd['index2'] = sample_pd['index2'].str.strip()
 sc_list = ['10X-3prime']
 sc_ATAC_list = ['10X-ATAC']
 sc_DNA_list = ['10X-CNV']
+
 # dictionary to map latin name with cell ranger genome ref name
 cellranger_ref_genome_dict = {'Homo sapiens':'GRCh38', 'Mus musculus':'mm10', 'Danio rerio':'GRCz10',
                               'Gallus gallus':'Gallus_gallus'}
@@ -60,7 +61,7 @@ cellranger_10XDNA_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_DNA_list)
 cellranger_idx_DNAlist_to_drop = cellranger_10XDNA_df.index.values.tolist()
 cellranger_10XDNA_df['ReferenceGenome'] = cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
 
-#combine 10X and iCLIP lists to drop
+#combine 10X lists to drop
 total_idx_to_drop = idx_list_to_drop + cellranger_idx_list_to_drop + cellranger_idx_ATAClist_to_drop + cellranger_idx_DNAlist_to_drop
 
 cellranger_needed = 'false'

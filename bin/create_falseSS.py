@@ -28,9 +28,8 @@ with open(samplesheet, 'r') as f:
 # import sample sheet as not fixed path when in pipeline
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
 
-# find unique lanes and remove lanes that only have one sample (iClip lanes)
-iclip_lanes_removed = sample_pd.groupby('Lane').filter(lambda x: len(x) > 1)
-iclip_lanes_removed_set = iclip_lanes_removed['Lane'].unique()
+# find unique lanes 
+sample_pd_lane_set = sample_pd['Lane'].unique()
 
 samplesheet_new = sample_pd.copy()
 
@@ -62,7 +61,7 @@ for idx, item in samplesheet_new.iterrows():
 
 short_long_lane_mixed_ids = []
 lane_length_dict ={}
-for x in iclip_lanes_removed_set:
+for x in sample_pd_lane_set:
     # select lane that match current lane
     lane_select = samplesheet_new.loc[samplesheet_new['Lane'] == x]
 

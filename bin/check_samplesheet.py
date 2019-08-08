@@ -28,9 +28,8 @@ def check_samplesheet(samplesheet):
     sample_pd['index'] = sample_pd['index'].astype('str')
     sample_pd['index2'] = sample_pd['index2'].astype('str')
 
-    # find unique lanes and remove lanes that only have one sample (iClip lanes)
-    iclip_lanes_removed = sample_pd.groupby('Lane').filter(lambda x: len(x) > 1)
-    iclip_lanes_removed_set = iclip_lanes_removed['Lane'].unique()
+    # get unique lanes
+    sample_pd_lane_set = sample_pd['Lane'].unique()
 
     # check if single index samples  are on the same lane as dual index
     sample_pd_empty_remove = sample_pd[sample_pd["index2"].notnull()]
@@ -47,7 +46,7 @@ def check_samplesheet(samplesheet):
     elif not result:
         lane_length_dict = {}
         samplesheet_check = "pass"
-        for x in iclip_lanes_removed_set:
+        for x in sample_pd_lane_set:
 
             # select lane that match current lane
             lane_select = sample_pd.loc[sample_pd['Lane'] == x]
