@@ -23,7 +23,7 @@ def helpMessage() {
 
     Mandatory arguments:
       --samplesheet                       Full path to samplesheet
-      --runfolder                         Full path to run directory
+      --runfolder                         Full path to run directory (will parse name of run from the last directory in path)
       -profile                            Configuration profile to use. Can use multiple (comma separated)
                                           Available: conda, docker, singularity, awsbatch, test and more.
 
@@ -179,7 +179,6 @@ checkHostname()
 process reformat_samplesheet {
     tag "${sheet.name}"
     label 'process_small'
-    //echo true
 
     input:
     file sheet from ss_sheet
@@ -271,7 +270,7 @@ process bcl2fastq_problem_SS {
     script:
     """
     bcl2fastq \\
-        --runfolder-dir ${params.runfolder} \\
+        --runfolder-dir ${runDir} \\
         --output-dir . \\
         --sample-sheet ${sheet} \\
         --ignore-missing-bcls \\
@@ -374,15 +373,15 @@ process cellRangerMkFastQ {
     script:
     if (sheet.name =~ /^*sheet.tenx.csv/){
         """
-        cellranger mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
+        cellranger mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
         """
     } else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
         """
-        cellranger-atac mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
+        cellranger-atac mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
         """
     } else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
         """
-        cellranger-dna mkfastq --id mkfastq --run ${params.runfolder} --samplesheet ${sheet}
+        cellranger-dna mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
         """
     }
 }
@@ -551,7 +550,7 @@ process bcl2fastq_default {
     if (result.name =~ /^pass.*/){
         """
         bcl2fastq \\
-            --runfolder-dir ${params.runfolder} \\
+            --runfolder-dir ${runDir} \\
             --output-dir . \\
             --sample-sheet ${std_samplesheet} \\
             --adapter-stringency ${params.adapter_stringency} \\
@@ -571,7 +570,7 @@ process bcl2fastq_default {
     } else if (result.name =~ /^fail.*/){
         """
         bcl2fastq \\
-            --runfolder-dir ${params.runfolder} \\
+            --runfolder-dir ${runDir} \\
             --output-dir . \\
             --sample-sheet ${sheet} \\
             --adapter-stringency ${params.adapter_stringency} \\
@@ -709,52 +708,6 @@ if (params.fastq_screen_conf) {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-def create_workflow_summary(summary) {
-    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
-    yaml_file.text  = """
-    id: 'nf-core-demultiplex-summary'
-    description: " - this information is collected when the pipeline is started."
-    section_name: 'nf-core/demultiplex Workflow Summary'
-    section_href: 'https://github.com/nf-core/demultiplex'
-    plot_type: 'html'
-    data: |
-        <dl class=\"dl-horizontal\">
-${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
-        </dl>
-    """.stripIndent()
-
-   return yaml_file
-}
-
-/*
- * Parse software version numbers
- */
-process get_software_versions {
-    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
-        saveAs: {filename ->
-            if (filename.indexOf(".csv") > 0) filename
-            else null
-        }
-
-    output:
-    file 'software_versions_mqc.yaml' into software_versions_yaml
-    file "software_versions.csv"
-
-    script:
-    // TODO nf-core: Get all tools to print their version number here
-    """
-    echo $workflow.manifest.version > v_pipeline.txt
-    echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    fastq_screen --version > v_fastqscreen.txt
-    multiqc --version > v_multiqc.txt
-    echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
-    cellranger mkfastq --version > v_cellranger.txt
-    #cellranger-atac --version > v_cellrangeratac.txt
-    #cellranger-dna --version > v_cellrangerdna.txt
-    scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
 
 /*
  * STEP 13.1 - MultiQC per project
@@ -824,6 +777,53 @@ process multiqcAll {
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+
+def create_workflow_summary(summary) {
+    def yaml_file = workDir.resolve('workflow_summary_mqc.yaml')
+    yaml_file.text  = """
+    id: 'nf-core-demultiplex-summary'
+    description: " - this information is collected when the pipeline is started."
+    section_name: 'nf-core/demultiplex Workflow Summary'
+    section_href: 'https://github.com/nf-core/demultiplex'
+    plot_type: 'html'
+    data: |
+        <dl class=\"dl-horizontal\">
+${summary.collect { k,v -> "            <dt>$k</dt><dd><samp>${v ?: '<span style=\"color:#999999;\">N/A</a>'}</samp></dd>" }.join("\n")}
+        </dl>
+    """.stripIndent()
+
+   return yaml_file
+}
+
+/*
+ * Parse software version numbers
+ */
+process get_software_versions {
+    publishDir "${params.outdir}/pipeline_info", mode: 'copy',
+        saveAs: {filename ->
+            if (filename.indexOf(".csv") > 0) filename
+            else null
+        }
+
+    output:
+    file 'software_versions_mqc.yaml' into software_versions_yaml
+    file "software_versions.csv"
+
+    script:
+    // TODO nf-core: Get all tools to print their version number here
+    """
+    echo $workflow.manifest.version > v_pipeline.txt
+    echo $workflow.nextflow.version > v_nextflow.txt
+    fastqc --version > v_fastqc.txt
+    fastq_screen --version > v_fastqscreen.txt
+    multiqc --version > v_multiqc.txt
+    echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
+    cellranger mkfastq --version > v_cellranger.txt
+    #cellranger-atac --version > v_cellrangeratac.txt
+    #cellranger-dna --version > v_cellrangerdna.txt
+    scrape_software_versions.py &> software_versions_mqc.yaml
+    """
+}
 
 /*
  * STEP 14 - Output Description HTML
