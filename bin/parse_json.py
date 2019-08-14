@@ -32,6 +32,9 @@ with open(samplesheet, 'r') as f:
         if data_tag_search in row:
             data_index = idx
 
+with open(samplesheet, 'r') as myfile:
+    head = [next(myfile) for x in range(data_index)]
+
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
 
 # slice sample sheet for only problem rows
@@ -92,6 +95,8 @@ for result in json_file:
 SS_new_problem_ids.drop('read_count', 1, inplace=True)
 
 with open('json_samplesheet.csv', 'w+') as fp:
+    for item in head:
+        fp.write(item)
     fp.write('[Data]\n')
     sample_pd.to_csv(fp, index=False)
     fp.close()

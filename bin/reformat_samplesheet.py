@@ -23,6 +23,9 @@ with open(samplesheet, 'r') as f:
         if data_tag_search in row:
             data_index = idx
 
+with open(samplesheet, 'r') as myfile:
+    head = [next(myfile) for x in range(data_index)]
+
 sample_pd = pd.read_csv(samplesheet, skiprows=range(0, data_index + 1))
 
 # check samplesheet has all columns needed
@@ -103,6 +106,8 @@ bcl2fastq_needed = open(bcl2fastq + ".bcl2fastq.txt", "w")
 bcl2fastq_needed.close()
 
 with open('reformatted_samplesheet.standard.csv', 'w+') as f:
+    for item in head:
+        f.write(item)
     f.write('[Data]\n')
     sample_pd['Lane'] = sample_pd['Lane'].astype(int)
     sample_pd.to_csv(f, index=False)
