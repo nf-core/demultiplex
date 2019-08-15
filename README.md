@@ -33,7 +33,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
       2. This is only run when there are samples left on the sample sheet after removing the single cell samples.
       3. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline. Takes into account if Index reads will be made into FastQ's as well
 6. [`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) runs on the pooled fastq files from all the conditional processes.
-7. [`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) runs on the pooled results from all the conditional processes.
+7. [`FastQ Screen`](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) runs on the pooled results from all the conditional processes. Must have own fastq_screen config to direct to.
 8. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
 9. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
