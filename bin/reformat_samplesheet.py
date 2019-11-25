@@ -44,8 +44,6 @@ sample_pd['index2'] = sample_pd['index2'].str.strip()
 
 # remove rows and create new samplesheet with 10X samples
 sc_list = ['10X-3prime']
-sc_ATAC_list = ['10X-ATAC']
-sc_DNA_list = ['10X-CNV']
 
 # dictionary to map latin name with cell ranger genome ref name
 cellranger_ref_genome_dict = {'Homo sapiens':'GRCh38', 'Mus musculus':'mm10', 'Danio rerio':'GRCz10',
@@ -56,41 +54,14 @@ cellranger_10X_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_list)].copy(
 cellranger_idx_list_to_drop = cellranger_10X_df.index.values.tolist()
 cellranger_10X_df['ReferenceGenome'] = cellranger_10X_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10X_df['ReferenceGenome'])
 
-# create new csv for just 10X-ATAC samples
-cellranger_10XATAC_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_ATAC_list)].copy()
-cellranger_idx_ATAClist_to_drop = cellranger_10XATAC_df.index.values.tolist()
-cellranger_10XATAC_df['ReferenceGenome']= cellranger_10XATAC_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XATAC_df['ReferenceGenome'])
-
-# create new csv for just 10X-DNA samples
-cellranger_10XDNA_df = sample_pd[sample_pd['DataAnalysisType'].isin(sc_DNA_list)].copy()
-cellranger_idx_DNAlist_to_drop = cellranger_10XDNA_df.index.values.tolist()
-cellranger_10XDNA_df['ReferenceGenome'] = cellranger_10XDNA_df['ReferenceGenome'].map(cellranger_ref_genome_dict).fillna(cellranger_10XDNA_df['ReferenceGenome'])
-
 #combine 10X sample indexes
-total_idx_to_drop = cellranger_idx_list_to_drop + cellranger_idx_ATAClist_to_drop + cellranger_idx_DNAlist_to_drop
-
+total_idx_to_drop = cellranger_idx_list_to_drop 
 cellranger_needed = 'false'
 if len(cellranger_10X_df) > 0:
     with open('tenX_samplesheet.tenx.csv', 'w+') as fp:
         fp.write('[Data]\n')
         cellranger_10X_df.to_csv(fp, index=False)
         fp.close()
-    cellranger_needed = 'true'
-
-if len(cellranger_10XATAC_df) > 0:
-    with open('tenX_samplesheet.ATACtenx.csv', 'w+') as ATACfile:
-        ATACfile.write('[Data]\n')
-        cellranger_10XATAC_df['Lane'] = cellranger_10XATAC_df['Lane'].astype(int)
-        cellranger_10XATAC_df.to_csv(ATACfile, index=False)
-        ATACfile.close()
-    cellranger_needed = 'true'
-
-if len(cellranger_10XDNA_df) > 0:
-    with open('tenX_samplesheet.DNAtenx.csv', 'w+') as DNAfile:
-        DNAfile.write('[Data]\n')
-        cellranger_10XDNA_df['Lane'] = cellranger_10XDNA_df['Lane'].astype(int) 
-        cellranger_10XDNA_df.to_csv(DNAfile, index=False)
-        DNAfile.close()
     cellranger_needed = 'true'
 
 reg = open(cellranger_needed + ".tenx.txt", "w")

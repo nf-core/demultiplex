@@ -371,19 +371,9 @@ process cellRangerMkFastQ {
     file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
 
     script:
-    if (sheet.name =~ /^*sheet.tenx.csv/){
-        """
-        cellranger mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
-        """
-    } else if (sheet.name =~ /^*sheet.ATACtenx.csv/){
-        """
-        cellranger-atac mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
-        """
-    } else if (sheet.name =~ /^*sheet.DNAtenx.csv/){
-        """
-        cellranger-dna mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
-        """
-    }
+    """
+    cellranger mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
+    """
 }
 
 /*
@@ -409,30 +399,9 @@ def getCellRangerProjectName(fqfile) {
 cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerProjectName(fqfile), getCellRangerSampleName(fqfile), fqfile.getFileName() ] }
 cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
-process cellRangerMoveFqs {
-    tag "${fastq}"
-
-    input:
-    set projectName, sampleName, file(fastq) from cr_fastqs_copyfs_tuple_ch
-    file result from tenx_results2
-
-    when:
-    result.name =~ /^true.*/
-
-    script:
-    """
-    while [[ ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} && ! -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]]; do sleep 15s; done
-    if [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ]; then
-        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${sampleName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-    elif [ -f ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ]; then
-        mkdir -p "${params.outdir}/${runName}/fastq/${projectName}" && cp -p ${params.outdir}/${runName}/mkfastq/outs/fastq_path/${projectName}/${fastq} ${params.outdir}/${runName}/fastq/${projectName}
-    fi
-    """
-}
-
 /*
  * STEP 9 - CellRanger count.
- *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
+ *          ONLY RUNS WHEN A 10X SAMPLESHEET EXISTS.
  */
 def getCellRangerFastqPath(fqfile) {
     def fastqPath = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
@@ -461,8 +430,6 @@ process cellRangerCount {
     publishDir "${params.outdir}/${runName}", mode: 'copy',
     saveAs: { filename ->
         if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
-        else if (dataType =~ /10X-CNV/) "CNV/${projectName}/$filename"
-        else if (dataType =~ /10X-ATAC/) "ATAC/${projectName}/$filename"
     }
 
     label 'process_big'
@@ -480,19 +447,9 @@ process cellRangerCount {
 
     script:
     genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
-    if (dataType =~ /10X-3prime/){
-        """
-        cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
-        """
-    } else if (dataType =~ /10X-CNV/){
-        """
-        cellranger-dna cnv --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_cnv} --fastqs=$fastqDir --sample=$sampleID
-        """
-    } else if (dataType =~ /10X-ATAC/){
-        """
-        cellranger-atac count --id=$sampleID --reference=${genome_ref_conf_filepath.tenx_atac} --fastqs=$fastqDir --sample=$sampleID
-        """
-    }
+    """
+    cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+    """
 }
 
 ///////////////////////////////////////////////////////////////////////////////
