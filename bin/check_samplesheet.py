@@ -31,10 +31,10 @@ def check_samplesheet(samplesheet):
     # get unique lanes
     sample_pd_lane_set = sample_pd['Lane'].unique()
 
-    # check if single index samples  are on the same lane as dual index
-    sample_pd_empty_remove = sample_pd[sample_pd["index2"].notnull()]
-    empty_index2 = sample_pd[sample_pd["index"].notnull()]
-    empty_index2 = empty_index2[empty_index2["index2"].isnull()]
+    # check if single index samples are on the same lane as dual index
+    sample_pd_empty_remove = sample_pd[sample_pd["index2"] != 'nan']
+    empty_index2 = sample_pd[sample_pd["index"] != 'nan']
+    empty_index2 = empty_index2[empty_index2["index2"] == 'nan']
 
     result = set(empty_index2['Lane']).intersection(set(sample_pd_empty_remove['Lane']))
 
@@ -64,13 +64,16 @@ def check_samplesheet(samplesheet):
                         if v != len(row['index']):
                             samplesheet_check = "fail"
                             return samplesheet_check
+
                         # second index short and not single indexed
                         elif v != len(row['index2']) and row['index2'] != 'nan':
-                            samplesheet_check = "fail"
-                            return samplesheet_check
+                            if row['index2'] != None:
+                                samplesheet_check = "fail"
+                                return samplesheet_check
+
         return samplesheet_check
 
 results_ss = check_samplesheet(samplesheet)
 
-x = open (results_ss + ".txt", "w")
+x = open(results_ss + ".txt", "w")
 x.close()

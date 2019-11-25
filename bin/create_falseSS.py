@@ -111,9 +111,9 @@ indexes_to_drop = [item for items in indexes_to_drop for item in items]
 
 sample_pd = sample_pd.drop(indexes_to_drop)
 
-# #check if there are samples still left on samplesheet
+# check if there are samples still left on samplesheet
 if sample_pd.empty:
-    sys.exit("Removed all samples from sample sheet as all considered problematic, left with empty sheet")
+    sys.exit("Removed all samples from sample sheet, left with empty sheet")
 
 with open('fake_samplesheet.csv', 'w+') as fp:
     fp.write('[Data]\n')

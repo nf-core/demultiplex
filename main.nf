@@ -29,6 +29,8 @@ def helpMessage() {
 
     References                            If not specified in the configuration file or you wish to overwrite any of the references.
       --tenx_genomes_base                 Base directory for 10x genomes
+      --fastq_screen_conf                 Full path to fastq_screen genome config file
+      --kraken_db                         Full path to Kraken2 DB for contaminant screeening
 
     bcl2fastq
       --adapter_stringency                The minimum match rate that would trigger the masking or trimming process
@@ -49,11 +51,10 @@ def helpMessage() {
       --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
 
     QC
-      --fastq_screen_conf                 Full path to fastq_screen genome config file
-      --kraken_db                         Full path to Kraken2 DB for contaminant screeening
       --skipFastQC                        Skip FastQC
       --skipMultiQC                       Skip MultiQC
       --skipMultiQCStats                  Exclude general statistics table from MultiQC report
+      --kraken_db_size                    Specify size parameters to build the Kraken database if no database available
 
     Other options:
       --outdir                            The output directory where the results will be saved
@@ -172,9 +173,8 @@ checkHostname()
 ///////////////////////////////////////////////////////////////////////////////
 
 /*
- * STEP 1 - Check sample sheet for iCLIP samples and 10X samples.
- *        - This will collapse iCLIP samples into one sample and pull out 10X
- *          samples into new samplesheet.
+ * STEP 1 - Check sample sheet for 10X samples.
+ *        - This will pull out 10X samples into new samplesheet.        
  */
 process reformat_samplesheet {
     tag "${sheet.name}"
@@ -527,9 +527,9 @@ process bcl2fastq_default {
     bcl_result.name =~ /^true.bcl2fastq.txt/
 
     output:
-    file "*/**{R1,R2,R3}_001.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch mode flatten
+    file "*/**{R1,R2,R3}_001.fastq.gz" into fastqs_fqc_ch, fastqs_screen_ch, fastq_kraken_ch mode flatten
     file "*/**{I1,I2}_001.fastq.gz" optional true into fastqs_idx_ch
-    file "*{R1,R2,R3}_001.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch mode flatten
+    file "*{R1,R2,R3}_001.fastq.gz" into undetermined_default_fq_ch, undetermined_default_fastqs_screen_ch, undetermined_fastq_kraken_ch mode flatten
     file "*{I1,I2}_001.fastq.gz" optional true into undetermined_idx_fq_ch
     file "Reports" into b2fq_default_reports_ch
     file "Stats" into b2fq_default_stats_ch
@@ -628,6 +628,16 @@ process fastqc {
     """
 }
 
+// function to determine if paired end or not
+def getFastqPairName(fqfile) {
+    def sampleName = (fqfile =~ /.*\/(.+)_[R][12]_001\.fastq\.gz/)
+    if (sampleName.find()) {
+        return sampleName.group(1)
+    }
+    return fqfile
+}
+
+// fastq_kraken_ch.map { fastq -> [ getFastqPairName(fastq), fastq] }.groupTuple().set{ fastq_pairs_ch }
 // process kraken2 {
 //     tag "${projectName}"
 //     publishDir path: "${params.outdir}/${runName}/kraken2/${projectName}", mode: 'copy'
@@ -637,14 +647,14 @@ process fastqc {
 //     !params.skipFastQC
 //
 //     input:
-//     set val(projectName), file(fqFile) from fastqcAll_ch
+//     set val(projectName), file(fqFile) from fastq_pairs_ch
 //
 //     output:
 //     set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
 //     file "*.html" into fqc_html_ch
 //
 //     script:
-//     single_end = singleEnd ? "" : "--paired"
+//     
 //     """
 //     kraken2 \\
 //         --db $kraken_db \\
