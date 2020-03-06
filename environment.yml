@@ -8,11 +8,11 @@ channels:
 
 dependencies:
   ## conda-forge packages
-  - r-base=3.5.1
-  - r-markdown=1.0
+  - r-base=3.6.2
+  - r-markdown=1.1
 
   ## bioconda packages
-  - fastqc=0.11.8
+  - fastqc=0.11.9
   - fastq-screen=0.13.0
   - kraken2=2.0.8_beta
-  - multiqc=1.7
+  - multiqc=1.8
