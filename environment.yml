@@ -5,14 +5,15 @@ channels:
   - conda-forge
   - bioconda
   - defaults
-
 dependencies:
   ## conda-forge packages
-  - r-base=3.6.2
-  - r-markdown=1.1
+  - conda-forge::r-base=3.6.2
+  - conda-forge::r-markdown=1.1
+  - conda-forge::pandas=1.0.1
+  - conda-forge::numpy=1.18.1
 
   ## bioconda packages
-  - fastqc=0.11.9
-  - fastq-screen=0.13.0
-  - kraken2=2.0.8_beta
-  - multiqc=1.8
+  - bioconda::fastqc=0.11.9
+  - bioconda::fastq-screen=0.13.0
+  - bioconda::kraken2=2.0.8_beta
+  - bioconda::multiqc=1.8
