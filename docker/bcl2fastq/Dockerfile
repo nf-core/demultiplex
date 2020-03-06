@@ -1,0 +1,1 @@
+FROM dceoy/bcl2fastq
