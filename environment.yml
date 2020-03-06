@@ -5,7 +5,7 @@ channels:
   - conda-forge
   - bioconda
   - defaults
-  - HCC
+
 dependencies:
   ## conda-forge packages
   - r-base=3.5.1
@@ -16,6 +16,3 @@ dependencies:
   - fastq-screen=0.13.0
   - kraken2=2.0.8_beta
   - multiqc=1.7
-
-  ## other packages
-  - HCC::cellranger=3.0.2
