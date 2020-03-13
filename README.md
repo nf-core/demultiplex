@@ -69,7 +69,7 @@ iv. Start running your own analysis!
 <!-- TODO nf-core: Update the default command above used to run the pipeline -->
 
 ```bash
-nextflow run nf-core/demultiplex -profile <docker/singularity/institute> --samplesheet samplesheet.csv  --runfolder /path/to/run/directory/
+nextflow run nf-core/demultiplex -profile <docker/singularity/institute> --input samplesheet.csv  --run_dir /path/to/run/directory/
 ```
 
 See [usage docs](docs/usage.md) for all of the available options when running the pipeline.
