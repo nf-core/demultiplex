@@ -18,11 +18,11 @@ def helpMessage() {
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/demultiplex --samplesheet samplesheet.csv  --runfolder /path/to/run/directory/ -profile docker
+    nextflow run nf-core/demultiplex --input samplesheet.csv  --run_dir /path/to/run/directory/ -profile docker
 
     Mandatory arguments:
-      --samplesheet [file]                Full path to samplesheet
-      --runfolder [file]                  Full path to run directory (will parse name of run from the last directory in path)
+      --input [file]                      Full path to samplesheet
+      --run_dir [file]                    Full path to run directory (will parse name of run from the last directory in path)
       -profile [str]                      Configuration profile to use. Can use multiple (comma separated)
                                           Available: docker, singularity, test, awsbatch, <institute> and more
 
@@ -50,10 +50,11 @@ def helpMessage() {
       --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
 
     QC
-      --skipFastQC [bool]                 Skip FastQC
-      --skipMultiQC [bool]                Skip MultiQC
-      --skipMultiQCStats [bool]           Exclude general statistics table from MultiQC report
       --kraken_db_size [int]              Specify size parameters to build the Kraken database if no database available
+      --skip_fastqc [bool]                Skip FastQC
+      --skip_kraken2 [bool]               Skip Kraken2
+      --skip_multiqc [bool]               Skip MultiQC
+      --skip_multiqc_stats [bool]         Exclude general statistics table from MultiQC report
 
     Other options:
       --outdir [file]                     The output directory where the results will be saved
@@ -96,8 +97,8 @@ if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
 // /* --          VALIDATE INPUTS                 -- */
 // ////////////////////////////////////////////////////
 
-if (params.samplesheet) { ss_sheet = file(params.samplesheet, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
-if (params.runfolder) { runDir = file(params.runfolder, checkIfExists: true) } else { exit 1, "Run directory not found!" }
+if (params.input) { ss_sheet = file(params.input, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
+if (params.run_dir) { runDir = file(params.run_dir, checkIfExists: true) } else { exit 1, "Run directory not found!" }
 runName = runDir.getName()
 
 // Stage config files
@@ -122,6 +123,8 @@ def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
 summary['Run Name']                          = custom_runName ?: workflow.runName
 // TODO nf-core: Report custom parameters here
+summary['Samplesheet']                       = params.input
+summary['Run Directory']                     = params.run_dir
 summary['10X Genome Dir']                    = params.tenx_genomes_base
 summary['Adapter Stringency']                = params.adapter_stringency
 summary['Barcode Mismatch']                  = params.barcode_mismatches
@@ -141,9 +144,10 @@ if (params.no_lane_splitting)                summary['No Lane Splitting'] = para
 if (params.find_adapters_withsliding_window) summary['Adapt Sliding Window'] = params.find_adapters_withsliding_window
 if (params.fastq_screen_conf)                summary['FastQ Screen Conf'] = params.fastq_screen_conf
 if (params.kraken_db)                        summary['Kraken2 DB'] = params.kraken_db
-if (params.skipFastQC)                       summary['Skip FastQC'] = params.skipFastQC
-if (params.skipMultiQC)                      summary['Skip MultiQC'] = params.skipMultiQC
-if (params.skipMultiQCStats)                 summary['Skip MultiQC Stats'] = params.skipMultiQCStats
+if (params.skip_fastqc)                      summary['Skip FastQC'] = params.skip_fastqc
+if (params.skip_kraken2)                     summary['Skip Kraken2'] = params.skip_kraken2
+if (params.skip_multiqc)                     summary['Skip MultiQC'] = params.skip_multiqc
+if (params.skip_multiqc_stats)               summary['Skip MultiQC Stats'] = params.skip_multiqc_stats
 summary['Max Resources']                     = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir']                        = params.outdir
@@ -225,7 +229,7 @@ process check_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
-/* --               Problem Sample Sheet Processes                       -- */
+/* --               Problem Sample Sheet Processes                        -- */
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -350,7 +354,7 @@ process recheck_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
-/* --               Single Cell Processes`                        -- */
+/* --               Single Cell Processes`                                -- */
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -577,7 +581,7 @@ process fastqc {
     label 'process_high'
 
     when:
-    !params.skipFastQC
+    !params.skip_fastqc
 
     input:
     set val(projectName), file(fqFile) from fastqcAll_ch
@@ -608,7 +612,7 @@ def getFastqPairName(fqfile) {
 //     label 'process_high'
 //
 //     when:
-//     !params.skipFastQC
+//     !params.skip_kraken2
 //
 //     input:
 //     set val(projectName), file(fqFile) from fastq_pairs_ch
@@ -682,7 +686,6 @@ if (params.fastq_screen_conf) {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-
 /*
  * STEP 13.1 - MultiQC per project
  */
@@ -691,7 +694,7 @@ process multiqc {
     publishDir path: "${params.outdir}/${runName}/multiqc/${projectName}", mode: 'copy'
 
     when:
-    !params.skipMultiQC
+    !params.skip_multiqc
 
     input:
     file ('fastqc/*') from fqc_folder_ch.collect{it[1]}.ifEmpty([])
@@ -712,7 +715,7 @@ process multiqc {
     rtitle = custom_runName ? "--title \"$custom_runName\"" : ''
     rfilename = custom_runName ? "--filename " + custom_runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report" : ''
     custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
+    mqcstats = params.skip_multiqc_stats ? '--cl_config "skip_generalstats: true"' : ''
     // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
     """
     multiqc ${fqFiles} ${fqScreen} $rtitle $rfilename $custom_config_file $mqcstats .
@@ -732,7 +735,7 @@ process multiqcAll {
     publishDir path: "${params.outdir}/${runName}/multiqc", mode: 'copy'
 
     when:
-    !params.skipMultiQC
+    !params.skip_multiqc
 
     input:
     file fqFile from all_fcq_files
@@ -746,7 +749,7 @@ process multiqcAll {
     file "multiqc_plots"
 
     script:
-    mqcstats = params.skipMultiQCStats ? '--cl_config "skip_generalstats: true"' : ''
+    mqcstats = params.skip_multiqc_stats ? '--cl_config "skip_generalstats: true"' : ''
     """
     multiqc ${fqFile} ${fqScreen} ${bcl_stats} --config $multiqc_config $mqcstats .
     """
@@ -797,6 +800,7 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
     fastq_screen --version > v_fastqscreen.txt
+    #kraken2
     multiqc --version > v_multiqc.txt
     echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
     cellranger mkfastq --version > v_cellranger.txt
@@ -952,7 +956,6 @@ workflow.onComplete {
     }
 
 }
-
 
 def nfcoreHeader() {
     // Log colors ANSI codes
