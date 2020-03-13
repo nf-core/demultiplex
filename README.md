@@ -40,15 +40,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 8. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
 9. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
-### Sample sheet format
+### Samplesheet format
 
 The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does.
 
-| Lane        | Sample_ID   | index   | index2 | Sample_Project | ReferenceGenome | DataAnalysisType |
-|-------------|-------------|---------|--------|----------------|-----------------|------------------|
-|     1       |   ABC11A2   | TCGATGTG|CTCGATGA|     PM10000    |  Homo sapiens   |    Whole Exome   |
-|     2       |  SAG100A10  | SI-GA-C1|        |     SC18100    |  Mus musculus	 |    10X-3prime    |
-|     3       |  CAP200A11  | CTCGATGA|        |     PM18200    |  Homo sapiens   |       Other      |
+| Lane | Sample_ID | index    | index2   | Sample_Project | ReferenceGenome | DataAnalysisType |
+|------|-----------|----------|----------|----------------|-----------------|------------------|
+| 1    | ABC11A2   | TCGATGTG | CTCGATGA | PM10000        | Homo sapiens    | Whole Exome      |
+| 2    | SAG100A10 | SI-GA-C1 |          | SC18100        | Mus musculus    | 10X-3prime       |
+| 3    | CAP200A11 | CTCGATGA |          | PM18200        | Homo sapiens    | Other            |
 
 ## Quick Start
 
