@@ -50,10 +50,11 @@ def helpMessage() {
       --find_adapters_withsliding_window  Find adapters with simple sliding window algorithm. Insertions and deletions of bases inside the adapter sequence are not handled.
 
     QC
+      --kraken_db_size [int]              Specify size parameters to build the Kraken database if no database available
       --skip_fastqc [bool]                Skip FastQC
+      --skip_kraken2 [bool]               Skip Kraken2
       --skip_multiqc [bool]               Skip MultiQC
       --skip_multiqc_stats [bool]         Exclude general statistics table from MultiQC report
-      --kraken_db_size [int]              Specify size parameters to build the Kraken database if no database available
 
     Other options:
       --outdir [file]                     The output directory where the results will be saved
@@ -144,6 +145,7 @@ if (params.find_adapters_withsliding_window) summary['Adapt Sliding Window'] = p
 if (params.fastq_screen_conf)                summary['FastQ Screen Conf'] = params.fastq_screen_conf
 if (params.kraken_db)                        summary['Kraken2 DB'] = params.kraken_db
 if (params.skip_fastqc)                      summary['Skip FastQC'] = params.skip_fastqc
+if (params.skip_kraken2)                     summary['Skip Kraken2'] = params.skip_kraken2
 if (params.skip_multiqc)                     summary['Skip MultiQC'] = params.skip_multiqc
 if (params.skip_multiqc_stats)               summary['Skip MultiQC Stats'] = params.skip_multiqc_stats
 summary['Max Resources']                     = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
@@ -227,7 +229,7 @@ process check_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
-/* --               Problem Sample Sheet Processes                       -- */
+/* --               Problem Sample Sheet Processes                        -- */
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -352,7 +354,7 @@ process recheck_samplesheet {
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 /* --                                                                     -- */
-/* --               Single Cell Processes`                        -- */
+/* --               Single Cell Processes`                                -- */
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -610,7 +612,7 @@ def getFastqPairName(fqfile) {
 //     label 'process_high'
 //
 //     when:
-//     !params.skip_fastqc
+//     !params.skip_kraken2
 //
 //     input:
 //     set val(projectName), file(fqFile) from fastq_pairs_ch
@@ -683,7 +685,6 @@ if (params.fastq_screen_conf) {
 /* --                                                                     -- */
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 
 /*
  * STEP 13.1 - MultiQC per project
@@ -799,6 +800,7 @@ process get_software_versions {
     echo $workflow.nextflow.version > v_nextflow.txt
     fastqc --version > v_fastqc.txt
     fastq_screen --version > v_fastqscreen.txt
+    #kraken2
     multiqc --version > v_multiqc.txt
     echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
     cellranger mkfastq --version > v_cellranger.txt
@@ -954,7 +956,6 @@ workflow.onComplete {
     }
 
 }
-
 
 def nfcoreHeader() {
     // Log colors ANSI codes
