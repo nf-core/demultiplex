@@ -11,7 +11,6 @@ RUN apt-get update \
     clang-6.0 \
     cython \
     dialog \
-#    golang-1.10-go \
     gcc-multilib \
     libbz2-dev \
     liblzma-dev \
@@ -36,7 +35,6 @@ RUN apt-get update \
     lzma-dev \
     python-cairo \
     python-h5py \
-#    python-libtiff \ 
     python-matplotlib \
     python-nacl \
     python-numpy \
@@ -78,10 +76,6 @@ COPY requirements.txt /opt/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r /opt/requirements.txt
 
-# RUN easy_install -U pip
-# RUN easy_install -U pyOpenSSL
-# RUN apt-get install python-dateutil
-
 # Install rust and cargo. Note that installing with apt gets a rust that won't complie
 # cellranger.
 RUN apt-get install -y \
@@ -121,6 +115,15 @@ RUN curl -sL https://deb.nodesource.com/setup_13.x | bash - \
 RUN git clone --recursive https://github.com/martian-lang/martian.git \
  && cd martian \
  && make mrc mrf mrg mrp mrs mrstat mrjob
+ 
+# Install tsne python package. pip installing it doesn't work
+RUN git clone https://github.com/TomKellyGenetics/tsne.git \
+ && cd tsne \
+ && make install \
+ && python setup.py install \
+ && cd .. \
+ && rm -rf tsne
+
 
 # Set up paths to cellranger. This is most of what sourceme.bash would do.
 ENV PATH /cellranger-3.0.2.9001/cellranger-cs/3.0.2.9001/bin/:/cellranger-3.0.2.9001/cellranger-cs/3.0.2.9001/lib/bin:/cellranger-3.0.2.9001/cellranger-cs/3.0.2.9001/tenkit/bin/:/cellranger-3.0.2.9001/cellranger-cs/3.0.2.9001/tenkit/lib/bin:/martian/bin/:$PATH
