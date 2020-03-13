@@ -21,11 +21,12 @@ funcsigs==0.4
 futures==2.2.0
 greenlet==0.4.5
 grin==1.2.1
+h5py==2.6.0
 illuminate
 itsdangerous==0.24
 jdcal
 jedi==0.8.1
-jinja2==2.7.3
+jinja2==2.10.1
 jsonschema==2.4.0
 lz4==2.2.1
 markupsafe==0.23
