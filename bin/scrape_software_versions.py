@@ -12,6 +12,7 @@ regexes = {
     'MultiQC': ['v_multiqc.txt', r"multiqc, version (\S+)"],
     'bcl2fastq': ['v_bcl2fastq.txt', r"bcl2fastq v(\S+)"],
     'CellRanger': ['v_cellranger.txt', r"cellranger mkfastq (\S+)"]
+    'UniverSC': ['v_universc.txt', r"UniverSC v(\S+)"]
     #'CellRangerATAC': ['v_cellrangeratac.txt', r"CellRangerATAC, version (\S+)"],
     #'CellRangerDNA': ['v_cellrangerdna.txt', r"CellRangerDNA, version (\S+)"],
 }

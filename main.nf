@@ -436,7 +436,7 @@ cr_fqname_fqfile_ch
         tuple(sampleID, projectName, refGenome, dataType, fastqDir) }
    .set { cr_grouped_fastq_dir_sample_ch }
 
-process cellRangerCount {
+process UniverSC {
     tag "${projectName}/${sampleID}"
     publishDir "${params.outdir}/${runName}", mode: 'copy',
     saveAs: { filename ->
@@ -459,7 +459,7 @@ process cellRangerCount {
     script:
     genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
     """
-    cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
+    bash universc/launch_universc.sh --id $sampleID --technology "10x" --reference ${genome_ref_conf_filepath.tenx_transcriptomes} --file ${fastqDir}/${sampleID}
     """
 }
 
@@ -804,6 +804,7 @@ process get_software_versions {
     multiqc --version > v_multiqc.txt
     echo \$(bcl2fastq --version 2>&1) > v_bcl2fastq.txt
     cellranger mkfastq --version > v_cellranger.txt
+    bash universc/launch_universc.sh --version | tail -2 | head -n 1 | cut -d" " -f3 > v_universc.txt
     #cellranger-atac --version > v_cellrangeratac.txt
     #cellranger-dna --version > v_cellrangerdna.txt
     scrape_software_versions.py &> software_versions_mqc.yaml
