@@ -20,12 +20,14 @@ process FASTQ_SCREEN {
     task.ext.when == null || task.ext.when
 
     script:
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     """
     fastq_screen \\
-        --force --subset 200000 \\
+        $args \\
         --conf $ch_fastq_screen_config \\
-        --aligner bowtie2 \\
-        $fqFile
+        --aligner $args2 \\
+        $reads
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
