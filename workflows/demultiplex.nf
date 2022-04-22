@@ -41,6 +41,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
 include { MAKE_FAKE_SS         } from '../modules/local/make_fake_ss'
+include { BCL2FASTQ_PROBLEM_SS } from '../modules/local/bcl2fastq_problem_ss'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -123,35 +124,11 @@ workflow DEMULTIPLEX {
     * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
     *           ONLY RUNS WHEN SAMPLESHEET FAILS.
     */
-    process bcl2fastq_problem_SS {
-        tag "problem_samplesheet"
-        label 'process_high'
-
-        input:
-        file sheet from fake_samplesheet
-        file result from resultChannel2
-
-        when:
-        result.name =~ /^fail.*/
-
-        output:
-        file "Stats/Stats.json" into stats_json_file
-
-        script:
-        """
-        bcl2fastq \\
-            --runfolder-dir ${runDir} \\
-            --output-dir . \\
-            --sample-sheet ${sheet} \\
-            --ignore-missing-bcls \\
-            --ignore-missing-filter \\
-            --with-failed-reads \\
-            --barcode-mismatches 0 \\
-            --loading-threads 8 \\
-            --processing-threads 24 \\
-            --writing-threads 6
-        """
-    }
+    BCL2FASTQ_PROBLEM_SS (
+        MAKE_FAKE_SS.out.fake_samplesheet,
+        INPUT_CHECK.out.result // FIXME this doesn't exist
+    )
+    ch_versions = ch_versions.mix(BCL2FASTQ_PROBLEM_SS.out.versions)
 
     /*
     * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the unknown barcodes section.
