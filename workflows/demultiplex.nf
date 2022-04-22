@@ -215,15 +215,16 @@ workflow DEMULTIPLEX {
         MAKE_FAKE_SS.out.problem_samples_list,
         BCL2FASTQ_PROBLEM_SS.out.stats_json_file
     )
+    // TODO
+    // ch_versions = ch_versions.mix(BCL2FASTQ.out.versions.first())
 
     // TODO Move to Subworkflow
 
     //
-    // TODO
     // STEP 11 - Run FastQC
     //
     FASTQC (
-        reads
+        BCL2FASTQ.out.fastq
     )
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
