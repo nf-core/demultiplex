@@ -40,6 +40,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 // MODULE: Local
 //
 include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
+include { MAKE_FAKE_SS         } from '../modules/local/make_fake_ss'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -112,26 +113,11 @@ workflow DEMULTIPLEX {
     *          will remove problem samples from entire sample and create a new one.
     *          ONLY RUNS WHEN SAMPLESHEET FAILS.
     */
-    process make_fake_SS {
-        tag "problem_samplesheet"
-        label 'process_low'
-
-        input:
-        file sheet from standard_samplesheet2
-        file result from resultChannel1
-
-        when:
-        result.name =~ /^fail.*/
-
-        output:
-        file "*.csv" into fake_samplesheet
-        file "*.txt" into problem_samples_list1, problem_samples_list2
-
-        script:
-        """
-        create_falseSS.py --samplesheet "${sheet}"
-        """
-    }
+    MAKE_FAKE_SS (
+        REFORMAT_SAMPLESHEET.out.standard_samplesheet,
+        REFORMAT_SAMPLESHEET.out.bcl2fastq_results
+    )
+    ch_versions = ch_versions.mix(MAKE_FAKE_SS.out.versions)
 
     /*
     * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
