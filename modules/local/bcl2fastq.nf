@@ -2,6 +2,11 @@ process BCL2FASTQ {
     tag "${std_samplesheet.name}"
     label 'process_high'
 
+    if (params.enable_conda) {
+        exit 1, "Conda environments cannot be used when using bcl-convert. Please use docker or singularity containers."
+    }
+    container "nfcore/demultiplex:bcl2fastq-2.20.0"
+
     input:
     path result2
     path result
