@@ -75,13 +75,6 @@ workflow DEMULTIPLEX {
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC (
-        INPUT_CHECK.out.reads
-    )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -465,54 +458,14 @@ workflow DEMULTIPLEX {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --                           FastQC                                    -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 11 - FastQC
-    */
-    fqname_fqfile_ch = fastqs_fqc_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
-    undetermined_default_fqfile_tuple_ch = undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-    cr_fqname_fqfile_fqc_ch = cr_fastqs_fqc_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
-    cr_undetermined_default_fq_tuple_ch = cr_undetermined_default_fq_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-
-    fastqcAll = Channel.empty()
-    fastqcAll_ch = fastqcAll.mix(fqname_fqfile_ch, undetermined_default_fqfile_tuple_ch, cr_fqname_fqfile_fqc_ch, cr_undetermined_default_fq_tuple_ch)
-
-    process fastqc {
-        tag "${projectName}"
-        publishDir path: "${params.outdir}/${runName}/fastqc/${projectName}", mode: 'copy'
-        label 'process_high'
-
-        when:
-        !params.skip_fastqc
-
-        input:
-        set val(projectName), file(fqFile) from fastqcAll_ch
-
-        output:
-        set val(projectName), file("*_fastqc") into fqc_folder_ch, all_fcq_files_tuple
-        file "*.html" into fqc_html_ch
-
-        script:
-        """
-        fastqc --extract ${fqFile}
-        """
-    }
-
-    // function to determine if paired end or not
-    def getFastqPairName(fqfile) {
-        def sampleName = (fqfile =~ /.*\/(.+)_[R][12]_001\.fastq\.gz/)
-        if (sampleName.find()) {
-            return sampleName.group(1)
-        }
-        return fqfile
-    }
+    //
+    // TODO
+    // STEP 11 - Run FastQC
+    //
+    FASTQC (
+        reads
+    )
+    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
     // fastq_kraken_ch.map { fastq -> [ getFastqPairName(fastq), fastq] }.groupTuple().set{ fastq_pairs_ch }
     // process kraken2 {
