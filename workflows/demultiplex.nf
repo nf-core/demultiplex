@@ -37,6 +37,11 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 //
+// MODULE: Local
+//
+include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
+
+//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
@@ -89,24 +94,10 @@ workflow DEMULTIPLEX {
     * STEP 1 - Check sample sheet for 10X samples.
     *        - This will pull out 10X samples into new samplesheet.
     */
-    process reformat_samplesheet {
-        tag "${sheet.name}"
-        label 'process_low'
-
-        input:
-        file sheet from ss_sheet
-
-        output:
-        file "*.standard.csv" into standard_samplesheet1, standard_samplesheet2, standard_samplesheet3, standard_samplesheet4
-        file "*.bcl2fastq.txt" into bcl2fastq_results1, bcl2fastq_results2, bcl2fastq_results3
-        file "*.tenx.txt" into tenx_results1, tenx_results2, tenx_results3, tenx_results4, tenx_results5
-        file "*tenx.csv" optional true into tenx_samplesheet1, tenx_samplesheet2
-
-        script:
-        """
-        reformat_samplesheet.py --samplesheet "${sheet}"
-        """
-    }
+    REFORMAT_SAMPLESHEET (
+        INPUT_CHECK.out.samplesheet
+    )
+    ch_versions = ch_versions.mix(REFORMAT_SAMPLESHEET.out.versions)
 
     /*
     * STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
