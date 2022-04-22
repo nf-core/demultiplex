@@ -45,6 +45,7 @@ include { BCL2FASTQ_PROBLEM_SS } from '../modules/local/bcl2fastq_problem_ss'
 include { PARSE_JSONFILE       } from '../modules/local/parse_jsonfile'
 include { RECHECK_SAMPLESHEET  } from '../modules/local/recheck_samplesheet'
 include { BCL2FASTQ            } from '../modules/local/bcl2fastq'
+include { FASTQ_SCREEN         } from '../modules/local/fastq_screen'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -246,37 +247,10 @@ workflow DEMULTIPLEX {
     /*
     * STEP 12 - FastQ Screen
     */
-    fastqs_screen_fqfile_ch = fastqs_screen_ch.map { fqFile -> [fqFile.getParent().getName(), fqFile ] }
-    undetermined_fastqs_screen_fqfile_ch = undetermined_default_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-    cr_fqname_fqfile_screen_ch = cr_fastqs_screen_ch.map { fqFile -> [getCellRangerProjectName(fqFile), fqFile ] }
-    cr_undetermined_fastqs_screen_tuple_ch = cr_undetermined_fastqs_screen_ch.map { fqFile -> ["Undetermined_default", fqFile ] }
-
-    fastqcScreenAll = Channel.empty()
-    grouped_fqscreen_ch = fastqcScreenAll.mix(fastqs_screen_fqfile_ch, cr_fqname_fqfile_screen_ch, cr_undetermined_fastqs_screen_tuple_ch, undetermined_fastqs_screen_fqfile_ch)
-
-    if (params.fastq_screen_conf) {
-        process fastq_screen {
-            tag "${projectName}"
-            publishDir "${params.outdir}/${runName}/fastq_screen/${projectName}", mode: 'copy'
-            label 'process_high'
-
-            input:
-            set val(projectName), file(fqFile) from grouped_fqscreen_ch
-            file fastq_screen_config from ch_fastq_screen_config
-
-            output:
-            set val(projectName), file("*_screen.txt") into fastq_screen_txt, all_fq_screen_txt_tuple
-            file "*_screen.html" into fastq_screen_html
-
-            script:
-            """
-            fastq_screen --force --subset 200000 --conf $ch_fastq_screen_config --aligner bowtie2 ${fqFile}
-            """
-        }
-    } else {
-        fastq_screen_txt = Channel.create()
-        all_fq_screen_txt_tuple = Channel.create()
-    }
+    // TODO Run this against undetermined
+    FASTQ_SCREEN (
+        BCL2FASTQ.out.fastq
+    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
