@@ -111,6 +111,8 @@ workflow DEMULTIPLEX {
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
+    // TODO Move to subworkflow
+
     /*
     * STEP 3 - If previous process finds samples that will cause problems, this process
     *          will remove problem samples from entire sample and create a new one.
@@ -166,6 +168,8 @@ workflow DEMULTIPLEX {
     /* --                                                                     -- */
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
+
+    // TODO Move to Subworkflow
 
     /*
     * STEP 7 - CellRanger MkFastQ.
@@ -363,6 +367,8 @@ workflow DEMULTIPLEX {
             """
         }
     }
+
+    // TODO Move to Subworkflow
 
     //
     // TODO
