@@ -1,7 +1,5 @@
 process BCL2FASTQ {
     tag "${std_samplesheet.name}"
-    publishDir path: "${params.outdir}/${runName}/fastq", mode: 'copy'
-
     label 'process_high'
 
     input:
