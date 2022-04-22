@@ -60,6 +60,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 // MODULE: Installed directly from nf-core/modules
 //
 include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
+include { CELLRANGER_MKFASTQ          } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -175,29 +176,10 @@ workflow DEMULTIPLEX {
     * STEP 7 - CellRanger MkFastQ.
     *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
     */
-    process cellRangerMkFastQ {
-        tag "${sheet.name}"
-        label 'process_high'
-        publishDir path: "${params.outdir}/${runName}", mode: 'copy'
-
-        input:
-        file sheet from tenx_samplesheet1
-        file result from tenx_results1
-
-        when:
-        result.name =~ /^true.*/
-
-        output:
-        file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch, cr_undetermined_move_fq_ch mode flatten
-        file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
-        file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
-        file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
-
-        script:
-        """
-        cellranger mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
-        """
-    }
+    CELLRANGER_MKFASTQ (
+        REFORMAT_SAMPLESHEET.out.tenx_results,
+        REFORMAT_SAMPLESHEET.out.tenx_samplesheet
+    )
 
     /*
     * STEP 8 - Copy CellRanger FastQ files to new folder.
