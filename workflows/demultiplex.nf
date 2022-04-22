@@ -42,6 +42,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
 include { MAKE_FAKE_SS         } from '../modules/local/make_fake_ss'
 include { BCL2FASTQ_PROBLEM_SS } from '../modules/local/bcl2fastq_problem_ss'
+include { PARSE_JSONFILE       } from '../modules/local/parse_jsonfile'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -136,28 +137,13 @@ workflow DEMULTIPLEX {
     *           to remake the sample sheet so that bcl2fastq can run properly.
     *           ONLY RUNS WHEN SAMPLESHEET FAILS.
     */
-    updated_samplesheet2 = Channel.create()
-    process parse_jsonfile {
-        tag "problem_samplesheet"
-        label 'process_low'
-
-        input:
-        file json from stats_json_file
-        file sheet from standard_samplesheet3
-        file samp_probs from problem_samples_list1
-        file result from resultChannel3
-
-        when:
-        result.name =~ /^fail.*/
-
-        output:
-        file "*.csv" into updated_samplesheet1, updated_samplesheet2
-
-        script:
-        """
-        parse_json.py --samplesheet "${sheet}" --jsonfile "${json}" --problemsamples "${samp_probs}"
-        """
-    }
+    PARSE_JSONFILE (
+        BCL2FASTQ_PROBLEM_SS.out.stats_json_file,
+        MAKE_FAKE_SS.out.fake_samplesheet,
+        MAKE_FAKE_SS.out.problem_samples_list,
+        INPUT_CHECK.out.result // FIXME this doesn't exist
+    )
+    ch_versions = ch_versions.mix(PARSE_JSONFILE.out.versions)
 
     /*
     * STEP 6 -  Checking the remade sample sheet.
