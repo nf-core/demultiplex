@@ -15,6 +15,9 @@
             "fastqc": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "kraken2/kraken2": {
+                "git_sha": "abe025677cdd805cc93032341ab19885473c1a07"
+            },
             "multiqc": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             }
