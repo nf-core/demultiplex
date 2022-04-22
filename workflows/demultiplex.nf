@@ -43,6 +43,7 @@ include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
 include { MAKE_FAKE_SS         } from '../modules/local/make_fake_ss'
 include { BCL2FASTQ_PROBLEM_SS } from '../modules/local/bcl2fastq_problem_ss'
 include { PARSE_JSONFILE       } from '../modules/local/parse_jsonfile'
+include { RECHECK_SAMPLESHEET  } from '../modules/local/recheck_samplesheet'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -150,28 +151,13 @@ workflow DEMULTIPLEX {
     *           If this fails again the pipeline will exit and fail.
     *           ONLY RUNS WHEN SAMPLESHEET FAILS.
     */
-    PROBLEM_SS_CHECK2 = Channel.create()
-    process recheck_samplesheet {
-        tag "problem_samplesheet"
-        label 'process_low'
-
-        input:
-        file sheet from ss_sheet
-        file ud_sheet from updated_samplesheet1
-        file prob_samps from problem_samples_list2
-        file result from resultChannel4
-
-        when:
-        result.name =~ /^fail.*/
-
-        output:
-        file "*.txt" into PROBLEM_SS_CHECK2
-
-        script:
-        """
-        recheck_samplesheet.py --samplesheet "${sheet}" --newsamplesheet "${ud_sheet}" --problemsamples "${prob_samps}"
-        """
-    }
+    RECHECK_SAMPLESHEET (
+        MAKE_FAKE_SS.out.fake_samplesheet,
+        PARSE_JSONFILE.out.updated_samplesheet,
+        MAKE_FAKE_SS.out.problem_samples_list,
+        INPUT_CHECK.out.result // FIXME this doesn't exist
+    )
+    ch_versions = ch_versions.mix(RECHECK_SAMPLESHEET.out.versions)
 
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
