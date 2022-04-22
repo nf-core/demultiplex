@@ -72,16 +72,6 @@ workflow DEMULTIPLEX {
 
     ch_versions = Channel.empty()
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
-    INPUT_CHECK (
-        ch_input
-    )
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-
-
-
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
     /* --                                                                     -- */
@@ -95,29 +85,19 @@ workflow DEMULTIPLEX {
     *        - This will pull out 10X samples into new samplesheet.
     */
     REFORMAT_SAMPLESHEET (
-        INPUT_CHECK.out.samplesheet
+        ch_input
     )
     ch_versions = ch_versions.mix(REFORMAT_SAMPLESHEET.out.versions)
 
-    /*
-    * STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
-    *          indexes on same lanes and output pass or fail file to next processes.
-    */
-    process check_samplesheet {
-        tag "${sheet.name}"
-        label 'process_low'
-
-        input:
-        file sheet from standard_samplesheet1
-
-        output:
-        file "*.txt" into resultChannel1, resultChannel2, resultChannel3, resultChannel4, resultChannel5
-
-        script:
-        """
-        check_samplesheet.py --samplesheet "${sheet}"
-        """
-    }
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    //
+    // STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
+    //          indexes on same lanes and output pass or fail file to next processes.
+    //
+    INPUT_CHECK (
+        REFORMAT_SAMPLESHEET.out.standard_samplesheet
+    )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
