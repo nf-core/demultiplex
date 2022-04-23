@@ -32,12 +32,7 @@ process BCL2FASTQ {
         --runfolder-dir ${runDir} \\
         --output-dir . \\
         --sample-sheet ${std_samplesheet} \\
-        --adapter-stringency ${params.adapter_stringency} \\
         $args \\
-        --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-        --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-        --fastq-compression-level ${params.fastq_compression_level} \\
-        --barcode-mismatches ${params.barcode_mismatches} \\
         $args2
         """
     } else if (result2.name =~ /^fail.*/){
@@ -48,12 +43,7 @@ process BCL2FASTQ {
         --runfolder-dir ${runDir} \\
         --output-dir . \\
         --sample-sheet ${sheet} \\
-        --adapter-stringency ${params.adapter_stringency} \\
         $args \\
-        --minimum-trimmed-read-length ${params.minimum_trimmed_readlength} \\
-        --mask-short-adapter-reads ${params.mask_short_adapter_reads} \\
-        --fastq-compression-level ${params.fastq_compression_level} \\
-        --barcode-mismatches ${params.barcode_mismatches}
         $args2
         """
     }
