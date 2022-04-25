@@ -61,10 +61,10 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
-include { CELLRANGER_MKFASTQ          } from '../modules/nf-core/modules/cellranger/mkfastq/main'
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { BCLCONVERT                    } from '../modules/nf-core/modules/bclconvert/main'
+include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
+include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,90 +79,13 @@ workflow DEMULTIPLEX {
 
     ch_versions = Channel.empty()
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Sample Sheet Reformatting and Check`                  -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 1 - Check sample sheet for 10X samples.
-    *        - This will pull out 10X samples into new samplesheet.
-    */
-    REFORMAT_SAMPLESHEET (
-        ch_input
-    )
-    ch_versions = ch_versions.mix(REFORMAT_SAMPLESHEET.out.versions)
-
+    //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-    // STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
-    //          indexes on same lanes and output pass or fail file to next processes.
-    //
     INPUT_CHECK (
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet
+        ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Problem Sample Sheet Processes                        -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    // TODO Move to subworkflow
-
-    /*
-    * STEP 3 - If previous process finds samples that will cause problems, this process
-    *          will remove problem samples from entire sample and create a new one.
-    *          ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    MAKE_FAKE_SS (
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet,
-        REFORMAT_SAMPLESHEET.out.bcl2fastq_results
-    )
-    ch_versions = ch_versions.mix(MAKE_FAKE_SS.out.versions)
-
-    /*
-    * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    BCL2FASTQ_PROBLEM_SS (
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(BCL2FASTQ_PROBLEM_SS.out.versions)
-
-    /*
-    * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the unknown barcodes section.
-    *           The barcodes that match the short indexes and/or missing index 2 with the highest count
-    *           to remake the sample sheet so that bcl2fastq can run properly.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    PARSE_JSONFILE (
-        BCL2FASTQ_PROBLEM_SS.out.stats_json_file,
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(PARSE_JSONFILE.out.versions)
-
-    /*
-    * STEP 6 -  Checking the remade sample sheet.
-    *           If this fails again the pipeline will exit and fail.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    RECHECK_SAMPLESHEET (
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        PARSE_JSONFILE.out.updated_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(RECHECK_SAMPLESHEET.out.versions)
 
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
