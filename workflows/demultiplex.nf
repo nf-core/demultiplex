@@ -88,29 +88,8 @@ workflow DEMULTIPLEX {
     * STEP 7 - CellRanger MkFastQ.
     *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
     */
-    process cellRangerMkFastQ {
-        tag "${sheet.name}"
-        label 'process_high'
-        publishDir path: "${params.outdir}/${runName}", mode: 'copy'
 
-        input:
-        file sheet from tenx_samplesheet1
-        file result from tenx_results1
-
-        when:
-        result.name =~ /^true.*/
-
-        output:
-        file "*/outs/fastq_path/Undetermined_*.fastq.gz" into cr_undetermined_default_fq_ch, cr_undetermined_fastqs_screen_ch, cr_undetermined_move_fq_ch mode flatten
-        file "*/outs/fastq_path/*/**.fastq.gz" into cr_fastqs_count_ch, cr_fastqs_fqc_ch, cr_fastqs_screen_ch, cr_fastqs_copyfs_ch mode flatten
-        file "*/outs/fastq_path/Reports" into cr_b2fq_default_reports_ch
-        file "*/outs/fastq_path/Stats" into cr_b2fq_default_stats_ch
-
-        script:
-        """
-        cellranger mkfastq --id mkfastq --run ${runDir} --samplesheet ${sheet}
-        """
-    }
+    CELLRANGER_MKFASTQ ( tenx_samplesheet1, tenx_results1)
 
     /*
     * STEP 8 - Copy CellRanger FastQ files to new folder.
@@ -134,59 +113,6 @@ workflow DEMULTIPLEX {
 
     cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerProjectName(fqfile), getCellRangerSampleName(fqfile), fqfile.getFileName() ] }
     cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
-
-    /*
-    * STEP 9 - CellRanger count.
-    *          ONLY RUNS WHEN A 10X SAMPLESHEET EXISTS.
-    */
-    def getCellRangerFastqPath(fqfile) {
-        def fastqPath = (fqfile =~ /(.*\/outs\/fastq_path\/[a-zA-Z0-9_]*)\//)
-        if (fastqPath.find()) {
-            return fastqPath.group(1)
-        }
-        return fqfile
-    }
-
-    cr_samplesheet_info_ch = tenx_samplesheet2.splitCsv(header: true, skip: 1).map { row -> [ row.Sample_ID, row.Sample_Project, row.ReferenceGenome, row.DataAnalysisType ] }
-    cr_fqname_fqfile_ch = cr_fastqs_count_ch.map { fqfile -> [ getCellRangerSampleName(fqfile), getCellRangerFastqPath(fqfile) ] }.unique()
-
-    cr_fqname_fqfile_ch
-        .phase(cr_samplesheet_info_ch)
-        .map{ left, right ->
-            def sampleID = left[0]
-            def projectName = right[1]
-            def refGenome = right[2]
-            def dataType = right[3]
-            def fastqDir = left[1]
-            tuple(sampleID, projectName, refGenome, dataType, fastqDir) }
-    .set { cr_grouped_fastq_dir_sample_ch }
-
-    process cellRangerCount {
-        tag "${projectName}/${sampleID}"
-        publishDir "${params.outdir}/${runName}", mode: 'copy',
-        saveAs: { filename ->
-            if (dataType =~ /10X-3prime/) "count/${projectName}/$filename"
-        }
-
-        label 'process_high'
-        errorStrategy 'ignore'
-
-        input:
-        set sampleID, projectName, refGenome, dataType, fastqDir from cr_grouped_fastq_dir_sample_ch
-        file result from tenx_results3
-
-        when:
-        result.name =~ /^true.*/
-
-        output:
-        file "${sampleID}/" into count_output
-
-        script:
-        genome_ref_conf_filepath = params.cellranger_genomes.get(refGenome, false)
-        """
-        cellranger count --id=$sampleID --transcriptome=${genome_ref_conf_filepath.tenx_transcriptomes} --fastqs=$fastqDir --sample=$sampleID
-        """
-    }
 
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
