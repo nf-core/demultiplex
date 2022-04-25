@@ -14,6 +14,9 @@
             },
             "multiqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+            },
+            "untar": {
+                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             }
         }
     }
