@@ -70,6 +70,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 // MODULE: Installed directly from nf-core/modules
 //
 include { BCLCONVERT                    } from '../modules/nf-core/modules/bclconvert/main'
+include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -93,9 +94,22 @@ workflow DEMULTIPLEX {
         ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    ch_flowcells = Channel.from(INPUT_CHECK.out.flowcells)
 
     // MODULE: bclconvert
-    BCLCONVERT (samplesheet, run_directory)
+    // Runs when "params.demultiplexer" is set to "bclconvert"
+    // See conf/modules.config
+    BCLCONVERT (ch_flowcells[1], ch_flowcells[2])
+
+    // MODULE: cellranger
+    // Runs when "params.demultiplexer" is set to "cellranger"
+    // See conf/modules.config
+    CELLRANGER_MKFASTQ (ch_flowcells[2], ch_flowcells[1])
+
+    // MODULE: bases2fastq
+    // Runs when "params.demultiplexer" is set to "bases2fastq"
+    // See conf/modules.config
+    //BASES2FASTQ ()
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
