@@ -96,12 +96,13 @@ class RowChecker:
         """Assert that the run directory exists and is a directory or tar.gz file"""
         run_dir_path = Path(row[self._run_dir_col])
         assert len(row[self._run_dir_col]) > 0, "Run directory is required."
-        assert run_dir_path.exists(), "Run directory must exist."
-        assert run_dir_path.is_dir() or (
-            run_dir_path.is_file()
-            and all([ext in run_dir_path.suffixes for ext in [".tar", ".gz"]]),
-            "Run directory must be a directory or a tar.gz file.",
-        )
+        # FIXME
+        # assert run_dir_path.exists(), "Run directory must exist."
+        # assert run_dir_path.is_dir() or (
+        #     run_dir_path.is_file()
+        #     and all([ext in run_dir_path.suffixes for ext in [".tar", ".gz"]]),
+        #     "Run directory must be a directory or a tar.gz file.",
+        # )
 
 
 def sniff_format(handle):
@@ -168,7 +169,8 @@ def check_samplesheet(file_in, file_out):
             except AssertionError as error:
                 logger.critical(f"{str(error)} On line {i + 2}.")
                 sys.exit(1)
-        checker.validate_unique_samples()
+        # FIXME
+        # checker.validate_unique_samples()
     header = list(reader.fieldnames)
     header.insert(1, "single_end")
     # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
