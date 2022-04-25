@@ -74,17 +74,23 @@ class RowChecker:
     def _validate_fc(self, row):
         """Assert that the flowcell name exists and check format."""
         assert len(row[self._fc_col]) > 0, "Flowcell name is required."
-        assert len(row[self._fc_col].split("_")) == 4, "Flowcell name must have the following format: 'DDMMYY_SERIAL_RUN_FC'."
+        assert (
+            len(row[self._fc_col].split("_")) == 4
+        ), "Flowcell name must have the following format: 'DDMMYY_SERIAL_RUN_FC'."
 
     def _validate_samplesheet(self, row):
         """Assert that the samplesheet exists and has the right format."""
         assert len(row[self._samplesheet_col]) > 0, "SampleSheet file is required."
-        assert Path(row[self._samplesheet_col]).suffix == ".csv", "SampleSheet file must have the .csv extension."
+        assert (
+            Path(row[self._samplesheet_col]).suffix == ".csv"
+        ), "SampleSheet file must have the .csv extension."
 
     def _validate_lane(self, row):
         """Assert that the second FASTQ entry has the right format if it exists."""
         if row[self._lane_col]:
-            assert row[self._lane_col].isdigit(), "Lane number must be a positive integer."
+            assert row[
+                self._lane_col
+            ].isdigit(), "Lane number must be a positive integer."
 
     def _validate_run_dir(self, row):
         """Assert that the run directory exists and is a directory or tar.gz file"""
@@ -150,7 +156,9 @@ def check_samplesheet(file_in, file_out):
         reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
         # Validate the existence of the expected header columns.
         if not required_columns.issubset(reader.fieldnames):
-            logger.critical(f"The sample sheet **must** contain the column headers: {', '.join(required_columns)}.")
+            logger.critical(
+                f"The sample sheet **must** contain the column headers: {', '.join(required_columns)}."
+            )
             sys.exit(1)
         # Validate each row.
         checker = RowChecker()
