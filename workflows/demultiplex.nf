@@ -15,15 +15,19 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowDemultiplex.initialise(params, log)
 
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+def checkPathParamList = [
+    params.input,
+    params.multiqc_config
+]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-if (params.input) { ss_sheet = file(params.input, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
-if (params.run_dir) { runDir = file(params.run_dir, checkIfExists: true) } else { exit 1, "Run directory not found!" }
+
 runName = runDir.getName()
 
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+
+ch_input_fc = extract_csv(csv_file)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,7 +59,6 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 // MODULE: Installed directly from nf-core/modules
 //
 include { BCLCONVERT                    } from '../modules/nf-core/modules/bclconvert/main'
-include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -80,65 +83,16 @@ workflow DEMULTIPLEX {
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Single Cell Processes`                                -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
 
-    /*
-    * STEP 7 - CellRanger MkFastQ.
-    *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
-    */
-
-    CELLRANGER_MKFASTQ ( tenx_samplesheet1, tenx_results1)
-
-    /*
-    * STEP 8 - Copy CellRanger FastQ files to new folder.
-    *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS.
-    */
-    def getCellRangerSampleName(fqfile) {
-        def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
-        if (sampleName.find()) {
-            return sampleName.group(1)
-        }
-        return fqfile
-    }
-
-    def getCellRangerProjectName(fqfile) {
-        def projectName = (fqfile =~ /.*\/outs\/fastq_path\/([a-zA-Z0-9_]*)\//)
-        if (projectName.find()) {
-            return projectName.group(1)
-        }
-        return fqfile
-    }
-
-    cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerProjectName(fqfile), getCellRangerSampleName(fqfile), fqfile.getFileName() ] }
-    cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Main Demultiplexing Processes`                        -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 10 - Run bcl-convert
-    */
-
+    // MODULE: bclconvert
     BCLCONVERT (samplesheet, run_directory)
 
+    // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    //
     // MODULE: MultiQC
-    //
     workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
@@ -147,7 +101,6 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect()
@@ -168,6 +121,109 @@ workflow.onComplete {
     }
     NfcoreTemplate.summary(workflow, params, log)
 }
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+// Function to extract information (meta data + file(s)) from csv file(s)
+def extract_csv(csv_file) {
+    Channel.from(csv_file).splitCsv(header: true)
+        //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
+        .map{ row ->
+            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
+            [[row.patient.toString(), row.sample.toString()], row]
+        }.groupTuple()
+        .map{ meta, rows ->
+            size = rows.size()
+            [rows, size]
+        }.transpose()
+        .map{ row, numLanes -> //from here do the usual thing for csv parsing
+        def meta = [:]
+
+        //TODO since it is mandatory: error/warning if not present?
+        // Meta data to identify samplesheet
+        // Both patient and sample are mandatory
+        // Several sample can belong to the same patient
+        // Sample should be unique for the patient
+        if (row.patient) meta.patient = row.patient.toString()
+        if (row.sample)  meta.sample  = row.sample.toString()
+
+        // If no gender specified, gender is not considered
+        // gender is only mandatory for somatic CNV
+        if (row.gender) meta.gender = row.gender.toString()
+        else meta.gender = "NA"
+
+        // If no status specified, sample is assumed normal
+        if (row.status) meta.status = row.status.toInteger()
+        else meta.status = 0
+
+        // mapping with fastq
+        if (row.lane && row.fastq_2) {
+            meta.id         = "${row.sample}-${row.lane}".toString()
+            def fastq_1     = file(row.fastq_1, checkIfExists: true)
+            def fastq_2     = file(row.fastq_2, checkIfExists: true)
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.numLanes   = numLanes.toInteger()
+            meta.read_group = read_group.toString()
+            meta.data_type  = "fastq"
+            return [meta, [fastq_1, fastq_2]]
+        // start from BAM
+        } else if (row.lane && row.bam) {
+            meta.id         = "${row.sample}-${row.lane}".toString()
+            def bam         = file(row.bam,   checkIfExists: true)
+            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            meta.numLanes   = numLanes.toInteger()
+            meta.read_group = read_group.toString()
+            meta.data_type  = "bam"
+            return [meta, bam]
+        // recalibration
+        } else if (row.table && row.cram) {
+            meta.id   = meta.sample
+            def cram  = file(row.cram,  checkIfExists: true)
+            def crai  = file(row.crai,  checkIfExists: true)
+            def table = file(row.table, checkIfExists: true)
+            meta.data_type  = "cram"
+            return [meta, cram, crai, table]
+        // recalibration when skipping MarkDuplicates
+        } else if (row.table && row.bam) {
+            meta.id   = meta.sample
+            def bam   = file(row.bam,   checkIfExists: true)
+            def bai   = file(row.bai,   checkIfExists: true)
+            def table = file(row.table, checkIfExists: true)
+            meta.data_type  = "bam"
+            return [meta, bam, bai, table]
+        // prepare_recalibration or variant_calling
+        } else if (row.cram) {
+            meta.id = meta.sample
+            def cram = file(row.cram, checkIfExists: true)
+            def crai = file(row.crai, checkIfExists: true)
+            meta.data_type  = "cram"
+            return [meta, cram, crai]
+        // prepare_recalibration when skipping MarkDuplicates
+        } else if (row.bam) {
+            meta.id = meta.sample
+            def bam = file(row.bam, checkIfExists: true)
+            def bai = file(row.bai, checkIfExists: true)
+            meta.data_type  = "bam"
+            return [meta, bam, bai]
+        // annotation
+        } else if (row.vcf) {
+            meta.id = meta.sample
+            def vcf = file(row.vcf, checkIfExists: true)
+            meta.data_type     = "vcf"
+            meta.variantcaller = ""
+            return [meta, vcf]
+        } else {
+            log.warn "Missing or unknown field in csv file header"
+        }
+    }
+}
+
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
