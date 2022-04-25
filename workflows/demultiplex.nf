@@ -136,55 +136,10 @@ workflow DEMULTIPLEX {
     ///////////////////////////////////////////////////////////////////////////////
 
     /*
-    * STEP 9 - Running bcl2fastq on the remade samplesheet or a sample sheet that
-    *          passed the initial check. bcl2fastq parameters can be changed when
-    *          staring up the pipeline.
-    *          ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
-    *          INTO SEPARATE SAMPLE SHEETS.
+    * STEP 10 - Run bcl-convert
     */
-    BCL2FASTQ (
-        RECHECK_SAMPLESHEET.out.problem_ss,
-        INPUT_CHECK.out.result, // FIXME this doesn't exist
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet
-        PARSE_JSONFILE.out.updated_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        BCL2FASTQ_PROBLEM_SS.out.stats_json_file
-    )
-    // TODO
-    // ch_versions = ch_versions.mix(BCL2FASTQ.out.versions.first())
 
-    // TODO Move to Subworkflow
-
-    //
-    // STEP 11 - Run FastQC
-    //
-    FASTQC (
-        BCL2FASTQ.out.fastq
-    )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    KRAKEN2_KRAKEN2 (
-        BCL2FASTQ.out.fastq,
-        params.kraken_db,
-        true,
-        true
-    )
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --                         FastQ Screen                                -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 12 - FastQ Screen
-    */
-    // TODO Run this against undetermined
-    FASTQ_SCREEN (
-        BCL2FASTQ.out.fastq
-    )
+    BCLCONVERT (samplesheet, run_directory)
 
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
