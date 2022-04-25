@@ -21,13 +21,8 @@ def checkPathParamList = [
 ]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-runName = runDir.getName()
-
-
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-
-ch_input_fc = extract_csv(csv_file)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,7 +81,6 @@ workflow DEMULTIPLEX {
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     ch_flowcells = Channel.from(INPUT_CHECK.out.flowcells)
 
-    // meta = ch_flowcells[0]
     // samplesheet = ch_flowcells[1]
     // run_name = ch_flowcells[2]
     // TODO: Is this the right way to do this?
@@ -140,109 +134,6 @@ workflow.onComplete {
     }
     NfcoreTemplate.summary(workflow, params, log)
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-// Function to extract information (meta data + file(s)) from csv file(s)
-def extract_csv(csv_file) {
-    Channel.from(csv_file).splitCsv(header: true)
-        //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
-        .map{ row ->
-            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
-            [[row.patient.toString(), row.sample.toString()], row]
-        }.groupTuple()
-        .map{ meta, rows ->
-            size = rows.size()
-            [rows, size]
-        }.transpose()
-        .map{ row, numLanes -> //from here do the usual thing for csv parsing
-        def meta = [:]
-
-        //TODO since it is mandatory: error/warning if not present?
-        // Meta data to identify samplesheet
-        // Both patient and sample are mandatory
-        // Several sample can belong to the same patient
-        // Sample should be unique for the patient
-        if (row.patient) meta.patient = row.patient.toString()
-        if (row.sample)  meta.sample  = row.sample.toString()
-
-        // If no gender specified, gender is not considered
-        // gender is only mandatory for somatic CNV
-        if (row.gender) meta.gender = row.gender.toString()
-        else meta.gender = "NA"
-
-        // If no status specified, sample is assumed normal
-        if (row.status) meta.status = row.status.toInteger()
-        else meta.status = 0
-
-        // mapping with fastq
-        if (row.lane && row.fastq_2) {
-            meta.id         = "${row.sample}-${row.lane}".toString()
-            def fastq_1     = file(row.fastq_1, checkIfExists: true)
-            def fastq_2     = file(row.fastq_2, checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
-            meta.numLanes   = numLanes.toInteger()
-            meta.read_group = read_group.toString()
-            meta.data_type  = "fastq"
-            return [meta, [fastq_1, fastq_2]]
-        // start from BAM
-        } else if (row.lane && row.bam) {
-            meta.id         = "${row.sample}-${row.lane}".toString()
-            def bam         = file(row.bam,   checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
-            meta.numLanes   = numLanes.toInteger()
-            meta.read_group = read_group.toString()
-            meta.data_type  = "bam"
-            return [meta, bam]
-        // recalibration
-        } else if (row.table && row.cram) {
-            meta.id   = meta.sample
-            def cram  = file(row.cram,  checkIfExists: true)
-            def crai  = file(row.crai,  checkIfExists: true)
-            def table = file(row.table, checkIfExists: true)
-            meta.data_type  = "cram"
-            return [meta, cram, crai, table]
-        // recalibration when skipping MarkDuplicates
-        } else if (row.table && row.bam) {
-            meta.id   = meta.sample
-            def bam   = file(row.bam,   checkIfExists: true)
-            def bai   = file(row.bai,   checkIfExists: true)
-            def table = file(row.table, checkIfExists: true)
-            meta.data_type  = "bam"
-            return [meta, bam, bai, table]
-        // prepare_recalibration or variant_calling
-        } else if (row.cram) {
-            meta.id = meta.sample
-            def cram = file(row.cram, checkIfExists: true)
-            def crai = file(row.crai, checkIfExists: true)
-            meta.data_type  = "cram"
-            return [meta, cram, crai]
-        // prepare_recalibration when skipping MarkDuplicates
-        } else if (row.bam) {
-            meta.id = meta.sample
-            def bam = file(row.bam, checkIfExists: true)
-            def bai = file(row.bai, checkIfExists: true)
-            meta.data_type  = "bam"
-            return [meta, bam, bai]
-        // annotation
-        } else if (row.vcf) {
-            meta.id = meta.sample
-            def vcf = file(row.vcf, checkIfExists: true)
-            meta.data_type     = "vcf"
-            meta.variantcaller = ""
-            return [meta, vcf]
-        } else {
-            log.warn "Missing or unknown field in csv file header"
-        }
-    }
-}
-
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
