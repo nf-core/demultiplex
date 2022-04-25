@@ -28,7 +28,6 @@
             },
             "run_dir": {
                 "type": "string",
-                "format": "directory-path",
                 "description": "Run directory"
             }
         },

@@ -6,7 +6,7 @@
 
 
 def valid_params = [
-    demultiplexers: ["bcl-convert","cellranger","bases2fastq"]
+    demultiplexers: ["bclconvert","cellranger","bases2fastq"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
