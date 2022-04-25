@@ -91,7 +91,11 @@ class RowChecker:
         run_dir_path = Path(row[self._run_dir_col])
         assert len(row[self._run_dir_col]) > 0, "Run directory is required."
         assert run_dir_path.exists(), "Run directory must exist."
-        assert run_dir_path.is_dir() or ( run_dir_path.is_file() and all([ext in run_dir_path.suffixes for ext in [".tar", ".gz"]] ), "Run directory must be a directory or a tar.gz file."
+        assert run_dir_path.is_dir() or (
+            run_dir_path.is_file()
+            and all([ext in run_dir_path.suffixes for ext in [".tar", ".gz"]]),
+            "Run directory must be a directory or a tar.gz file.",
+        )
 
 
 def sniff_format(handle):
