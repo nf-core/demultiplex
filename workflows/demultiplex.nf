@@ -91,30 +91,24 @@ workflow DEMULTIPLEX {
         ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    ch_flowcells = Channel.from(INPUT_CHECK.out.flowcells)
-
-    meta = ch_flowcells[0]
-    samplesheet = ch_flowcells[1]
-    run_dir = ch_flowcells[2]
-    // TODO: Is this the right way to do this?
-
-    //TODO: Check if run_dir is tar.gz
-    //TODO: If tar.gz, unpack and replace variable
 
     // MODULE: untar
+    //TODO: Check if run_dir is tar.gz
+    //TODO: If tar.gz, unpack and replace variable
     // Runs when run_dir is a tar archive
-    UNTAR ([meta,run_dir])
-    run_dir = UNTAR.out.run_dir
+    // UNTAR ([meta,run_dir])
+    // run_dir = UNTAR.out.run_dir
 
     // MODULE: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT (samplesheet, run_dir)
+    BCLCONVERT ( INPUT_CHECK.out.flowcells )
 
     // MODULE: cellranger
     // Runs when "params.demultiplexer" is set to "cellranger"
     // See conf/modules.config
-    CELLRANGER_MKFASTQ (run_dir, samplesheet)
+    // TODO
+    // CELLRANGER_MKFASTQ (run_dir, samplesheet)
 
     // MODULE: bases2fastq
     // Runs when "params.demultiplexer" is set to "bases2fastq"
