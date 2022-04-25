@@ -102,19 +102,30 @@ workflow DEMULTIPLEX {
     * STEP 7 - CellRanger MkFastQ.
     *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
     */
-    CELLRANGER_MKFASTQ (
-        REFORMAT_SAMPLESHEET.out.tenx_results,
-        REFORMAT_SAMPLESHEET.out.tenx_samplesheet
-    )
+    CELLRANGER_MKFASTQ ( tenx_samplesheet1, tenx_results1)
 
     /*
-    * STEP 8 - CellRanger count.
-    *          ONLY RUNS WHEN A 10X SAMPLESHEET EXISTS.
+    * STEP 8 - Copy CellRanger FastQ files to new folder.
+    *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLES EXISTS.
     */
-    CELLRANGER_COUNT (
-        CELLRANGER_MKFASTQ.out.fastq,
-        params.cellranger_genomes.hg19 // FIXME Remove hard-code
-    )
+    def getCellRangerSampleName(fqfile) {
+        def sampleName = (fqfile =~ /.*\/outs\/fastq_path\/.*\/(.+)_S\d+_L00\d_[IR][123]_001\.fastq\.gz/)
+        if (sampleName.find()) {
+            return sampleName.group(1)
+        }
+        return fqfile
+    }
+
+    def getCellRangerProjectName(fqfile) {
+        def projectName = (fqfile =~ /.*\/outs\/fastq_path\/([a-zA-Z0-9_]*)\//)
+        if (projectName.find()) {
+            return projectName.group(1)
+        }
+        return fqfile
+    }
+
+    cr_fastqs_copyfs_tuple_ch = cr_fastqs_copyfs_ch.map { fqfile -> [ getCellRangerProjectName(fqfile), getCellRangerSampleName(fqfile), fqfile.getFileName() ] }
+    cr_undetermined_fastqs_copyfs_tuple_ch = cr_undetermined_move_fq_ch.map { fqfile -> [ "Undetermined", fqfile.getFileName() ] }
 
     ///////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
