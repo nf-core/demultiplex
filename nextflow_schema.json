@@ -42,6 +42,21 @@
                 }
             }
         },
+        "demultiplex_options": {
+            "title": "Demultiplexing options",
+            "type": "object",
+            "fa_icon": "fas fa-microscope",
+            "description": "Options for demultiplexing.",
+            "required": ["demultiplexer"],
+            "properties": {
+                "demultiplexer": {
+                    "type": "string",
+                    "enum": ["bclconvert", "bases2fastq", "cellranger"],
+                    "description": "Demultiplexer to use.",
+                    "fa_icon": "fas fa-microscope"
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -214,6 +229,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/demultiplex_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"
