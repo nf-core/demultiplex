@@ -24,7 +24,7 @@ process BCLCONVERT {
     def args = task.ext.args ?: ''
 
     """
-    bcl-convert \
+    bcl-convert \\
         $args \\
         --output-directory ${meta.id} \\
         --bcl-input-directory ${run_dir} \\
