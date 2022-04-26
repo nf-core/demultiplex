@@ -58,7 +58,6 @@ class RowChecker:
     def validate_and_transform(self, row):
         """
         Perform all validations on the given row.
-
         Args:
             row (dict): A mapping from column headers (keys) to elements of that row
                 (values).
