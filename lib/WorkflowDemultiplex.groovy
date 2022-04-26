@@ -7,8 +7,11 @@ class WorkflowDemultiplex {
     //
     // Check and validate parameters
     //
-    public static void initialise(params, log) {
-
+    public static void initialise(params, log, valid_params) {
+        if (!valid_params['demultiplexers'].contains(params.demultiplexer)) {
+            log.error "Invalid option: '${params.demultiplexer}'. Valid options for '--demultiplexer': ${valid_params['demultiplexer'].join(', ')}."
+            System.exit(1)
+        }
     }
 
     //

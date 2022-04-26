@@ -12,7 +12,7 @@ def valid_params = [
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-WorkflowDemultiplex.initialise(params, log)
+WorkflowDemultiplex.initialise(params, log, valid_params)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
@@ -90,28 +90,32 @@ workflow DEMULTIPLEX {
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-    ch_flowcells = flowcells.branch { meta, samplesheet, run ->
-        tar: run.endsWith('.tar.gz')
-            return [meta, run]
-        dir: true
-            return [meta, samplesheet, run]
-    }
+    flowcells
+        .branch { meta, samplesheet, run ->
+            tar: run.toString().endsWith('.tar.gz')
+            dir: true
+        }.set { ch_flowcells }
+
+    ch_flowcells.tar
+        .multiMap { meta, samplesheet, run ->
+            samplesheets: [ meta, samplesheet ]
+            run_dirs: [ meta, run ]
+        }.set { ch_flowcells_tar }
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
-    UNTAR(ch_flowcells.tar)
+    // Re-join the metadata and the untarred run directory with the samplesheet
+    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
     ch_versions = ch_versions.mix(UNTAR.out.versions)
 
-    // Re-join the metadata and the untarred run directory with the samplesheet
-    ch_flowcells.tar.join(UNTAR.out.untar)
-
     // Merge the two channels back together
-    ch_flowcells.dir.mix(ch_flowcells.tar)
+    flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged).view()
+
 
     // MODULE: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT ( ch_flowcells )
+    BCLCONVERT ( flowcells )
     ch_bclconvert_multiqc = BCLCONVERT.out.reports
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
