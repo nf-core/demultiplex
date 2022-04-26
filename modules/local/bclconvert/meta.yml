@@ -44,6 +44,6 @@ output:
   - interop:
       type: file
       description: Interop files
-      pattern: "Interop/*.{bin}"
+      pattern: "*.{bin}"
 authors:
   - "@matthdsm"

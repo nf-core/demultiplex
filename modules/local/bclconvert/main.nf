@@ -11,10 +11,10 @@ process BCLCONVERT {
     tuple val(meta), path(samplesheet), path(run_dir)
 
     output:
-    tuple val(meta), path("*.fastq.gz")             ,emit: fastq
-    tuple val(meta), path("Reports/*.{csv,xml,bin}"),emit: reports
+    tuple val(meta), path("**.fastq.gz")            ,emit: fastq
+    tuple val(meta), path("Reports/*.{csv,xml}")    ,emit: reports
     tuple val(meta), path("Logs/*.{log,txt}")       ,emit: logs
-    tuple val(meta), path("InterOp/*.bin")          ,emit: interop
+    tuple val(meta), path("**.bin")                 ,emit: interop
     tuple val(meta), path("versions.yml")           ,emit: versions
 
     when:
@@ -26,15 +26,10 @@ process BCLCONVERT {
     """
     bcl-convert \\
         $args \\
-        --output-directory ${meta.id} \\
+        --output-directory . \\
         --bcl-input-directory ${run_dir} \\
         --sample-sheet ${samplesheet} \\
         --bcl-num-parallel-tiles ${task.cpus}
-
-    mkdir InterOp
-    { cp ${run_dir}/InterOp/*.bin InterOp/ } || echo "No InterOp files found in ${run_dir}/InterOp"
-    { mv Reports/*.bin InterOp/ } || echo "No InterOp files found in Reports"
-    """
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
