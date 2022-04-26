@@ -69,7 +69,7 @@ include { BCLCONVERT                    } from '../modules/local/bclconvert/main
 include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
-include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
+include { UNTAR as UNTAR_RUN            } from '../modules/nf-core/modules/untar/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,36 +84,33 @@ workflow DEMULTIPLEX {
 
     ch_versions = Channel.empty()
 
-    //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
-    INPUT_CHECK (
-        ch_input
-    )
+    flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     // MODULE: untar
-    //TODO: Check if run_dir is tar.gz
-    //TODO: If tar.gz, unpack and replace variable
     // Runs when run_dir is a tar archive
-    // UNTAR ([meta,run_dir])
-    // run_dir = UNTAR.out.run_dir
+    if (flowcells[2].endsWith('.tar.gz') {
+        flowcells[2] = UNTAR_RUN ([flowcells[0], flowcells[1]]).untar
+    }
 
     // MODULE: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT ( INPUT_CHECK.out.flowcells )
-
+    BCLCONVERT ( flowcells )
+    ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
     // MODULE: cellranger
     // Runs when "params.demultiplexer" is set to "cellranger"
     // See conf/modules.config
     // TODO
     // CELLRANGER_MKFASTQ (run_dir, samplesheet)
+    //ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
 
     // MODULE: bases2fastq
     // Runs when "params.demultiplexer" is set to "bases2fastq"
     // See conf/modules.config
     //BASES2FASTQ (samplesheet, run_dir)
+    //ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
