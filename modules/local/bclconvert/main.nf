@@ -5,7 +5,7 @@ process BCLCONVERT {
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used when using bcl-convert. Please use docker or singularity containers."
     }
-    container "nfcore/bclconvert:3.9.3"
+    container "cmgg/bclconvert:3.9.3"
 
     input:
     tuple val(meta), path(samplesheet), path(run_dir)
