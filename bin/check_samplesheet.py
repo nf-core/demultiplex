@@ -7,9 +7,9 @@ import argparse
 import csv
 import logging
 import sys
-from collections import Counter
 from pathlib import Path
 
+from urllib import request
 
 logger = logging.getLogger()
 
@@ -84,6 +84,10 @@ class RowChecker:
         assert (
             Path(row[self._samplesheet_col]).suffix == ".csv"
         ), "SampleSheet file must have the .csv extension."
+        assert (
+            Path(row[self._samplesheet_col]).exists()
+            or request.urlopen(row[self._samplesheet_col]).getcode() == 200
+        ), "SampleSheet file must exist."
 
     def _validate_lane(self, row):
         """Assert that the second FASTQ entry has the right format if it exists."""
@@ -96,13 +100,10 @@ class RowChecker:
         """Assert that the run directory exists and is a directory or tar.gz file"""
         run_dir_path = Path(row[self._run_dir_col])
         assert len(row[self._run_dir_col]) > 0, "Run directory is required."
-        # FIXME
-        # assert run_dir_path.exists(), "Run directory must exist."
-        # assert run_dir_path.is_dir() or (
-        #     run_dir_path.is_file()
-        #     and all([ext in run_dir_path.suffixes for ext in [".tar", ".gz"]]),
-        #     "Run directory must be a directory or a tar.gz file.",
-        # )
+        assert (
+            Path(row[self._run_dir_col]).exists()
+            or request.urlopen(row[self._run_dir_col]).getcode() == 200
+        ), "Run directory must exist."
 
 
 def sniff_format(handle):
@@ -169,16 +170,14 @@ def check_samplesheet(file_in, file_out):
             except AssertionError as error:
                 logger.critical(f"{str(error)} On line {i + 2}.")
                 sys.exit(1)
-        # FIXME
-        # checker.validate_unique_samples()
-    header = list(reader.fieldnames)
-    header.insert(1, "single_end")
-    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    with file_out.open(mode="w", newline="") as out_handle:
-        writer = csv.DictWriter(out_handle, header, delimiter=",")
-        writer.writeheader()
-        for row in checker.modified:
-            writer.writerow(row)
+
+        header = list(reader.fieldnames)
+        # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
+        with file_out.open(mode="w", newline="") as out_handle:
+            writer = csv.DictWriter(out_handle, header, delimiter=",")
+            writer.writeheader()
+            for row in checker.modified:
+                writer.writerow(row)
 
 
 def parse_args(argv=None):
