@@ -69,7 +69,7 @@ include { BCLCONVERT                    } from '../modules/local/bclconvert/main
 include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
-include { UNTAR as UNTAR_RUN            } from '../modules/nf-core/modules/untar/main'
+include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,28 +88,46 @@ workflow DEMULTIPLEX {
     flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
+    // Split flowcells into separate channels containg run as tar and run as path
+    // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
+    ch_flowcells = flowcells.branch { meta, samplesheet, run ->
+        tar: run.endsWith('.tar.gz')
+            return [meta, run]
+        dir: true
+            return [meta, samplesheet, run]
+    }
+
     // MODULE: untar
     // Runs when run_dir is a tar archive
-    if (flowcells[2].endsWith('.tar.gz') {
-        flowcells[2] = UNTAR_RUN ([flowcells[0], flowcells[1]]).untar
-    }
+    UNTAR(ch_flowcells.tar)
+    ch_versions = ch_versions.mix(UNTAR.out.versions)
+
+    // Re-join the metadata and the untarred run directory with the samplesheet
+    ch_flowcells.tar.join(UNTAR.out.untar)
+
+    // Merge the two channels back together
+    ch_flowcells.dir.mix(ch_flowcells.tar)
 
     // MODULE: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT ( flowcells )
+    BCLCONVERT ( ch_flowcells )
+    ch_bclconvert_multiqc = BCLCONVERT.out.reports
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
+
     // MODULE: cellranger
     // Runs when "params.demultiplexer" is set to "cellranger"
     // See conf/modules.config
     // TODO
     // CELLRANGER_MKFASTQ (run_dir, samplesheet)
-    //ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
+    // ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
 
     // MODULE: bases2fastq
     // Runs when "params.demultiplexer" is set to "bases2fastq"
     // See conf/modules.config
+    // TODO
     //BASES2FASTQ (samplesheet, run_dir)
+    // ch_bases2fastq_multiqc = BASES2FASTQ.out.reports
     //ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
 
     // DUMP SOFTWARE VERSIONS
@@ -122,6 +140,7 @@ workflow DEMULTIPLEX {
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_bclconvert_multiqc)
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
