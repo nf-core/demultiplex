@@ -7,8 +7,7 @@
     "items": {
         "type": "object",
         "properties": {
-            "flowcell":
-            {
+            "flowcell": {
                 "type": "string",
                 "description": "Flowcell ID",
                 "pattern": "^\\S+$",
@@ -18,7 +17,7 @@
                 "type": "string",
                 "format": "file-path",
                 "description": "Sample sheet file",
-                "pattern": "^\\S+\\.csv$",
+                "pattern": "^\\S+\\.csv$"
             },
             "lane": {
                 "type": "integer",

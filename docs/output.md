@@ -28,6 +28,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - Untrimmed raw fastq files
 
 ### bases2fastq
+
 TODO: add info for bases2fastq @emiller
 
 ### CellRanger

@@ -30,7 +30,7 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
 ```
 
 | Column        | Description                                                                                                       |
-| --------------| ------------------------------------------------------------------------------------------------------------------|
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `flowcell`    | flowcell id                                                                                                       |
 | `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
 | `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |

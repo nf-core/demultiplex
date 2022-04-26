@@ -34,21 +34,21 @@ On release, automated continuous integration tests run the pipeline on a full-si
 ## Pipeline summary
 
 4. Single cell 10X sample processes (CONDITIONAL):
-      NOTE: Must create CONFIG to point to CellRanger genome References
-      1. Cell Ranger mkfastq runs only when 10X samples exist. This will run the process with [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger), [`CellRanger ATAC`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/what-is-cell-ranger-atac), and [`Cell Ranger DNA`](https://support.10xgenomics.com/single-cell-dna/software/pipelines/latest/what-is-cell-ranger-dna) depending on which sample sheet has been created.
+   NOTE: Must create CONFIG to point to CellRanger genome References
+   1. Cell Ranger mkfastq runs only when 10X samples exist. This will run the process with [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger), [`CellRanger ATAC`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/what-is-cell-ranger-atac), and [`Cell Ranger DNA`](https://support.10xgenomics.com/single-cell-dna/software/pipelines/latest/what-is-cell-ranger-dna) depending on which sample sheet has been created.
 5. [`bcl2fastq`](http://emea.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) (CONDITIONAL):
-      1. Runs on either the original sample sheet that had no error prone samples or on the newly created sample sheet created from the extra steps.
-      2. This is only run when there are samples left on the sample sheet after removing the single cell samples.
-      3. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline. Takes into account if Index reads will be made into FastQ's as well
-8. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
-9. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
+   1. Runs on either the original sample sheet that had no error prone samples or on the newly created sample sheet created from the extra steps.
+   2. This is only run when there are samples left on the sample sheet after removing the single cell samples.
+   3. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline. Takes into account if Index reads will be made into FastQ's as well
+6. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
+7. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
 
 ### Samplesheet format
 
 The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does.
 
 | Lane | Sample_ID | index    | index2   | Sample_Project | ReferenceGenome | DataAnalysisType |
-|------|-----------|----------|----------|----------------|-----------------|------------------|
+| ---- | --------- | -------- | -------- | -------------- | --------------- | ---------------- |
 | 1    | ABC11A2   | TCGATGTG | CTCGATGA | PM10000        | Homo sapiens    | Whole Exome      |
 | 2    | SAG100A10 | SI-GA-C1 |          | SC18100        | Mus musculus    | 10X-3prime       |
 | 3    | CAP200A11 | CTCGATGA |          | PM18200        | Homo sapiens    | Other            |
