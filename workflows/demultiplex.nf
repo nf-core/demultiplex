@@ -109,7 +109,7 @@ workflow DEMULTIPLEX {
     ch_versions = ch_versions.mix(UNTAR.out.versions)
 
     // Merge the two channels back together
-    flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged).view()
+    flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
 
     // MODULE: bclconvert

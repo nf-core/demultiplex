@@ -32,8 +32,9 @@ process BCLCONVERT {
         --bcl-num-parallel-tiles ${task.cpus}
 
     mkdir InterOp
-    cp ${run_dir}/InterOp/*.bin InterOp/
-    mv Reports/*.bin InterOp/
+    { cp ${run_dir}/InterOp/*.bin InterOp/ } || echo "No InterOp files found in ${run_dir}/InterOp"
+    { mv Reports/*.bin InterOp/ } || echo "No InterOp files found in Reports"
+    """
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
