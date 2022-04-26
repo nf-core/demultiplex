@@ -64,8 +64,8 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-//include { BASES2FASTQ                 } from '../modules/nf-core/local/bases2fastq'
-include { BCLCONVERT                    } from '../modules/nf-core/modules/bclconvert/main'
+//include { BASES2FASTQ                 } from '../modules/local/bases2fastq'
+include { BCLCONVERT                    } from '../modules/bclconvert/main'
 include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
