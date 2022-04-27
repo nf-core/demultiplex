@@ -12,9 +12,9 @@ process BCLCONVERT {
 
     output:
     tuple val(meta), path("**.fastq.gz")            ,emit: fastq
-    tuple val(meta), path("Reports/*.{csv,xml}")    ,emit: reports
-    tuple val(meta), path("Logs/*.{log,txt}")       ,emit: logs
-    tuple val(meta), path("**.bin")                 ,emit: interop
+    path("Reports/*.{csv,xml}")                     ,emit: reports
+    path("Logs/*.{log,txt}")                        ,emit: logs
+    path("**.bin")                                  ,emit: interop
     path("versions.yml")                            ,emit: versions
 
     when:
