@@ -25,10 +25,12 @@ process BCLCONVERT {
 
     script:
     def args = task.ext.args ?: ''
+    def select_lane = meta.lane ? "--bcl-only-lane ${meta.lane}" : ""
 
     """
     bcl-convert \\
         $args \\
+        $select_lane \\
         --output-directory . \\
         --bcl-input-directory ${run_dir} \\
         --sample-sheet ${samplesheet} \\
