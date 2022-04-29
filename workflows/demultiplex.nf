@@ -4,19 +4,22 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+
+def valid_params = [
+    demultiplexers: ["bclconvert","cellranger","bases2fastq"]
+]
+
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-WorkflowDemultiplex.initialise(params, log)
+WorkflowDemultiplex.initialise(params, log, valid_params)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
+def checkPathParamList = [
+    params.input,
+    params.multiqc_config
+]
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-if (params.input) { ss_sheet = file(params.input, checkIfExists: true) } else { exit 1, "Sample sheet not found!" }
-if (params.run_dir) { runDir = file(params.run_dir, checkIfExists: true) } else { exit 1, "Run directory not found!" }
-runName = runDir.getName()
-
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
@@ -61,10 +64,12 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC                      } from '../modules/nf-core/modules/fastqc/main'
-include { CELLRANGER_MKFASTQ          } from '../modules/nf-core/modules/cellranger/mkfastq/main'
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+//include { BASES2FASTQ                 } from '../modules/local/bases2fastq'
+include { BCLCONVERT                    } from '../modules/local/bclconvert/main'
+include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
+include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -79,195 +84,71 @@ workflow DEMULTIPLEX {
 
     ch_versions = Channel.empty()
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Sample Sheet Reformatting and Check`                  -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 1 - Check sample sheet for 10X samples.
-    *        - This will pull out 10X samples into new samplesheet.
-    */
-    REFORMAT_SAMPLESHEET (
-        ch_input
-    )
-    ch_versions = ch_versions.mix(REFORMAT_SAMPLESHEET.out.versions)
-
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
-    // STEP 2 - Check samplesheet for single and dual mixed lanes and long and short
-    //          indexes on same lanes and output pass or fail file to next processes.
-    //
-    INPUT_CHECK (
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet
-    )
+    flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Problem Sample Sheet Processes                        -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
+    // Split flowcells into separate channels containg run as tar and run as path
+    // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
+    flowcells
+        .branch { meta, samplesheet, run ->
+            tar: run.toString().endsWith('.tar.gz')
+            dir: true
+        }.set { ch_flowcells }
 
-    // TODO Move to subworkflow
+    ch_flowcells.tar
+        .multiMap { meta, samplesheet, run ->
+            samplesheets: [ meta, samplesheet ]
+            run_dirs: [ meta, run ]
+        }.set { ch_flowcells_tar }
 
-    /*
-    * STEP 3 - If previous process finds samples that will cause problems, this process
-    *          will remove problem samples from entire sample and create a new one.
-    *          ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    MAKE_FAKE_SS (
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet,
-        REFORMAT_SAMPLESHEET.out.bcl2fastq_results
-    )
-    ch_versions = ch_versions.mix(MAKE_FAKE_SS.out.versions)
+    // MODULE: untar
+    // Runs when run_dir is a tar archive
+    // Re-join the metadata and the untarred run directory with the samplesheet
+    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
+    ch_versions = ch_versions.mix(UNTAR.out.versions)
 
-    /*
-    * STEP 4 -  Running bcl2fastq on the false_samplesheet with problem samples removed.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    BCL2FASTQ_PROBLEM_SS (
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(BCL2FASTQ_PROBLEM_SS.out.versions)
+    // Merge the two channels back together
+    flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
-    /*
-    * STEP 5 -  Parsing .json file output from the bcl2fastq run to access the unknown barcodes section.
-    *           The barcodes that match the short indexes and/or missing index 2 with the highest count
-    *           to remake the sample sheet so that bcl2fastq can run properly.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    PARSE_JSONFILE (
-        BCL2FASTQ_PROBLEM_SS.out.stats_json_file,
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(PARSE_JSONFILE.out.versions)
 
-    /*
-    * STEP 6 -  Checking the remade sample sheet.
-    *           If this fails again the pipeline will exit and fail.
-    *           ONLY RUNS WHEN SAMPLESHEET FAILS.
-    */
-    RECHECK_SAMPLESHEET (
-        MAKE_FAKE_SS.out.fake_samplesheet,
-        PARSE_JSONFILE.out.updated_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        INPUT_CHECK.out.result // FIXME this doesn't exist
-    )
-    ch_versions = ch_versions.mix(RECHECK_SAMPLESHEET.out.versions)
+    // MODULE: bclconvert
+    // Runs when "params.demultiplexer" is set to "bclconvert"
+    // See conf/modules.config
+    BCLCONVERT ( flowcells )
+    ch_bclconvert_multiqc = BCLCONVERT.out.reports
+    ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Single Cell Processes`                                -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    // TODO Move to Subworkflow
-    // NOTE Maybe this lives in nf-core/scrnaseq?
-
-    /*
-    * STEP 7 - CellRanger MkFastQ.
-    *          ONLY RUNS WHEN ANY TYPE OF 10X SAMPLESHEET EXISTS.
-    */
-    CELLRANGER_MKFASTQ (
-        REFORMAT_SAMPLESHEET.out.tenx_results,
-        REFORMAT_SAMPLESHEET.out.tenx_samplesheet
-    )
-
-    /*
-    * STEP 8 - CellRanger count.
-    *          ONLY RUNS WHEN A 10X SAMPLESHEET EXISTS.
-    */
-    CELLRANGER_COUNT (
-        CELLRANGER_MKFASTQ.out.fastq,
-        params.cellranger_genomes.hg19 // FIXME Remove hard-code
-    )
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --               Main Demultiplexing Processes`                        -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 9 - Running bcl2fastq on the remade samplesheet or a sample sheet that
-    *          passed the initial check. bcl2fastq parameters can be changed when
-    *          staring up the pipeline.
-    *          ONLY RUNS WHEN SAMPLES REMAIN AFTER Single Cell SAMPLES ARE SPLIT OFF
-    *          INTO SEPARATE SAMPLE SHEETS.
-    */
-    BCL2FASTQ (
-        RECHECK_SAMPLESHEET.out.problem_ss,
-        INPUT_CHECK.out.result, // FIXME this doesn't exist
-        REFORMAT_SAMPLESHEET.out.standard_samplesheet
-        PARSE_JSONFILE.out.updated_samplesheet,
-        MAKE_FAKE_SS.out.problem_samples_list,
-        BCL2FASTQ_PROBLEM_SS.out.stats_json_file
-    )
+    // MODULE: cellranger
+    // Runs when "params.demultiplexer" is set to "cellranger"
+    // See conf/modules.config
     // TODO
-    // ch_versions = ch_versions.mix(BCL2FASTQ.out.versions.first())
+    // CELLRANGER_MKFASTQ (run_dir, samplesheet)
+    // ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
 
-    // TODO Move to Subworkflow
+    // MODULE: bases2fastq
+    // Runs when "params.demultiplexer" is set to "bases2fastq"
+    // See conf/modules.config
+    // TODO
+    //BASES2FASTQ (samplesheet, run_dir)
+    // ch_bases2fastq_multiqc = BASES2FASTQ.out.reports
+    //ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
 
-    //
-    // STEP 11 - Run FastQC
-    //
-    FASTQC (
-        BCL2FASTQ.out.fastq
-    )
-    ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    KRAKEN2_KRAKEN2 (
-        BCL2FASTQ.out.fastq,
-        params.kraken_db,
-        true,
-        true
-    )
-
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-    /* --                                                                     -- */
-    /* --                         FastQ Screen                                -- */
-    /* --                                                                     -- */
-    ///////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /*
-    * STEP 12 - FastQ Screen
-    */
-    // TODO Run this against undetermined
-    FASTQ_SCREEN (
-        BCL2FASTQ.out.fastq
-    )
-
+    // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    //
     // MODULE: MultiQC
-    //
     workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
     ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_bclconvert_multiqc)
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect()
