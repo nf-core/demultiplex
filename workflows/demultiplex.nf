@@ -125,7 +125,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: fastp
     FASTP(ch_parsed_fastq, [], [])
-    ch_fastp_multiqc = FASTP.out.json
+    ch_fastp_multiqc = FASTP.out.json.map { meta, json -> return json}
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     // DUMP SOFTWARE VERSIONS
