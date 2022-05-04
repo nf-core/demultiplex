@@ -42,13 +42,9 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // MODULE: Local
 //
-include { REFORMAT_SAMPLESHEET } from '../modules/local/reformat_samplesheet'
-include { MAKE_FAKE_SS         } from '../modules/local/make_fake_ss'
-include { BCL2FASTQ_PROBLEM_SS } from '../modules/local/bcl2fastq_problem_ss'
-include { PARSE_JSONFILE       } from '../modules/local/parse_jsonfile'
-include { RECHECK_SAMPLESHEET  } from '../modules/local/recheck_samplesheet'
-include { BCL2FASTQ            } from '../modules/local/bcl2fastq'
-include { FASTQ_SCREEN         } from '../modules/local/fastq_screen'
+// include { BASES2FASTQ } from '../modules/local/bases2fastq'
+include { BCLCONVERT                    } from '../modules/local/bclconvert/main'
+
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -64,10 +60,9 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-//include { BASES2FASTQ                 } from '../modules/local/bases2fastq'
-include { BCLCONVERT                    } from '../modules/local/bclconvert/main'
 include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { FASTP                         } from '../modules/nf-core/modules/fastp/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
 
@@ -85,12 +80,12 @@ workflow DEMULTIPLEX {
     ch_versions = Channel.empty()
 
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    flowcells = INPUT_CHECK (ch_input).flowcells
+    ch_flowcells = INPUT_CHECK (ch_input).flowcells
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-    flowcells
+    ch_flowcells
         .branch { meta, samplesheet, run ->
             tar: run.toString().endsWith('.tar.gz')
             dir: true
@@ -109,30 +104,27 @@ workflow DEMULTIPLEX {
     ch_versions = ch_versions.mix(UNTAR.out.versions)
 
     // Merge the two channels back together
-    flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
+    ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
-
+    //
+    // RUN demultiplexing
+    //
+    ch_raw_fastq = Channel.empty()
     // MODULE: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT ( flowcells )
-    ch_bclconvert_multiqc = BCLCONVERT.out.reports
+    BCLCONVERT ( ch_flowcells )
+    ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.fastq)
+    ch_bclconvert_multiqc = BCLCONVERT.out.reports.map { meta, report -> return report}
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
-    // MODULE: cellranger
-    // Runs when "params.demultiplexer" is set to "cellranger"
-    // See conf/modules.config
-    // TODO
-    // CELLRANGER_MKFASTQ (run_dir, samplesheet)
-    // ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
+    //
+    // RUN QC
+    //
+    ch_parsed_fastq = generate_fastq_meta(ch_raw_fastq).view()
 
-    // MODULE: bases2fastq
-    // Runs when "params.demultiplexer" is set to "bases2fastq"
-    // See conf/modules.config
-    // TODO
-    //BASES2FASTQ (samplesheet, run_dir)
-    // ch_bases2fastq_multiqc = BASES2FASTQ.out.reports
-    //ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+    // MODULE: fastp
+    FASTP(ch_parsed_fastq, [], [])
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -168,6 +160,41 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
     NfcoreTemplate.summary(workflow, params, log)
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Add meta values to fastq channel
+def generate_fastq_meta(ch_reads) {
+    ch_reads.map {
+        fc_meta, raw_fastq ->
+        raw_fastq
+    }
+    // Create a tuple with the meta.id and the fastq
+    .flatten().map{
+        fastq ->
+        def meta = [
+            "id": fastq.getSimpleName().toString() - ~/_S[0-9]+_.*$/,
+            "basename": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/
+        ]
+        [ meta , fastq ]
+    }
+    // Group by meta.id for PE samples
+    .groupTuple(by: [0])
+    // Add meta.single_end
+    .map {
+        meta, fastq ->
+        if (fastq.size() == 1){
+            meta.single_end = true
+        } else {
+            meta.single_end = false
+        }
+        return [ meta, fastq.flatten() ]
+    }
 }
 
 /*
