@@ -4,7 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
 def valid_params = [
     demultiplexers: ["bclconvert","cellranger","bases2fastq"]
 ]
@@ -42,9 +41,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // MODULE: Local
 //
-// include { BASES2FASTQ } from '../modules/local/bases2fastq'
-include { BCLCONVERT                    } from '../modules/local/bclconvert/main'
-
+include { BCLCONVERT } from '../modules/local/bclconvert/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -60,7 +57,6 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CELLRANGER_MKFASTQ            } from '../modules/nf-core/modules/cellranger/mkfastq/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { FASTP                         } from '../modules/nf-core/modules/fastp/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
