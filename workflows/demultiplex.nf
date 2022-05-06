@@ -59,6 +59,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { FASTP                         } from '../modules/nf-core/modules/fastp/main'
+include { FASTQC                        } from '../modules/nf-core/modules/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
 
@@ -74,6 +75,7 @@ def multiqc_report = []
 workflow DEMULTIPLEX {
 
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
 
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     ch_flowcells = INPUT_CHECK (ch_input).flowcells
@@ -111,7 +113,7 @@ workflow DEMULTIPLEX {
     // See conf/modules.config
     BCLCONVERT ( ch_flowcells )
     ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.fastq)
-    ch_bclconvert_multiqc = BCLCONVERT.out.reports.map { meta, report -> return report}
+    ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.reports.map { meta, report -> return report} )
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
     //
@@ -121,7 +123,12 @@ workflow DEMULTIPLEX {
 
     // MODULE: fastp
     FASTP(ch_parsed_fastq, [], [])
-    ch_fastp_multiqc = FASTP.out.json.map { meta, json -> return json}
+    ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
+    ch_versions = ch_versions.mix(FASTP.out.versions)
+
+    // MODULE: fastqc
+    FASTQC(ch_fastp_multiqc)
+    ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     // DUMP SOFTWARE VERSIONS
@@ -132,9 +139,6 @@ workflow DEMULTIPLEX {
     // MODULE: MultiQC
     workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_bclconvert_multiqc, ch_fastp_multiqc)
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
