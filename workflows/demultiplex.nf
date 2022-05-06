@@ -127,7 +127,7 @@ workflow DEMULTIPLEX {
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     // MODULE: fastqc
-    FASTQC(ch_fastp_multiqc)
+    FASTQC(ch_parsed_fastq)
     ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
