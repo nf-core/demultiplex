@@ -5,7 +5,7 @@
 */
 
 def valid_params = [
-    demultiplexers: ["bclconvert","bcl2fastq"]
+    demultiplexers: ["bclconvert","bcl2fastq","bases2fastq"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -37,6 +37,11 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+//
+// MODULE: Local
+//
+include { BASES2FASTQ } from '../modules/local/bases2fastq/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -112,6 +117,14 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.reports.map { meta, report -> return report} )
     ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return stats } )
     ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
+
+    // MODULE: bases2fastq
+    // Runs when "params.demultiplexer" is set to "bases2fastq"
+    // See conf/modules.config
+    BASES2FASTQ ( ch_flowcells )
+    ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
+    // TODO ch_multiqc_files = ch_multiqc_files.mix()
+    ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
 
     //
     // RUN QC
