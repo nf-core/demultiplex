@@ -1,5 +1,5 @@
 process BASES2FASTQ {
-    // tag "$meta.id"
+    tag "$meta.id"
     label 'process_high'
 
     if (params.enable_conda) {
