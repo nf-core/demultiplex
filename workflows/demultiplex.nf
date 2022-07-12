@@ -116,12 +116,12 @@ workflow DEMULTIPLEX {
     //
 
     // MODULE: fastp
-    FASTP(ch_parsed_fastq, [], [])
+    FASTP(ch_raw_fastq, [], [])
     ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     // MODULE: fastqc
-    FASTQC(ch_parsed_fastq)
+    FASTQC(ch_raw_fastq)
     ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
     ch_versions = ch_versions.mix(FASTQC.out.versions)
 
@@ -133,13 +133,12 @@ workflow DEMULTIPLEX {
     // MODULE: MultiQC
     workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     MULTIQC (
-        ch_multiqc_files.collect()
+        ch_multiqc_files.collect(),[ch_multiqc_config, []]
     )
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)

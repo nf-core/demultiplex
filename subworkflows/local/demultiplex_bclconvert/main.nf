@@ -15,7 +15,7 @@ workflow DEMULTIPLEX_BCLCONVERT {
 
         // MODULE: bclconvert
         // Demultiplex the bcl files
-        BCLCONVERT( ch_flowcells)
+        BCLCONVERT( ch_flowcell)
         ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
         // Generate meta for each fastq
@@ -45,7 +45,7 @@ def generate_fastq_meta(ch_reads) {
         fastq ->
         def meta = [
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
-            "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/
+            "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
             "readgroup": [:]
         ]
         meta.readgroup = readgroup_from_fastq(fastq)
