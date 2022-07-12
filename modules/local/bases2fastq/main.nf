@@ -5,7 +5,7 @@ process BASES2FASTQ {
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used when using bases2fastq. Please use docker or singularity containers."
     }
-    container "elembio/bases2fastq:1.0.0"
+    container "elembio/bases2fastq:1.1.0"
 
     input:
     tuple val(meta), path(run_manifest), path(run_dir)
