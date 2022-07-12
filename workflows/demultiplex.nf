@@ -39,14 +39,9 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 //
-// MODULE: Local
-//
-include { BCLCONVERT } from '../modules/local/bclconvert/main'
-
-//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { DEMULTIPLEX_BCLCONVERT as BCLCONVERT } from "../subworkflows/local/demultiplex_bclconvert/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,23 +72,22 @@ workflow DEMULTIPLEX {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    ch_flowcells = INPUT_CHECK (ch_input).flowcells
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // Sanitize inputs and separate input types
+    ch_inputs = extract_csv(ch_input)
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-    ch_flowcells
+    ch_flowcells = ch_inputs
         .branch { meta, samplesheet, run ->
             tar: run.toString().endsWith('.tar.gz')
             dir: true
-        }.set { ch_flowcells }
+        }
 
-    ch_flowcells.tar
+    ch_flowcells_tar = ch_flowcells.tar
         .multiMap { meta, samplesheet, run ->
             samplesheets: [ meta, samplesheet ]
             run_dirs: [ meta, run ]
-        }.set { ch_flowcells_tar }
+        }
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
@@ -108,18 +102,18 @@ workflow DEMULTIPLEX {
     // RUN demultiplexing
     //
     ch_raw_fastq = Channel.empty()
-    // MODULE: bclconvert
+
+    // SUBWORKFLOW: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT ( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.fastq)
-    ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.reports.map { meta, report -> return report} )
+    BCLCONVERT(ch_flowcells)
+    ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.bclconvert_fastq)
+    ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.bclconvert_reports.map { meta, report -> return report} )
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
     //
     // RUN QC
     //
-    ch_parsed_fastq = generate_fastq_meta(ch_raw_fastq).view()
 
     // MODULE: fastp
     FASTP(ch_parsed_fastq, [], [])
@@ -170,34 +164,36 @@ workflow.onComplete {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Add meta values to fastq channel
-def generate_fastq_meta(ch_reads) {
-    ch_reads.map {
-        fc_meta, raw_fastq ->
-        raw_fastq
-    }
-    // Create a tuple with the meta.id and the fastq
-    .flatten().map{
-        fastq ->
-        def meta = [
-            "id": fastq.getSimpleName().toString() - ~/_S[0-9]+_.*$/,
-            "basename": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/
-        ]
-        [ meta , fastq ]
-    }
-    // Group by meta.id for PE samples
-    .groupTuple(by: [0])
-    // Add meta.single_end
-    .map {
-        meta, fastq ->
-        if (fastq.size() == 1){
-            meta.single_end = true
-        } else {
-            meta.single_end = false
+// Extract information (meta data + file(s)) from csv file(s)
+def extract_csv(csv_file) {
+    Channel.value(csv_file).splitCsv(header: true, strip: true).map { row ->
+        // check common mandatory fields
+        if(!(row.id)){
+            log.error "Missing id field in input csv file"
         }
-        return [ meta, fastq.flatten() ]
+        // check for invalid flowcell input
+        if(row.flowcell && !(row.samplesheet)){
+            log.error "Flowcell input requires both samplesheet and flowcell"
+        }
+        // valid flowcell input
+        if(row.flowcell && row.samplesheet){
+            return parse_flowcell_csv(row)
+        }
     }
 }
+
+// Parse flowcell input map
+def parse_flowcell_csv(row) {
+    def meta = [:]
+    meta.id   = row.id.toString()
+    meta.lane = row.lane.toInteger() ?: null
+
+    def flowcell        = file(row.flowcell, checkIfExists: true)
+    def samplesheet     = file(row.samplesheet, checkIfExists: true)
+    return [meta, samplesheet, flowcell]
+}
+
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
