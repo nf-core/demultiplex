@@ -9,8 +9,9 @@ Initial release of nf-core/demultiplex, created with the [nf-core](https://nf-co
 
 ### `Added`
 
-### `Fixed`
+- [#38](https://github.com/nf-core/demultiplex/pull/388) - Add FastP
+- [#39](https://github.com/nf-core/demultiplex/pull/388) - Add FastQC
 
-### `Dependencies`
+### `Fixed`
 
 ### `Deprecated`
