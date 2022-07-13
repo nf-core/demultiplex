@@ -185,7 +185,10 @@ def extract_csv(csv_file) {
 def parse_flowcell_csv(row) {
     def meta = [:]
     meta.id   = row.id.toString()
-    meta.lane = row.lane.toInteger() ?: null
+    meta.lane = null
+    if (row.containsKey("lane") && row.lane ) {
+        meta.lane = row.lane.toInteger()
+    }
 
     def flowcell        = file(row.flowcell, checkIfExists: true)
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
