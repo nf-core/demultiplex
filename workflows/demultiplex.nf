@@ -106,8 +106,8 @@ workflow DEMULTIPLEX {
     // SUBWORKFLOW: bclconvert
     // Runs when "params.demultiplexer" is set to "bclconvert"
     // See conf/modules.config
-    BCLCONVERT(ch_flowcells)
-    ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.bclconvert_fastq)
+    BCLCONVERT( ch_flowcells )
+    ch_raw_fastq = ch_raw_fastq.mix( BCLCONVERT.out.bclconvert_fastq )
     ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.bclconvert_reports.map { meta, report -> return report} )
     ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 

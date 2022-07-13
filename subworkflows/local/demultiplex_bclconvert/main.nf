@@ -15,7 +15,7 @@ workflow DEMULTIPLEX_BCLCONVERT {
 
         // MODULE: bclconvert
         // Demultiplex the bcl files
-        BCLCONVERT( ch_flowcell)
+        BCLCONVERT( ch_flowcell )
         ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
         // Generate meta for each fastq
