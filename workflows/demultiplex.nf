@@ -110,7 +110,7 @@ workflow DEMULTIPLEX {
     DEMUX_ILLUMINA( ch_flowcells )
     ch_raw_fastq = ch_raw_fastq.mix( DEMUX_ILLUMINA.out.fastq )
     ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.reports.map { meta, report -> return report} )
-    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return report} )
+    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return stats } )
     ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
 
     //
