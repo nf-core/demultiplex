@@ -53,7 +53,7 @@ workflow DEMUX_ILLUMINA {
 */
 
 // Add meta values to fastq channel
-def generate_fastq_meta(ch_reads, ch_fc_meta) {
+def generate_fastq_meta(ch_reads) {
     // Create a tuple with the meta.id and the fastq
     ch_reads.transpose().map{
         fc_meta, fastq ->
