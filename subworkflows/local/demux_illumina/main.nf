@@ -5,27 +5,45 @@
 //
 
 include { BCLCONVERT } from "../../../modules/nf-core/modules/bclconvert/main"
+include { BCL2FASTQ  } from "../../../modules/nf-core/modules/bcl2fastq/main"
 
-workflow DEMULTIPLEX_BCLCONVERT {
+workflow DEMUX_ILLUMINA {
     take:
         ch_flowcell // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
 
     main:
         ch_versions = Channel.empty()
+        ch_fastq    = Channel.empty()
+        ch_reports  = Channel.empty()
+        ch_stats    = Channel.empty()
+        ch_interop  = Channel.empty()
 
         // MODULE: bclconvert
         // Demultiplex the bcl files
         BCLCONVERT( ch_flowcell )
+        ch_fastq    = ch_fastq.mix(BCLCONVERT.out.fastq)
+        ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
+        ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
         ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
 
+        // MODULE: bcl2fastq
+        // Demultiplex the bcl files
+        BCL2FASTQ( ch_flowcell )
+        ch_fastq    = ch_fastq.mix(BCL2FASTQ.out.fastq)
+        ch_interop  = ch_interop.mix(BCL2FASTQ.out.interop)
+        ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
+        ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
+        ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
+
         // Generate meta for each fastq
-        ch_bclconvert_fastq = generate_fastq_meta(BCLCONVERT.out.fastq)
+        ch_fastq_with_meta = generate_fastq_meta(ch_fastq)
 
     emit:
-        bclconvert_fastq    = ch_bclconvert_fastq
-        bclconvert_reports  = BCLCONVERT.out.reports
-        bclconvert_interop  = BCLCONVERT.out.interop
-        versions            = ch_versions
+        fastq    = ch_fastq_with_meta
+        reports  = ch_reports
+        stats    = ch_stats
+        interop  = ch_interop
+        versions = ch_versions
 }
 
 /*

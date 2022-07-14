@@ -41,7 +41,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DEMULTIPLEX_BCLCONVERT as BCLCONVERT } from "../subworkflows/local/demultiplex_bclconvert/main"
+include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,13 +104,14 @@ workflow DEMULTIPLEX {
     //
     ch_raw_fastq = Channel.empty()
 
-    // SUBWORKFLOW: bclconvert
-    // Runs when "params.demultiplexer" is set to "bclconvert"
+    // SUBWORKFLOW: illumina
+    // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
     // See conf/modules.config
-    BCLCONVERT( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix( BCLCONVERT.out.bclconvert_fastq )
-    ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.bclconvert_reports.map { meta, report -> return report} )
-    ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
+    DEMUX_ILLUMINA( ch_flowcells )
+    ch_raw_fastq = ch_raw_fastq.mix( DEMUX_ILLUMINA.out.fastq )
+    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.reports.map { meta, report -> return report} )
+    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return report} )
+    ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
 
     //
     // RUN QC
