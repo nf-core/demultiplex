@@ -53,18 +53,16 @@ workflow DEMUX_ILLUMINA {
 */
 
 // Add meta values to fastq channel
-def generate_fastq_meta(ch_reads) {
-    ch_reads.map {
-        fc_meta, raw_fastq ->
-        raw_fastq
-    }
+def generate_fastq_meta(ch_reads, ch_fc_meta) {
     // Create a tuple with the meta.id and the fastq
-    .flatten().map{
-        fastq ->
+    ch_reads.transpose().map{
+        fc_meta, fastq ->
         def meta = [
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
             "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
-            "readgroup": [:]
+            "readgroup": [:],
+            "fcid": fc_meta.id,
+            "lane": fc_meta.lane
         ]
         meta.readgroup = readgroup_from_fastq(fastq)
         meta.readgroup.SM = meta.samplename
