@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/demultiplex",
     "repos": {
         "nf-core/modules": {
+            "bcl2fastq": {
+                "git_sha": "9294259eeab91a9c6fa8b12eeffb2a1bdf50f81c"
+            },
             "bclconvert": {
                 "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
             },
