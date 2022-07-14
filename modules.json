@@ -15,6 +15,9 @@
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
+            "md5sum": {
+                "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
+            },
             "multiqc": {
                 "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
             },
