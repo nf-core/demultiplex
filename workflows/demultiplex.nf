@@ -57,6 +57,7 @@ include { FASTP                         } from '../modules/nf-core/modules/fastp
 include { FASTQC                        } from '../modules/nf-core/modules/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
+include { MD5SUM                        } from '../modules/nf-core/modules/md5sum/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -124,6 +125,11 @@ workflow DEMULTIPLEX {
     FASTQC(ch_raw_fastq)
     ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
     ch_versions = ch_versions.mix(FASTQC.out.versions)
+
+    // MODULE: md5sum
+    // Split file list into separate channels entries and generate a checksum for each
+    ch_fq_single = ch_raw_fastq.transpose()
+    MD5SUM(ch_fq_single)
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
