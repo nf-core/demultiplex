@@ -11,12 +11,12 @@ process BASES2FASTQ {
     tuple val(meta), path(run_manifest), path(run_dir)
 
     output:
-    tuple val(meta), path('Samples/*/*_R*.fastq.gz'), emit: sample_fastq
-    tuple val(meta), path('Samples/*/*.json')       , emit: sample_json
-    tuple val(meta), path('RunStats.json')          , emit: run_stats
-    tuple val(meta), path('RunManifest.json')       , emit: generated_run_manifest
-    tuple val(meta), path('Metrics.csv')            , emit: metrics
-    tuple val(meta), path('UnassignedSequences.csv'), emit: unassigned
+    tuple val(meta), path('output/Samples/*/*_R*.fastq.gz'), emit: sample_fastq
+    tuple val(meta), path('output/Samples/*/*.json')       , emit: sample_json
+    tuple val(meta), path('output/RunStats.json')          , emit: run_stats
+    tuple val(meta), path('output/RunManifest.json')       , emit: generated_run_manifest
+    tuple val(meta), path('output/Metrics.csv')            , emit: metrics
+    tuple val(meta), path('output/UnassignedSequences.csv'), emit: unassigned
     path "versions.yml"                             , emit: versions
 
     when:
@@ -32,7 +32,7 @@ process BASES2FASTQ {
         $runManifest \\
         $args \\
         $run_dir \\
-        .
+        output
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
