@@ -5,7 +5,7 @@
 */
 
 def valid_params = [
-    demultiplexers: ["bclconvert","cellranger","bases2fastq"]
+    demultiplexers: ["bclconvert","bcl2fastq"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -39,14 +39,9 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 //
-// MODULE: Local
-//
-include { BCLCONVERT } from '../modules/local/bclconvert/main'
-
-//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,6 +57,7 @@ include { FASTP                         } from '../modules/nf-core/modules/fastp
 include { FASTQC                        } from '../modules/nf-core/modules/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/modules/untar/main'
+include { MD5SUM                        } from '../modules/nf-core/modules/md5sum/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,23 +73,22 @@ workflow DEMULTIPLEX {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    ch_flowcells = INPUT_CHECK (ch_input).flowcells
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // Sanitize inputs and separate input types
+    ch_inputs = extract_csv(ch_input)
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-    ch_flowcells
+    ch_flowcells = ch_inputs
         .branch { meta, samplesheet, run ->
             tar: run.toString().endsWith('.tar.gz')
             dir: true
-        }.set { ch_flowcells }
+        }
 
-    ch_flowcells.tar
+    ch_flowcells_tar = ch_flowcells.tar
         .multiMap { meta, samplesheet, run ->
             samplesheets: [ meta, samplesheet ]
             run_dirs: [ meta, run ]
-        }.set { ch_flowcells_tar }
+        }
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
@@ -108,28 +103,34 @@ workflow DEMULTIPLEX {
     // RUN demultiplexing
     //
     ch_raw_fastq = Channel.empty()
-    // MODULE: bclconvert
-    // Runs when "params.demultiplexer" is set to "bclconvert"
+
+    // SUBWORKFLOW: illumina
+    // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
     // See conf/modules.config
-    BCLCONVERT ( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix(BCLCONVERT.out.fastq)
-    ch_multiqc_files = ch_multiqc_files.mix( BCLCONVERT.out.reports.map { meta, report -> return report} )
-    ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
+    DEMUX_ILLUMINA( ch_flowcells )
+    ch_raw_fastq = ch_raw_fastq.mix( DEMUX_ILLUMINA.out.fastq )
+    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.reports.map { meta, report -> return report} )
+    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return stats } )
+    ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
 
     //
     // RUN QC
     //
-    ch_parsed_fastq = generate_fastq_meta(ch_raw_fastq).view()
 
     // MODULE: fastp
-    FASTP(ch_parsed_fastq, [], [])
+    FASTP(ch_raw_fastq, [], [])
     ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
     // MODULE: fastqc
-    FASTQC(ch_parsed_fastq)
+    FASTQC(ch_raw_fastq)
     ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
     ch_versions = ch_versions.mix(FASTQC.out.versions)
+
+    // MODULE: md5sum
+    // Split file list into separate channels entries and generate a checksum for each
+    ch_fq_single = ch_raw_fastq.transpose()
+    MD5SUM(ch_fq_single)
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
@@ -139,14 +140,11 @@ workflow DEMULTIPLEX {
     // MODULE: MultiQC
     workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
-    ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
-    MULTIQC (
-        ch_multiqc_files.collect()
-    )
+    MULTIQC (ch_multiqc_files.collect(),ch_multiqc_config, [])
     multiqc_report = MULTIQC.out.report.toList()
     ch_versions    = ch_versions.mix(MULTIQC.out.versions)
 }
@@ -170,34 +168,39 @@ workflow.onComplete {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Add meta values to fastq channel
-def generate_fastq_meta(ch_reads) {
-    ch_reads.map {
-        fc_meta, raw_fastq ->
-        raw_fastq
-    }
-    // Create a tuple with the meta.id and the fastq
-    .flatten().map{
-        fastq ->
-        def meta = [
-            "id": fastq.getSimpleName().toString() - ~/_S[0-9]+_.*$/,
-            "basename": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/
-        ]
-        [ meta , fastq ]
-    }
-    // Group by meta.id for PE samples
-    .groupTuple(by: [0])
-    // Add meta.single_end
-    .map {
-        meta, fastq ->
-        if (fastq.size() == 1){
-            meta.single_end = true
-        } else {
-            meta.single_end = false
+// Extract information (meta data + file(s)) from csv file(s)
+def extract_csv(csv_file) {
+    Channel.value(csv_file).splitCsv(header: true, strip: true).map { row ->
+        // check common mandatory fields
+        if(!(row.id)){
+            log.error "Missing id field in input csv file"
         }
-        return [ meta, fastq.flatten() ]
+        // check for invalid flowcell input
+        if(row.flowcell && !(row.samplesheet)){
+            log.error "Flowcell input requires both samplesheet and flowcell"
+        }
+        // valid flowcell input
+        if(row.flowcell && row.samplesheet){
+            return parse_flowcell_csv(row)
+        }
     }
 }
+
+// Parse flowcell input map
+def parse_flowcell_csv(row) {
+    def meta = [:]
+    meta.id   = row.id.toString()
+    meta.lane = null
+    if (row.containsKey("lane") && row.lane ) {
+        meta.lane = row.lane.toInteger()
+    }
+
+    def flowcell        = file(row.flowcell, checkIfExists: true)
+    def samplesheet     = file(row.samplesheet, checkIfExists: true)
+    return [meta, samplesheet, flowcell]
+}
+
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

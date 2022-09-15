@@ -51,7 +51,7 @@
             "properties": {
                 "demultiplexer": {
                     "type": "string",
-                    "enum": ["bclconvert", "bases2fastq", "cellranger"],
+                    "enum": ["bclconvert", "bcl2fastq"],
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope"
                 }
