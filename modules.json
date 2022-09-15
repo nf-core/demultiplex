@@ -15,11 +15,11 @@
                 },
                 "custom/dumpsoftwareversions": {
                     "branch": "master",
-                    "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
                 },
                 "fastp": {
                     "branch": "master",
-                    "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
+                    "git_sha": "2c70c1c1951aaf884d2e8d8d9c871db79f7b35aa"
                 },
                 "fastqc": {
                     "branch": "master",
@@ -31,11 +31,11 @@
                 },
                 "multiqc": {
                     "branch": "master",
-                    "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
+                    "git_sha": "5587389874dac9c9953a2ab6f01d49af81969492"
                 },
                 "untar": {
                     "branch": "master",
-                    "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
+                    "git_sha": "393dbd6ddafe3f18eac02893dd4a21e4d45de679"
                 }
             }
         }
