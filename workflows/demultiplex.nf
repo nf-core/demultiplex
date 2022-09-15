@@ -39,11 +39,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 */
 
 //
-// MODULE: Local
-//
-include { BASES2FASTQ } from '../modules/local/bases2fastq/main'
-
-//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
@@ -58,6 +53,7 @@ include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { BASES2FASTQ                   } from '../modules/nf-core/modules/bases2fastq/main'
 include { FASTP                         } from '../modules/nf-core/modules/fastp/main'
 include { FASTQC                        } from '../modules/nf-core/modules/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/modules/multiqc/main'
