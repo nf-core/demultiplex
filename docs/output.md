@@ -29,7 +29,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### bases2fastq
 
-TODO: add info for bases2fastq @emiller
+[bases2fastq](https://go.elementbiosciences.com/bases2fastq-download) Demultiplexes sequencing data and converts base calls into FASTQ files for secondary analysis.
 
 ### CellRanger
 
