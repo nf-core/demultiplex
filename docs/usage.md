@@ -12,7 +12,6 @@
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
 
-<<<<<<< HEAD
 ```bash
 --input '[path to samplesheet file]'
 ```
@@ -26,10 +25,6 @@ sample,fastq_1,fastq_2
 CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
 CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
 CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-=======
-```console
---input '[path to input file]'
->>>>>>> dev
 ```
 
 ### Full samplesheet
@@ -58,13 +53,8 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 The typical command for running the pipeline is as follows:
 
-<<<<<<< HEAD
-```bash
-nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile docker
-=======
 ```console
 nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile docker
->>>>>>> dev
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
