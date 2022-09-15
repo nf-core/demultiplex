@@ -25,6 +25,8 @@ jobs:
         test:
           - "bclconvert"
           - "bcl2fastq"
+          # HACK
+          - "bases2fastq --input ./tests/b2fq-samplesheet.csv"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
