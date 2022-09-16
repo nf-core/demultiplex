@@ -7,7 +7,8 @@
             "modules": {
                 "bases2fastq": {
                     "branch": "master",
-                    "git_sha": "4963ca05709438c37ae3f89e9f6a0fa3135bd0df"
+                    "git_sha": "4963ca05709438c37ae3f89e9f6a0fa3135bd0df",
+                    "patch": "modules/nf-core/modules/bases2fastq/bases2fastq.diff"
                 },
                 "bcl2fastq": {
                     "branch": "master",
