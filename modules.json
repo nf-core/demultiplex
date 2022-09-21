@@ -5,6 +5,11 @@
         "nf-core/modules": {
             "git_url": "https://github.com/nf-core/modules.git",
             "modules": {
+                "bases2fastq": {
+                    "branch": "master",
+                    "git_sha": "4963ca05709438c37ae3f89e9f6a0fa3135bd0df",
+                    "patch": "modules/nf-core/modules/bases2fastq/bases2fastq.diff"
+                },
                 "bcl2fastq": {
                     "branch": "master",
                     "git_sha": "9294259eeab91a9c6fa8b12eeffb2a1bdf50f81c"

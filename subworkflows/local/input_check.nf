@@ -35,6 +35,10 @@ def create_fc_channel(LinkedHashMap row) {
     if (!file(row.samplesheet).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> FLowcell SampleSheet does not exist!\n${row.samplesheet}"
     }
-    fc_meta = [ meta, row.samplesheet, row.run_dir ]
+    fc_meta = [
+        meta,
+        file(row.samplesheet, checkIfExists: true),
+        file(row.run_dir, checkIfExists: true)
+    ]
     return fc_meta
 }
