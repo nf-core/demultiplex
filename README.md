@@ -12,9 +12,7 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
-
-**nf-core/demultiplex** is a bioinformatics best-practice analysis pipeline for Demultiplexing pipeline for Illumina sequencing data.
+**nf-core/demultiplex** is a bioinformatics pipeline used to demultiplex the raw data produced by next generation sequencing machines. At present, only Illumina sequencing data is supported.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
@@ -28,6 +26,28 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+
+## Pipeline summary
+
+4. Single cell 10X sample processes (CONDITIONAL):
+   NOTE: Must create CONFIG to point to CellRanger genome References
+   1. Cell Ranger mkfastq runs only when 10X samples exist. This will run the process with [`CellRanger`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger), [`CellRanger ATAC`](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/what-is-cell-ranger-atac), and [`Cell Ranger DNA`](https://support.10xgenomics.com/single-cell-dna/software/pipelines/latest/what-is-cell-ranger-dna) depending on which sample sheet has been created.
+5. [`bcl2fastq`](http://emea.support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html) (CONDITIONAL):
+   1. Runs on either the original sample sheet that had no error prone samples or on the newly created sample sheet created from the extra steps.
+   2. This is only run when there are samples left on the sample sheet after removing the single cell samples.
+   3. The arguments passed in bcl2fastq are changeable parameters that can be set on the command line when initiating the pipeline. Takes into account if Index reads will be made into FastQ's as well
+6. [`MultiQC`](https://multiqc.info/docs/) runs on each projects FastQC results produced.
+7. [`MultiQC_all`](https://multiqc.info/docs/) runs on all FastQC results produced.
+
+### Samplesheet format
+
+The input sample sheet must adhere to Illumina standards as outlined in the table below. Additional columns for `DataAnalysisType` and `ReferenceGenome` are required for the correct processing of 10X samples. The order of columns does not matter but the case of column name's does.
+
+| Lane | Sample_ID | index    | index2   | Sample_Project | ReferenceGenome | DataAnalysisType |
+| ---- | --------- | -------- | -------- | -------------- | --------------- | ---------------- |
+| 1    | ABC11A2   | TCGATGTG | CTCGATGA | PM10000        | Homo sapiens    | Whole Exome      |
+| 2    | SAG100A10 | SI-GA-C1 |          | SC18100        | Mus musculus    | 10X-3prime       |
+| 3    | CAP200A11 | CTCGATGA |          | PM18200        | Homo sapiens    | Other            |
 
 ## Quick Start
 
@@ -50,10 +70,8 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 4. Start running your own analysis!
 
-   <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
-
-   ```bash
-   nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> --genome GRCh37 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
+   ```console
+   nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 ## Documentation
@@ -62,7 +80,9 @@ The nf-core/demultiplex pipeline comes with documentation about the pipeline [us
 
 ## Credits
 
-nf-core/demultiplex was originally written by Chelsea Sawyer, Edmund Miller, Matthias De Smet.
+The nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.
+
+Many thanks to others who have helped out along the way too, including (but not limited to): [`@ChristopherBarrington`](https://github.com/ChristopherBarrington), [`@drpatelh`](https://github.com/drpatelh), [`@danielecook`](https://github.com/danielecook), [`@escudem`](https://github.com/escudem), [`@crickbabs`](https://github.com/crickbabs)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
