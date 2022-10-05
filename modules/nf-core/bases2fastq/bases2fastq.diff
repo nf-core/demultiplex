@@ -1,6 +1,6 @@
 Changes in module 'nf-core/modules/bases2fastq'
---- modules/nf-core/modules/bases2fastq/main.nf
-+++ modules/nf-core/modules/bases2fastq/main.nf
+--- modules/nf-core/bases2fastq/main.nf
++++ modules/nf-core/bases2fastq/main.nf
 @@ -11,14 +11,19 @@
      tuple val(meta), path(run_manifest), path(run_dir)
  
