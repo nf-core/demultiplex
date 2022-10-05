@@ -61,14 +61,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastp/`
+- `<flowcell_id>/`
   - `*.fastp.html`: Trimming report in html format.
   - `*.fastp.json`: Trimming report in json format.
-- `fastp/log/`
   - `*.fastp.log`: Trimming log file.
-- `fastqc/trim/`
-  - `*_fastqc.html`: FastQC report of the trimmed reads.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 </details>
 
@@ -81,7 +77,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
+- `<flowcell_id>/`
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
@@ -102,7 +98,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `flowcell_id/`
+- `<flowcell_id>/`
   - `*.fastq.gz.md5`: MD5 checksum of fastq
 
 </details>
