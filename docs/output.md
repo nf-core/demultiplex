@@ -15,7 +15,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [fastp](#fastp) - Adapter and quality trimming
 - [FastQC](#fastqc) - Raw read QC
-- [md5sum](#md5sum) - TODO
+- [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ### bcl-convert
@@ -98,6 +98,16 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 ![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
 
 ### md5sum
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `flowcell_id/`
+  - `*.fastq.gz.md5`: MD5 checksum of fastq
+
+</details>
+
+Creates an MD5 (128-bit) checksum of every fastq.
 
 ### MultiQC
 
