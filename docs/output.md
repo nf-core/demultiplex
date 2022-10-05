@@ -13,6 +13,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
+- [FastP](#fastp) - TODO
+- [FastQC](#fastqc) - Raw read QC
+- [md5sum](#md5sum) - TODO
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ### bcl-convert
@@ -44,6 +47,31 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 ### bcl2fastq
 
 <!-- TODO -->
+
+### FastP
+
+### FastQC
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastqc/`
+  - `*_fastqc.html`: FastQC report containing quality metrics.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+> **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
+
+</details>
+
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+
+![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
+
+![MultiQC - FastQC mean quality scores plot](images/mqc_fastqc_quality.png)
+
+![MultiQC - FastQC adapter content plot](images/mqc_fastqc_adapter.png)
+
+### md5sum
 
 ### MultiQC
 
