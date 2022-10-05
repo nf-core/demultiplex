@@ -13,7 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
-- [FastP](#fastp) - TODO
+- [fastp](#fastp) - Adapter and quality trimming
 - [FastQC](#fastqc) - Raw read QC
 - [md5sum](#md5sum) - TODO
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
@@ -56,7 +56,25 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 <!-- TODO -->
 
-### FastP
+### fastp
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `fastp/`
+  - `*.fastp.html`: Trimming report in html format.
+  - `*.fastp.json`: Trimming report in json format.
+- `fastp/log/`
+  - `*.fastp.log`: Trimming log file.
+- `fastqc/trim/`
+  - `*_fastqc.html`: FastQC report of the trimmed reads.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+
+</details>
+
+[fastp](https://github.com/OpenGene/fastp) is a tool designed to provide fast, all-in-one preprocessing for FastQ files. It has been developed in C++ with multithreading support to achieve higher performance. fastp is used in this pipeline for standard adapter trimming and quality filtering.
+
+![MultiQC - fastp filtered reads plot](images/mqc_fastp_plot.png)
 
 ### FastQC
 
