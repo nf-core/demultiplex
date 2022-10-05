@@ -4,42 +4,43 @@
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {
-                "bases2fastq": {
-                    "branch": "master",
-                    "git_sha": "4963ca05709438c37ae3f89e9f6a0fa3135bd0df",
-                    "patch": "modules/nf-core/modules/bases2fastq/bases2fastq.diff"
-                },
-                "bcl2fastq": {
-                    "branch": "master",
-                    "git_sha": "9294259eeab91a9c6fa8b12eeffb2a1bdf50f81c"
-                },
-                "bclconvert": {
-                    "branch": "master",
-                    "git_sha": "a9521de5ac03e1873c2746af2147600821fdaa49"
-                },
-                "custom/dumpsoftwareversions": {
-                    "branch": "master",
-                    "git_sha": "5e7b1ef9a5a2d9258635bcbf70fcf37dacd1b247"
-                },
-                "fastp": {
-                    "branch": "master",
-                    "git_sha": "2c70c1c1951aaf884d2e8d8d9c871db79f7b35aa"
-                },
-                "fastqc": {
-                    "branch": "master",
-                    "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
-                },
-                "md5sum": {
-                    "branch": "master",
-                    "git_sha": "bd1b80f36e1b9a978e598e4b47f6705ede34da37"
-                },
-                "multiqc": {
-                    "branch": "master",
-                    "git_sha": "5587389874dac9c9953a2ab6f01d49af81969492"
-                },
-                "untar": {
-                    "branch": "master",
-                    "git_sha": "b63b9f752dc8e43fc70b0491aad5e0a270ab0e10"
+                "nf-core": {
+                    "bases2fastq": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "bcl2fastq": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "bclconvert": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "custom/dumpsoftwareversions": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "fastqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "md5sum": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    },
+                    "untar": {
+                        "branch": "master",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    }
                 }
             }
         }
