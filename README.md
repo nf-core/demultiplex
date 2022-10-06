@@ -66,7 +66,7 @@ The nf-core/demultiplex pipeline comes with documentation about the pipeline [us
 
 The nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.
 
-The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@emiller88](https://github.com/drpatelh)) from [Element Biosciences](https://www.elementbiosciences.com/)
+The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@emiller88](https://github.com/emiller88)) from [Element Biosciences](https://www.elementbiosciences.com/)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 [`@ChristopherBarrington`](https://github.com/ChristopherBarrington)
