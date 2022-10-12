@@ -129,6 +129,7 @@ workflow DEMULTIPLEX {
         default:
             exit 1, "Unknown demultiplexer: ${params.demultiplexer}"
     }
+    ch_raw_fastq.dump(tag: "Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC
@@ -229,8 +230,6 @@ def parse_flowcell_csv(row) {
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
     return [meta, samplesheet, flowcell]
 }
-
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
