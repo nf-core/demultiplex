@@ -56,7 +56,6 @@ include { BASES_DEMULTIPLEX } from '../subworkflows/local/bases_demultiplex/main
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { BASES2FASTQ                   } from '../modules/nf-core/bases2fastq/main'
 include { FASTP                         } from '../modules/nf-core/fastp/main'
 include { FASTQC                        } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
@@ -112,7 +111,6 @@ workflow DEMULTIPLEX {
         case ['bclconvert', 'bcl2fastq']:
             // SUBWORKFLOW: illumina
             // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            // See conf/modules.config
             BCL_DEMULTIPLEX( ch_flowcells, params.demultiplexer )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
@@ -122,12 +120,11 @@ workflow DEMULTIPLEX {
         case 'bases2fastq':
             // MODULE: bases2fastq
             // Runs when "params.demultiplexer" is set to "bases2fastq"
-            // See conf/modules.config
             BASES_DEMULTIPLEX ( ch_flowcells )
-            ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
+            ch_raw_fastq = ch_raw_fastq.mix(BASES_DEMULTIPLEX.out.fastq)
             // TODO: verify that this is the correct output
-            ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics)
-            ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+            ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics)
+            ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
         default:
             exit 1, "Unknown demultiplexer: ${params.demultiplexer}"
