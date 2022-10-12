@@ -123,8 +123,7 @@ workflow DEMULTIPLEX {
             // MODULE: bases2fastq
             // Runs when "params.demultiplexer" is set to "bases2fastq"
             // See conf/modules.config
-            // TODO: replace this with the bases2fastq subworkflow
-            BASES2FASTQ ( ch_flowcells )
+            BASES_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
             // TODO: verify that this is the correct output
             ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics)
