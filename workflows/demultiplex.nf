@@ -107,22 +107,31 @@ workflow DEMULTIPLEX {
     //
     ch_raw_fastq = Channel.empty()
 
-    // SUBWORKFLOW: illumina
-    // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
-    // See conf/modules.config
-    BCL_DEMULTIPLEX( ch_flowcells, params.demultiplexer )
-    ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
-    ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
-    ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
-    ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
-
-    // MODULE: bases2fastq
-    // Runs when "params.demultiplexer" is set to "bases2fastq"
-    // See conf/modules.config
-    BASES2FASTQ ( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
-    // TODO ch_multiqc_files = ch_multiqc_files.mix()
-    ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+    switch (params.demultiplexer) {
+        case ['bclconvert', 'bcl2fastq']:
+            // SUBWORKFLOW: illumina
+            // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            // See conf/modules.config
+            BCL_DEMULTIPLEX( ch_flowcells, params.demultiplexer )
+            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
+            ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
+            break
+        case 'bases2fastq':
+            // MODULE: bases2fastq
+            // Runs when "params.demultiplexer" is set to "bases2fastq"
+            // See conf/modules.config
+            // TODO: replace this with the bases2fastq subworkflow
+            BASES2FASTQ ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
+            // TODO: verify that this is the correct output
+            ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics)
+            ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+            break
+        default:
+            exit 1, "Unknown demultiplexer: ${params.demultiplexer}"
+    }
 
     //
     // RUN QC
