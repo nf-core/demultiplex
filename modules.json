@@ -42,6 +42,14 @@
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     }
                 }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "bcl_demultiplex": {
+                        "branch": "master",
+                        "git_sha": "cc980fb6f3931cb02fbae41ebd0cece34c7638f4"
+                    }
+                }
             }
         }
     }

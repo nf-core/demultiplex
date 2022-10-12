@@ -1,15 +1,16 @@
 #!/usr/bin/env nextflow
 
 //
-// Demultiplex Illumina BCL data using bcl-convert
+// Demultiplex Illumina BCL data using bcl-convert or bcl2fastq
 //
 
 include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
 
-workflow DEMUX_ILLUMINA {
+workflow BCL_DEMULTIPLEX {
     take:
-        ch_flowcell // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
+        ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
+        demultiplexer   // bclconvert or bcl2fastq
 
     main:
         ch_versions = Channel.empty()
@@ -20,20 +21,25 @@ workflow DEMUX_ILLUMINA {
 
         // MODULE: bclconvert
         // Demultiplex the bcl files
-        BCLCONVERT( ch_flowcell )
-        ch_fastq    = ch_fastq.mix(BCLCONVERT.out.fastq)
-        ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
-        ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
-        ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
+        if (demultiplexer == "bclconvert") {
+            BCLCONVERT( ch_flowcell )
+            ch_fastq    = ch_fastq.mix(BCLCONVERT.out.fastq)
+            ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
+            ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
+            ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
+        }
+
 
         // MODULE: bcl2fastq
         // Demultiplex the bcl files
-        BCL2FASTQ( ch_flowcell )
-        ch_fastq    = ch_fastq.mix(BCL2FASTQ.out.fastq)
-        ch_interop  = ch_interop.mix(BCL2FASTQ.out.interop)
-        ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
-        ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
-        ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
+        if (demultiplexer == "bcl2fastq") {
+            BCL2FASTQ( ch_flowcell )
+            ch_fastq    = ch_fastq.mix(BCL2FASTQ.out.fastq)
+            ch_interop  = ch_interop.mix(BCL2FASTQ.out.interop)
+            ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
+            ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
+            ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
+        }
 
         // Generate meta for each fastq
         ch_fastq_with_meta = generate_fastq_meta(ch_fastq)
@@ -87,8 +93,7 @@ def generate_fastq_meta(ch_reads) {
 def readgroup_from_fastq(path) {
     // expected format:
     // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
+
     def line
 
     path.withInputStream {
@@ -102,22 +107,17 @@ def readgroup_from_fastq(path) {
     def fields = line.split(':')
     def rg = [:]
 
-    if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        sequencer_serial = fields[0]
-        run_nubmer       = fields[1]
-        fcid             = fields[2]
-        lane             = fields[3]
-        index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+    // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+    sequencer_serial = fields[0]
+    run_nubmer       = fields[1]
+    fcid             = fields[2]
+    lane             = fields[3]
+    index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
-        rg.ID = [fcid,lane].join(".")
-        rg.PU = [fcid, lane, index].findAll().join(".")
-        rg.PL = "ILLUMINA"
-    } else if (fields.size() == 5) {
-        fcid = fields[0]
+    rg.ID = [fcid,lane].join(".")
+    rg.PU = [fcid, lane, index].findAll().join(".")
+    rg.PL = "ILLUMINA"
 
-        rg.ID = fcid
-    }
     return rg
 }
