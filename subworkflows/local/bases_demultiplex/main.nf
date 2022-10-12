@@ -84,8 +84,8 @@ def readgroup_from_fastq(path) {
     def fields = line.split(':')
     def rg = [:]
 
-    // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+    // https://www.elementbiosciences.com/resources/user-guides/workflow/bases2fastq
+    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:UMI <read>:N:0:<index sequence>"
     sequencer_serial = fields[0]
     run_nubmer       = fields[1]
     fcid             = fields[2]
