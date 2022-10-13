@@ -57,7 +57,7 @@ include { BASES_DEMULTIPLEX } from '../subworkflows/local/bases_demultiplex/main
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { FASTP                         } from '../modules/nf-core/fastp/main'
-include { FASTQC                        } from '../modules/nf-core/fastqc/main'
+include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
@@ -140,10 +140,10 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
-    // MODULE: fastqc
-    FASTQC(ch_raw_fastq)
-    ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
-    ch_versions = ch_versions.mix(FASTQC.out.versions)
+    // MODULE: falco, drop in replacement for fastqc
+    FALCO(ch_raw_fastq)
+    ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
+    ch_versions = ch_versions.mix(FALCO.out.versions)
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
