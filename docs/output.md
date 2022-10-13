@@ -14,7 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [fastp](#fastp) - Adapter and quality trimming
-- [FastQC](#fastqc) - Raw read QC
+- [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
@@ -72,20 +72,21 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ![MultiQC - fastp filtered reads plot](images/mqc_fastp_plot.png)
 
-### FastQC
+### Falco
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `<flowcell_id>/`
   - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+  - `*_fastqc.txt`: Txt containing the FastQC report, tab-delimited data file.
+  - `*_summary.txt`: Txt containing the summary metrics.
 
-> **NB:** The FastQC plots in this directory are generated relative to the raw, input reads. They may contain adapter sequence and regions of low quality. To see how your reads look after adapter and quality trimming please refer to the FastQC reports in the `trimgalore/fastqc/` directory.
+> **NB:** The FastQC plots in this directory are generated relative to the raw, demultiplexed reads. They may contain adapter sequence and regions of low quality.
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+[Falco](https://github.com/smithlabcode/falco) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences.
 
 ![MultiQC - FastQC sequence counts plot](images/mqc_fastqc_counts.png)
 

@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bases2fastq": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "f67b13d71bad1a1d805283b9537449141dff384e"
                     },
                     "bcl2fastq": {
                         "branch": "master",
@@ -21,11 +21,11 @@
                         "branch": "master",
                         "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
                     },
-                    "fastp": {
+                    "falco": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "fc959214036403ad83efe7a41d43d0606c445cda"
                     },
-                    "fastqc": {
+                    "fastp": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     },
@@ -40,6 +40,14 @@
                     "untar": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "bcl_demultiplex": {
+                        "branch": "master",
+                        "git_sha": "cc980fb6f3931cb02fbae41ebd0cece34c7638f4"
                     }
                 }
             }

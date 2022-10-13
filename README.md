@@ -29,7 +29,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 
 2. [fastp](#fastp) - Adapter and quality trimming
-3. [FastQC](#fastqc) - Raw read QC
+3. [Falco](#falco) - Raw read QC
 4. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 

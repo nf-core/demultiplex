@@ -43,7 +43,8 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
+include { BCL_DEMULTIPLEX   } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { BASES_DEMULTIPLEX } from '../subworkflows/local/bases_demultiplex/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,9 +56,8 @@ include { DEMUX_ILLUMINA } from "../subworkflows/local/demux_illumina/main"
 // MODULE: Installed directly from nf-core/modules
 //
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-include { BASES2FASTQ                   } from '../modules/nf-core/bases2fastq/main'
 include { FASTP                         } from '../modules/nf-core/fastp/main'
-include { FASTQC                        } from '../modules/nf-core/fastqc/main'
+include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
@@ -107,22 +107,29 @@ workflow DEMULTIPLEX {
     //
     ch_raw_fastq = Channel.empty()
 
-    // SUBWORKFLOW: illumina
-    // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
-    // See conf/modules.config
-    DEMUX_ILLUMINA( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix( DEMUX_ILLUMINA.out.fastq )
-    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.reports.map { meta, report -> return report} )
-    ch_multiqc_files = ch_multiqc_files.mix( DEMUX_ILLUMINA.out.stats.map   { meta, stats  -> return stats } )
-    ch_versions = ch_versions.mix(DEMUX_ILLUMINA.out.versions)
-
-    // MODULE: bases2fastq
-    // Runs when "params.demultiplexer" is set to "bases2fastq"
-    // See conf/modules.config
-    BASES2FASTQ ( ch_flowcells )
-    ch_raw_fastq = ch_raw_fastq.mix(BASES2FASTQ.out.sample_fastq)
-    // TODO ch_multiqc_files = ch_multiqc_files.mix()
-    ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+    switch (params.demultiplexer) {
+        case ['bclconvert', 'bcl2fastq']:
+            // SUBWORKFLOW: illumina
+            // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            BCL_DEMULTIPLEX( ch_flowcells, params.demultiplexer )
+            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
+            ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+            break
+        case 'bases2fastq':
+            // MODULE: bases2fastq
+            // Runs when "params.demultiplexer" is set to "bases2fastq"
+            BASES_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(BASES_DEMULTIPLEX.out.fastq)
+            // TODO: verify that this is the correct output
+            ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
+            break
+        default:
+            exit 1, "Unknown demultiplexer: ${params.demultiplexer}"
+    }
+    ch_raw_fastq.dump(tag: "Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC
@@ -133,10 +140,10 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
-    // MODULE: fastqc
-    FASTQC(ch_raw_fastq)
-    ch_multiqc_files = ch_multiqc_files.mix( FASTQC.out.zip.map { meta, zip -> return zip} )
-    ch_versions = ch_versions.mix(FASTQC.out.versions)
+    // MODULE: falco, drop in replacement for fastqc
+    FALCO(ch_raw_fastq)
+    ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
+    ch_versions = ch_versions.mix(FALCO.out.versions)
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
@@ -155,10 +162,10 @@ workflow DEMULTIPLEX {
     methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
     ch_methods_description = Channel.value(methods_description)
 
-    ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files.dump(tag: "MultiQC files",{FormattingService.prettyFormat(it)})
 
     MULTIQC (
         ch_multiqc_files.collect(),
@@ -223,8 +230,6 @@ def parse_flowcell_csv(row) {
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
     return [meta, samplesheet, flowcell]
 }
-
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
