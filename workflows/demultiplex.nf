@@ -123,7 +123,7 @@ workflow DEMULTIPLEX {
             BASES_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(BASES_DEMULTIPLEX.out.fastq)
             // TODO: verify that this is the correct output
-            ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics)
+            ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
         default:
@@ -162,10 +162,10 @@ workflow DEMULTIPLEX {
     methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
     ch_methods_description = Channel.value(methods_description)
 
-    ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files.dump(tag: "MultiQC files",{FormattingService.prettyFormat(it)})
 
     MULTIQC (
         ch_multiqc_files.collect(),
