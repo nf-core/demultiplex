@@ -34,6 +34,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ![subway map](docs/demultiplex.png)
+
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
