@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Fix MultiQC report inputs, fixes MultiQC report is empty #64
+- [#67](https://github.com/nf-core/demultiplex/pull/67) Enable instititutional configs
 
 ## v1.0.0 - 2022-10-06
 
