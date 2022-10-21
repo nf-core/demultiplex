@@ -12,9 +12,9 @@
             "default": "",
             "properties": {
                 "trim_fastq": {
-                    "type": "string",
-                    "default": "false",
-                    "description": "Wether or not to skip trimming"
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether or not to skip trimming"
                 },
                 "skip_tools": {
                     "type": "string",
