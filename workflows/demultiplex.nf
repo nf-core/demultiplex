@@ -132,7 +132,7 @@ workflow DEMULTIPLEX {
     ch_raw_fastq.dump(tag: "Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
-    // RUN QC
+    // RUN QC and TRIMMING
     //
 
     // MODULE: fastp
@@ -140,14 +140,16 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
     ch_versions = ch_versions.mix(FASTP.out.versions)
 
+    ch_fastq_to_process = params.trim_fastq ? FASTP.out.fastq : ch_raw_fastq
+
     // MODULE: falco, drop in replacement for fastqc
-    FALCO(ch_raw_fastq)
+    FALCO(ch_fastq_to_process)
     ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
     ch_versions = ch_versions.mix(FALCO.out.versions)
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
-    ch_fq_single = ch_raw_fastq.transpose()
+    ch_fq_single = ch_fastq_to_process.transpose()
     MD5SUM(ch_fq_single)
 
     // DUMP SOFTWARE VERSIONS
