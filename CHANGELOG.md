@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Add bases_demultiplex local subworkflow
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Replace fastqc with falco for speedier QC, fixes Replace fastqc with falco #62
 - [#64](https://github.com/nf-core/demultiplex/pull/64) Add subway map by @nvnieuwk
+- [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional
 
 ### `Fixed`
 
