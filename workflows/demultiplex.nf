@@ -74,9 +74,9 @@ def multiqc_report = []
 workflow DEMULTIPLEX {
 
     // Value inputs
-    demultiplexer = params.demultiplexer            // string: bclconvert, bcl2fastq, bases2fastq
-    trim_fastq    = params.trim_fastq               // boolean: true, false
-    skip_tools    = params.skip_tools.split(',')    // list: [falco, fastp, multiqc]
+    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq
+    trim_fastq    = params.trim_fastq                                      // boolean: true, false
+    skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
     // Channel inputs
 
