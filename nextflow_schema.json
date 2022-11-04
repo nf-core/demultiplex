@@ -13,7 +13,7 @@
             "properties": {
                 "trim_fastq": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "description": "Whether or not to skip trimming"
                 },
                 "skip_tools": {
