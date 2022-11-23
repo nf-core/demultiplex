@@ -5,6 +5,23 @@
     "description": "Demultiplexing pipeline for Illumina sequencing data",
     "type": "object",
     "definitions": {
+        "workflow_options": {
+            "title": "Workflow options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether or not to skip trimming"
+                },
+                "skip_tools": {
+                    "type": "string",
+                    "default": null
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -245,6 +262,9 @@
         }
     },
     "allOf": [
+        {
+            "$ref": "#/definitions/workflow_options"
+        },
         {
             "$ref": "#/definitions/input_output_options"
         },

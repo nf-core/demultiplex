@@ -73,6 +73,14 @@ def multiqc_report = []
 
 workflow DEMULTIPLEX {
 
+    // Value inputs
+    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq
+    trim_fastq    = params.trim_fastq                                      // boolean: true, false
+    skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+
+    // Channel inputs
+
+
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
@@ -107,11 +115,11 @@ workflow DEMULTIPLEX {
     //
     ch_raw_fastq = Channel.empty()
 
-    switch (params.demultiplexer) {
+    switch (demultiplexer) {
         case ['bclconvert', 'bcl2fastq']:
             // SUBWORKFLOW: illumina
-            // Runs when "params.demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            BCL_DEMULTIPLEX( ch_flowcells, params.demultiplexer )
+            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
@@ -119,7 +127,7 @@ workflow DEMULTIPLEX {
             break
         case 'bases2fastq':
             // MODULE: bases2fastq
-            // Runs when "params.demultiplexer" is set to "bases2fastq"
+            // Runs when "demultiplexer" is set to "bases2fastq"
             BASES_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(BASES_DEMULTIPLEX.out.fastq)
             // TODO: verify that this is the correct output
@@ -127,28 +135,36 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
         default:
-            exit 1, "Unknown demultiplexer: ${params.demultiplexer}"
+            exit 1, "Unknown demultiplexer: ${demultiplexer}"
     }
     ch_raw_fastq.dump(tag: "Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
-    // RUN QC
+    // RUN QC and TRIMMING
     //
 
+    ch_fastq_to_qc = ch_raw_fastq
+
     // MODULE: fastp
-    FASTP(ch_raw_fastq, [], [])
-    ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
-    ch_versions = ch_versions.mix(FASTP.out.versions)
+    if (! "fastp" in skip_tools){
+            FASTP(ch_raw_fastq, [], [], [])
+            ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
+            ch_versions = ch_versions.mix(FASTP.out.versions)
+            if (trim_fastq) {
+                ch_fastq_to_qc = FASTP.out.fastq
+            }
+    }
 
     // MODULE: falco, drop in replacement for fastqc
-    FALCO(ch_raw_fastq)
-    ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
-    ch_versions = ch_versions.mix(FALCO.out.versions)
+    if (! "falco" in skip_tools){
+        FALCO(ch_fastq_to_qc)
+        ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
+        ch_versions = ch_versions.mix(FALCO.out.versions)
+    }
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
-    ch_fq_single = ch_raw_fastq.transpose()
-    MD5SUM(ch_fq_single)
+    MD5SUM(ch_fastq_to_qc.transpose())
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
