@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Replace fastqc with falco for speedier QC, fixes Replace fastqc with falco #62
 - [#64](https://github.com/nf-core/demultiplex/pull/64) Add subway map by @nvnieuwk
 - [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional
+- [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test
 
 ### `Fixed`
 
@@ -24,9 +25,9 @@ Initial release of nf-core/demultiplex, created with the [nf-core](https://nf-co
 
 ### `Added`
 
-- [#38](https://github.com/nf-core/demultiplex/pull/38) - Add FastP
-- [#39](https://github.com/nf-core/demultiplex/pull/39) - Add FastQC
-- [#51](https://github.com/nf-core/demultiplex/pull/51) - Add bases2fastq
+- [#38](https://github.com/nf-core/demultiplex/pull/38) Add FastP
+- [#39](https://github.com/nf-core/demultiplex/pull/39) Add FastQC
+- [#51](https://github.com/nf-core/demultiplex/pull/51) Add bases2fastq
 
 ### `Fixed`
 

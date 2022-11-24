@@ -1,0 +1,14 @@
+{
+    "Should run without failures": {
+        "content": [
+            "DefaultSample_R1.fastq.gz.md5:md5,5d8bc31e54f78babafb9a860be2ff52a",
+            "DefaultSample_R2.fastq.gz.md5:md5,1b71d1475ec7fb7e7ca16b7958990622",
+            "Metrics.csv:md5,3213ad7bdf66f33476cb589b4d608948",
+            "RunManifest.json:md5,d4ecdb19e5fbcffab3e6e770c34023fb",
+            "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097",
+            "DefaultSample_R1.fastq.gz:md5,77b68ec94323741d1bddc03a7a428fa9",
+            "DefaultSample_R2.fastq.gz:md5,ecd4ed53e10207582bbbc29383080b57"
+        ],
+        "timestamp": "2022-11-24T01:47:50+0000"
+    }
+}

@@ -1,0 +1,38 @@
+nextflow_pipeline {
+
+    name "Test Bases2Fastq"
+    script "main.nf"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/b2fq-samplesheet.csv"
+                demultiplexer = 'bases2fastq'
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 6
+
+            assert snapshot(
+                path("$outputDir/sim-data/DefaultSample_R1.fastq.gz.md5"),
+                path("$outputDir/sim-data/DefaultSample_R2.fastq.gz.md5"),
+                path("$outputDir/sim-data/Metrics.csv"),
+                path("$outputDir/sim-data/RunManifest.json"),
+                path("$outputDir/sim-data/UnassignedSequences.csv"),
+
+                path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R1.fastq.gz"),
+                path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R2.fastq.gz"),
+            ).match()
+
+            assert new File("$outputDir/sim-data/Bases2Fastq-Sim_QC.html").exists()
+            assert new File("$outputDir/sim-data/RunStats.json").exists()
+            assert new File("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_stats.json").exists()
+        }
+
+    }
+
+}
