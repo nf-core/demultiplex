@@ -86,6 +86,7 @@ workflow DEMULTIPLEX {
 
     // Sanitize inputs and separate input types
     ch_inputs = extract_csv(ch_input)
+    ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -137,7 +138,7 @@ workflow DEMULTIPLEX {
         default:
             exit 1, "Unknown demultiplexer: ${demultiplexer}"
     }
-    ch_raw_fastq.dump(tag: "Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
+    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC and TRIMMING
@@ -181,7 +182,7 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files.dump(tag: "MultiQC files",{FormattingService.prettyFormat(it)})
+    ch_multiqc_files.dump(tag: "DEMULTIPLEX::MultiQC files",{FormattingService.prettyFormat(it)})
 
     MULTIQC (
         ch_multiqc_files.collect(),
