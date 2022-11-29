@@ -1,0 +1,168 @@
+nextflow_function {
+
+    name "Test Functions"
+    script "workflows/demultiplex.nf"
+
+    test("Test Function summary_params = NfcoreSchema.paramsSummaryMap") {
+
+        function "summary_params = NfcoreSchema.paramsSummaryMap"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function extract_csv") {
+
+        function "extract_csv"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function all_columns = input_schema.columns.keySet().collect") {
+
+        function "all_columns = input_schema.columns.keySet().collect"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function commons = all_columns.intersect") {
+
+        function "commons = all_columns.intersect"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function diffs = all_columns.plus") {
+
+        function "diffs = all_columns.plus"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function parse_flowcell_csv") {
+
+        function "parse_flowcell_csv"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function flowcell        = file") {
+
+        function "flowcell        = file"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+    test("Test Function samplesheet     = file") {
+
+        function "samplesheet     = file"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+
+    }
+
+	
+
+}
