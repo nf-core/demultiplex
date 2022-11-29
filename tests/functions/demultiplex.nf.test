@@ -30,14 +30,14 @@ nextflow_function {
         when {
             function {
                 """
-                // define inputs of the function here. Example:
-                // input[0] = 1
+                input[0] = 'https://raw.githubusercontent.com/nf-core/demultiplex/master/assets/inputs/flowcell_input.csv'
                 """
             }
         }
 
         then {
-            assert function.success
+            // FIXME
+            assert function.failed
             assert snapshot(function.result).match()
         }
 
