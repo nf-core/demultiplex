@@ -219,8 +219,8 @@ workflow.onComplete {
 // Extract information (meta data + file(s)) from csv file(s)
 def extract_csv(input_csv) {
 
-        // Flowcell Sheet schema
-        // Possible values for the "content" column: [meta, path, number, string, bool]
+    // Flowcell Sheet schema
+    // Possible values for the "content" column: [meta, path, number, string, bool]
     def input_schema = [
         'columns': [
             'id': [
