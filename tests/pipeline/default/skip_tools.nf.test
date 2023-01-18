@@ -1,0 +1,31 @@
+nextflow_pipeline {
+
+    name "Test skips"
+    script "main.nf"
+
+    test("Should skip trimming") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bclconvert'
+                trim_fastq  = false
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 7
+
+            assert snapshot(
+                path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
+                path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+            ).match()
+        }
+
+    }
+
+}
