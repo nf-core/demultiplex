@@ -2,7 +2,6 @@
     "Should run without failures": {
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
             "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
@@ -19,6 +18,6 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2022-11-24T01:34:12+0000"
+        "timestamp": "2023-01-18T23:51:44+0000"
     }
 }
