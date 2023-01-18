@@ -152,7 +152,7 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             if (trim_fastq) {
-                ch_fastq_to_qc = FASTP.out.fastq
+                ch_fastq_to_qc = FASTP.out.reads
             }
     }
 
