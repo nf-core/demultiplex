@@ -147,17 +147,17 @@ workflow DEMULTIPLEX {
     ch_fastq_to_qc = ch_raw_fastq
 
     // MODULE: fastp
-    if (! "fastp" in skip_tools){
+    if (!("fastp" in skip_tools)){
             FASTP(ch_raw_fastq, [], [], [])
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             if (trim_fastq) {
-                ch_fastq_to_qc = FASTP.out.fastq
+                ch_fastq_to_qc = FASTP.out.reads
             }
     }
 
     // MODULE: falco, drop in replacement for fastqc
-    if (! "falco" in skip_tools){
+    if (!("falco" in skip_tools)){
         FALCO(ch_fastq_to_qc)
         ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
         ch_versions = ch_versions.mix(FALCO.out.versions)
