@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional
 - [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test
 
+### `Changed`
+
+- [#78](https://github.com/nf-core/demultiplex/pull/78) Nextflow minimal version is now `22.10.1`
+
 ### `Fixed`
 
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Fix MultiQC report inputs, fixes MultiQC report is empty #64
