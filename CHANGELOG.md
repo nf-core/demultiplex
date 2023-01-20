@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#67](https://github.com/nf-core/demultiplex/pull/67) Enable instititutional configs
 - [#83](https://github.com/nf-core/demultiplex/pull/83) Fix skip_tools
 - [#80](https://github.com/nf-core/demultiplex/issues/80) When NoLaneSplitting is true the process fails because of a glob. See [nf-core/modules #2745](https://github.com/nf-core/modules/pull/2745).
+- [#79](https://github.com/nf-core/demultiplex/issues/79) Update link in docs to samplesheet
 
 ## v1.0.0 - 2022-10-06
 
