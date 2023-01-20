@@ -72,11 +72,12 @@ The nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinfor
 The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent, Ghent University](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@emiller88](https://github.com/emiller88)) from [Element Biosciences](https://www.elementbiosciences.com/)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
-[`@ChristopherBarrington`](https://github.com/ChristopherBarrington)
-[`@drpatelh`](https://github.com/drpatelh)
-[`@danielecook`](https://github.com/danielecook)
-[`@escudem`](https://github.com/escudem)
-[`@crickbabs`](https://github.com/crickbabs)
+
+- [`@ChristopherBarrington`](https://github.com/ChristopherBarrington)
+- [`@drpatelh`](https://github.com/drpatelh)
+- [`@danielecook`](https://github.com/danielecook)
+- [`@escudem`](https://github.com/escudem)
+- [`@crickbabs`](https://github.com/crickbabs)
 
 ## Contributions and Support
 
@@ -86,7 +87,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use  nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.7153103](https://doi.org/10.5281/zenodo.7153103)
+If you use nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.7153103](https://doi.org/10.5281/zenodo.7153103)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
