@@ -1,12 +1,13 @@
 # ![nf-core/demultiplex](docs/images/nf-core-demultiplex_logo_light.png#gh-light-mode-only) ![nf-core/demultiplex](docs/images/nf-core-demultiplex_logo_dark.png#gh-dark-mode-only)
 
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.7153103-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.7153103)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/demultiplex)
+[![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
 
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23demultiplex-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/demultiplex)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
@@ -29,13 +30,15 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 
 2. [fastp](#fastp) - Adapter and quality trimming
-3. [FastQC](#fastqc) - Raw read QC
+3. [Falco](#falco) - Raw read QC
 4. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
+![subway map](docs/demultiplex.png)
+
 ## Quick Start
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
+1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.1`)
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
 
@@ -66,14 +69,15 @@ The nf-core/demultiplex pipeline comes with documentation about the pipeline [us
 
 The nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.
 
-The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@emiller88](https://github.com/emiller88)) from [Element Biosciences](https://www.elementbiosciences.com/)
+The pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent, Ghent University](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@emiller88](https://github.com/emiller88)) from [Element Biosciences](https://www.elementbiosciences.com/)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
-[`@ChristopherBarrington`](https://github.com/ChristopherBarrington)
-[`@drpatelh`](https://github.com/drpatelh)
-[`@danielecook`](https://github.com/danielecook)
-[`@escudem`](https://github.com/escudem)
-[`@crickbabs`](https://github.com/crickbabs)
+
+- [`@ChristopherBarrington`](https://github.com/ChristopherBarrington)
+- [`@drpatelh`](https://github.com/drpatelh)
+- [`@danielecook`](https://github.com/danielecook)
+- [`@escudem`](https://github.com/escudem)
+- [`@crickbabs`](https://github.com/crickbabs)
 
 ## Contributions and Support
 
@@ -83,10 +87,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+If you use nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.7153103](https://doi.org/10.5281/zenodo.7153103)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
