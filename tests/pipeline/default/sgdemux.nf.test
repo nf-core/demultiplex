@@ -1,0 +1,25 @@
+nextflow_pipeline {
+
+    name "Test SGDEMUX"
+    script "main.nf"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/sgdemux-samplesheet.csv"
+                demultiplexer = 'sgdemux'
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            // assert workflow.trace.succeeded().size() == 8
+
+            assert snapshot(path("$outputDir/sgdemux/output/metrics.tsv")).match()
+        }
+
+    }
+
+}

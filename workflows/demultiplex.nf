@@ -75,7 +75,7 @@ def multiqc_report = []
 workflow DEMULTIPLEX {
 
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq
+    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq, sgdemux
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -143,7 +143,7 @@ workflow DEMULTIPLEX {
             ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
             // TODO: verify that this is the correct output for sgdemux and bases2fastq
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
-            ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
+            ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
             exit 1, "Unknown demultiplexer: ${demultiplexer}"
