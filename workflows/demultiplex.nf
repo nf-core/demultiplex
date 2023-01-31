@@ -141,7 +141,6 @@ workflow DEMULTIPLEX {
             // Runs when "demultiplexer" is set to "sgdemux"
             SINGULAR_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
-            // TODO: verify that this is the correct output for sgdemux and bases2fastq
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break

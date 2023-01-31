@@ -23,11 +23,10 @@ workflow SINGULAR_DEMULTIPLEX {
 
     emit:
         fastq                   = ch_fastq_with_meta
-        // sample_json             = BASES2FASTQ.out.sample_json TODO no json
-        // qc_report               = BASES2FASTQ.out.qc_report TODO no qc report
-        generated_run_manifest  = SGDEMUX.out.per_project_metrics // TODO
-        metrics                 = SGDEMUX.out.metrics // TODO 
-        unassigned              = SGDEMUX.out.most_frequent_unmatched // TODO 
+        //TODO: @samfulcrum veriify outputs are correct compared to what is in bases2fastq
+        generated_run_manifest  = SGDEMUX.out.per_project_metrics 
+        metrics                 = SGDEMUX.out.metrics 
+        unassigned              = SGDEMUX.out.most_frequent_unmatched 
         versions                = SGDEMUX.out.versions
 }
 
@@ -96,7 +95,6 @@ def readgroup_from_fastq(path) {
 
     rg.ID = [fcid,lane].join(".")
     rg.PU = [fcid, lane, index].findAll().join(".")
-    // TODO: @emiller verify if this is correct
     rg.PL = "SINGULAR"
 
     return rg
