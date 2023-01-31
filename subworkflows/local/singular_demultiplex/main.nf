@@ -97,7 +97,7 @@ def readgroup_from_fastq(path) {
     rg.ID = [fcid,lane].join(".")
     rg.PU = [fcid, lane, index].findAll().join(".")
     // TODO: @emiller verify if this is correct
-    rg.PL = "ELEMENT"
+    rg.PL = "SINGULAR"
 
     return rg
 }
