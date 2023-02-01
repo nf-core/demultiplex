@@ -10,7 +10,7 @@ workflow SINGULAR_DEMULTIPLEX {
     take:
         // Input fastq's must be bgzipped for compatibility with sgdemux
         // samplesheet.csv must be a two column csv = Sample_Barcode,Sample_ID)
-        ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bases/files]
+        ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/fastq/files]
 
     main:
 
