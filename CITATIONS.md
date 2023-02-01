@@ -20,7 +20,7 @@
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
-- [sgdemux] (https://github.com/Singular-Genomics/singular-demux)
+- [sgdemux](https://github.com/Singular-Genomics/singular-demux)
 
 ## Software packaging/containerisation tools
 
