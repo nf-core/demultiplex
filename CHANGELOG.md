@@ -37,6 +37,7 @@ Initial release of nf-core/demultiplex, created with the [nf-core](https://nf-co
 - [#38](https://github.com/nf-core/demultiplex/pull/38) Add FastP
 - [#39](https://github.com/nf-core/demultiplex/pull/39) Add FastQC
 - [#51](https://github.com/nf-core/demultiplex/pull/51) Add bases2fastq
+- [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
 
 ### `Fixed`
 
