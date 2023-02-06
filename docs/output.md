@@ -13,6 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
+- [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
@@ -55,6 +56,28 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 ### bcl2fastq
 
 <!-- TODO -->
+
+### sgdemux
+[sgdemux](https://github.com/Singular-Genomics/singular-demux) demultiplexes sequencing data generated on Singular Genomics sequencing instruments.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+| File                            | Directory                         | Description                                                                                 |
+| :------------------------------ | :-------------------------------- | :------------------------------------------------------------------------------------------ |
+| Execution logs                  | <OUTDIR>/pipeline_info            | Log files (html/txt) for nextflow workflow reports                                          |
+| `software_versions/yml`         | <OUTDIR>/pipeline_info            | Log file with software versions                                                             |
+| FASTQ                           | <OUTDIR>/<id>                     | Demultiplexed fastq.gz files                                                                |
+| `metrics.csv`                   | <OUTDIR>/<id>                     | Summary stats across run: control_reads_omitted, failing_reads_omitted, and total_templates |
+| `most_frequent_unmatched.tsv`   | <OUTDIR>/<id>                     | Counts for the most prevalent unmatched barcode: barcode, count                             |
+| `per_project_metrics.tsv`       | <OUTDIR>/<id>                     | Summary metrics per project                                                                 |
+| `per_sample_metrics.tsv`        | <OUTDIR>/<id>                     | Summary metrics per sample                                                                  |
+| `sample_barcode_hop_metrics.tsv`| <OUTDIR>/<id>                     | Unexpected barcode combinations for dual indexed reads, else empty file                     |
+| Fastqc summary stats            | <OUTDIR>/<id>/*fastqc_data.txt    | Per base quality summary, for each demultiplexed fastq file                                 |
+| Fastq summary html              | <OUTDIR>/<id>/*fastqc_report.html | Interactive html link for fastqc summary stats                                              |
+| Md5Sum                          | <OUTDIR>/<id>/*.md5               | Md5Sums for each demultiplexed fastq file                                                   |
+
+</details>
 
 ### fastp
 
