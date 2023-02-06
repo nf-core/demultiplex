@@ -66,7 +66,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 | File                             | Directory                          | Description                                                                                 |
 | :------------------------------- | :--------------------------------- | :------------------------------------------------------------------------------------------ |
-| Execution logs                   | <OUTDIR>/pipeline_info             | Log files (html/txt) for nextflow workflow reports                                          |
+| Execution logs                   | <OUTDIR>/pipeline_info             | Log files for the nextflow workflow                                                         |
 | `software_versions/yml`          | <OUTDIR>/pipeline_info             | Log file with software versions                                                             |
 | FASTQ                            | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                                                |
 | `metrics.csv`                    | <OUTDIR>/<id>                      | Summary stats across run: control_reads_omitted, failing_reads_omitted, and total_templates |
