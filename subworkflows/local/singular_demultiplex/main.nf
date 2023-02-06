@@ -23,7 +23,6 @@ workflow SINGULAR_DEMULTIPLEX {
 
     emit:
         fastq                   = ch_fastq_with_meta
-        //TODO: @samfulcrum veriify outputs are correct compared to what is in bases2fastq
         generated_run_manifest  = SGDEMUX.out.per_project_metrics 
         metrics                 = SGDEMUX.out.metrics 
         unassigned              = SGDEMUX.out.most_frequent_unmatched 
