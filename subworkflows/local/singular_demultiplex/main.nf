@@ -84,7 +84,6 @@ def readgroup_from_fastq(path) {
     def fields = line.split(':')
     def rg = [:]
 
-    // https://www.elementbiosciences.com/resources/user-guides/workflow/bases2fastq
     // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:UMI <read>:N:0:<index sequence>"
     sequencer_serial = fields[0]
     run_nubmer       = fields[1]
