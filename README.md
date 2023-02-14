@@ -28,6 +28,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
+- [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 
 2. [fastp](#fastp) - Adapter and quality trimming
 3. [Falco](#falco) - Raw read QC
@@ -78,6 +79,8 @@ We thank the following people for their extensive assistance in the development 
 - [`@danielecook`](https://github.com/danielecook)
 - [`@escudem`](https://github.com/escudem)
 - [`@crickbabs`](https://github.com/crickbabs)
+- [`@nh13`](https://github.com/nh13)
+- [`@sam-white04`](https://github.com/sam-white04)
 
 ## Contributions and Support
 

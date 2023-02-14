@@ -5,7 +5,7 @@
 */
 
 def valid_params = [
-    demultiplexers: ["bclconvert","bcl2fastq","bases2fastq"]
+    demultiplexers: ["bclconvert","bcl2fastq","bases2fastq","sgdemux"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -45,6 +45,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 include { BCL_DEMULTIPLEX   } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { BASES_DEMULTIPLEX } from '../subworkflows/local/bases_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,7 +75,7 @@ def multiqc_report = []
 workflow DEMULTIPLEX {
 
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq
+    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq, sgdemux
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -134,6 +135,14 @@ workflow DEMULTIPLEX {
             // TODO: verify that this is the correct output
             ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
+            break
+        case 'sgdemux':
+            // MODULE: sgdemux
+            // Runs when "demultiplexer" is set to "sgdemux"
+            SINGULAR_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
             exit 1, "Unknown demultiplexer: ${demultiplexer}"
