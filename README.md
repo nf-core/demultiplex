@@ -32,7 +32,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
-- [sgdemux](#sgdemux) - demultiplexing Singular Genomics instrument fasztq files to per-sample fastqs (CONDITIONAL)
+- [sgdemux](#sgdemux) - demultiplexing Singular Genomics instrument fastq files to per-sample fastqs (CONDITIONAL)
 
 2. [fastp](#fastp) - Adapter and quality trimming
 3. [Falco](#falco) - Raw read QC
