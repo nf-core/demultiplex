@@ -79,6 +79,8 @@ We thank the following people for their extensive assistance in the development 
 - [`@danielecook`](https://github.com/danielecook)
 - [`@escudem`](https://github.com/escudem)
 - [`@crickbabs`](https://github.com/crickbabs)
+- [`@nh13`](https://github.com/nh13)
+- [`@sam-white04`](https://github.com/sam-white04)
 
 ## Contributions and Support
 
