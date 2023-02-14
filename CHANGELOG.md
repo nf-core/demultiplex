@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [dev]
+- [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
 
 ## v1.1.0 - 2023-01-23
 
@@ -15,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#64](https://github.com/nf-core/demultiplex/pull/64) Add subway map by @nvnieuwk
 - [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional (@matthdsm)
 - [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test (@emiller88)
-- [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
 
 ### `Changed`
 
