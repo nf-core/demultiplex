@@ -14,6 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
+- [fqtk](#fqtk) - demultiplexing fastq files (CONDITIONAL)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
@@ -67,7 +68,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | File                             | Directory                          | Description                                                                                 |
 | :------------------------------- | :--------------------------------- | :------------------------------------------------------------------------------------------ |
 | Execution logs                   | <OUTDIR>/pipeline_info             | Log files for the nextflow workflow                                                         |
-| `software_versions/yml`          | <OUTDIR>/pipeline_info             | Log file with software versions                                                             |
+| `software_versions.yml`          | <OUTDIR>/pipeline_info             | Log file with software versions                                                             |
 | FASTQ                            | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                                                |
 | `metrics.csv`                    | <OUTDIR>/<id>                      | Summary stats across run: control_reads_omitted, failing_reads_omitted, and total_templates |
 | `most_frequent_unmatched.tsv`    | <OUTDIR>/<id>                      | Counts for the most prevalent unmatched barcode: barcode, count                             |
@@ -77,6 +78,26 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | Fastqc summary stats             | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed fastq file                                 |
 | Fastq summary html               | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats                                              |
 | Md5Sum                           | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed fastq file                                                   |
+
+</details>
+
+### fqtk
+
+[fqtk](https://github.com/fulcrumgenomics/fqtk) A toolkit for working with FASTQ files, written in Rust.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+| File                       | Directory                          | Description                                                 |
+| :------------------------- | :--------------------------------- | :---------------------------------------------------------- |
+| Execution logs             | <OUTDIR>/pipeline_info             | Log files for the nextflow workflow                         |
+| `software_versions.yml`    | <OUTDIR>/pipeline_info             | Log file with software versions                             |
+| FASTQ                      | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                |
+| `demux-metrics.txt`        | <OUTDIR>/<id>                      | Summary stats across run                                    |
+| `unmatched_<1/2>.fastq.gz` | <OUTDIR>/<id>                      | Unmatched R1 and R2 records                                 |
+| Fastqc summary stats       | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed fastq file |
+| Fastq summary html         | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
+| Md5Sum                     | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed fastq file                   |
 
 </details>
 
