@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [dev]
 
 - [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
+- [#99](https://github.com/nf-core/demultiplex/pull/99) Add fqtk
 
 ## v1.1.0 - 2023-01-23
 
