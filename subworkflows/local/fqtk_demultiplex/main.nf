@@ -5,7 +5,7 @@
 //
 
 include { FQTK }  from "../../../modules/nf-core/fqtk/main"
-include {CSV2TSV} from "../../../modules/local/csv2tsv"
+include { CSV2TSV } from "../../../modules/local/csv2tsv"
 
 workflow FQTK_DEMULTIPLEX {
     take:
