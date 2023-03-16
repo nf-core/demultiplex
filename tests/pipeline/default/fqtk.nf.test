@@ -1,0 +1,76 @@
+nextflow_pipeline {
+
+    name "Test FQTK"
+    script "main.nf"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/fqtk-samplesheet.csv"
+                demultiplexer = 'fqtk'
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 105
+
+            assert snapshot(
+                path("$outputDir/test/demux-metrics.txt"),
+            ).match()
+
+            assert new File("$outputDir/test/unmatched_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/unmatched_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s10_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s10_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s11_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s11_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s12_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s12_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s13_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s13_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s14_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s14_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s15_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s15_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s16_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s16_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s17_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s17_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s18_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s18_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s19_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s19_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s1_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s1_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s20_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s20_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s21_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s21_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s22_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s22_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s23_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s23_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s24_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s24_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s2_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s2_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s3_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s3_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s4_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s4_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s5_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s5_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s6_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s6_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s7_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s7_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s8_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s8_2.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s9_1.fastp.fastq.gz").exists()
+            assert new File("$outputDir/test/s9_2.fastp.fastq.gz").exists()
+        }
+    }
+}

@@ -35,6 +35,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "fqtk": {
+                        "branch": "master",
+                        "git_sha": "c3e177f0cd1ad539d5184a7bcc22f51605d897d1",
+                        "installed_by": ["modules"]
+                    },
                     "md5sum": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
