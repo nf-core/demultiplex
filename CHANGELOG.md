@@ -5,8 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+### `Added`
+
 - [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
 - [#99](https://github.com/nf-core/demultiplex/pull/99) Add fqtk
+
+### `Fixed`
+
+- [#97](https://github.com/nf-core/demultiplex/issues/97) bcl2fastq installation error (@matthdsm)
 
 ## v1.1.0 - 2023-01-23
 
