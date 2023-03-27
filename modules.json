@@ -12,7 +12,7 @@
                     },
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "100f641b272ff7e309bfbb86d0c3f63d7b6c6a9b",
+                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
