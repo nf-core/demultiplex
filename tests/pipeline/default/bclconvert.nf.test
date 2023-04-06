@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test Bclconvert"
+    name "Test Workflow main.nf"
     script "main.nf"
 
     test("Bclconvert") {

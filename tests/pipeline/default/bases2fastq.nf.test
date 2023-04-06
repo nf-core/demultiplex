@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Demultiplex Bases2Fastq"
+    name "Test Workflow main.nf"
     script "main.nf"
 
     test("Bases2Fastq") {

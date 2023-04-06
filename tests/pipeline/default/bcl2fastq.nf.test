@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test Bcl2fastq"
+    name "Test Workflow main.nf"
     script "main.nf"
 
     test("Bcl2Fastq") {
