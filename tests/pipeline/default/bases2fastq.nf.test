@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test Bases2Fastq"
+    name "Demultiplex Bases2Fastq"
     script "main.nf"
 
-    test("Should run without failures") {
+    test("Bases2Fastq") {
 
         when {
             params {
@@ -14,24 +14,31 @@ nextflow_pipeline {
         }
 
         then {
-            assert workflow.success
-            assert workflow.trace.succeeded().size() == 8
-
-            assert snapshot(
-                // FIXME
-                // path("$outputDir/sim-data/DefaultSample_R1.fastq.gz.md5"),
-                // path("$outputDir/sim-data/DefaultSample_R2.fastq.gz.md5"),
-                path("$outputDir/sim-data/Metrics.csv"),
-                path("$outputDir/sim-data/RunManifest.json"),
-                path("$outputDir/sim-data/UnassignedSequences.csv"),
-
-                path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R1.fastq.gz"),
-                path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R2.fastq.gz"),
-            ).match()
-
-            assert new File("$outputDir/sim-data/Bases2Fastq-Sim_QC.html").exists()
-            assert new File("$outputDir/sim-data/RunStats.json").exists()
-            assert new File("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_stats.json").exists()
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/pipeline_info/software_versions.yml")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 8 },
+                { assert snapshot(path("$outputDir/sim-data/DefaultSample.fastp.json"),
+                                  path("$outputDir/sim-data/DefaultSample_1.fastp.fastq.gz"),
+                                  path("$outputDir/sim-data/DefaultSample_1.fastp.fastq.gz.md5"),
+                                  path("$outputDir/sim-data/DefaultSample_1.fastp.fastq.gz_fastqc_data.txt"),
+                                  path("$outputDir/sim-data/DefaultSample_1.fastp.fastq.gz_summary.txt"),
+                                  path("$outputDir/sim-data/DefaultSample_2.fastp.fastq.gz"),
+                                  path("$outputDir/sim-data/DefaultSample_2.fastp.fastq.gz.md5"),
+                                  path("$outputDir/sim-data/DefaultSample_2.fastp.fastq.gz_fastqc_data.txt"),
+                                  path("$outputDir/sim-data/DefaultSample_2.fastp.fastq.gz_summary.txt"),
+                                  path("$outputDir/sim-data/Metrics.csv"),
+                                  path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R1.fastq.gz"),
+                                  path("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_R2.fastq.gz"),
+                                  path("$outputDir/sim-data/UnassignedSequences.csv")).match("bases2fastq") },
+                { assert new File("$outputDir/sim-data/Bases2Fastq-Sim_QC.html").exists() },
+                { assert new File("$outputDir/sim-data/DefaultSample.fastp.html").exists() },
+                { assert new File("$outputDir/sim-data/DefaultSample_1.fastp.fastq.gz_fastqc_report.html").exists() },
+                { assert new File("$outputDir/sim-data/DefaultSample_2.fastp.fastq.gz_fastqc_report.html").exists() },
+                { assert new File("$outputDir/sim-data/RunStats.json").exists() },
+                { assert new File("$outputDir/sim-data/RunManifest.json").exists() },
+                { assert new File("$outputDir/sim-data/Samples/DefaultSample/DefaultSample_stats.json").exists() }
+            )
         }
 
     }

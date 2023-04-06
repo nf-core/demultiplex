@@ -1,23 +1,178 @@
 {
-    "Should run without failures": {
+    "skip_fastqc": {
         "content": [
+            "Sample1_S1_L001_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
+            "Sample1_S1_L001.fastp.fastq.gz:md5,081f3075bdc3f3f410058035124f1eb2",
+            "Sample1_S1_L001.fastp.fastq.gz.md5:md5,476855ec906b5fa5d989fba4d4077869",
+            "Sample1_S1_L001.fastp.json:md5,91fcd16615456aba380203a6ee2dad59",
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
             "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
             [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+                [
+                    "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
+                    "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
+                    "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
+                    "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
+                    "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
+                    "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                    "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
+                    "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
+                    "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
+                    "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                    "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
+                    "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                ]
+            ],
+            "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
+            "CorrectedIntMetricsOut.bin:md5,2bbf84d3be72734addaa2fe794711434",
+            "ErrorMetricsOut.bin:md5,38c88def138e9bb832539911affdb286",
+            "ExtractionMetricsOut.bin:md5,7497c3178837eea8f09350b5cd252e99",
+            "IndexMetricsOut.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
+            "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c",
+            "software_versions.yml:md5,cc96f47d7dc10ec3a710446511afb2d5"
         ],
-        "timestamp": "2023-01-18T23:51:44+0000"
+        "timestamp": "2023-04-06T05:50:43+0000"
+    },
+    "skip_fastp": {
+        "content": [
+            "Sample1_S1_L001_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            [
+                [
+                    "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
+                    "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
+                    "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
+                    "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
+                    "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
+                    "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                    "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
+                    "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
+                    "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
+                    "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                    "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
+                    "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                ]
+            ],
+            "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
+            "CorrectedIntMetricsOut.bin:md5,2bbf84d3be72734addaa2fe794711434",
+            "ErrorMetricsOut.bin:md5,38c88def138e9bb832539911affdb286",
+            "ExtractionMetricsOut.bin:md5,7497c3178837eea8f09350b5cd252e99",
+            "IndexMetricsOut.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
+            "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c",
+            "software_versions.yml:md5,e51a8581bbebc7da84ae89fba9662f9c"
+        ],
+        "timestamp": "2023-04-06T05:50:43+0000"
+    },
+    "skip_fastp_fastqc": {
+        "content": [
+            "Sample1_S1_L001_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            [
+                [
+                    "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
+                    "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
+                    "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
+                    "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
+                    "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
+                    "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                    "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
+                    "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
+                    "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
+                    "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                    "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
+                    "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                ]
+            ],
+            "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
+            "CorrectedIntMetricsOut.bin:md5,2bbf84d3be72734addaa2fe794711434",
+            "ErrorMetricsOut.bin:md5,38c88def138e9bb832539911affdb286",
+            "ExtractionMetricsOut.bin:md5,7497c3178837eea8f09350b5cd252e99",
+            "IndexMetricsOut.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
+            "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c",
+            "software_versions.yml:md5,e51a8581bbebc7da84ae89fba9662f9c"
+        ],
+        "timestamp": "2023-04-06T05:50:43+0000"
+    },
+    "bclconvert": {
+        "content": [
+            "Sample1_S1_L001_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
+            "Sample1_S1_L001.fastp.fastq.gz:md5,081f3075bdc3f3f410058035124f1eb2",
+            "Sample1_S1_L001.fastp.fastq.gz.md5:md5,476855ec906b5fa5d989fba4d4077869",
+            "Sample1_S1_L001.fastp.json:md5,91fcd16615456aba380203a6ee2dad59",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            [
+                [
+                    "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
+                    "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
+                    "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
+                    "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
+                    "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
+                    "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                    "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
+                    "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
+                    "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
+                    "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                    "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
+                    "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                ]
+            ],
+            "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
+            "CorrectedIntMetricsOut.bin:md5,2bbf84d3be72734addaa2fe794711434",
+            "ErrorMetricsOut.bin:md5,38c88def138e9bb832539911affdb286",
+            "ExtractionMetricsOut.bin:md5,7497c3178837eea8f09350b5cd252e99",
+            "IndexMetricsOut.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
+            "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c"
+        ],
+        "timestamp": "2023-04-06T05:50:43+0000"
+    },
+    "software_versions": {
+        "content": [
+            "software_versions.yml:md5,cc96f47d7dc10ec3a710446511afb2d5"
+        ],
+        "timestamp": "2023-04-06T05:50:43+0000"
+    },
+    "skip_trimming": {
+        "content": [
+            "Sample1_S1_L001_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            [
+                [
+                    "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
+                    "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
+                    "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
+                    "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
+                    "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
+                    "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                    "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
+                    "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
+                    "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
+                    "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                    "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
+                    "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                ]
+            ],
+            "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
+            "CorrectedIntMetricsOut.bin:md5,2bbf84d3be72734addaa2fe794711434",
+            "ErrorMetricsOut.bin:md5,38c88def138e9bb832539911affdb286",
+            "ExtractionMetricsOut.bin:md5,7497c3178837eea8f09350b5cd252e99",
+            "IndexMetricsOut.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+            "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
+            "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c",
+            "software_versions.yml:md5,cc96f47d7dc10ec3a710446511afb2d5"
+        ],
+        "timestamp": "2023-04-06T05:50:43+0000"
     }
 }

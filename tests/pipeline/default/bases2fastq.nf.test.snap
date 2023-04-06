@@ -1,12 +1,26 @@
 {
-    "Should run without failures": {
+    "software_versions": {
         "content": [
-            "Metrics.csv:md5,3213ad7bdf66f33476cb589b4d608948",
-            "RunManifest.json:md5,d4ecdb19e5fbcffab3e6e770c34023fb",
-            "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097",
-            "DefaultSample_R1.fastq.gz:md5,77b68ec94323741d1bddc03a7a428fa9",
-            "DefaultSample_R2.fastq.gz:md5,ecd4ed53e10207582bbbc29383080b57"
+            "software_versions.yml:md5,591f916e0f6055a86d4abe350b878ebb"
         ],
-        "timestamp": "2023-01-18T23:53:51+0000"
+        "timestamp": "2023-04-06T04:04:35+0000"
+    },
+    "bases2fastq": {
+        "content": [
+            "DefaultSample.fastp.json:md5,8c2848f3a286065aae0d27fcc3689f1d",
+            "DefaultSample_1.fastp.fastq.gz:md5,71dae55499eade51d3e0a2679faa5e3a",
+            "DefaultSample_1.fastp.fastq.gz.md5:md5,d97502a8a791692a961a684724c77377",
+            "DefaultSample_1.fastp.fastq.gz_fastqc_data.txt:md5,491f8f00abcd21efcca2c5707a616e8a",
+            "DefaultSample_1.fastp.fastq.gz_summary.txt:md5,6951a6b657ffe35ef0698fa0ee992da3",
+            "DefaultSample_2.fastp.fastq.gz:md5,13ed689999a65ca500caadb38f0076a1",
+            "DefaultSample_2.fastp.fastq.gz.md5:md5,f684ac5c810c6c003e8b65ccbaaccdac",
+            "DefaultSample_2.fastp.fastq.gz_fastqc_data.txt:md5,405c95342805bbde7b6629b40d6a263c",
+            "DefaultSample_2.fastp.fastq.gz_summary.txt:md5,2fcb4a8052a245dad91140004e638a5f",
+            "Metrics.csv:md5,3213ad7bdf66f33476cb589b4d608948",
+            "DefaultSample_R1.fastq.gz:md5,77b68ec94323741d1bddc03a7a428fa9",
+            "DefaultSample_R2.fastq.gz:md5,ecd4ed53e10207582bbbc29383080b57",
+            "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097"
+        ],
+        "timestamp": "2023-04-06T04:04:35+0000"
     }
 }

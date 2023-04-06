@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test bclconvert"
+    name "Test Bclconvert"
     script "main.nf"
 
-    test("Should run without failures") {
+    test("Bclconvert") {
 
         when {
             params {
@@ -14,18 +14,161 @@ nextflow_pipeline {
         }
 
         then {
-            assert workflow.success
-            assert workflow.trace.succeeded().size() == 7
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/pipeline_info/software_versions.yml")).match("software_versions") },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_data.txt"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz.md5"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.json"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"), 
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/").list(),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ControlMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/CorrectedIntMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ErrorMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ExtractionMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/IndexMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/QMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/TileMetricsOut.bin")).match("bclconvert") },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.html").exists() },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_report.html").exists() }
+            )
+        }
+    }
 
-            assert snapshot(
-                path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
-                // FIXME
-                // path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-            ).match()
+    test("Skip Trimming") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bclconvert'
+                trim_fastq  = false
+                outdir = "$outputDir"
+            }
         }
 
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_data.txt"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"), 
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/").list(),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ControlMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/CorrectedIntMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ErrorMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ExtractionMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/IndexMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/QMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/TileMetricsOut.bin"),
+                                  path("$outputDir/pipeline_info/software_versions.yml")).match("skip_trimming") },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.html").exists() },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_report.html").exists() }
+            )
+        }
+    }
+
+    test("Skip Fastp") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bclconvert'
+                skip_tools = "fastp"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_data.txt"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"), 
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/").list(),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ControlMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/CorrectedIntMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ErrorMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ExtractionMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/IndexMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/QMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/TileMetricsOut.bin"),
+                                  path("$outputDir/pipeline_info/software_versions.yml")).match("skip_fastp") },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_report.html").exists() }
+            )
+        }
+    }
+
+    test("Skip Fastqc") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bclconvert'
+                skip_tools = "fastqc"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_data.txt"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz.md5"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.json"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"), 
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/").list(),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ControlMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/CorrectedIntMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ErrorMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ExtractionMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/IndexMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/QMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/TileMetricsOut.bin"),
+                                  path("$outputDir/pipeline_info/software_versions.yml")).match("skip_fastqc") },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.html").exists() },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_report.html").exists() }
+            )
+        }
+    }
+
+    test("Skip Fastp and Fastqc") {
+
+        when {
+            params {
+                input = "$baseDir/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bclconvert'
+                skip_tools = "fastp,fastqc"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_data.txt"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"), 
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/").list(),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ControlMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/CorrectedIntMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ErrorMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/ExtractionMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/IndexMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/QMetricsOut.bin"),
+                                  path("$outputDir/220422_M11111_0222_000000000-K9H97/InterOp/TileMetricsOut.bin"),
+                                  path("$outputDir/pipeline_info/software_versions.yml")).match("skip_fastp_fastqc") },
+                { assert new File("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_report.html").exists() }
+            )
+        }
     }
 
 }
