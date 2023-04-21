@@ -39,7 +39,7 @@ process BCLCONVERT {
         --sample-sheet ${samplesheet} \\
         --bcl-num-parallel-tiles ${task.cpus}
 
-    find ./ -type d -name "InterOp" -exec cp -r {} . \\;
+    find ./ -follow -type d -name "InterOp" -exec cp -L -r {} . \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
