@@ -6,7 +6,6 @@
 
 include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
-include { UNTAR      } from "../../../modules/nf-core/untar/main"
 
 workflow BCL_DEMULTIPLEX {
     take:
@@ -34,15 +33,12 @@ workflow BCL_DEMULTIPLEX {
                 run_dirs: [ meta, run ]
             }.set { ch_flowcells_tar }
 
-        // MODULE: untar
         // Runs when run_dir is a tar archive
         // Re-join the metadata and the untarred run directory with the samplesheet
-        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
-        ch_versions = ch_versions.mix(UNTAR.out.versions)
+        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( ch_flowcells_tar.run_dirs )
 
         // Merge the two channels back together
         ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
-
 
         // MODULE: bclconvert
         // Demultiplex the bcl files

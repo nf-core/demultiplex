@@ -122,11 +122,9 @@ workflow DEMULTIPLEX {
             } 
     }
 
-    // MODULE: untar
     // Runs when run_dir is a tar archive
     // Re-join the metadata and the untarred run directory with the samplesheet
-    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
-    ch_versions = ch_versions.mix(UNTAR.out.versions)
+    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( ch_flowcells_tar.run_dirs )
 
     // Merge the two channels back together
     ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
