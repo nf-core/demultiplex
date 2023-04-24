@@ -68,7 +68,7 @@
             "properties": {
                 "demultiplexer": {
                     "type": "string",
-                    "enum": ["sgdemux", "bclconvert", "bcl2fastq", "bases2fastq", "fqtk"],
+                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux"],
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope"
                 }

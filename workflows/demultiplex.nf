@@ -5,7 +5,7 @@
 */
 
 def valid_params = [
-    demultiplexers: ["bclconvert","bcl2fastq","bases2fastq","sgdemux","fqtk"]
+    demultiplexers: ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -74,7 +74,7 @@ def multiqc_report = []
 
 workflow DEMULTIPLEX {
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq, sgdemux, fqtk
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -141,15 +141,6 @@ workflow DEMULTIPLEX {
     ch_raw_fastq = Channel.empty()
 
     switch (demultiplexer) {
-        case ['bclconvert', 'bcl2fastq']:
-            // SUBWORKFLOW: illumina
-            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
-            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
-            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
-            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
-            ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
-            break
         case 'bases2fastq':
             // MODULE: bases2fastq
             // Runs when "demultiplexer" is set to "bases2fastq"
@@ -159,16 +150,17 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
-        case 'sgdemux':
-            // MODULE: sgdemux
-            // Runs when "demultiplexer" is set to "sgdemux"
-            SINGULAR_DEMULTIPLEX ( ch_flowcells )
-            ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
-            ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
-            ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
+        case ['bcl2fastq', 'bclconvert']:
+            // SUBWORKFLOW: illumina
+            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
+            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
+            ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
             break
         case 'fqtk':
-            // MODULE: sgdemux
+            // MODULE: fqtk
             // Runs when "demultiplexer" is set to "fqtk"
 
             // Collect fastqs and read structures from field 2 of ch_flowcells
@@ -188,6 +180,14 @@ workflow DEMULTIPLEX {
             ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
             ch_multiqc_files = ch_multiqc_files.mix(FQTK_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(FQTK_DEMULTIPLEX.out.versions)
+            break
+        case 'sgdemux':
+            // MODULE: sgdemux
+            // Runs when "demultiplexer" is set to "sgdemux"
+            SINGULAR_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
             exit 1, "Unknown demultiplexer: ${demultiplexer}"
