@@ -50,7 +50,6 @@ workflow BCL_DEMULTIPLEX {
             ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
         }
 
-
         // MODULE: bcl2fastq
         // Demultiplex the bcl files
         if (demultiplexer == "bcl2fastq") {
