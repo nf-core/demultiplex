@@ -119,14 +119,19 @@ workflow DEMULTIPLEX {
             .multiMap { meta, samplesheet, run ->
                 samplesheets: [ meta, samplesheet ]
                 run_dirs: [ meta, run ]
-            } 
+            }
     }
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
+    // Except for bclconvert and bcl2fastq for wich we untar in the process
     // Re-join the metadata and the untarred run directory with the samplesheet
-    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
-    ch_versions = ch_versions.mix(UNTAR.out.versions)
+
+    if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs)
+    else {
+        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
+        ch_versions = ch_versions.mix(UNTAR.out.versions)
+    }
 
     // Merge the two channels back together
     ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
@@ -170,11 +175,11 @@ workflow DEMULTIPLEX {
             fastq_read_structure = ch_flowcells.map{it[2]}
                 .splitCsv(header:true)
                 .map{[it.fastq, it.read_structure]}
-            
+
             // Combine the directory containing the fastq with the fastq name and read structure
             // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
             fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
-            
+
             // Format ch_input like so:
             // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
             ch_input = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}

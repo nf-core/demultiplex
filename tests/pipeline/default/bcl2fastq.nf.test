@@ -15,7 +15,7 @@ nextflow_pipeline {
 
         then {
             assert workflow.success
-            assert workflow.trace.succeeded().size() == 7
+            assert workflow.trace.succeeded().size() == 6
 
             assert snapshot(
                 // FIXME
