@@ -13,11 +13,14 @@
 
 ## Introduction
 
-**nf-core/demultiplex** is a bioinformatics pipeline used to demultiplex the raw data produced by next generation sequencing machines. At present, only Illumina sequencing data is supported.
+**nf-core/demultiplex** is a bioinformatics pipeline used to demultiplex the raw data produced by next generation sequencing machines. The following platforms are supported:
+
+1. Illumina (via `bcl2fastq` or `bclconvert`)
+2. Element Biosciences (via `bases2fastq`)
+3. Singular Genomics (via [`sgdemux`](https://github.com/Singular-Genomics/singular-demux))
+4. FASTQ files with user supplied read structures (via [`fqtk`](https://github.com/fulcrumgenomics/fqtk))
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
-
-<!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable -->
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/demultiplex/results).
 
@@ -28,6 +31,8 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
+- [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
+- [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)
 
 2. [fastp](#fastp) - Adapter and quality trimming
 3. [Falco](#falco) - Raw read QC
@@ -78,6 +83,9 @@ We thank the following people for their extensive assistance in the development 
 - [`@danielecook`](https://github.com/danielecook)
 - [`@escudem`](https://github.com/escudem)
 - [`@crickbabs`](https://github.com/crickbabs)
+- [`@nh13`](https://github.com/nh13)
+- [`@sam-white04`](https://github.com/sam-white04)
+- [`@maxulysse`](https://github.com/maxulysse)
 
 ## Contributions and Support
 

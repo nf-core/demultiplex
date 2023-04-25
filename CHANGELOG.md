@@ -3,6 +3,25 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0 - 2023-04-25
+
+### `Added`
+
+- [#91](https://github.com/nf-core/demultiplex/pull/91) Add sgdemux
+- [#99](https://github.com/nf-core/demultiplex/pull/99) Add fqtk
+- [#107](https://github.com/nf-core/demultiplex/pull/107) Add test_full
+
+### `Changed`
+
+- [#94](https://github.com/nf-core/demultiplex/issues/94) update documentation
+- [#95](https://github.com/nf-core/demultiplex/issues/95) add Codeowners
+- [#108](https://github.com/nf-core/demultiplex/issues/108) update modules (untar is now in bcl2fastq and bclconvert modules)
+
+### `Fixed`
+
+- [#96](https://github.com/nf-core/demultiplex/issues/96) fix logo
+- [#97](https://github.com/nf-core/demultiplex/issues/97) bcl2fastq installation error (@matthdsm)
+
 ## v1.1.0 - 2023-01-23
 
 ### `Added`

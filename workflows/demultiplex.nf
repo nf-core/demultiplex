@@ -5,7 +5,7 @@
 */
 
 def valid_params = [
-    demultiplexers: ["bclconvert","bcl2fastq","bases2fastq"]
+    demultiplexers: ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux"]
 ]
 
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
@@ -22,7 +22,6 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -43,8 +42,10 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BCL_DEMULTIPLEX   } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { BASES_DEMULTIPLEX } from '../subworkflows/local/bases_demultiplex/main'
+include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,60 +73,74 @@ include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 def multiqc_report = []
 
 workflow DEMULTIPLEX {
-
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bclconvert, bcl2fastq, bases2fastq
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
     // Channel inputs
-
-
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
     // Sanitize inputs and separate input types
-    ch_inputs = extract_csv(ch_input)
-    ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
+    // FQTK's input contains an extra column 'per_flowcell_manifest' so it is handled seperately
+    // For reference - assets/inputs/fqtk-samplesheet.csv vs assets/inputs/sgdemux-samplesheet
+    if (demultiplexer == 'fqtk'){
+        ch_inputs = extract_csv_fqtk(ch_input)
 
-    // Split flowcells into separate channels containg run as tar and run as path
-    // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-    ch_flowcells = ch_inputs
-        .branch { meta, samplesheet, run ->
-            tar: run.toString().endsWith('.tar.gz')
-            dir: true
-        }
+        ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
 
-    ch_flowcells_tar = ch_flowcells.tar
-        .multiMap { meta, samplesheet, run ->
-            samplesheets: [ meta, samplesheet ]
-            run_dirs: [ meta, run ]
-        }
+        // Split flowcells into separate channels containg run as tar and run as path
+        // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
+        ch_flowcells = ch_inputs
+            .branch { meta, samplesheet, run, manifest ->
+                tar: run.toString().endsWith('.tar.gz')
+                dir: true
+            }
+
+        ch_flowcells_tar = ch_flowcells.tar
+            .multiMap { meta, samplesheet, run, manifest ->
+                samplesheets: [ meta, samplesheet, manifest ]
+                run_dirs: [ meta, run ]
+            }
+    } else {
+        ch_inputs = extract_csv(ch_input)
+        ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
+
+        // Split flowcells into separate channels containg run as tar and run as path
+        // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
+        ch_flowcells = ch_inputs
+            .branch { meta, samplesheet, run ->
+                tar: run.toString().endsWith('.tar.gz')
+                dir: true
+            }
+
+        ch_flowcells_tar = ch_flowcells.tar
+            .multiMap { meta, samplesheet, run ->
+                samplesheets: [ meta, samplesheet ]
+                run_dirs: [ meta, run ]
+            }
+    }
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
+    // Except for bclconvert and bcl2fastq for wich we untar in the process
     // Re-join the metadata and the untarred run directory with the samplesheet
-    ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar )
-    ch_versions = ch_versions.mix(UNTAR.out.versions)
+
+    if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
+    else {
+        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
+        ch_versions = ch_versions.mix(UNTAR.out.versions)
+    }
 
     // Merge the two channels back together
     ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
-    //
     // RUN demultiplexing
     //
     ch_raw_fastq = Channel.empty()
 
     switch (demultiplexer) {
-        case ['bclconvert', 'bcl2fastq']:
-            // SUBWORKFLOW: illumina
-            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
-            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
-            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
-            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
-            ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
-            break
         case 'bases2fastq':
             // MODULE: bases2fastq
             // Runs when "demultiplexer" is set to "bases2fastq"
@@ -134,6 +149,45 @@ workflow DEMULTIPLEX {
             // TODO: verify that this is the correct output
             ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
+            break
+        case ['bcl2fastq', 'bclconvert']:
+            // SUBWORKFLOW: illumina
+            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
+            ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
+            ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
+            ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+            break
+        case 'fqtk':
+            // MODULE: fqtk
+            // Runs when "demultiplexer" is set to "fqtk"
+
+            // Collect fastqs and read structures from field 2 of ch_flowcells
+            fastq_read_structure = ch_flowcells.map{it[2]}
+                .splitCsv(header:true)
+                .map{[it.fastq, it.read_structure]}
+
+            // Combine the directory containing the fastq with the fastq name and read structure
+            // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
+            fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
+
+            // Format ch_input like so:
+            // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
+            ch_input = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}
+
+            FQTK_DEMULTIPLEX ( ch_input )
+            ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(FQTK_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(FQTK_DEMULTIPLEX.out.versions)
+            break
+        case 'sgdemux':
+            // MODULE: sgdemux
+            // Runs when "demultiplexer" is set to "sgdemux"
+            SINGULAR_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
             exit 1, "Unknown demultiplexer: ${demultiplexer}"
@@ -214,37 +268,37 @@ workflow.onComplete {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
 // Extract information (meta data + file(s)) from csv file(s)
-def extract_csv(input_csv) {
+def extract_csv(input_csv, input_schema=null) {
 
     // Flowcell Sheet schema
     // Possible values for the "content" column: [meta, path, number, string, bool]
-    def input_schema = [
-        'columns': [
-            'id': [
-                'content': 'meta',
-                'meta_name': 'id',
-                'pattern': '',
+    if(input_schema == null){
+        def default_input_schema = [
+            'columns': [
+                'id': [
+                    'content': 'meta',
+                    'meta_name': 'id',
+                    'pattern': '',
+                ],
+                'samplesheet': [
+                    'content': 'path',
+                    'pattern': '^.*.csv$',
+                ],
+                'lane': [
+                    'content': 'meta',
+                    'meta_name': 'lane',
+                    'pattern': '',
+                ],
+                'flowcell': [
+                    'content': 'path',
+                    'pattern': '',
+                ],
             ],
-            'samplesheet': [
-                'content': 'path',
-                'pattern': '^.*.csv$',
-            ],
-            'lane': [
-                'content': 'meta',
-                'meta_name': 'lane',
-                'pattern': '',
-            ],
-            'flowcell': [
-                'content': 'path',
-                'pattern': '',
-            ],
-
-        ],
-        required: ['id','flowcell', 'samplesheet'],
-    ]
-
+            required: ['id','flowcell', 'samplesheet'],
+        ]
+        input_schema = default_input_schema
+    }
     // Don't change these variables
     def row_count = 1
     def all_columns = input_schema.columns.keySet().collect()
@@ -329,6 +383,48 @@ def parse_flowcell_csv(row) {
     def flowcell        = file(row.flowcell, checkIfExists: true)
     def samplesheet     = file(row.samplesheet, checkIfExists: true)
     return [meta, samplesheet, flowcell]
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS FOR FQTK
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Extract information (meta data + file(s)) from csv file(s)
+def extract_csv_fqtk(input_csv) {
+
+    // Flowcell Sheet schema
+    // Possible values for the "content" column: [meta, path, number, string, bool]
+    def input_schema = [
+        'columns': [
+            'id': [
+                'content': 'meta',
+                'meta_name': 'id',
+                'pattern': '',
+            ],
+            'samplesheet': [
+                'content': 'path',
+                'pattern': '^.*.csv$',
+            ],
+            'lane': [
+                'content': 'meta',
+                'meta_name': 'lane',
+                'pattern': '',
+            ],
+            'flowcell': [
+                'content': 'path',
+                'pattern': '',
+            ],
+            'per_flowcell_manifest': [
+                'content': 'path',
+                'pattern': '',
+            ]
+        ],
+        required: ['id','flowcell', 'samplesheet', 'per_flowcell_manifest'],
+    ]
+
+    return extract_csv(input_csv, input_schema)
 }
 
 /*
