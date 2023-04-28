@@ -4,7 +4,6 @@
     nf-core/demultiplex
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/demultiplex
-
     Website: https://nf-co.re/demultiplex
     Slack  : https://nfcore.slack.com/channels/demultiplex
 ----------------------------------------------------------------------------------------
