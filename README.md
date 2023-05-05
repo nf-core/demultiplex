@@ -64,9 +64,9 @@ Each row represents a fastq file (single-end) or a pair of fastq files (paired e
 
 -->
 
-   ```console
-   nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-   ```
+```console
+nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
+```
 
 ```bash
 nextflow run nf-core/demultiplex \
