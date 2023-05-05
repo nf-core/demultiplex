@@ -1,0 +1,31 @@
+nextflow_pipeline {
+
+    name "Test bcl2fastq"
+    script "main.nf"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+                input = "${baseDir}/assets/inputs/flowcell_input.csv"
+                demultiplexer = 'bcl2fastq'
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.succeeded().size() == 6
+
+            assert snapshot(
+                // FIXME
+                // path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
+
+                path("$outputDir/bcl2fastq/Sample1_S1_L001_R1_001.fastq.gz"),
+                path("$outputDir/bcl2fastq/Stats").list(),
+            ).match()
+        }
+
+    }
+
+}
