@@ -12,16 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-### `Fixed`
-
-## v1.2.0 - 2023-04-25
-
-### `Added`
-
-### `Changed`
-
 - [#115](https://github.com/nf-core/demultiplex/pull/115/files) Add public_aws_ecr profile
-- [#113](https://github.com/nf-core/demultiplex/pull/113) Back to dev
 
 ### `Fixed`
 
