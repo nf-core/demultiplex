@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+### `Changed`
+
+### `Fixed`
+
+## v1.3.0 - 2023-05-31
+
+### `Added`
+
 - Add `public_aws_ecr` profile for using ECR containers.
 - Bump `fastp` module to v0.23.4
 
