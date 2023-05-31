@@ -18,4 +18,3 @@ process CSV2TSV {
     sed 's/,/\t/g' ${sample_sheet} > samplesheet.tsv
     """
 }
-
