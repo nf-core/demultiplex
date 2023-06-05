@@ -32,7 +32,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
                         "installed_by": ["modules"]
                     },
                     "fqtk": {
@@ -42,7 +42,7 @@
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -57,7 +57,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules", "bcl_demultiplex"]
                     }
                 }
