@@ -6,7 +6,7 @@ process BCLCONVERT {
 
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "BCLCONVERT module does not support Conda. Please use Docker / Singularity / Podman instead."
+        Nextflow.error "BCLCONVERT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
     input:
