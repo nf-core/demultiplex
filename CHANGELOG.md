@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#103](https://github.com/nf-core/demultiplex/issues/103) `-profile test` failing due to relative path in `flowcell_input.csv`
+- [#122](https://github.com/nf-core/demultiplex/pull/122) Fails gracefully if an error is encountered
 
 ## 1.3.0 - 2023-05-31
 
