@@ -12,7 +12,7 @@ nextflow_function {
         when {
             function {
                 """
-                input[0] = 'https://raw.githubusercontent.com/nf-core/demultiplex/master/assets/inputs/flowcell_input.csv'
+                input[0] = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 """
             }
         }
