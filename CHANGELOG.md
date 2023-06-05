@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- Fails gracefully if an error is encountered
+- [#122](https://github.com/nf-core/demultiplex/pull/122) Fails gracefully if an error is encountered
 
 ## 1.3.0 - 2023-05-31
 
