@@ -7,7 +7,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/assets/inputs/b2fq-samplesheet.csv"
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv'
                 demultiplexer = 'bases2fastq'
                 outdir = "$outputDir"
             }
