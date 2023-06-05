@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#121](https://github.com/nf-core/demultiplex/pull/121) Relative path for SampleSheet no longer causes `-profile test` to fail when not ran from root of project directory.
+- [#122](https://github.com/nf-core/demultiplex/pull/122) Fails gracefully if an error is encountered
+
 
 ## 1.3.0 - 2023-05-31
 
