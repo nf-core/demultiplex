@@ -21,7 +21,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { Nextflow.error 'Input samplesheet not specified!' }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -84,7 +84,9 @@ workflow DEMULTIPLEX {
 
     // Sanitize inputs and separate input types
     // FQTK's input contains an extra column 'per_flowcell_manifest' so it is handled seperately
-    // For reference - assets/inputs/fqtk-samplesheet.csv vs assets/inputs/sgdemux-samplesheet
+    // For reference:
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS 
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
     if (demultiplexer == 'fqtk'){
         ch_inputs = extract_csv_fqtk(ch_input)
 
@@ -190,7 +192,7 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
-            exit 1, "Unknown demultiplexer: ${demultiplexer}"
+            Nextflow.error "Unknown demultiplexer: ${demultiplexer}"
     }
     ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
@@ -319,14 +321,14 @@ def extract_csv(input_csv, input_schema=null) {
                     diff in all_columns ? missing_columns.add(diff) : wrong_columns.add(diff)
                 }
                 if(missing_columns.size() > 0){
-                    exit 1, "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
+                    Nextflow.error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
                 }
                 else {
-                    exit 1, "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
+                    Nextflow.error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
                 }
             }
             else {
-                exit 1, "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
+                Nextflow.error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
             }
 
         }
@@ -343,7 +345,7 @@ def extract_csv(input_csv, input_schema=null) {
             row[column] ?: missing_mandatory_columns.add(column)
         }
         if(missing_mandatory_columns.size > 0){
-            exit 1, "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
+            Nextflow.error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
         }
 
         def output = []
@@ -353,7 +355,7 @@ def extract_csv(input_csv, input_schema=null) {
             content = row[key]
 
             if(!(content ==~ col.value['pattern']) && col.value['pattern'] != '' && content != '') {
-                exit 1, "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
+                Nextflow.error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
             }
 
             if(col.value['content'] == 'path'){

@@ -33,7 +33,7 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 | `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
 | `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
 
-An [example samplesheet](../assets/inputs/flowcell_input.csv) has been provided with the pipeline.
+An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
 Note `run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk
 
