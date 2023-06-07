@@ -14,12 +14,12 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-01-18T22:46:32+0000"
+        "timestamp": "2023-06-07T18:00:39+0000"
     },
     "Should skip trimming": {
         "content": [
@@ -36,12 +36,12 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-01-18T22:42:00+0000"
+        "timestamp": "2023-06-07T18:00:39+0000"
     },
     "Should skip fastp": {
         "content": [
@@ -58,12 +58,12 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-01-18T22:42:00+0000"
+        "timestamp": "2023-06-07T18:00:39+0000"
     },
     "Should skip fastqc": {
         "content": [
@@ -79,11 +79,11 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
+                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-01-18T22:58:43+0000"
+        "timestamp": "2023-06-07T18:00:39+0000"
     }
 }
