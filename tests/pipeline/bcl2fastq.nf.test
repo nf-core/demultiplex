@@ -1,0 +1,35 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    tag "bcl2fastq"
+    tag "pipeline"
+
+    test("Bcl2Fastq") {
+
+        when {
+            params {
+                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
+                demultiplexer = 'bcl2fastq'
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 6 },
+                { assert snapshot(
+                        // FIXME
+                        // path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
+
+                        path("$outputDir/bcl2fastq/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/bcl2fastq/Stats").list(),
+                    ).match("bcl2fastq") }
+            )
+        }
+
+    }
+
+}
