@@ -1,0 +1,37 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    tag "bclconvert"
+    tag "pipeline"
+
+    test("BCL-CONVERT") {
+
+        when {
+            params {
+                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
+                demultiplexer = 'bclconvert'
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 6 },
+                { assert snapshot(path("$outputDir/multiqc/multiqc_bclconvert_bylane.txt"),
+                                path("$outputDir/multiqc/multiqc_fastp.txt"),
+                                path("$outputDir/multiqc/multiqc_bclconvert_bysample.txt")).match("multiqc") },
+                { assert snapshot(path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                    ).match("bclconvert") }
+            )
+        }
+
+    }
+
+}
