@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
 
+## `Removed`
+
+- Remove `public_aws_ecr` profile.
+
 ## 1.3.2 - 2023-06-07
 
 ### `Fixed`
@@ -46,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#94](https://github.com/nf-core/demultiplex/issues/94) update documentation
+
 - [#95](https://github.com/nf-core/demultiplex/issues/95) add Codeowners
 - [#108](https://github.com/nf-core/demultiplex/issues/108) update modules (untar is now in bcl2fastq and bclconvert modules)
 
