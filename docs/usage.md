@@ -8,19 +8,22 @@
 
 ## input
 
-Input samplesheet is used to link demultiplexer-specific samplesheets to flowcell runs. The input samplesheet is a comma-separated file that contains four columns: id, samplesheet, lane, flowcell.
+Input samplesheet samplesheet.csv is used to link demultiplexer-specific samplesheets to flowcell runs. The input samplesheet is a comma-separated file that contains four columns: id, samplesheet, lane, flowcell and (for fqtk only) per_flow_cell_manifest.
 
-| Column        | Description                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `flowcell`    | flowcell id                                                                                                       |
-| `samplesheet` | Full path to the demultiplexer-specific `SampleSheet.csv` file containing the sample information and indexes      |
-| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
+Column descriptions:
 
-The full path to the input samplesheet is passed with the parameter `--input`
+| Column                   | Description                                                                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                     | flowcell id                                                                                                                            |
+| `samplesheet`            | Full path to the demultiplexer-specific `<demultiplexer-name>_SampleSheet.csv` file containing the sample information and indexes      |
+| `lane`                   | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                        |
+| `flowcell`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of the directory                       |
+| `per_flowcell_manifest`  | (for fqtk only) Full path to the flowcell manifest, containing the fastq file names and read structures                                |
+
+The input samplesheet is passed with the parameter `--input`:
 
 ```bash
-nextflow run demultiplex --input '[path to input samplesheet file]'
+nextflow run demultiplex --input '[full path to input samplesheet file]'
 ```
 
 Example input_samplesheet.csv:
@@ -112,15 +115,6 @@ DDMMYY_SERIAL_NUMBER_FC,/path/to/fqtk_SampleSheet1.csv,2,/path/to/sequencer/outp
 DDMMYY_SERIAL_NUMBER_FC2,/path/to/fqtk_SampleSheet2.csv,1,/path/to/sequencer/output2,/path/to/flowcell/manifest2.csv
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/fqtk_SampleSheet3.csv,3,/path/to/sequencer/output3,/path/to/flowcell/manifest3.csv
 ```
-
-| Column                  | Description                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `id`                    | flowcell id                                                                                                       |
-| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
-| `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
-| `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                           |
-
 
 [example fqtk_SampleSheet.csv from test-dataset](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
 Note that `flowcell`/`run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk.
