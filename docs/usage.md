@@ -20,7 +20,7 @@ Column descriptions:
 | `flowcell`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of the directory                       |
 | `per_flowcell_manifest`  | (for fqtk only) Full path to the flowcell manifest, containing the fastq file names and read structures                                |
 
-The input samplesheet is passed with the parameter `--input`:
+The input samplesheet is passed with the nf-core parameter `--input`:
 
 ```bash
 nextflow run demultiplex --input '[full path to input samplesheet file]'
