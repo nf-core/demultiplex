@@ -32,9 +32,6 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
-An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline test dataset.
-Note `run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk.
-
 Note that each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets and their respective input samplesheets. 
 
 
@@ -126,6 +123,9 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/fqtk_SampleSheet3.csv,3,/path/to/sequencer/out
 
 
 [example fqtk_SampleSheet.csv from test-dataset](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+Note that `flowcell`/`run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk.
+
+
 
 ### Samplesheet for sgdemux
 
