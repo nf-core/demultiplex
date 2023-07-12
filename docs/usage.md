@@ -29,10 +29,10 @@ nextflow run demultiplex --input '[full path to input samplesheet file]'
 Example input_samplesheet.csv:
 ```console
 id,samplesheet,lane,flowcell
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
-DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
-DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
+DDMMYY_SERIAL_NUMBER_FC,/path/to/demultiplexer_SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/demultiplexer_SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/demultiplexer_SampleSheet2.csv,1,/path/to/sequencer/output2
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/demultiplexer_SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
 Note that each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets and their respective input samplesheets. 
