@@ -17,7 +17,7 @@ Input samplesheet is used to link demultiplexer-specific samplesheets to flowcel
 | `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
 | `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
 
-The full path to the input samplesheet is passed with the parameter --input
+The full path to the input samplesheet is passed with the parameter `--input`
 
 ```bash
 nextflow run demultiplex --input '[path to input samplesheet file]'
