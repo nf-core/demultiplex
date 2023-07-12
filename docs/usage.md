@@ -52,7 +52,16 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/bcl2fastq_SampleSheet.csv,1,/path/to/sequencer
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/bcl2fastq_SampleSheet.csv,3,/path/to/sequencer/output3
 ```
 
-The example demultiplexer-specific samplesheet, bclconvert_SampleSheet.csv, should contain a header labeled [Data]. The minimum requirement for this file is three columns: Sample_ID, Sample_name, and index (in the case of single-index sequencing). In addition, there should be an optional column named index2, which is necessary only for dual-index sequencing.
+The example demultiplexer-specific samplesheet, bclconvert_SampleSheet.csv, should contain a header labeled [Data]. The minimum requirement for this file is three columns: Sample_ID, Sample_name, and index (in the case of single-index sequencing):
+
+```console
+[Data]			
+Sample_ID,Sample_name,index
+1,Sample1,TAAGGCGA
+2,Sample2,TAAGGCGA
+```
+
+In addition, for dual-index sequencing there should be an optional column named index2:
 
 ```console
 [Data]			
