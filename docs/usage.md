@@ -49,7 +49,7 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/bcl2fastq_SampleSheet.csv,1,/path/to/sequencer
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/bcl2fastq_SampleSheet.csv,3,/path/to/sequencer/output3
 ```
 
-Example minimum input bclconvert_SampleSheet.csv has a header `[Data]` and minimum 3 columns (`Sample_ID`,`Sample_name`,`index` in case of single-index sequencing) plus additional column (`index2` in case of dual-index sequencing). 
+The example demultiplexer-specific samplesheet, bclconvert_SampleSheet.csv, should contain a header labeled [Data]. The minimum requirement for this file is three columns: Sample_ID, Sample_name, and index (in the case of single-index sequencing). In addition, there should be an optional column named index2, which is necessary only for dual-index sequencing.
 
 ```console
 [Data]			
@@ -58,7 +58,7 @@ Sample_ID,Sample_name,index,index2
 2,Sample2,TAAGGCGA,ATTAGACG
 ```
 
-If lane splitting must be avoided, specify this in the [Settings] section inside the `bcl2fastq_SampleSheet.csv` file. Currently the lane splitting can not be passed as a command line option for the nf-core pipeline. 
+If lane splitting should not be done, specify this in the [Settings] section inside the `bcl2fastq_SampleSheet.csv` file. Currently the lane splitting can not be passed as a command line option for the nf-core pipeline. 
 
 ```console
 [Settings]
