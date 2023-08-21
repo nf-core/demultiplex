@@ -6,58 +6,63 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
-
 ## Samplesheet input
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+
+When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
 ```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+id,samplesheet,lane,flowcell
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column        | Description                                                                                                       |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `flowcell`    | flowcell id                                                                                                       |
+| `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
+| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
+| `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
+
+Note `run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk
+
+Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv) and [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+
+### Samplesheet for fqtk
+
+```console
+id,samplesheet,lane,flowcell,per_flowcell_manifest
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2,/path/to/flowcell/manifest2.csv
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,/path/to/flowcell/manifest3.csv
+```
+
+| Column                  | Description                                                                                                       |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `id`                    | flowcell id                                                                                                       |
+| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
+| `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
+| `run_dir`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
+| `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                           |
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/demultiplex --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/demultiplex --input ./samplesheet.csv --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
