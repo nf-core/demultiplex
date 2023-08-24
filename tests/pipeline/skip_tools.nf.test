@@ -22,12 +22,12 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_trimming") },
                 { assert workflow.trace.succeeded().size() == 6 },
+                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                        path("$outputDir/multiqc/multiqc_report.html"),
                     ).match("skip_trimming") }
             )
         }
@@ -50,12 +50,12 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp") },
                 { assert workflow.trace.succeeded().size() == 5 },
+                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                        path("$outputDir/multiqc/multiqc_report.html"),
                     ).match("skip_fastp") }
             )
         }
@@ -78,12 +78,12 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastqc") },
                 { assert workflow.trace.succeeded().size() == 6 },
+                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz.md5"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                        path("$outputDir/multiqc/multiqc_report.html"),
                     ).match("skip_fastqc") }
             )
         }
@@ -106,12 +106,12 @@ nextflow_pipeline {
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp_fastqc") },
                 { assert workflow.trace.succeeded().size() == 5 },
+                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                        path("$outputDir/multiqc/multiqc_report.html"),
                     ).match("skip_fastp_fastqc") }
             )
         }
