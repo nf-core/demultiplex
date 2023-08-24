@@ -61,8 +61,8 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,
 
 The typical command for running the pipeline is as follows:
 
-```console
-nextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile docker
+```bash
+nextflow run nf-core/demultiplex --input ./samplesheet.csv --outdir ./results -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -81,7 +81,8 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-> The above pipeline run specified with a params file in yaml format:
+
+The above pipeline run specified with a params file in yaml format:
 
 ```bash
 nextflow run nf-core/demultiplex -profile docker -params-file params.yaml
@@ -93,7 +94,6 @@ with `params.yaml` containing:
 input: './samplesheet.csv'
 outdir: './results/'
 genome: 'GRCh37'
-input: 'data'
 <...>
 ```
 
