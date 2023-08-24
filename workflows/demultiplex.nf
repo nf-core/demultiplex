@@ -21,7 +21,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { Nextflow.error 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { error 'Input samplesheet not specified!' }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CONFIG FILES
@@ -192,7 +192,7 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
-            Nextflow.error "Unknown demultiplexer: ${demultiplexer}"
+            error "Unknown demultiplexer: ${demultiplexer}"
     }
     ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
@@ -323,14 +323,14 @@ def extract_csv(input_csv, input_schema=null) {
                     diff in all_columns ? missing_columns.add(diff) : wrong_columns.add(diff)
                 }
                 if(missing_columns.size() > 0){
-                    Nextflow.error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
+                    error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
                 }
                 else {
-                    Nextflow.error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
+                    error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
                 }
             }
             else {
-                Nextflow.error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
+                error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
             }
 
         }
@@ -347,7 +347,7 @@ def extract_csv(input_csv, input_schema=null) {
             row[column] ?: missing_mandatory_columns.add(column)
         }
         if(missing_mandatory_columns.size > 0){
-            Nextflow.error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
+            error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
         }
 
         def output = []
@@ -357,7 +357,7 @@ def extract_csv(input_csv, input_schema=null) {
             content = row[key]
 
             if(!(content ==~ col.value['pattern']) && col.value['pattern'] != '' && content != '') {
-                Nextflow.error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
+                error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
             }
 
             if(col.value['content'] == 'path'){
