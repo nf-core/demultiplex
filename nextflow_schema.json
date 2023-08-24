@@ -18,7 +18,8 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "default": null
+                    "default": null,
+                    "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
                 }
             }
         },
