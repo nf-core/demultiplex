@@ -184,7 +184,7 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         default:
-            Nextflow.error "Unknown demultiplexer: ${demultiplexer}"
+            error "Unknown demultiplexer: ${demultiplexer}"
     }
     ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
@@ -221,25 +221,27 @@ workflow DEMULTIPLEX {
     )
 
     // MODULE: MultiQC
-    workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
+    if (!("multiqc" in skip_tools)){
+        workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
+        methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
+    
+        ch_multiqc_files = Channel.empty()
+        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+        ch_multiqc_files.collect().dump(tag: "DEMULTIPLEX::MultiQC files",{FormattingService.prettyFormat(it)})
 
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_files.collect().dump(tag: "DEMULTIPLEX::MultiQC files",{FormattingService.prettyFormat(it)})
-
-    MULTIQC (
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList()
-    )
-    multiqc_report = MULTIQC.out.report.toList()
+        MULTIQC (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList()
+        )
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 }
 
 /*
@@ -314,14 +316,14 @@ def extract_csv(input_csv, input_schema=null) {
                     diff in all_columns ? missing_columns.add(diff) : wrong_columns.add(diff)
                 }
                 if(missing_columns.size() > 0){
-                    Nextflow.error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
+                    error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
                 }
                 else {
-                    Nextflow.error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
+                    error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
                 }
             }
             else {
-                Nextflow.error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
+                error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
             }
 
         }
@@ -338,7 +340,7 @@ def extract_csv(input_csv, input_schema=null) {
             row[column] ?: missing_mandatory_columns.add(column)
         }
         if(missing_mandatory_columns.size > 0){
-            Nextflow.error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
+            error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
         }
 
         def output = []
@@ -348,7 +350,7 @@ def extract_csv(input_csv, input_schema=null) {
             content = row[key]
 
             if(!(content ==~ col.value['pattern']) && col.value['pattern'] != '' && content != '') {
-                Nextflow.error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
+                error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
             }
 
             if(col.value['content'] == 'path'){

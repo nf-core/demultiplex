@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
+- [#140](https://github.com/nf-core/demultiplex/pull/140) Make it possible to skip MultiQC, fix error raising
 
 ## `Removed`
 
