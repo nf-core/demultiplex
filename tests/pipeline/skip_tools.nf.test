@@ -34,7 +34,7 @@ nextflow_pipeline {
 
     }
 
-    test("SKip Fastp") {
+    test("Skip Fastp") {
 
         when {
             params {
