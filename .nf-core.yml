@@ -1,1 +1,5 @@
 repository_type: pipeline
+lint:
+  actions_ci: False
+  files_unchanged:
+    - .github/ISSUE_TEMPLATE/bug_report.yml

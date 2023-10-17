@@ -5,20 +5,69 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
+                    "bases2fastq": {
+                        "branch": "master",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
+                        "installed_by": ["modules"]
+                    },
+                    "bcl2fastq": {
+                        "branch": "master",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
+                        "installed_by": ["bcl_demultiplex"]
+                    },
+                    "bclconvert": {
+                        "branch": "master",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
+                        "installed_by": ["bcl_demultiplex"]
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
-                    "fastqc": {
+                    "falco": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
+                        "installed_by": ["modules"]
+                    },
+                    "fqtk": {
                         "branch": "master",
                         "git_sha": "bd8092b67b5103bdd52e300f75889442275c3117",
+                        "installed_by": ["modules"]
+                    },
+                    "md5sum": {
+                        "branch": "master",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
+                    },
+                    "sgdemux": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"]
+                    },
+                    "untar": {
+                        "branch": "master",
+                        "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
+                        "installed_by": ["modules", "bcl_demultiplex"]
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "bcl_demultiplex": {
+                        "branch": "master",
+                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }
