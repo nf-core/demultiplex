@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+### `Changed`
+
+- [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
+
 ### `Fixed`
 
 - [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
