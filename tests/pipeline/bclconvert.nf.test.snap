@@ -20,13 +20,13 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-06-15T00:38:31+0000"
+        "timestamp": "2023-10-17T07:59:12+0000"
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-06-15T00:38:31+0000"
+        "timestamp": "2023-10-17T07:59:12+0000"
     },
     "multiqc": {
         "content": [
@@ -34,6 +34,6 @@
             "multiqc_fastp.txt:md5,76b067a76f4f58759526ca2aa4d6679d",
             "multiqc_bclconvert_bysample.txt:md5,b68dcbf3fdb26e6eb483995eb114cdd8"
         ],
-        "timestamp": "2023-06-15T00:38:31+0000"
+        "timestamp": "2023-10-17T07:59:12+0000"
     }
 }
