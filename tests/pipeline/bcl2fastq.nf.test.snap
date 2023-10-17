@@ -1,9 +1,9 @@
 {
     "software_versions": {
         "content": [
-            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-06-14T23:57:41+0000"
+        "timestamp": "2023-10-17T07:58:06+0000"
     },
     "bcl2fastq": {
         "content": [
@@ -17,6 +17,6 @@
                 "Stats.json:md5,8e5f038b8aa9e465599d3575f930e604"
             ]
         ],
-        "timestamp": "2023-06-14T23:57:41+0000"
+        "timestamp": "2023-10-17T07:58:06+0000"
     }
 }
