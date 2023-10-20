@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+### `Added`
+
+- [#148](https://github.com/nf-core/demultiplex/pull/148) Update CODEOWNERS to use GitHub teams
+
 ### `Changed`
 
 - [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
