@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unpublished Version / DEV]
+
+### `Changed`
+
+- [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
+
+### `Fixed`
+
+- [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
+- [#140](https://github.com/nf-core/demultiplex/pull/140) Make it possible to skip MultiQC, fix error raising
+- [#145](https://github.com/nf-core/demultiplex/pull/145) Fix MultiQC report generation
+
+## `Removed`
+
+- Remove `public_aws_ecr` profile.
+
 ## 1.3.2 - 2023-06-07
 
 ### `Fixed`
