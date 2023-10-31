@@ -1,15 +1,15 @@
 {
     "software_versions_skip_trimming": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:40:12.308416"
     },
     "skip_fastqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -25,13 +25,13 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:41:59.969786"
     },
     "skip_fastp": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -47,13 +47,13 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:40:44.801689"
     },
     "skip_multiqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -69,13 +69,13 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:43:37.155748"
     },
     "skip_fastp_fastqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -91,37 +91,37 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:42:35.089011"
     },
     "software_versions_skip_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:41:58.993732"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:42:33.138684"
     },
     "software_versions_skip_multiqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:43:35.278888"
     },
     "software_versions_skip_fastp": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:40:44.187338"
     },
     "skip_trimming": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -137,6 +137,6 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "timestamp": "2023-10-31T12:40:12.565447"
     }
 }
