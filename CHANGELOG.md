@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Updated bclconvert module to 4.2.4
 
 ### `Fixed`
 
 - [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
 - [#140](https://github.com/nf-core/demultiplex/pull/140) Make it possible to skip MultiQC, fix error raising
 - [#145](https://github.com/nf-core/demultiplex/pull/145) Fix MultiQC report generation
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Close [#150](https://github.com/nf-core/demultiplex/issues/150)
 
 ## `Removed`
 
