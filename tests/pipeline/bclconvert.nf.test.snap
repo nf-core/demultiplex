@@ -2,9 +2,9 @@
     "bclconvert": {
         "content": [
             "Sample1_S1_L001.fastp.fastq.gz:md5,8a723787b4a0c0fbf5b81d3a0b989c69",
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
             "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -20,13 +20,13 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T07:59:12+0000"
+        "timestamp": "2023-10-31T12:33:16.768754"
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T07:59:12+0000"
+        "timestamp": "2023-10-31T12:33:16.074351"
     },
     "multiqc": {
         "content": [
