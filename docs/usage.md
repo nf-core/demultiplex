@@ -6,56 +6,134 @@
 
 ## Introduction
 
-## Samplesheet input
+## input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+Input samplesheet samplesheet.csv is used to link demultiplexer-specific samplesheets to flowcell runs. The input samplesheet is a comma-separated file that contains four columns: id, samplesheet, lane, flowcell and (for fqtk only) per_flow_cell_manifest.
 
-When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
+Column descriptions:
+
+| Column                   | Description                                                                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                     | flowcell id                                                                                                                            |
+| `samplesheet`            | Full path to the demultiplexer-specific `<demultiplexer-name>_SampleSheet.csv` file containing the sample information and indexes      |
+| `lane`                   | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                        |
+| `flowcell`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of the directory                       |
+| `per_flowcell_manifest`  | (for fqtk only) Full path to the flowcell manifest, containing the fastq file names and read structures                                |
+
+The input samplesheet is passed with the nf-core parameter `--input`:
 
 ```bash
---input '[path to samplesheet file]'
+nextflow run demultiplex --input '[full path to input samplesheet file]'
 ```
 
-### Full samplesheet
+Example input_samplesheet.csv:
+```console
+id,samplesheet,lane,flowcell
+DDMMYY_SERIAL_NUMBER_FC,/path/to/demultiplexer_SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/demultiplexer_SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/demultiplexer_SampleSheet2.csv,1,/path/to/sequencer/output2
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/demultiplexer_SampleSheet3.csv,3,/path/to/sequencer/output3
+```
+
+Note that each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets and their respective input samplesheets. 
+
+
+### Samplesheet for bcl2fastq
+
+Please see the following examples to format `SampleSheet.csv` for [bcl2fastq](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) at test-datasets. 
+
+Example input `samplesheet.csv` for use with `--demultiplexer bclconvert` option:
 
 ```console
 id,samplesheet,lane,flowcell
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
-DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
-DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
+DDMMYY_SERIAL_NUMBER_FC,/path/to/bcl2fastq_SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/bcl2fastq_SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/bcl2fastq_SampleSheet.csv,1,/path/to/sequencer/output2
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/bcl2fastq_SampleSheet.csv,3,/path/to/sequencer/output3
 ```
 
-| Column        | Description                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `flowcell`    | flowcell id                                                                                                       |
-| `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
-| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
+The example demultiplexer-specific samplesheet, bclconvert_SampleSheet.csv, should contain a header labeled [Data]. The minimum requirement for this file is three columns: Sample_ID, Sample_name, and index (in the case of single-index sequencing):
 
-An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
+```console
+[Data]			
+Sample_ID,Sample_name,index
+1,Sample1,TAAGGCGA
+2,Sample2,TAAGGCGA
+```
 
-Note `run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk
+In addition, for dual-index sequencing there should be an optional column named index2:
 
-Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv) and [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+```console
+[Data]			
+Sample_ID,Sample_name,index,index2
+1,Sample1,TAAGGCGA,CGGAGAGA
+2,Sample2,TAAGGCGA,ATTAGACG
+```
+
+If lane splitting should not be done, specify this in the [Settings] section inside the `bcl2fastq_SampleSheet.csv` file. Currently the lane splitting can not be passed as a command line option for the nf-core pipeline. 
+
+```console
+[Settings]
+NoLaneSplitting
+
+[Data]			
+Sample_ID,Sample_name,index,index2
+1,Sample1,TAAGGCGA,CGGAGAGA
+2,Sample2,TAAGGCGA,ATTAGACG
+```
+
+[example bcl2fastq_SampleSheet.csv file from nf-core test-dataset]()
+
+### Samplesheet for bclconvert
+
+Note that `BCL convert` can also accept a minimal samplesheet formatted for `bcl2fastq`. 
+
+Example input `samplesheet.csv` for use with `--demultiplexer bclconvert` option:
+
+```console
+id,samplesheet,lane,flowcell
+DDMMYY_SERIAL_NUMBER_FC,/path/to/bclconvert_SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/bclconvert_SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/bclconvert_SampleSheet.csv,1,/path/to/sequencer/output2
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/bclconvert_SampleSheet.csv,3,/path/to/sequencer/output3
+```
+
+If lane splitting must be avoided, specify that in the `bclconvert_SampleSheet.csv` file. Currently the lane splitting can not be passed as a command line option for the pipeline. 
+
+```console
+[BCLConvert_Settings]
+NoLaneSplitting
+
+[Data]			
+Sample_ID,Sample_name,index,index2
+1,Sample1,TAAGGCGA,CGGAGAGA
+2,Sample2,TAAGGCGA,ATTAGACG
+```
+
 
 ### Samplesheet for fqtk
 
+When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://raw.githubusercontent.com/fulcrumgenomics/nf-core-test-datasets/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
+
+Example input `samplesheet.csv` for use with `--demultiplexer fqtk` option:
+
 ```console
 id,samplesheet,lane,flowcell,per_flowcell_manifest
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
-DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
-DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2,/path/to/flowcell/manifest2.csv
-DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,/path/to/flowcell/manifest3.csv
+DDMMYY_SERIAL_NUMBER_FC,/path/to/fqtk_SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
+DDMMYY_SERIAL_NUMBER_FC,/path/to/fqtk_SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/fqtk_SampleSheet2.csv,1,/path/to/sequencer/output2,/path/to/flowcell/manifest2.csv
+DDMMYY_SERIAL_NUMBER_FC3,/path/to/fqtk_SampleSheet3.csv,3,/path/to/sequencer/output3,/path/to/flowcell/manifest3.csv
 ```
 
-| Column                  | Description                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `id`                    | flowcell id                                                                                                       |
-| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
-| `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
-| `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                           |
+[example fqtk_SampleSheet.csv from test-dataset](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+Note that `flowcell`/`run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk.
+
+
+
+### Samplesheet for sgdemux
+
+Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv) 
+
 
 ## Running the pipeline
 
