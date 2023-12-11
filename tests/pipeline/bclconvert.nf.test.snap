@@ -1,10 +1,10 @@
 {
     "bclconvert": {
         "content": [
-            "Sample1_S1_L001.fastp.fastq.gz:md5,8a723787b4a0c0fbf5b81d3a0b989c69",
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,a0c1359a2c922967660524a6e77db494",
+            "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,163be0a88c70ca629fd516dbaadad96a",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -20,7 +20,7 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-31T12:33:16.768754"
+        "timestamp": "2023-12-11T16:38:54.135338"
     },
     "software_versions": {
         "content": [
