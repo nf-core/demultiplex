@@ -24,16 +24,16 @@
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:33:16.074351"
+        "timestamp": "2023-12-11T16:56:35.649441"
     },
     "multiqc": {
         "content": [
-            "multiqc_bclconvert_bylane.txt:md5,8ef9efabf1d2f9de8221e651d0b10e2f",
-            "multiqc_fastp.txt:md5,76b067a76f4f58759526ca2aa4d6679d",
-            "multiqc_bclconvert_bysample.txt:md5,b68dcbf3fdb26e6eb483995eb114cdd8"
+            "multiqc_bclconvert_bylane.txt:md5,9d7173439fd77fdec5936bddd686749f",
+            "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
+            "multiqc_bclconvert_bysample.txt:md5,37bf84cfc38af8e044ce92ce47211ebe"
         ],
-        "timestamp": "2023-10-17T07:59:12+0000"
+        "timestamp": "2023-12-11T16:56:35.661017"
     }
 }

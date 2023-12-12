@@ -7,8 +7,8 @@
     },
     "software_versions": {
         "content": [
-            "{CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, FQTK={fqtk=0.2.1}, UNTAR={untar=1.30}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, FQTK={fqtk=0.2.1}, UNTAR={untar=1.30}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:06:53+0000"
+        "timestamp": "2023-12-11T17:05:36.315291"
     }
 }

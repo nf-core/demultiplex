@@ -1,9 +1,9 @@
 {
     "software_versions_skip_trimming": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:40:12.308416"
+        "timestamp": "2023-12-11T17:00:30.102965"
     },
     "skip_fastqc": {
         "content": [
@@ -95,27 +95,27 @@
     },
     "software_versions_skip_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:41:58.993732"
+        "timestamp": "2023-12-11T17:02:16.631766"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:42:33.138684"
+        "timestamp": "2023-12-11T17:02:44.134341"
     },
     "software_versions_skip_multiqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:43:35.278888"
+        "timestamp": "2023-12-11T17:03:50.096961"
     },
     "software_versions_skip_fastp": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.4}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
         ],
-        "timestamp": "2023-10-31T12:40:44.187338"
+        "timestamp": "2023-12-11T17:00:57.483981"
     },
     "skip_trimming": {
         "content": [
