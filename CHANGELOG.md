@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.4.0 - 2023-12-14
+
 ### `Added`
 
 - [#148](https://github.com/nf-core/demultiplex/pull/148) Update CODEOWNERS to use GitHub teams
@@ -25,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## `Removed`
 
-- Remove `public_aws_ecr` profile.
+- [#130](https://github.com/nf-core/demultiplex/pull/130) Remove `public_aws_ecr` profile.
 
 ## 1.3.2 - 2023-06-07
 
