@@ -1,0 +1,17 @@
+{
+    "software_versions": {
+        "content": [
+            "{CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, SGDEMUX={sgdemux=1.1.1}, UNTAR={untar=1.30}, Workflow={nf-core/demultiplex=1.4.0}}"
+        ],
+        "timestamp": "2023-12-11T16:59:13.85618"
+    },
+    "sgdemux": {
+        "content": [
+            "metrics.tsv:md5,7627e4bd2a56ea551fd74b4a2b5cb4b2",
+            "per_project_metrics.tsv:md5,7393bc580c8ed8431107ad3dd00a7d2a",
+            "per_sample_metrics.tsv:md5,fb8ce024ad2508e7b22a4af65fe44358",
+            "sample_barcode_hop_metrics.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+        ],
+        "timestamp": "2023-10-17T08:01:14+0000"
+    }
+}

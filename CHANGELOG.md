@@ -3,6 +3,32 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unpublished Version / DEV]
+
+## 1.4.0 - 2023-12-14
+
+### `Added`
+
+- [#148](https://github.com/nf-core/demultiplex/pull/148) Update CODEOWNERS to use GitHub teams
+
+### `Changed`
+
+- [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Updated bclconvert module to 4.2.4
+
+### `Fixed`
+
+- [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
+- [#140](https://github.com/nf-core/demultiplex/pull/140) Make it possible to skip MultiQC, fix error raising
+- [#145](https://github.com/nf-core/demultiplex/pull/145) Fix MultiQC report generation
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Close [#150](https://github.com/nf-core/demultiplex/issues/150)
+- [#157](https://github.com/nf-core/demultiplex/pull/157) Fix bcl2fastq and bclconvert publishDir
+- [#158](https://github.com/nf-core/demultiplex/pull/158) Update all modules
+
+## `Removed`
+
+- [#130](https://github.com/nf-core/demultiplex/pull/130) Remove `public_aws_ecr` profile.
+
 ## 1.3.2 - 2023-06-07
 
 ### `Fixed`
