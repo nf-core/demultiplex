@@ -1,7 +1,7 @@
 {
     "software_versions": {
         "content": [
-            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0}}"
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.12.0, yaml=6.0.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.5.0dev}}"
         ],
         "timestamp": "2023-12-11T16:55:21.645426"
     },
