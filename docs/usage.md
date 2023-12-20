@@ -18,7 +18,7 @@ When using the demultiplexer fqtk, the samplesheet must contain an additional co
 
 ### Full samplesheet
 
-```console
+```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
@@ -41,7 +41,7 @@ Please see the following examples to format `SampleSheet.csv` for [sgdemux](http
 
 ### Samplesheet for fqtk
 
-```console
+```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
