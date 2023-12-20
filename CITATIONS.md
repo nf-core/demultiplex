@@ -10,9 +10,11 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [fastp](https://www.ncbi.nlm.nih.gov/pubmed/30423086/)
 
-  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+  > Chen S, Zhou Y, Chen Y, Gu J. fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics. 2018 Sep 1;34(17):i884-i890. doi: 10.1093/bioinformatics/bty560. PubMed PMID: 30423086; PubMed Central PMCID: PMC6129281.
+
+- [Falco](https://github.com/smithlabcode/falco)
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
