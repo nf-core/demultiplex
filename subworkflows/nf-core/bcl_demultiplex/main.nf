@@ -116,28 +116,41 @@ def readgroup_from_fastq(path) {
 
     def line
 
-    path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-        BufferedReader buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
+    try {
+        path.withInputStream {
+            InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+            Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+            BufferedReader buffered = new BufferedReader(decoder)
+            line = buffered.readLine()
+        }
+
+        // Check if line is null or doesn't start with '@'
+        if (line == null || !line.startsWith('@')) {
+            throw new IllegalArgumentException("The file ${path} is empty, not in FASTQ format, or does not start with '@'. First line: ${line}")
+        }
+
+        line = line.substring(1)
+        def fields = line.split(':')
+        if (fields.length < 7) {
+            throw new IllegalArgumentException("The file ${path} does not contain the expected number of fields. Found: ${fields.length}, Expected: 7. First line: ${line}")
+        }
+
+        // Process fields to extract information
+        def sequencer_serial = fields[0]
+        def run_number       = fields[1]
+        def fcid             = fields[2]
+        def lane             = fields[3]
+        def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
+        def rg = [:]
+        rg.ID = [fcid, lane].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
+        rg.PL = "ILLUMINA"
+
+        // Return the read group information
+        return rg
+
+    } catch (Exception e) {
+        throw new RuntimeException("Error processing file ${path}: ${e.message}", e)
     }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    def rg = [:]
-
-    // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-    sequencer_serial = fields[0]
-    run_nubmer       = fields[1]
-    fcid             = fields[2]
-    lane             = fields[3]
-    index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
-
-    rg.ID = [fcid,lane].join(".")
-    rg.PU = [fcid, lane, index].findAll().join(".")
-    rg.PL = "ILLUMINA"
-
-    return rg
 }
