@@ -110,30 +110,11 @@ def generate_fastq_meta(ch_reads) {
 }
 
 // https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
-// Assume 'workDir' is a predefined variable pointing to the working directory
-def failedFastqsLog = "${workDir}/failed_fastqs.log"
-def failedDir = "${workDir}/failed_fastqs"
-
-// Function to handle logging and moving failed FASTQ files
-def handleFailedFile(String path) {
-    // Ensure the directory for failed FASTQ files exists
-    new File(failedDir).mkdirs()
-
-    // Append the file path and error timestamp to the log file
-    new File(failedFastqsLog).withWriterAppend { writer ->
-        writer.println("${new Date()} - Empty or Failed FASTQ: ${path}")
-    }
-
-    // Move the file to the failed directory (consider copy for safety)
-    new File(path).renameTo(new File("$failedDir/${path.split('/').last()}"))
-}
-
-// Main function to process FASTQ files and extract read group information
+// Function to read the first line of a FASTQ file and extract read group information
 def readgroup_from_fastq(path) {
     def line
 
     try {
-        // Attempt to open and read the first line of the FASTQ file
         path.withInputStream {
             InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
             Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
@@ -141,33 +122,40 @@ def readgroup_from_fastq(path) {
             line = buffered.readLine()
         }
 
-        // Check if the line is null or doesn't start with '@'
         if (line == null || !line.startsWith('@')) {
-            // Handle the failure for improper file format or empty file
-            handleFailedFile(path)
-            return null  // Signal to skip this file
+            println("Warning! Skipping file: ${path}.\n" +
+                    "Expected a FASTQ file starting with '@', but found null.\n" +
+                    "File is likely empty, corrupt or inaccessible.\n" +
+                    "It will be skipped from further analyses.")
+            return null  // Signal to skip this file and gracefully continue
         }
 
-        // Process the read line to extract read group information
         line = line.substring(1)
         def fields = line.split(':')
         if (fields.length < 7) {
-            // Handle the failure for unexpected number of fields
-            handleFailedFile(path)
-            return null  // Signal to skip this file
+            println("Warning! File ${path} does not match the expected schema for " +
+            "Illumina's FASTQ headers. It will be skipped from further analyses.\n" +
+            "Expected format: @INSTRUMENT:RUN_NUMBER:FLOWCELL_ID:LANE:TITLE:X_POS:Y_POS")
+            return null  // Signal to skip this file and gracefully continue
         }
 
-        // Extract and return the read group information
+        def sequencer_serial = fields[0]
+        def run_number       = fields[1]
+        def fcid             = fields[2]
+        def lane             = fields[3]
+        def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
         def rg = [:]
-        rg.ID = [fields[2], fields[3]].join(".")  // Example: FLOWCELLID.LANE
-        rg.PU = [fields[2], fields[3], fields[-1]].findAll().join(".")  // Example: FLOWCELLID.LANE.INDEX
+        rg.ID = [fcid, lane].join(".")
+        rg.PU = [fcid, lane, index].findAll().join(".")
         rg.PL = "ILLUMINA"
 
         return rg
 
     } catch (Exception e) {
-        // Handle any unexpected errors during file processing
-        handleFailedFile(path)
-        return null  // Signal to skip this file
+        throw new RuntimeException(
+                "Critical Error! Processing file ${path} failed: ${e.message}.\n" +
+                "Ensure the file is in the correct FASTQ format.", e
+        )
     }
 }
