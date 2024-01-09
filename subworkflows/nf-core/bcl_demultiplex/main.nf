@@ -76,8 +76,15 @@ workflow BCL_DEMULTIPLEX {
 }
 
  // Collect invalid FASTQ files
-invalid_fastqs_ch
-    .collectFile(name: "${params.outdir}/invalid_fastqs.txt", newLine: true)
+process WriteInvalidFastqPaths {
+    output:
+    file("invalid_fastqs.txt") into ch_invalid_fastqs_file
+
+    script:
+    """
+    ${invalid_fastqs_ch.collect().join("\n")} > invalid_fastqs.txt
+    """
+}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
