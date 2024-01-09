@@ -75,17 +75,10 @@ workflow BCL_DEMULTIPLEX {
         versions = ch_versions
 }
 
-process WriteInvalidFastqPaths {
-    output:
-    file("invalid_fastqs.txt") into ch_failed_fastqs_file
-
-    publishDir "${params.outdir}", mode: 'copy'
-
-    script:
-    """
-    cat ${invalid_fastqs_ch.collect().join('\n')} > invalid_fastqs.txt
-    """
-}
+ // Collect and publish invalid FASTQ file paths
+invalid_fastqs_ch
+    .collectFile(name: 'invalid_fastqs.txt', newLine: true)
+    .publishDir "${params.outdir}", mode: 'copy', saveAs: 'invalid_fastqs.txt'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,34 +86,36 @@ process WriteInvalidFastqPaths {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Add meta values to fastq channel
+// Add meta values to fastq channel and filter out invalid FASTQ files
 def generate_fastq_meta(ch_reads) {
     // Create a tuple with the meta.id and the fastq
-    ch_reads.transpose().map{
-        fc_meta, fastq ->
+    ch_reads.transpose().flatMap { fc_meta, fastq ->
+        // Get readgroup; skip file if null (invalid FASTQ)
+        def readgroup = readgroup_from_fastq(fastq)
+        if (!readgroup) {
+            println("Warning: Invalid FASTQ file skipped: ${fastq}")
+            return []  // Return empty to exclude this file
+        }
+
+        // Construct metadata for valid FASTQ files
         def meta = [
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
             "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
-            "readgroup": [:],
+            "readgroup": readgroup,
             "fcid": fc_meta.id,
             "lane": fc_meta.lane
         ]
-        meta.readgroup = readgroup_from_fastq(fastq)
         meta.readgroup.SM = meta.samplename
 
-        return [ meta , fastq ]
+        // Return metadata and fastq path
+        return [meta, fastq]
     }
-    // Group by meta.id for PE samples
+    // Group by meta.id for paired-end (PE) samples
     .groupTuple(by: [0])
-    // Add meta.single_end
-    .map {
-        meta, fastq ->
-        if (fastq.size() == 1){
-            meta.single_end = true
-        } else {
-            meta.single_end = false
-        }
-        return [ meta, fastq.flatten() ]
+    // Add single_end flag based on fastq count
+    .map { meta, fastq ->
+        meta.single_end = fastq.size() == 1
+        return [meta, fastq.flatten()]
     }
 }
 
