@@ -75,10 +75,9 @@ workflow BCL_DEMULTIPLEX {
         versions = ch_versions
 }
 
- // Collect and publish invalid FASTQ file paths
+ // Collect invalid FASTQ files
 invalid_fastqs_ch
-    .collectFile(name: 'invalid_fastqs.txt', newLine: true)
-    .publishDir "${params.outdir}", mode: 'copy', saveAs: 'invalid_fastqs.txt'
+    .collectFile(name: "${params.outdir}/invalid_fastqs.txt", newLine: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
