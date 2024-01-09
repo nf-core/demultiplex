@@ -7,8 +7,8 @@
 include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
 
-// Channel to collect paths of FASTQ files failing validation checks.
-Channel.create().set { invalid_fastqs_ch }
+// Initialize an empty channel to collect paths of invalid FASTQ files
+invalid_fastqs_ch = Channel.empty()
 
 workflow BCL_DEMULTIPLEX {
     take:
