@@ -75,16 +75,11 @@ workflow BCL_DEMULTIPLEX {
         versions = ch_versions
 }
 
- // Collect invalid FASTQ files
-process WriteInvalidFastqPaths {
-    output:
-    file("invalid_fastqs.txt") into ch_invalid_fastqs_file
-
-    script:
-    """
-    ${invalid_fastqs_ch.collect().join("\n")} > invalid_fastqs.txt
-    """
-}
+// Collect invalid FASTQ files
+invalid_fastqs_ch
+    .map { path -> return path.toString() }
+    .collectFile(name: 'invalid_fastqs.txt', newLine: true)
+    .set { ch_invalid_fastqs_file }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,6 +139,7 @@ def readgroup_from_fastq(path) {
                     "Expected a FASTQ file starting with '@', but found null.\n" +
                     "File is likely empty, corrupt or inaccessible.\n" +
                     "It will be skipped from further analyses.")
+            println("To investigate, the FASTQ path will be logged into: ${System.getProperty('user.dir')}/invalid_fastqs.txt")
             return null  // Signal to skip this file and gracefully continue
         }
 
@@ -154,6 +150,7 @@ def readgroup_from_fastq(path) {
             println("Warning! File ${path} does not match the expected schema for " +
                     "Illumina's FASTQ headers. It will be skipped from further analyses.\n" +
                     "Expected format: @INSTRUMENT:RUN_NUMBER:FLOWCELL_ID:LANE:TITLE:X_POS:Y_POS")
+            println("To investigate, the FASTQ path will be logged into: ${System.getProperty('user.dir')}/invalid_fastqs.txt")
             return null  // Signal to skip this file and gracefully continue
         }
 
