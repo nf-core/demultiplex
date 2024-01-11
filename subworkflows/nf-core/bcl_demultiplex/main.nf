@@ -89,28 +89,30 @@ invalid_fastqs_ch
 
 // Add meta values to fastq channel and filter out invalid FASTQ files
 def generate_fastq_meta(ch_reads) {
-    ch_reads.flatMap { fc_meta, fastq ->
-        try {
-            def readgroup = readgroup_from_fastq(fastq)
-            if (!readgroup) {
-                println("DEBUG: Invalid FASTQ file skipped: ${fastq}")
-                return [] // Skip invalid file
+    ch_reads.flatMap { fc_meta, fastqs ->
+        fastqs.collect { fastq ->
+            try {
+                def readgroup = readgroup_from_fastq(fastq)
+                if (!readgroup) {
+                    println("DEBUG: Invalid FASTQ file skipped: ${fastq}")
+                    return [] // Skip invalid file
+                }
+
+                def meta = [
+                    "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
+                    "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
+                    "readgroup": readgroup,
+                    "fcid": fc_meta.id,
+                    "lane": fc_meta.lane
+                ]
+                meta.readgroup.SM = meta.samplename
+
+                println("DEBUG: Processing file ${fastq} with metadata: ${meta}")
+                return [meta, fastq]
+            } catch (Exception e) {
+                println("DEBUG: Error processing file ${fastq}: ${e.message}")
+                return [] // Skip file on error
             }
-
-            def meta = [
-                "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
-                "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
-                "readgroup": readgroup,
-                "fcid": fc_meta.id,
-                "lane": fc_meta.lane
-            ]
-            meta.readgroup.SM = meta.samplename
-
-            println("DEBUG: Processing file ${fastq} with metadata: ${meta}")
-            return [meta, fastq]
-        } catch (Exception e) {
-            println("DEBUG: Error processing file ${fastq}: ${e.message}")
-            return [] // Skip file on error
         }
     }
     .groupTuple(by: [0])
