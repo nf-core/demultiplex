@@ -90,7 +90,7 @@ invalid_fastqs_ch
 // Add meta values to fastq channel and filter out invalid FASTQ files
 def generate_fastq_meta(ch_reads) {
     ch_reads.flatMap { fc_meta, fastqs ->
-        fastqs.collect { fastq ->
+        def collected = fastqs.collect { fastq ->
             try {
                 def readgroup = readgroup_from_fastq(fastq)
                 if (!readgroup) {
@@ -114,6 +114,10 @@ def generate_fastq_meta(ch_reads) {
                 return [] // Skip file on error
             }
         }
+        if (collected.every { it.isEmpty() }) {
+            return [] // Skip this iteration if collected is empty
+        }
+        return collected
     }
     .groupTuple(by: [0])
     .map { meta, fastq ->
