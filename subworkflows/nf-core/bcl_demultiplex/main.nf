@@ -121,37 +121,6 @@ def generate_fastq_meta(ch_reads) {
     }
 }
 
-// Add meta values to fastq channel
-def generate_fastq_meta(ch_reads) {
-    // Create a tuple with the meta.id and the fastq
-    ch_reads.transpose().map{
-        fc_meta, fastq ->
-        def meta = [
-            "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
-            "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
-            "readgroup": [:],
-            "fcid": fc_meta.id,
-            "lane": fc_meta.lane
-        ]
-        meta.readgroup = readgroup_from_fastq(fastq)
-        meta.readgroup.SM = meta.samplename
-
-        return [ meta , fastq ]
-    }
-    // Group by meta.id for PE samples
-    .groupTuple(by: [0])
-    // Add meta.single_end
-    .map {
-        meta, fastq ->
-        if (fastq.size() == 1){
-            meta.single_end = true
-        } else {
-            meta.single_end = false
-        }
-        return [ meta, fastq.flatten() ]
-    }
-}
-
 // https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
 // Function to read the first line of a FASTQ file and extract read group information
 def readgroup_from_fastq(path) {
