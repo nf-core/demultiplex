@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::falco=1.2.1
+  - bioconda::falco:1.2.1--h867801b_3
