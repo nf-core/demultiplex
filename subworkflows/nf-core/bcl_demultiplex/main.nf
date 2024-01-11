@@ -89,34 +89,66 @@ invalid_fastqs_ch
 
 // Add meta values to fastq channel and filter out invalid FASTQ files
 def generate_fastq_meta(ch_reads) {
-    // Create a tuple with the meta.id and the fastq
-    ch_reads.transpose().flatMap { fc_meta, fastq ->
-        // Get readgroup; skip file if null (invalid FASTQ)
-        def readgroup = readgroup_from_fastq(fastq)
-        if (!readgroup) {
-            println("Warning: Invalid FASTQ file skipped: ${fastq}")
-            return []  // Return empty to exclude this file
-        }
+    ch_reads.flatMap { fc_meta, fastq ->
+        try {
+            def readgroup = readgroup_from_fastq(fastq)
+            if (!readgroup) {
+                println("DEBUG: Invalid FASTQ file skipped: ${fastq}")
+                return [] // Skip invalid file
+            }
 
-        // Construct metadata for valid FASTQ files
+            def meta = [
+                "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
+                "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
+                "readgroup": readgroup,
+                "fcid": fc_meta.id,
+                "lane": fc_meta.lane
+            ]
+            meta.readgroup.SM = meta.samplename
+
+            println("DEBUG: Processing file ${fastq} with metadata: ${meta}")
+            return [meta, fastq]
+        } catch (Exception e) {
+            println("DEBUG: Error processing file ${fastq}: ${e.message}")
+            return [] // Skip file on error
+        }
+    }
+    .groupTuple(by: [0])
+    .map { meta, fastq ->
+        meta.single_end = fastq.size() == 1
+        println("DEBUG: Grouped metadata: ${meta}, Number of FASTQ files: ${fastq.size()}")
+        return [meta, fastq.flatten()]
+    }
+}
+
+// Add meta values to fastq channel
+def generate_fastq_meta(ch_reads) {
+    // Create a tuple with the meta.id and the fastq
+    ch_reads.transpose().map{
+        fc_meta, fastq ->
         def meta = [
             "id": fastq.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
             "samplename": fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/,
-            "readgroup": readgroup,
+            "readgroup": [:],
             "fcid": fc_meta.id,
             "lane": fc_meta.lane
         ]
+        meta.readgroup = readgroup_from_fastq(fastq)
         meta.readgroup.SM = meta.samplename
 
-        // Return metadata and fastq path
-        return [meta, fastq]
+        return [ meta , fastq ]
     }
-    // Group by meta.id for paired-end (PE) samples
+    // Group by meta.id for PE samples
     .groupTuple(by: [0])
-    // Add single_end flag based on fastq count
-    .map { meta, fastq ->
-        meta.single_end = fastq.size() == 1
-        return [meta, fastq.flatten()]
+    // Add meta.single_end
+    .map {
+        meta, fastq ->
+        if (fastq.size() == 1){
+            meta.single_end = true
+        } else {
+            meta.single_end = false
+        }
+        return [ meta, fastq.flatten() ]
     }
 }
 
