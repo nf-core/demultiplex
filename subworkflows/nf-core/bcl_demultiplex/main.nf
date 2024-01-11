@@ -78,7 +78,7 @@ workflow BCL_DEMULTIPLEX {
 // Collect invalid FASTQ files
 invalid_fastqs_ch
     .map { path -> return path.toString() }
-    .collectFile(name: 'invalid_fastqs.txt', newLine: true)
+    .collectFile(name: 'invalid_fastqs.txt', newLine: true, dir: params.outdir)
     .set { ch_invalid_fastqs_file }
 
 /*
