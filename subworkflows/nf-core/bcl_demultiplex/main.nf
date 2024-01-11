@@ -119,6 +119,7 @@ def generate_fastq_meta(ch_reads) {
         }
         return collected
     }
+    .filter { it.size() > 0 } // Added this line to filter out empty lists
     .groupTuple(by: [0])
     .map { meta, fastq ->
         meta.single_end = fastq.size() == 1
