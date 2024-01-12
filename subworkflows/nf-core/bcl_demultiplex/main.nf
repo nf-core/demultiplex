@@ -18,7 +18,6 @@ workflow BCL_DEMULTIPLEX {
         ch_reports  = Channel.empty()
         ch_stats    = Channel.empty()
         ch_interop  = Channel.empty()
-        ch_invalid_fastqs = Channel.empty()
 
         // Split flowcells into separate channels containg run as tar and run as path
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -81,6 +80,15 @@ workflow BCL_DEMULTIPLEX {
         interop  = ch_interop
         versions = ch_versions
 }
+
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Global Channels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+// Channel to collect invalid FASTQ files
+ch_invalid_fastqs = Channel.empty()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
