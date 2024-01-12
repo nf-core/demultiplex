@@ -73,9 +73,6 @@ workflow BCL_DEMULTIPLEX {
             storeDir: "${System.getProperty('user.dir')}")
             .set { ch_invalid_fastqs_file }
 
-        // Check Invalid Fastqs Process
-        CheckInvalidFastqs(ch_invalid_fastqs_file)
-
     emit:
         fastq    = ch_fastq_with_meta
         invalid_fastqs = ch_invalid_fastqs_file
@@ -83,17 +80,6 @@ workflow BCL_DEMULTIPLEX {
         stats    = ch_stats
         interop  = ch_interop
         versions = ch_versions
-}
-
-process CheckInvalidFastqs {
-    input:
-    path invalid_fastqs_file from ch_invalid_fastqs_file
-
-    script:
-    """
-    echo "Checking invalid_fastqs.txt file"
-    ls -l ${invalid_fastqs_file}
-    """
 }
 
 /*
