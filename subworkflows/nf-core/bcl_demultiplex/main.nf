@@ -76,10 +76,15 @@ workflow BCL_DEMULTIPLEX {
 }
 
 // Collect invalid FASTQ files
+println("DEBUG: Before invalid_fastqs_ch operation")
+
 invalid_fastqs_ch
     .map { path -> path.toString() }
-    .collectFile(name: 'invalid_fastqs.txt', newLine: true, storeDir: params.outdir)
+    .collectFile(name: 'invalid_fastqs.txt', newLine: true, storeDir: "${System.getProperty('user.dir')}")
     .set { ch_invalid_fastqs_file }
+
+println("DEBUG: After invalid_fastqs_ch operation")
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +99,7 @@ def generate_fastq_meta(ch_reads) {
             try {
                 def readgroup = readgroup_from_fastq(fastq)
                 if (!readgroup) {
-                    println("DEBUG: Invalid FASTQ file skipped: ${fastq}")
+                    println("Warning! - Invalid FASTQ file skipped: ${fastq}")
                     return [] // Skip invalid file
                 }
 
@@ -107,10 +112,10 @@ def generate_fastq_meta(ch_reads) {
                 ]
                 meta.readgroup.SM = meta.samplename
 
-                println("DEBUG: Processing file ${fastq} with metadata: ${meta}")
+                // println("DEBUG: Processing file ${fastq} with metadata: ${meta}")
                 return [meta, fastq]
             } catch (Exception e) {
-                println("DEBUG: Error processing file ${fastq}: ${e.message}")
+                println("ERROR! - Skipping processing file ${fastq}: ${e.message}")
                 return [] // Skip file on error
             }
         }
