@@ -7,13 +7,13 @@
 include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
 
-// Initialize an empty channel to collect paths of invalid FASTQ files
-invalid_fastqs_ch = Channel.empty()
-
 workflow BCL_DEMULTIPLEX {
     take:
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
         demultiplexer   // bclconvert or bcl2fastq
+
+        // Initialize an empty channel to collect paths of invalid FASTQ files
+        invalid_fastqs_ch = Channel.empty()
 
     main:
         ch_versions = Channel.empty()
@@ -67,6 +67,17 @@ workflow BCL_DEMULTIPLEX {
         // Generate meta for each fastq
         ch_fastq_with_meta = generate_fastq_meta(ch_fastq)
 
+        // Collect invalid FASTQ files
+        invalid_fastqs_ch
+            .map { path -> path.toString() }
+            .collectFile(name: 'invalid_fastqs.txt',
+            newLine: true,
+            storeDir: "${System.getProperty('user.dir')}")
+            .set { ch_invalid_fastqs_file }
+
+        // Check Invalid Fastqs Process
+        CheckInvalidFastqs(ch_invalid_fastqs_file)
+
     emit:
         fastq    = ch_fastq_with_meta
         reports  = ch_reports
@@ -75,16 +86,16 @@ workflow BCL_DEMULTIPLEX {
         versions = ch_versions
 }
 
-// Collect invalid FASTQ files
-println("DEBUG: Before invalid_fastqs_ch operation")
+process CheckInvalidFastqs {
+    input:
+    path invalid_fastqs_file from ch_invalid_fastqs_file
 
-invalid_fastqs_ch
-    .map { path -> path.toString() }
-    .collectFile(name: 'invalid_fastqs.txt', newLine: true, storeDir: "${System.getProperty('user.dir')}")
-    .set { ch_invalid_fastqs_file }
-
-println("DEBUG: After invalid_fastqs_ch operation")
-
+    script:
+    """
+    echo "Checking invalid_fastqs.txt file"
+    ls -l ${invalid_fastqs_file}
+    """
+}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
