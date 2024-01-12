@@ -12,15 +12,13 @@ workflow BCL_DEMULTIPLEX {
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
         demultiplexer   // bclconvert or bcl2fastq
 
-        // Initialize an empty channel to collect paths of invalid FASTQ files
-        invalid_fastqs_ch = Channel.empty()
-
     main:
         ch_versions = Channel.empty()
         ch_fastq    = Channel.empty()
         ch_reports  = Channel.empty()
         ch_stats    = Channel.empty()
         ch_interop  = Channel.empty()
+        ch_invalid_fastqs = Channel.empty()
 
         // Split flowcells into separate channels containg run as tar and run as path
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -68,7 +66,7 @@ workflow BCL_DEMULTIPLEX {
         ch_fastq_with_meta = generate_fastq_meta(ch_fastq)
 
         // Collect invalid FASTQ files
-        invalid_fastqs_ch
+        ch_invalid_fastqs
             .map { path -> path.toString() }
             .collectFile(name: 'invalid_fastqs.txt',
             newLine: true,
@@ -158,7 +156,7 @@ def readgroup_from_fastq(path) {
         }
 
         if (line == null || !line.startsWith('@')) {
-            invalid_fastqs_ch << path
+            ch_invalid_fastqs << path
             println("Warning! Skipping file: ${path}.\n" +
                     "Expected a FASTQ file starting with '@', but found null.\n" +
                     "File is likely empty, corrupt or inaccessible.\n" +
@@ -170,7 +168,7 @@ def readgroup_from_fastq(path) {
         line = line.substring(1)
         def fields = line.split(':')
         if (fields.length < 7) {
-            invalid_fastqs_ch << path
+            ch_invalid_fastqs << path
             println("Warning! File ${path} does not match the expected schema for " +
                     "Illumina's FASTQ headers. It will be skipped from further analyses.\n" +
                     "Expected format: @INSTRUMENT:RUN_NUMBER:FLOWCELL_ID:LANE:TITLE:X_POS:Y_POS")
@@ -192,7 +190,7 @@ def readgroup_from_fastq(path) {
         return rg
 
     } catch (Exception e) {
-        invalid_fastqs_ch << path
+        ch_invalid_fastqs << path
         throw new RuntimeException(
                 "Critical Error! Processing file ${path} failed: ${e.message}.\n" +
                 "Ensure the file is in the correct FASTQ format.", e
