@@ -78,6 +78,7 @@ workflow BCL_DEMULTIPLEX {
 
     emit:
         fastq    = ch_fastq_with_meta
+        invalid_fastqs = ch_invalid_fastqs_file
         reports  = ch_reports
         stats    = ch_stats
         interop  = ch_interop
