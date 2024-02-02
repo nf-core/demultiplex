@@ -77,7 +77,7 @@ workflow DEMULTIPLEX {
     // Sanitize inputs and separate input types
     // FQTK's input contains an extra column 'per_flowcell_manifest' so it is handled seperately
     // For reference:
-    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS 
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
     if (demultiplexer == 'fqtk'){
         ch_inputs = extract_csv_fqtk(ch_input)
@@ -227,7 +227,7 @@ workflow DEMULTIPLEX {
 
         methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
         ch_methods_description = Channel.value(methods_description)
-    
+
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
