@@ -14,7 +14,7 @@ workflow FQTK_DEMULTIPLEX {
     main:
         // Convert csv to tsv
         CSV2TSV( ch_input )
-        
+
         // MODULE: fqtk
         FQTK( CSV2TSV.out.ch_output )
 
@@ -23,8 +23,8 @@ workflow FQTK_DEMULTIPLEX {
 
     emit:
         fastq                   = ch_fastq_with_meta
-        metrics                 = FQTK.out.metrics 
-        unassigned              = FQTK.out.most_frequent_unmatched 
+        metrics                 = FQTK.out.metrics
+        unassigned              = FQTK.out.most_frequent_unmatched
         versions                = FQTK.out.versions
 }
 
