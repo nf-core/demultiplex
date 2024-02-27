@@ -17,17 +17,17 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "29eb51e782b783b91f62302876c3b1d9dc336885",
+                        "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+                        "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
                         "installed_by": ["modules"]
                     },
                     "falco": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "a236d2c2ec9e68db9b8501105d804acb359552b5",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
