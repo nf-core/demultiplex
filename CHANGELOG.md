@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.4.1 - 2024-02-27
+
 ### `Changed`
 
 - [#167](https://github.com/nf-core/demultiplex/pull/167) Updated template to nf-core/tools v2.12
