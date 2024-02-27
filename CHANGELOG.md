@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.4.1 - 2024-02-27
+
+### `Changed`
+
+- [#167](https://github.com/nf-core/demultiplex/pull/167) Updated template to nf-core/tools v2.12
+- [#162](https://github.com/nf-core/demultiplex/pull/162) Updated template to nf-core/tools v2.11
+- [#163](https://github.com/nf-core/demultiplex/pull/163) Updated template to nf-core/tools v2.11.1
+
 ## 1.4.0 - 2023-12-14
 
 ### `Added`
@@ -83,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Replace fastqc with falco for speedier QC, fixes Replace fastqc with falco [#62](https://github.com/nf-core/demultiplex/issues/62) (@matthdsm)
 - [#64](https://github.com/nf-core/demultiplex/pull/64) Add subway map by @nvnieuwk
 - [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional (@matthdsm)
-- [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test (@emiller88)
+- [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test (@edmundmiller)
 
 ### `Changed`
 
@@ -92,10 +100,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Fix MultiQC report inputs, fixes MultiQC report is empty (@matthdsm)
-- [#67](https://github.com/nf-core/demultiplex/pull/67) Enable institutional configs (@emiller88)
+- [#67](https://github.com/nf-core/demultiplex/pull/67) Enable institutional configs (@edmundmiller)
 - [#83](https://github.com/nf-core/demultiplex/pull/83) Fix skip_tools (@glichtenstein)
 - [#80](https://github.com/nf-core/demultiplex/issues/80) When NoLaneSplitting is true the process fails because of a glob. See [nf-core/modules #2745](https://github.com/nf-core/modules/pull/2745). (@matthdsm)
-- [#79](https://github.com/nf-core/demultiplex/issues/79) Update link in docs to samplesheet (@glichtenstein & @emiller88)
+- [#79](https://github.com/nf-core/demultiplex/issues/79) Update link in docs to samplesheet (@glichtenstein & @edmundmiller)
 
 ## v1.0.0 - 2022-10-06
 
