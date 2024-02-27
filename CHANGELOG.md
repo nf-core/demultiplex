@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#167](https://github.com/nf-core/demultiplex/pull/167) Updated template to nf-core/tools v2.12
-- [#163](https://github.com/nf-core/demultiplex/pull/163) Updated template to nf-core/tools v2.11.1
 - [#162](https://github.com/nf-core/demultiplex/pull/162) Updated template to nf-core/tools v2.11
+- [#163](https://github.com/nf-core/demultiplex/pull/163) Updated template to nf-core/tools v2.11.1
 
 ## 1.4.0 - 2023-12-14
 
