@@ -47,7 +47,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "ccacf6f5de6df3bc6d73b665c1fd2933d8bbc290",
+                        "git_sha": "9e71d8519dfbfc328c078bba14d4bd4c99e39a94",
                         "installed_by": ["modules"]
                     },
                     "sgdemux": {
