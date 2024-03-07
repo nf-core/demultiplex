@@ -144,9 +144,9 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
-        case ['bcl2fastq', 'bclconvert']:
+        case ['bcl2fastq', 'bclconvert', 'dragen']:
             // SUBWORKFLOW: illumina
-            // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
+            // Runs when "demultiplexer" is set to "bclconvert", "bcl2fastq" or "dragen"
             BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )

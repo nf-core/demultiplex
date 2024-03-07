@@ -34,7 +34,6 @@ process DRAGEN_DEMULTIPLEXER {
     """
     echo ${input_dir}
     echo ${run_dir}
-    echo ${outdir}
     """
     // """
     // if [ ! -d ${input_dir} ]; then
