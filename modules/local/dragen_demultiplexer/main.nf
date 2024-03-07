@@ -36,7 +36,7 @@ process DRAGEN_DEMULTIPLEXER {
         mkdir -p ${input_dir}
     fi
 
-    dragen_input_directory=\$(echo ${flowcell} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
+    dragen_input_directory=\$(echo ${run_dir} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
 
     /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
         --bcl-input-directory \$dragen_input_directory \
@@ -44,7 +44,7 @@ process DRAGEN_DEMULTIPLEXER {
         --output-directory ./ --force \
         --sample-sheet $samplesheet
 
-    cp -r ${input_dir}/InterOp .
+    cp -r ${run_dir}/InterOp .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
