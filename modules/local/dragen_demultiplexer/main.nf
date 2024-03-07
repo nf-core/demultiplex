@@ -1,11 +1,11 @@
 process DRAGEN_DEMULTIPLEXER {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
-    label 'process_high'
-    queue 'dragen'
+    // label 'process_high'
+    // queue 'dragen'
     debug true
 
     input:
-    tuple val(meta), path(samplesheet), path(run_dir)
+    tuple val(meta), path(samplesheet), val(run_dir)
 
     output:
     tuple val(meta), path("**_S[1-9]*_R?_00?.fastq.gz")          , emit: fastq
@@ -28,13 +28,16 @@ process DRAGEN_DEMULTIPLEXER {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
-    def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
-    def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
+    // def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
+    // def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
+    // def input_dir = input_tar ? new File(run_dir).getParent() : run_dir
 
     """
-    if [ ! -d ${input_dir} ]; then
-        mkdir -p ${input_dir}
-    fi
+    pwd
+    echo $run_dir
+    echo $samplesheet
+    echo $meta
+
 
     dragen_input_directory=\$(echo ${run_dir} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
 

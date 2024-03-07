@@ -65,6 +65,7 @@ workflow BCL_DEMULTIPLEX {
         // MODULE: DRAGEN
         // Demultiplex the bcl files
         if (demultiplexer == "dragen") {
+            ch_flowcell.view()
             DRAGEN_DEMULTIPLEXER( ch_flowcells )
             ch_fastq    = ch_fastq.mix(DRAGEN_DEMULTIPLEXER.out.fastq)
             ch_interop  = ch_interop.mix(DRAGEN_DEMULTIPLEXER.out.interop)
