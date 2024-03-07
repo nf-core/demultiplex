@@ -27,9 +27,6 @@ process DRAGEN_DEMULTIPLEXER {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
-    // def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
-    // def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
-    // def input_dir = input_tar ? new File(run_dir).getParent() : run_dir
 
     """
     if [ ! -d ${params.outdir} ]; then
@@ -44,7 +41,7 @@ process DRAGEN_DEMULTIPLEXER {
         --output-directory $params.outdir --force \
         --sample-sheet $samplesheet
 
-    cp -r ${run_dir}/InterOp $params.outdir
+    cp -r \$dragen_input_directory/InterOp $params.outdir
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
