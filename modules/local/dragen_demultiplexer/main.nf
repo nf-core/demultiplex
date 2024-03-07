@@ -1,8 +1,7 @@
-process BCL2FASTQ {
+process DRAGEN_DEMULTIPLEXER {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
     label 'process_high'
-
-    container "nf-core/bcl2fastq:2.20.0.422"
+    queue 'dragen'
 
     input:
     tuple val(meta), path(samplesheet), path(run_dir)
@@ -65,9 +64,10 @@ process BCL2FASTQ {
 
     cp -r ${input_dir}/InterOp .
 
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bcl2fastq: \$(bcl2fastq -V 2>&1 | grep -m 1 bcl2fastq | sed 's/^.*bcl2fastq v//')
+        dragen: \$(echo \$(/opt/edico/bin/dragen --version 2>&1) | sed -e "s/dragen Version //g")
     END_VERSIONS
     """
 }
