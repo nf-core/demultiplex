@@ -32,56 +32,23 @@ process DRAGEN_DEMULTIPLEXER {
     def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
 
     """
-    echo ${input_dir}
-    echo ${run_dir}
+    if [ ! -d ${input_dir} ]; then
+        mkdir -p ${input_dir}
+    fi
+
+    dragen_input_directory=\$(echo ${flowcell} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
+
+    /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
+        --bcl-input-directory \$dragen_input_directory \
+        --intermediate-results-dir /staging/LAB/tmp/ \
+        --output-directory ./ --force \
+        --sample-sheet $samplesheet
+
+    cp -r ${input_dir}/InterOp .
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dragen: \$(echo \$(/opt/edico/bin/dragen --version 2>&1) | sed -e "s/dragen Version //g")
+    END_VERSIONS
     """
-    // """
-    // if [ ! -d ${input_dir} ]; then
-    //     mkdir -p ${input_dir}
-    // fi
-
-    // if ${input_tar}; then
-    //     ## Ensures --strip-components only applied when top level of tar contents is a directory
-    //     ## If just files or multiple directories, place all in $input_dir
-
-    //     if [[ \$(tar -taf ${run_dir} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
-    //         tar \\
-    //             -C $input_dir --strip-components 1 \\
-    //             -xavf \\
-    //             $args2 \\
-    //             $run_dir \\
-    //             $args3
-    //     else
-    //         tar \\
-    //             -C $input_dir \\
-    //             -xavf \\
-    //             $args2 \\
-    //             $run_dir \\
-    //             $args3
-    //     fi
-    // fi
-
-    // bcl2fastq \\
-    //     $args \\
-    //     --output-dir . \\
-    //     --runfolder-dir ${input_dir} \\
-    //     --sample-sheet ${samplesheet} \\
-    //     --processing-threads ${task.cpus}
-
-    // cp -r ${input_dir}/InterOp .
-
-
-    // dragen_input_directory=\$(echo ${input_dir} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
-
-    // /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
-    //     --bcl-input-directory \$dragen_input_directory \
-    //     --intermediate-results-dir $params.intermediate_directory \
-    //     --output-directory $params.outdir --force \
-    //     --sample-sheet $samplesheet
-
-    // cat <<-END_VERSIONS > versions.yml
-    // "${task.process}":
-    //     dragen: \$(echo \$(/opt/edico/bin/dragen --version 2>&1) | sed -e "s/dragen Version //g")
-    // END_VERSIONS
-    // """
 }
