@@ -64,7 +64,6 @@ process DRAGEN_DEMULTIPLEXER {
 
     cp -r ${input_dir}/InterOp .
 
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         dragen: \$(echo \$(/opt/edico/bin/dragen --version 2>&1) | sed -e "s/dragen Version //g")
