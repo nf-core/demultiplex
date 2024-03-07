@@ -1,8 +1,7 @@
 process DRAGEN_DEMULTIPLEXER {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
-    // label 'process_high'
-    // queue 'dragen'
-    debug true
+    label 'process_high'
+    queue 'dragen'
 
     input:
     tuple val(meta), path(samplesheet), val(run_dir)
@@ -33,21 +32,19 @@ process DRAGEN_DEMULTIPLEXER {
     // def input_dir = input_tar ? new File(run_dir).getParent() : run_dir
 
     """
-    pwd
-    echo $run_dir
-    echo $samplesheet
-    echo $meta
-
+    if [ ! -d ${params.outdir} ]; then
+        mkdir -p ${params.outdir}
+    fi
 
     dragen_input_directory=\$(echo ${run_dir} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
 
     /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
         --bcl-input-directory \$dragen_input_directory \
         --intermediate-results-dir /staging/LAB/tmp/ \
-        --output-directory ./ --force \
+        --output-directory $params.outdir --force \
         --sample-sheet $samplesheet
 
-    cp -r ${run_dir}/InterOp .
+    cp -r ${run_dir}/InterOp $params.outdir
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
