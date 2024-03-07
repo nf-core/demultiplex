@@ -8,3 +8,4 @@ testing*
 *.pyc
 .nf-test/
 null/
+sample_sheet.csv
