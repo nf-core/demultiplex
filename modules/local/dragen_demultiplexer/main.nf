@@ -3,18 +3,20 @@ process DRAGEN_DEMULTIPLEXER {
     label 'process_high'
     queue 'dragen'
 
+    publishDir "$params.outdir/", mode: 'copy'
+
     input:
     tuple val(meta), path(samplesheet), val(run_dir)
 
     output:
-    tuple val(meta), path("${params.outdir}/**_S[1-9]*_R?_00?.fastq.gz")          , emit: fastq
-    tuple val(meta), path("${params.outdir}/**_S[1-9]*_I?_00?.fastq.gz")          , optional:true, emit: fastq_idx
-    tuple val(meta), path("${params.outdir}/**Undetermined_S0*_R?_00?.fastq.gz")  , optional:true, emit: undetermined
-    tuple val(meta), path("${params.outdir}/**Undetermined_S0*_I?_00?.fastq.gz")  , optional:true, emit: undetermined_idx
-    tuple val(meta), path("${params.outdir}/Reports")                             , emit: reports
-    tuple val(meta), path("${params.outdir}/Stats")                               , emit: stats
-    tuple val(meta), path("${params.outdir}/InterOp/*.bin")                       , emit: interop
-    path("${params.outdir}/versions.yml")                                         , emit: versions
+    tuple val(meta), path("**_S[1-9]*_R?_00?.fastq.gz")          , emit: fastq
+    tuple val(meta), path("**_S[1-9]*_I?_00?.fastq.gz")          , optional:true, emit: fastq_idx
+    tuple val(meta), path("**Undetermined_S0*_R?_00?.fastq.gz")  , optional:true, emit: undetermined
+    tuple val(meta), path("**Undetermined_S0*_I?_00?.fastq.gz")  , optional:true, emit: undetermined_idx
+    tuple val(meta), path("Logs")                                , emit: stats
+    tuple val(meta), path("Reports")                             , emit: reports
+    tuple val(meta), path("InterOp/*.bin")                       , emit: interop
+    path("versions.yml")                                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,10 +40,10 @@ process DRAGEN_DEMULTIPLEXER {
     /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
         --bcl-input-directory \$dragen_input_directory \
         --intermediate-results-dir /staging/LAB/tmp/ \
-        --output-directory $params.outdir --force \
+        --output-directory ./ --force \
         --sample-sheet $samplesheet
 
-    cp -r \$dragen_input_directory/InterOp $params.outdir
+    cp -r \$dragen_input_directory/InterOp ./
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
