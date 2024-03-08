@@ -90,6 +90,14 @@ nextflow run nf-core/demultiplex \
 nextflow run main.nf -profile test_dragen,singularity
 ```
 
+## TODO
+```bash
+nextflow run main.nf \
+ --input /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/sgalera/nfcore_demultiplex/sample_sheet.csv \
+ --outdir /data/scratch/LAB/temp_demultiplex/to_delete_whatever \
+ -c hpc.config
+```
+
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/demultiplex/usage) and the [parameter documentation](https://nf-co.re/demultiplex/parameters).
 
 ## Pipeline output
