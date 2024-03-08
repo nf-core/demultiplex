@@ -1,6 +1,6 @@
 process DRAGEN_DEMULTIPLEXER {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
-    label 'process_high'
+    label 'dragen'
     queue 'dragen'
 
     publishDir "$params.outdir/", mode: 'copy'
@@ -13,7 +13,7 @@ process DRAGEN_DEMULTIPLEXER {
     tuple val(meta), path("**_S[1-9]*_I?_00?.fastq.gz")          , optional:true, emit: fastq_idx
     tuple val(meta), path("**Undetermined_S0*_R?_00?.fastq.gz")  , optional:true, emit: undetermined
     tuple val(meta), path("**Undetermined_S0*_I?_00?.fastq.gz")  , optional:true, emit: undetermined_idx
-    tuple val(meta), path("Logs")                                , emit: stats
+    tuple val(meta), path("Reports/legacy/Stats")                , emit: stats
     tuple val(meta), path("Reports")                             , emit: reports
     tuple val(meta), path("InterOp/*.bin")                       , emit: interop
     path("versions.yml")                                         , emit: versions
