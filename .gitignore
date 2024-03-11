@@ -10,4 +10,5 @@ testing*
 null/
 sample_sheet.csv
 smallest_run_SampleSheet.csv
-just_testing.sh
+just_testing*
+dragen_demultiplex*
