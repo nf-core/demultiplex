@@ -1,16 +1,17 @@
 #!/usr/bin/env nextflow
 
 //
-// Demultiplex Illumina BCL data using bcl-convert or bcl2fastq
+// Demultiplex Illumina BCL data using bcl-convert, bcl2fastq or dragen
 //
 
-include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
-include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
+include { BCLCONVERT               } from "../../../modules/nf-core/bclconvert/main"
+include { BCL2FASTQ                } from "../../../modules/nf-core/bcl2fastq/main"
+include { DRAGEN_DEMULTIPLEXER     } from "../../../modules/local/dragen_demultiplexer/main"
 
 workflow BCL_DEMULTIPLEX {
     take:
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
-        demultiplexer   // bclconvert or bcl2fastq
+        demultiplexer   // bclconvert, bcl2fastq or dragen
 
     main:
         ch_versions = Channel.empty()
@@ -59,6 +60,17 @@ workflow BCL_DEMULTIPLEX {
             ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
             ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
             ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
+        }
+
+        // MODULE: DRAGEN
+        // Demultiplex the bcl files
+        if (demultiplexer == "dragen") {
+            DRAGEN_DEMULTIPLEXER( ch_flowcells )
+            ch_fastq    = ch_fastq.mix(DRAGEN_DEMULTIPLEXER.out.fastq)
+            ch_interop  = ch_interop.mix(DRAGEN_DEMULTIPLEXER.out.interop)
+            ch_reports  = ch_reports.mix(DRAGEN_DEMULTIPLEXER.out.reports)
+            ch_stats    = ch_stats.mix(DRAGEN_DEMULTIPLEXER.out.stats)
+            ch_versions = ch_versions.mix(DRAGEN_DEMULTIPLEXER.out.versions)
         }
 
         // Generate meta for each fastq

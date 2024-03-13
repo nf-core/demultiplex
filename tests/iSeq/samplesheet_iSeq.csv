@@ -1,2 +1,2 @@
 id,samplesheet,lane,flowcell
-20230719_FS10001385_16_BTR67709-2111,/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/20230719_FS10001385_16_BTR67709-2111/SampleSheet.csv,1,/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/20230719_FS10001385_16_BTR67709-2111/
+20230719_FS10001385_16_BTR67709-2111,/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/sgalera/nfcore_demultiplex/smallest_run_SampleSheet.csv,1,/data/medper/LAB/illumina_iSeq/Runs/20231109_FS10001385_17_BRL95625-0922/

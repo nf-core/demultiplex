@@ -1,15 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bcl_demultiplex"
-description: Demultiplex Illumina BCL data using bcl-convert or bcl2fastq
+description: Demultiplex Illumina BCL data using bcl-convert, bcl2fastq or dragen
 keywords:
   - bcl
   - bclconvert
   - bcl2fastq
+  - dragen
   - demultiplex
   - fastq
 components:
   - bcl2fastq
   - bclconvert
+  - dragen
 input:
   - meta:
       type: map
@@ -25,7 +27,7 @@ input:
       description: Directory or tar archive containing Illumina BCL data, sequencer output directory
   - demultiplexer:
       type: string
-      description: Which demultiplexer to use, bcl2fastq or bclconvert
+      description: Which demultiplexer to use, bcl2fastq, bclconvert or dragen
 output:
   - meta:
       type: map
