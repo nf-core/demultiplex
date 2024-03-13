@@ -1,8 +1,8 @@
 process DRAGEN_DEMULTIPLEXER {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
-    // label 'dragen'
-    // queue 'dragen'
-    debug true
+    label 'dragen'
+    queue 'dragen'
+    // debug true
 
     publishDir "$params.outdir/", mode: 'copy'
 
