@@ -37,7 +37,7 @@ process DRAGEN_DEMULTIPLEXER {
 
     dragen_input_directory=\$(echo ${run_dir} | sed 's/\\/data\\/medper\\/LAB/\\/mnt\\/SequencerOutput/')
 
-    /opt/edico/bin/dragen --bcl-conversion-only=true --no-lane-splitting true --output-legacy-stats true \
+    /opt/edico/bin/dragen --bcl-conversion-only=true $args --output-legacy-stats true \
         --bcl-input-directory \$dragen_input_directory \
         --intermediate-results-dir /staging/LAB/tmp/ \
         --output-directory ./ --force \
