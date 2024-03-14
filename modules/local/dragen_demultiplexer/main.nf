@@ -1,10 +1,8 @@
 process DRAGEN_DEMULTIPLEXER {
-    tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
+    tag {"${meta.lane < 5 ? meta.id + '.' + meta.lane : meta.id}" }
     label 'dragen'
     queue 'dragen'
     // debug true
-
-    publishDir "$params.outdir/", mode: 'copy'
 
     input:
     tuple val(meta), path(samplesheet), val(run_dir)
@@ -32,7 +30,6 @@ process DRAGEN_DEMULTIPLEXER {
     def args3 = task.ext.args3 ?: ''
 
     """
-    echo $params.outdir
     if [ ! -d ${params.outdir} ]; then
         mkdir -p ${params.outdir}
     fi
