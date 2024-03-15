@@ -28,6 +28,7 @@ module load singularity/3.4.1
 
 ## Test 3 Full test https://github.com/nf-core/demultiplex/tree/1.4.1/conf/test_full.config
 
+ 
 # nextflow run nf-core/demultiplex -profile test_full,singularity --outdir test_nf_core_full -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/demultiplex.conf
 
 # nextflow run nf-core/demultiplex --input ./tests/iSeq/samplesheet_iSeq.csv --outdir ./results -profile singularity --demultiplexer 'bcl2fastq' -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/hpc.conf

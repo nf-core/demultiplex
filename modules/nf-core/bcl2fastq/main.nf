@@ -1,6 +1,7 @@
 process BCL2FASTQ {
     tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
     label 'process_high'
+    debug true
 
     container "nf-core/bcl2fastq:2.20.0.422"
 
@@ -31,6 +32,7 @@ process BCL2FASTQ {
     def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
     def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
     """
+    echo $task.ext.args
     if [ ! -d ${input_dir} ]; then
         mkdir -p ${input_dir}
     fi

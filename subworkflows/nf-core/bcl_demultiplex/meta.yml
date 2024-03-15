@@ -27,7 +27,7 @@ input:
       description: Directory or tar archive containing Illumina BCL data, sequencer output directory
   - demultiplexer:
       type: string
-      description: Which demultiplexer to use, bcl2fastq, bclconvert or dragen
+      description: Which demultiplexer to use, bcl2fastq or bclconvert
 output:
   - meta:
       type: map

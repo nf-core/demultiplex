@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 //
-// Demultiplex Illumina BCL data using bcl-convert, bcl2fastq or dragen
+// Demultiplex Illumina BCL data using bcl-convert or bcl2fastq or dragen
 //
 
 include { BCLCONVERT               } from "../../../modules/nf-core/bclconvert/main"
@@ -11,7 +11,7 @@ include { DRAGEN_DEMULTIPLEXER     } from "../../../modules/local/dragen_demulti
 workflow BCL_DEMULTIPLEX {
     take:
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
-        demultiplexer   // bclconvert, bcl2fastq or dragen
+        demultiplexer   // bclconvert or bcl2fastq or dragen
 
     main:
         ch_versions = Channel.empty()
