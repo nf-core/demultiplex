@@ -223,10 +223,6 @@ workflow DEMULTIPLEX {
     }
 
 
-    if (!("kraken" in skip_tools)){
-
-    }
-
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     MD5SUM(ch_fastq_to_qc.transpose())
