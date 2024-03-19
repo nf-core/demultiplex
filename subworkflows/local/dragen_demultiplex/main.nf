@@ -4,10 +4,9 @@
 // Demultiplex Illumina BCL data using bcl-convert or bcl2fastq or dragen
 //
 
-include { BCLCONVERT               } from "../../../modules/nf-core/bclconvert/main"
-include { BCL2FASTQ                } from "../../../modules/nf-core/bcl2fastq/main"
+include { DRAGEN_DEMULTIPLEXER     } from "../../../modules/local/dragen_demultiplexer/main"
 
-workflow BCL_DEMULTIPLEX {
+workflow DRAGEN_DEMULTIPLEX {
     take:
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/bcl/files]
         demultiplexer   // bclconvert or bcl2fastq or dragen
@@ -40,26 +39,15 @@ workflow BCL_DEMULTIPLEX {
         // Merge the two channels back together
         ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
-        // MODULE: bclconvert
+        // MODULE: DRAGEN
         // Demultiplex the bcl files
-        if (demultiplexer == "bclconvert") {
-            BCLCONVERT( ch_flowcells )
-            ch_fastq    = ch_fastq.mix(BCLCONVERT.out.fastq)
-            ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
-            ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
-            ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
-        }
+        DRAGEN_DEMULTIPLEXER( ch_flowcells )
+        ch_fastq    = ch_fastq.mix(DRAGEN_DEMULTIPLEXER.out.fastq)
+        ch_interop  = ch_interop.mix(DRAGEN_DEMULTIPLEXER.out.interop)
+        ch_reports  = ch_reports.mix(DRAGEN_DEMULTIPLEXER.out.reports)
+        ch_stats    = ch_stats.mix(DRAGEN_DEMULTIPLEXER.out.stats)
+        ch_versions = ch_versions.mix(DRAGEN_DEMULTIPLEXER.out.versions)
 
-        // MODULE: bcl2fastq
-        // Demultiplex the bcl files
-        if (demultiplexer == "bcl2fastq") {
-            BCL2FASTQ( ch_flowcells )
-            ch_fastq    = ch_fastq.mix(BCL2FASTQ.out.fastq)
-            ch_interop  = ch_interop.mix(BCL2FASTQ.out.interop)
-            ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
-            ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
-            ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
-        }
 
         // Generate meta for each fastq
         ch_fastq_with_meta = generate_fastq_meta(ch_fastq)
