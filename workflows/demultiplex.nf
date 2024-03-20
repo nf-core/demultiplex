@@ -222,6 +222,13 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(FALCO.out.versions)
     }
 
+    // MODULE: kraken2
+    if (!("kraken" in skip_tools)){
+        KRAKEN2_KRAKEN2(
+            ch_fastq_to_qc
+        )
+    }
+
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
