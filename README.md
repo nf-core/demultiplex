@@ -84,13 +84,14 @@ nextflow run nf-core/demultiplex \
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
 > [!NOTE]
-> If you are about to run the pipeline inside the HPC (NASERTIC Urederra) cluster, we have created a [config file](conf/test_dragen.config) which runs the pipeline with  minimal possible requirements
+> If you are about to run the pipeline inside the HPC (NASERTIC Urederra) cluster, we have created a [config file](conf/test_dragen.config) which runs the pipeline with minimal possible requirements
 
 ```bash
 nextflow run main.nf -profile test_dragen,singularity
 ```
 
 ## TODO
+
 ```bash
 nextflow run main.nf \
  --input /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/sgalera/nfcore_demultiplex/sample_sheet.csv \
