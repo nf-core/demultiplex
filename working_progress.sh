@@ -28,7 +28,7 @@ module load singularity/3.4.1
 
 ## Test 3 Full test https://github.com/nf-core/demultiplex/tree/1.4.1/conf/test_full.config
 
- 
+
 # nextflow run nf-core/demultiplex -profile test_full,singularity --outdir test_nf_core_full -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/demultiplex.conf
 
 # nextflow run nf-core/demultiplex --input ./tests/iSeq/samplesheet_iSeq.csv --outdir ./results -profile singularity --demultiplexer 'bcl2fastq' -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/hpc.conf
@@ -42,7 +42,7 @@ module load singularity/3.4.1
 #     -c hpc.conf \
      #-resume
 
-nextflow run main.nf -profile test_dragen,singularity -c hpc.conf
+nextflow run main.nf -profile test_dragen_kraken2,singularity -c hpc.conf
 
 # Real data NovaSeq
 # nextflow run nfcore_demultiplex/main.nf \
@@ -52,3 +52,13 @@ nextflow run main.nf -profile test_dragen,singularity -c hpc.conf
 #    --demultiplexer 'bcl2fastq' \
 #    -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/demultiplex.conf \
 #    #-resume
+
+
+        input           =   '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/sample_sheet_split.csv'
+        outdir          =   '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/tests/results'
+        demultiplexer   =   'dragen'
+        demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
+        trim_fastq    = params.trim_fastq                                      // boolean: true, false
+        skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+        sample_size   = params.sample_size                                     // int
+        kraken_db     = params.kraken_db                                       // path
