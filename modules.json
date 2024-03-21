@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bases2fastq": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "c2342b45bbfc5d6fe19cc4154b38fa57177c67dd",
                         "installed_by": [
                             "modules"
                         ]
@@ -42,7 +42,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "003920c7f9a8ae19b69a97171922880220bedf56",
+                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
                         "installed_by": [
                             "modules"
                         ]
@@ -56,9 +56,9 @@
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
-                        "git_sha": "8fae4ee738f645812384d6aba9d0dc651ad79ff9",
+                        "git_sha": "653218e79ffa76fde20319e9062f8b8da5cf7555",
                         "installed_by": [
-                            "modules"
+                            "fastq_contam_seqtk_kraken"
                         ]
                     },
                     "md5sum": {
@@ -70,9 +70,16 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "9e71d8519dfbfc328c078bba14d4bd4c99e39a94",
+                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": [
                             "modules"
+                        ]
+                    },
+                    "seqtk/sample": {
+                        "branch": "master",
+                        "git_sha": "7f88aae93c69586c0789322b77743ee0ef469502",
+                        "installed_by": [
+                            "fastq_contam_seqtk_kraken"
                         ]
                     },
                     "sgdemux": {
@@ -84,7 +91,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "e719354ba77df0a1bd310836aa2039b45c29d620",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": [
                             "modules"
                         ]
@@ -96,6 +103,13 @@
                     "bcl_demultiplex": {
                         "branch": "master",
                         "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
+                        "installed_by": [
+                            "subworkflows"
+                        ]
+                    },
+                    "fastq_contam_seqtk_kraken": {
+                        "branch": "master",
+                        "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",
                         "installed_by": [
                             "subworkflows"
                         ]
