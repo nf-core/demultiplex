@@ -83,22 +83,6 @@ nextflow run nf-core/demultiplex \
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
-> [!NOTE]
-> If you are about to run the pipeline inside the HPC (NASERTIC Urederra) cluster, we have created a [config file](conf/test_dragen.config) which runs the pipeline with minimal possible requirements
-
-```bash
-nextflow run main.nf -profile test_dragen,singularity
-```
-
-## TODO
-
-```bash
-nextflow run main.nf \
- --input /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/sgalera/nfcore_demultiplex/sample_sheet.csv \
- --outdir /data/scratch/LAB/temp_demultiplex/to_delete_whatever \
- -c hpc.config
-```
-
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/demultiplex/usage) and the [parameter documentation](https://nf-co.re/demultiplex/parameters).
 
 ## Pipeline output

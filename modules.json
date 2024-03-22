@@ -13,22 +13,30 @@
                     "bcl2fastq": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["bcl_demultiplex"]
+                        "installed_by": [
+                            "bcl_demultiplex"
+                        ]
                     },
                     "bclconvert": {
                         "branch": "master",
                         "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
-                        "installed_by": ["bcl_demultiplex"]
+                        "installed_by": [
+                            "bcl_demultiplex"
+                        ]
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "falco": {
                         "branch": "master",
                         "git_sha": "a236d2c2ec9e68db9b8501105d804acb359552b5",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "fastp": {
                         "branch": "master",
@@ -38,7 +46,21 @@
                     "fqtk": {
                         "branch": "master",
                         "git_sha": "97a796133cd9644ba3dd83d3c0fd09a9a63b1a84",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "8fae4ee738f645812384d6aba9d0dc651ad79ff9",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "653218e79ffa76fde20319e9062f8b8da5cf7555",
+                        "installed_by": ["fastq_contam_seqtk_kraken"]
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
@@ -48,7 +70,9 @@
                     "md5sum": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "multiqc": {
                         "branch": "master",
@@ -63,7 +87,9 @@
                     "sgdemux": {
                         "branch": "master",
                         "git_sha": "574074e6ea2497b53df1f226473a8c71524af0d0",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "untar": {
                         "branch": "master",
