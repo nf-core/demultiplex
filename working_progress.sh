@@ -44,14 +44,29 @@ module load singularity/3.4.1
 
 nextflow run main.nf -profile test_dragen_kraken2,singularity -c hpc.conf
 
-# Real data NovaSeq
-# nextflow run nfcore_demultiplex/main.nf \
-#    -profile singularity \
-#    --input samplesheet_NovaSeq.csv \
-#    --outdir /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/test_nfcore_NovaSeq \
-#    --demultiplexer 'bcl2fastq' \
-#    -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/demultiplex.conf \
+
+# Real data iSeq
+nextflow run main.nf  \
+    -profile singularity \
+    --input '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/sample_sheet.csv' \
+    --outdir '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/tests/results_NovaSeq' \
+    --demultiplexer 'dragen' \
+    -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/hpc.conf \
+    --sample_size 10000 \
+    --kraken_db '/home/projects/LAB/reference/dbkraken/k2_standard_20240112'
 #    #-resume
+
+# Real data NovaSeq
+nextflow run main.nf  \
+    -profile singularity \
+    --input '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/sample_sheet_NovaSeq.csv' \
+    --outdir '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/tests/results_NovaSeq' \
+    --demultiplexer 'dragen' \
+    -c /data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/hpc.conf \
+    --sample_size 10000 \
+    --kraken_db '/home/projects/LAB/reference/dbkraken/k2_standard_20240112'
+#    #-resume
+
 
 
         input           =   '/data/scratch/LAB/temp_demultiplex/nfcore_demultiplex/mansego/nfcore_demultiplex/sample_sheet_split.csv'

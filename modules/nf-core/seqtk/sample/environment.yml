@@ -1,7 +1,7 @@
-name: multiqc
+name: seqtk_sample
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::multiqc=1.21
+  - bioconda::seqtk=1.4

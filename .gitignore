@@ -11,5 +11,7 @@ null/
 sample_sheet*
 smallest_run_SampleSheet.csv
 just_testing*
+NovaSeq_run_SampleSheet.csv
 dragen_demultiplex*
 tests/
+*.tar.gz
