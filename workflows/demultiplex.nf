@@ -33,11 +33,12 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { DRAGEN_DEMULTIPLEX   } from '../subworkflows/local/dragen_demultiplex/main'
-include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
+include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { DRAGEN_DEMULTIPLEX        } from '../subworkflows/local/dragen_demultiplex/main'
+include { FASTQ_CONTAM_SEQTK_KRAKEN } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
+include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,9 +68,11 @@ def multiqc_report = []
 
 workflow DEMULTIPLEX {
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, dragen
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+    sample_size   = params.sample_size                                     // int
+    kraken_db     = params.kraken_db                                       // path
 
     // Channel inputs
     ch_input = file(params.input)
@@ -149,12 +152,22 @@ workflow DEMULTIPLEX {
         case ['bcl2fastq', 'bclconvert']:
             // SUBWORKFLOW: illumina
             // Runs when "demultiplexer" is set to "bclconvert", "bcl2fastq"
+            // Runs when "demultiplexer" is set to "bclconvert", "bcl2fastq"
             BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
             break
+
+        case 'dragen':
+            DRAGEN_DEMULTIPLEX( ch_flowcells, demultiplexer )
+            ch_raw_fastq = ch_raw_fastq.mix( DRAGEN_DEMULTIPLEX.out.fastq )
+            ch_multiqc_files = ch_multiqc_files.mix( DRAGEN_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
+            ch_multiqc_files = ch_multiqc_files.mix( DRAGEN_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
+            ch_versions = ch_versions.mix(DRAGEN_DEMULTIPLEX.out.versions)
+            break
+
 
         case 'dragen':
             DRAGEN_DEMULTIPLEX( ch_flowcells, demultiplexer )
@@ -230,9 +243,21 @@ workflow DEMULTIPLEX {
     }
 
 
+
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     MD5SUM(ch_fastq_to_qc.transpose())
+
+    // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
+    if (kraken_db){
+        FASTQ_CONTAM_SEQTK_KRAKEN(
+            ch_fastq_to_qc,
+            [sample_size],
+            kraken_db
+        )
+        ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
+    }
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (

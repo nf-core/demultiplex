@@ -83,6 +83,7 @@ nextflow run nf-core/demultiplex \
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
+<<<<<<< HEAD
 > [!NOTE]
 > If you are about to run the pipeline inside the HPC (NASERTIC Urederra) cluster, we have created a [config file](conf/test_dragen.config) which runs the pipeline with  minimal possible requirements
 
@@ -98,6 +99,8 @@ nextflow run main.nf \
  -c hpc.conf
 ```
 
+=======
+>>>>>>> c1ff1a76cd7c07f4006b89e1f4c35e7be8f3b81b
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/demultiplex/usage) and the [parameter documentation](https://nf-co.re/demultiplex/parameters).
 
 ## Pipeline output
