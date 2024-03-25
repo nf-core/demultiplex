@@ -13,4 +13,17 @@ process FASTQ_SCREEN{
     output:
 
     script:
+    """
+    fastq-screen --threads ${task.cpus} \\
+        --aligner bwa \\
+        --conf $params.fastq_screen_config \\
+        $reads \\
+        $args \\
+        --outdir ${prefix}_fq_screen
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        fastqscreen: \$(echo \$(fastq_screen --version 2>&1) | sed 's/^.*FastQ Screen v//; s/ .*\$//')
+    END_VERSIONS
+    """
 }
