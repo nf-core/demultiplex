@@ -28,7 +28,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -66,11 +69,20 @@
             "type": "object",
             "fa_icon": "fas fa-microscope",
             "description": "Options for demultiplexing.",
-            "required": ["demultiplexer"],
+            "required": [
+                "demultiplexer"
+            ],
             "properties": {
                 "demultiplexer": {
                     "type": "string",
-                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "dragen"],
+                    "enum": [
+                        "bases2fastq",
+                        "bcl2fastq",
+                        "bclconvert",
+                        "fqtk",
+                        "sgdemux",
+                        "dragen"
+                    ],
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope"
                 }
@@ -184,7 +196,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
