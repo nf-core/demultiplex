@@ -9,7 +9,7 @@ process KRAKEN2_KRAKEN2 {
 
     input:
     tuple val(meta), path(reads)
-    path  db
+    path db
     val save_output_fastqs
     val save_reads_assignment
 
