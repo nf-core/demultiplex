@@ -235,12 +235,6 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(FALCO.out.versions)
     }
 
-    // MODULE: kraken2
-    if (!("kraken" in skip_tools)){
-        KRAKEN2_KRAKEN2(
-            ch_fastq_to_qc
-        )
-    }
 
 
 
