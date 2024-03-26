@@ -9,6 +9,8 @@ process FASTQ_SCREEN{
         'biocontainers/fastq-screen:0.15.3--pl5321hdfd78af_0'}"
 
     input:
+    tuple val(meta), path(reads)
+    path config
 
     output:
 
@@ -17,7 +19,7 @@ process FASTQ_SCREEN{
     fastq-screen --threads ${task.cpus} \\
         --subset $params.fastq_screen_subset \\
         --aligner bowtie2 \\
-        --conf $params.fastq_screen_config \\
+        --conf $config \\
         $reads \\
         $args \\
         --outdir .
