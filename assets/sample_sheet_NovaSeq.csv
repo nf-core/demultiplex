@@ -1,0 +1,2 @@
+id,samplesheet,lane,flowcell
+smallest_run_NovaSeq,./assets/NovaSeq_run_SampleSheet.csv,5,/data/medper/LAB/illumina_NovaSeq/Runs/240306_A01215_0124_BHL3LFDRX3/

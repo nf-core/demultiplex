@@ -1,0 +1,2 @@
+id,samplesheet,lane,flowcell
+smallest_run_iSeq,./assets/smallest_run_SampleSheet.csv,5,/data/medper/LAB/illumina_iSeq/Runs/20231109_FS10001385_17_BRL95625-0922/
