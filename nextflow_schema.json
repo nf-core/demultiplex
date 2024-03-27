@@ -31,6 +31,22 @@
                     "format": "directory-path",
                     "default": null,
                     "description": "path to Kraken2 DB to use for screening"
+                },
+                "fastq_screen_subset": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Number of reads to subsample for FastQ Screen."
+                },
+                "fastq_screen_config": {
+                    "type": "string",
+                    "format": "file-path",
+                    "default": "/data/scratch/LAB/references/FastQ_Screen_Genomes/fastq_screen.conf",
+                    "description": "Path to FastQ Screen configuration file."
+                },
+                "no_split": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "TO BE REMOVED --> JUST FOR TESTING TOOL"
                 }
             }
         },
