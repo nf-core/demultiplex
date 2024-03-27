@@ -237,9 +237,6 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(FALCO.out.versions)
     }
 
-
-
-
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     MD5SUM(ch_fastq_to_qc.transpose())
@@ -261,6 +258,8 @@ workflow DEMULTIPLEX {
             fastq_screen_config,
             fastq_screen_subset
         )
+        ch_multiqc_files = ch_multiqc_files.mix( FASTQ_SCREEN.out.fastq_screen_txt_report.map { meta, txt -> return txt} )
+        ch_versions = ch_versions.mix(FASTQ_SCREEN.out.versions)
     }
 
     // DUMP SOFTWARE VERSIONS

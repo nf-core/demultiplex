@@ -16,6 +16,10 @@ process FASTQ_SCREEN{
     tuple val(meta), path('*screen.html')       , emit: fastq_screen_html_report
     tuple val(meta), path('*screen.txt')        , emit: fastq_screen_txt_report
     tuple val(meta), path('*screen.png')        , emit: fastq_screen_image
+    path "versions.yml"                         , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     """
