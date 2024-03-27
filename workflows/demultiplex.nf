@@ -68,11 +68,13 @@ def multiqc_report = []
 
 workflow DEMULTIPLEX {
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, dragen
-    trim_fastq    = params.trim_fastq                                      // boolean: true, false
-    skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
-    sample_size   = params.sample_size                                     // int
-    kraken_db     = params.kraken_db                                       // path
+    demultiplexer           = params.demultiplexer                                      // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, dragen
+    trim_fastq              = params.trim_fastq                                         // boolean: true, false
+    skip_tools              = params.skip_tools ? params.skip_tools.split(',') : []     // list: [falco, fastp, multiqc]
+    sample_size             = params.sample_size                                        // int
+    kraken_db               = params.kraken_db                                          // path
+    fastq_screen_config     = params.fastq_screen_config                                // path
+    fastq_screen_subset     = params.fastq_screen_subset                                // int
 
     // Channel inputs
     ch_input = file(params.input)
@@ -253,11 +255,13 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
     }
 
-    // if (!("fastq_screen" in skip_tools)){
-    //     FASTQ_SCREEN(
-
-    //     )
-    // }
+    if (!("fastq_screen" in skip_tools)){
+        FASTQ_SCREEN(
+            ch_fastq_to_qc,
+            fastq_screen_config,
+            fastq_screen_subset
+        )
+    }
 
     // DUMP SOFTWARE VERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
