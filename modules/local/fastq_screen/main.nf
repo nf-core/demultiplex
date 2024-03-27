@@ -1,7 +1,6 @@
 process FASTQ_SCREEN{
     tag "fastq_screen"
-    label 'process_single'
-    queue 'local'
+    label 'process_medium'
 
     conda "fastq-screen"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,13 +10,17 @@ process FASTQ_SCREEN{
     input:
     tuple val(meta), path(reads)
     path config
+    val fastq_screen_subset
 
     output:
+    tuple val(meta), path('*screen.html')       , emit: fastq_screen_html_report
+    tuple val(meta), path('*screen.txt')        , emit: fastq_screen_txt_report
+    tuple val(meta), path('*screen.png')        , emit: fastq_screen_image
 
     script:
     """
-    fastq-screen --threads ${task.cpus} \\
-        --subset $params.fastq_screen_subset \\
+    fastq_screen --threads ${task.cpus} \\
+        --subset $fastq_screen_subset \\
         --aligner bowtie2 \\
         --conf $config \\
         $reads \\
