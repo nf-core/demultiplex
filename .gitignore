@@ -15,3 +15,4 @@ NovaSeq_run_SampleSheet.csv
 dragen_demultiplex*.out
 tests/
 *.tar.gz
+info.txt
