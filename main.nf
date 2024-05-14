@@ -81,9 +81,7 @@ workflow {
         params.input
     )
 
-    //
     // WORKFLOW: Run main workflow
-    //
     NFCORE_DEMULTIPLEX (
         PIPELINE_INITIALISATION.out.samplesheet
     )

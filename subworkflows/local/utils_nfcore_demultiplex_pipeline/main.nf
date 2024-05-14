@@ -83,20 +83,7 @@ workflow PIPELINE_INITIALISATION {
     Channel
         .fromSamplesheet("input")
         .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map {
             validateInputSamplesheet(it)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
 
@@ -162,16 +149,27 @@ def validateInputParameters() {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
-
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ it.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+    // destructure the input array
+    def meta, samplesheet, lane, flowcell, per_flowcell_manifest = input
+    
+    // When using the demultiplexer fqtk, the samplesheet must contain an additional 
+    // column per_flowcell_manifest. The column per_flowcell_manifest must contain 
+    // two headers fastq and read_structure
+    // For reference:
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
+    if( params.demultiplexer == 'fqtk' ) {
+        ( per_flowcell_manifest.exists()) ?: error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}"
+        // Check the header of the per flowcell manifest
+        Channel.fromFile(per_flowcell_manifest).splitCsv(header:true, strip:true).map{ row ->
+            if( !row.containsKey("fastq") || !row.containsKey("read_structure") ) {
+                error "[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'"
+            }
+        }
     }
-
-    return [ metas[0], fastqs ]
+    return input
 }
+
 //
 // Get attribute from genome config file e.g. fasta
 //

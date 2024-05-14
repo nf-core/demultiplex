@@ -6,6 +6,7 @@
     "type": "array",
     "items": {
         "type": "object",
+        "required": ["id", "samplesheet", "flowcell"],
         "properties": {
             "id": {
                 "type": "string",
@@ -26,10 +27,15 @@
                 "minimum": 1,
                 "maximum": 8
             },
-            "flow_cell": {
+            "flowcell": {
                 "type": "string",
                 "format": "file-path",
                 "description": "Run directory"
+            },
+            "per_flowcell_manifest": {
+                "type": "string",
+                "format": "file-path",
+                "description": "Per flowcell manifest file"
             }
         }
     }

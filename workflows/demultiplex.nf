@@ -4,32 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
-
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -38,21 +12,22 @@ include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/m
 include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { FASTP                         } from '../modules/nf-core/fastp/main'
 include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
+
+//
+// FUNCTION
+//
+include { paramsSummaryMap       } from 'plugin/nf-validation'	
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,55 +36,48 @@ include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 */
 
 workflow DEMULTIPLEX {
+
+    take:
+    ch_samplesheet // channel: samplesheet read in from --input
+
+    main: 
     // Value inputs
     demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
     // Channel inputs
-    ch_input = file(params.input)
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    
+    // Convenience 
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
-    // Sanitize inputs and separate input types
-    // FQTK's input contains an extra column 'per_flowcell_manifest' so it is handled seperately
-    // For reference:
-    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
-    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
+    // Split flowcells into separate channels containg run as tar and run as path
+    // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
     if (demultiplexer == 'fqtk'){
-        ch_inputs = extract_csv_fqtk(ch_input)
-
-        ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
-
-        // Split flowcells into separate channels containg run as tar and run as path
-        // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-        ch_flowcells = ch_inputs
-            .branch { meta, samplesheet, run, manifest ->
-                tar: run.toString().endsWith('.tar.gz')
+  
+        ch_flowcells = ch_samplesheet
+            .branch { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+                tar: flowcell.toString().endsWith('.tar.gz')
                 dir: true
             }
-
         ch_flowcells_tar = ch_flowcells.tar
-            .multiMap { meta, samplesheet, run, manifest ->
-                samplesheets: [ meta, samplesheet, manifest ]
-                run_dirs: [ meta, run ]
+            .multiMap { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+                samplesheets: [ meta, samplesheet, per_flowcell_manifest ]
+                run_dirs: [ meta, flowcell ]
             }
     } else {
-        ch_inputs = extract_csv(ch_input)
-        ch_inputs.dump(tag: 'DEMULTIPLEX::inputs',{FormattingService.prettyFormat(it)})
 
-        // Split flowcells into separate channels containg run as tar and run as path
-        // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
-        ch_flowcells = ch_inputs
-            .branch { meta, samplesheet, run ->
-                tar: run.toString().endsWith('.tar.gz')
+        ch_flowcells = ch_samplesheet
+            .branch { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+                tar: flowcell.toString().endsWith('.tar.gz')
                 dir: true
             }
-
         ch_flowcells_tar = ch_flowcells.tar
-            .multiMap { meta, samplesheet, run ->
+            .multiMap { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
                 samplesheets: [ meta, samplesheet ]
-                run_dirs: [ meta, run ]
+                run_dirs: [ meta, flowcell ]
             }
     }
 
@@ -163,11 +131,11 @@ workflow DEMULTIPLEX {
             // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
             fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
 
-            // Format ch_input like so:
+            // Format ch_samplesheet like so:
             // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
-            ch_input = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}
+            ch_samplesheet = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}
 
-            FQTK_DEMULTIPLEX ( ch_input )
+            FQTK_DEMULTIPLEX ( ch_samplesheet )
             ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
             ch_multiqc_files = ch_multiqc_files.mix(FQTK_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(FQTK_DEMULTIPLEX.out.versions)
@@ -210,25 +178,53 @@ workflow DEMULTIPLEX {
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
-    MD5SUM(ch_fastq_to_qc.transpose())
+    if (!("md5sum" in skip_tools)){
+        MD5SUM(ch_fastq_to_qc.transpose())
+        ch_versions = ch_versions.mix(MD5SUM.out.versions)
+    }
 
-    // DUMP SOFTWARE VERSIONS
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+         .collectFile(
+             storeDir: "${params.outdir}/pipeline_info",
+             name: 'nf_core_pipeline_software_mqc_versions.yml',
+             sort: true,
+             newLine: true
+         ).set { ch_collated_versions }
 
     // MODULE: MultiQC
     if (!("multiqc" in skip_tools)){
-        workflow_summary    = WorkflowDemultiplex.paramsSummaryMultiqc(workflow, summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
+        ch_multiqc_files.collect().dump(tag: "multiqc_files",{FormattingService.prettyFormat(it)})
 
-        methods_description    = WorkflowDemultiplex.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-        ch_methods_description = Channel.value(methods_description)
+        ch_multiqc_config        = Channel.fromPath(	
+            "$projectDir/assets/multiqc_config.yml", checkIfExists: true)	
+        ch_multiqc_custom_config = params.multiqc_config ?	
+            Channel.fromPath(params.multiqc_config, checkIfExists: true) :	
+            Channel.empty()	
+        ch_multiqc_logo= params.multiqc_logo ?	
+            Channel.fromPath(params.multiqc_logo, checkIfExists: true) :	
+            Channel.empty()	
+        summary_params      = paramsSummaryMap(	
+            workflow, parameters_schema: "nextflow_schema.json")	
+        ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))	
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-        ch_multiqc_files.collect().dump(tag: "DEMULTIPLEX::MultiQC files",{FormattingService.prettyFormat(it)})
+        ch_multiqc_custom_methods_description = params.multiqc_methods_description ?	
+            file(params.multiqc_methods_description, checkIfExists: true) :	
+            file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)	
+        ch_methods_description                = Channel.value(	
+            methodsDescriptionText(ch_multiqc_custom_methods_description))	
+
+        ch_multiqc_files = ch_multiqc_files.mix(	
+            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))	
+        ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)	
+        ch_multiqc_files = ch_multiqc_files.mix(	
+            ch_methods_description.collectFile(	
+                name: 'methods_description_mqc.yaml',	
+                sort: true	
+            )	
+        )
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -236,178 +232,14 @@ workflow DEMULTIPLEX {
             ch_multiqc_custom_config.toList(),
             ch_multiqc_logo.toList()
         )
-        multiqc_report = MULTIQC.out.report.toList()
     }
-}
 
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
 }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-// Extract information (meta data + file(s)) from csv file(s)
-def extract_csv(input_csv, input_schema=null) {
-
-    // Flowcell Sheet schema
-    // Possible values for the "content" column: [meta, path, number, string, bool]
-    if(input_schema == null){
-        def default_input_schema = [
-            'columns': [
-                'id': [
-                    'content': 'meta',
-                    'meta_name': 'id',
-                    'pattern': '',
-                ],
-                'samplesheet': [
-                    'content': 'path',
-                    'pattern': '^.*.csv$',
-                ],
-                'lane': [
-                    'content': 'meta',
-                    'meta_name': 'lane',
-                    'pattern': '',
-                ],
-                'flowcell': [
-                    'content': 'path',
-                    'pattern': '',
-                ],
-            ],
-            required: ['id','flowcell', 'samplesheet'],
-        ]
-        input_schema = default_input_schema
-    }
-    // Don't change these variables
-    def row_count = 1
-    def all_columns = input_schema.columns.keySet().collect()
-    def mandatory_columns = input_schema.required
-
-    // Header checks
-    Channel.value(input_csv).splitCsv(strip:true).first().map({ row ->
-
-        if(row != all_columns) {
-            def commons = all_columns.intersect(row)
-            def diffs = all_columns.plus(row)
-            diffs.removeAll(commons)
-
-            if(diffs.size() > 0){
-                def missing_columns = []
-                def wrong_columns = []
-                for(diff : diffs){
-                    diff in all_columns ? missing_columns.add(diff) : wrong_columns.add(diff)
-                }
-                if(missing_columns.size() > 0){
-                    error "[Samplesheet Error] The column(s) $missing_columns is/are not present. The header should look like: $all_columns"
-                }
-                else {
-                    error "[Samplesheet Error] The column(s) $wrong_columns should not be in the header. The header should look like: $all_columns"
-                }
-            }
-            else {
-                error "[Samplesheet Error] The columns $row are not in the right order. The header should look like: $all_columns"
-            }
-
-        }
-    })
-
-    // Field checks + returning the channels
-    Channel.value(input_csv).splitCsv(header:true, strip:true).map({ row ->
-
-        row_count++
-
-        // Check the mandatory columns
-        def missing_mandatory_columns = []
-        for(column : mandatory_columns) {
-            row[column] ?: missing_mandatory_columns.add(column)
-        }
-        if(missing_mandatory_columns.size > 0){
-            error "[Samplesheet Error] The mandatory column(s) $missing_mandatory_columns is/are empty on line $row_count"
-        }
-
-        def output = []
-        def meta = [:]
-        for(col : input_schema.columns) {
-            key = col.key
-            content = row[key]
-
-            if(!(content ==~ col.value['pattern']) && col.value['pattern'] != '' && content != '') {
-                error "[Samplesheet Error] The content of column '$key' on line $row_count does not match the pattern '${col.value['pattern']}'"
-            }
-
-            if(col.value['content'] == 'path'){
-                output.add(content ? file(content, checkIfExists:true) : col.value['default'] ?: [])
-            }
-            else if(col.value['content'] == 'meta'){
-                for(meta_name : col.value['meta_name'].split(",")){
-                    meta[meta_name] = content != '' ? content.replace(' ', '_') : col.value['default'] ?: null
-                }
-            }
-        }
-
-        output.add(0, meta)
-        return output
-    })
-}
-
-// Parse flowcell input map
-def parse_flowcell_csv(row) {
-    def meta = [:]
-    meta.id   = row.id.toString()
-    meta.lane = null
-    if (row.containsKey("lane") && row.lane ) {
-        meta.lane = row.lane.toInteger()
-    }
-
-    def flowcell        = file(row.flowcell, checkIfExists: true)
-    def samplesheet     = file(row.samplesheet, checkIfExists: true)
-    return [meta, samplesheet, flowcell]
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS FOR FQTK
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// Extract information (meta data + file(s)) from csv file(s)
-def extract_csv_fqtk(input_csv) {
-
-    // Flowcell Sheet schema
-    // Possible values for the "content" column: [meta, path, number, string, bool]
-    def input_schema = [
-        'columns': [
-            'id': [
-                'content': 'meta',
-                'meta_name': 'id',
-                'pattern': '',
-            ],
-            'samplesheet': [
-                'content': 'path',
-                'pattern': '^.*.csv$',
-            ],
-            'lane': [
-                'content': 'meta',
-                'meta_name': 'lane',
-                'pattern': '',
-            ],
-            'flowcell': [
-                'content': 'path',
-                'pattern': '',
-            ],
-            'per_flowcell_manifest': [
-                'content': 'path',
-                'pattern': '',
-            ]
-        ],
-        required: ['id','flowcell', 'samplesheet', 'per_flowcell_manifest'],
-    ]
-
-    return extract_csv(input_csv, input_schema)
-}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
