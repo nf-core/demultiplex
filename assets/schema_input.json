@@ -7,27 +7,30 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "id": {
                 "type": "string",
+                "description": "Flowcell ID",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "samplesheet": {
                 "type": "string",
                 "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "description": "Sample sheet file",
+                "pattern": "^\\S+\\.csv$"
             },
-            "fastq_2": {
+            "lane": {
+                "type": "integer",
+                "description": "Lane number",
+                "minimum": 1,
+                "maximum": 8
+            },
+            "flow_cell": {
                 "type": "string",
                 "format": "file-path",
-                "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "description": "Run directory"
             }
-        },
-        "required": ["sample", "fastq_1"]
+        }
     }
 }
