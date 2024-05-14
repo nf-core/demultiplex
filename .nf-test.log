@@ -1,0 +1,484 @@
+May-13 18:00:24.038 [main] INFO  com.askimed.nf.test.App - nf-test 0.8.4
+May-13 18:00:24.049 [main] INFO  com.askimed.nf.test.App - Arguments: [test, --verbose]
+May-13 18:00:24.662 [main] INFO  com.askimed.nf.test.App - Nextflow Version: 23.10.1
+May-13 18:00:24.663 [main] INFO  com.askimed.nf.test.commands.RunTestsCommand - Load config from file /Users/kyle/Projects/demultiplex/nf-test.config...
+May-13 18:00:24.866 [main] INFO  com.askimed.nf.test.commands.RunTestsCommand - Detected 7 test files.
+May-13 18:00:24.993 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/8955932d43553766ca4959c71644b196/meta/bin'
+May-13 18:00:24.995 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/8955932d43553766ca4959c71644b196/meta/lib'
+May-13 18:00:24.996 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/8955932d43553766ca4959c71644b196/meta/assets'
+May-13 18:00:24.999 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.030 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/b6dca944ef4fca5beabf758044b57cb0/meta/bin'
+May-13 18:00:25.031 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/b6dca944ef4fca5beabf758044b57cb0/meta/lib'
+May-13 18:00:25.032 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/b6dca944ef4fca5beabf758044b57cb0/meta/assets'
+May-13 18:00:25.034 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.096 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9aaba3e707a31ee53fe286bd94bebb83/meta/bin'
+May-13 18:00:25.097 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9aaba3e707a31ee53fe286bd94bebb83/meta/lib'
+May-13 18:00:25.098 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9aaba3e707a31ee53fe286bd94bebb83/meta/assets'
+May-13 18:00:25.099 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.100 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/e8f0e5d616687ac41c72b95007dab2c9/meta/bin'
+May-13 18:00:25.100 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/e8f0e5d616687ac41c72b95007dab2c9/meta/lib'
+May-13 18:00:25.101 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/e8f0e5d616687ac41c72b95007dab2c9/meta/assets'
+May-13 18:00:25.102 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.103 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9281e97e9905d38af24fa8452f353202/meta/bin'
+May-13 18:00:25.103 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9281e97e9905d38af24fa8452f353202/meta/lib'
+May-13 18:00:25.104 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/9281e97e9905d38af24fa8452f353202/meta/assets'
+May-13 18:00:25.105 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.106 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/f34b7f13447efc9808fb4d2087b8b345/meta/bin'
+May-13 18:00:25.106 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/f34b7f13447efc9808fb4d2087b8b345/meta/lib'
+May-13 18:00:25.107 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/f34b7f13447efc9808fb4d2087b8b345/meta/assets'
+May-13 18:00:25.108 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.108 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/47a08fc7eaeb077ccb02850ba7a32983/meta/bin'
+May-13 18:00:25.109 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/47a08fc7eaeb077ccb02850ba7a32983/meta/lib'
+May-13 18:00:25.110 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/47a08fc7eaeb077ccb02850ba7a32983/meta/assets'
+May-13 18:00:25.111 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.128 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/3fddc5ae3437852a4d048ba07ad6f407/meta/bin'
+May-13 18:00:25.129 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/3fddc5ae3437852a4d048ba07ad6f407/meta/lib'
+May-13 18:00:25.130 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/3fddc5ae3437852a4d048ba07ad6f407/meta/assets'
+May-13 18:00:25.131 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.183 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/82ad70204042c369460c7651781365b5/meta/bin'
+May-13 18:00:25.184 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/82ad70204042c369460c7651781365b5/meta/lib'
+May-13 18:00:25.184 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/82ad70204042c369460c7651781365b5/meta/assets'
+May-13 18:00:25.186 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.231 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/5a30c2a078a47bb2391c4782e39fe3e7/meta/bin'
+May-13 18:00:25.231 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/5a30c2a078a47bb2391c4782e39fe3e7/meta/lib'
+May-13 18:00:25.232 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/5a30c2a078a47bb2391c4782e39fe3e7/meta/assets'
+May-13 18:00:25.233 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.253 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/bin' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/32793dc9d30a4c7ab48e16ddff889310/meta/bin'
+May-13 18:00:25.254 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/lib' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/32793dc9d30a4c7ab48e16ddff889310/meta/lib'
+May-13 18:00:25.254 [main] INFO  com.askimed.nf.test.config.FileStaging - Copy directory '/Users/kyle/Projects/demultiplex/assets' to '/Users/kyle/Projects/demultiplex/.nf-test/tests/32793dc9d30a4c7ab48e16ddff889310/meta/assets'
+May-13 18:00:25.256 [main] DEBUG com.askimed.nf.test.core.AbstractTest - Stage 0 user provided files...
+May-13 18:00:25.257 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Started test plan
+May-13 18:00:25.257 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bclconvert.nf.test'.
+May-13 18:00:25.257 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '8955932d: BCL-CONVERT'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:00:34.383 [main] DEBUG com.askimed.nf.test.lang.extensions.SnapshotFile - Load snapshots from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bclconvert.nf.test.snap'
+May-13 18:00:34.385 [main] DEBUG com.askimed.nf.test.lang.extensions.Snapshot - Snapshots 'multiqc' do not match.
+May-13 18:00:34.386 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '8955932d: BCL-CONVERT' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at bclconvert_nf$_run_closure1$_closure2$_closure4.doCall(bclconvert.nf.test:19)
+	at bclconvert_nf$_run_closure1$_closure2$_closure4.doCall(bclconvert.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:00:34.389 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: true, skipped tests: false, failed tests: true
+May-13 18:00:34.389 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bases2fastq.nf.test'.
+May-13 18:00:34.389 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test 'b6dca944: Bases2Fastq'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:00:41.799 [main] DEBUG com.askimed.nf.test.lang.extensions.SnapshotFile - Load snapshots from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bases2fastq.nf.test.snap'
+May-13 18:00:41.800 [main] DEBUG com.askimed.nf.test.lang.extensions.Snapshot - Snapshots 'bases2fastq' do not match.
+May-13 18:00:41.802 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test 'b6dca944: Bases2Fastq' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 7 of 7 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at bases2fastq_nf$_run_closure1$_closure2$_closure4.doCall(bases2fastq.nf.test:19)
+	at bases2fastq_nf$_run_closure1$_closure2$_closure4.doCall(bases2fastq.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:00:41.803 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: true, skipped tests: false, failed tests: true
+May-13 18:00:41.803 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/skip_tools.nf.test'.
+May-13 18:00:41.803 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '9aaba3e7: Skip Trimming'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:00:48.658 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '9aaba3e7: Skip Trimming' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at skip_tools_nf$_run_closure1$_closure2$_closure8.doCall(skip_tools.nf.test:21)
+	at skip_tools_nf$_run_closure1$_closure2$_closure8.doCall(skip_tools.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:00:48.658 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test 'e8f0e5d6: Skip Fastp'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:00:55.615 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test 'e8f0e5d6: Skip Fastp' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at skip_tools_nf$_run_closure1$_closure3$_closure16.doCall(skip_tools.nf.test:49)
+	at skip_tools_nf$_run_closure1$_closure3$_closure16.doCall(skip_tools.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:00:55.616 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '9281e97e: Skip Fastqc'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:02.494 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '9281e97e: Skip Fastqc' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at skip_tools_nf$_run_closure1$_closure4$_closure24.doCall(skip_tools.nf.test:77)
+	at skip_tools_nf$_run_closure1$_closure4$_closure24.doCall(skip_tools.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:02.494 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test 'f34b7f13: Skip Fastp & Fastqc'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:09.159 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test 'f34b7f13: Skip Fastp & Fastqc' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at skip_tools_nf$_run_closure1$_closure5$_closure32.doCall(skip_tools.nf.test:105)
+	at skip_tools_nf$_run_closure1$_closure5$_closure32.doCall(skip_tools.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:09.160 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '47a08fc7: Skip MultiQC'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:15.852 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '47a08fc7: Skip MultiQC' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 4 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at skip_tools_nf$_run_closure1$_closure6$_closure40.doCall(skip_tools.nf.test:133)
+	at skip_tools_nf$_run_closure1$_closure6$_closure40.doCall(skip_tools.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:15.853 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: false, skipped tests: false, failed tests: true
+May-13 18:01:15.853 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bcl2fastq.nf.test'.
+May-13 18:01:15.853 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '3fddc5ae: Bcl2Fastq'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:22.657 [main] DEBUG com.askimed.nf.test.lang.extensions.SnapshotFile - Load snapshots from file '/Users/kyle/Projects/demultiplex/tests/pipeline/bcl2fastq.nf.test.snap'
+May-13 18:01:22.658 [main] DEBUG com.askimed.nf.test.lang.extensions.Snapshot - Snapshots 'multiqc' do not match.
+May-13 18:01:22.658 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '3fddc5ae: Bcl2Fastq' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 5 of 5 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at bcl2fastq_nf$_run_closure1$_closure2$_closure4.doCall(bcl2fastq.nf.test:19)
+	at bcl2fastq_nf$_run_closure1$_closure2$_closure4.doCall(bcl2fastq.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:22.659 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: true, skipped tests: false, failed tests: true
+May-13 18:01:22.659 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/fqtk.nf.test'.
+May-13 18:01:22.659 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '82ad7020: FQTK'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:30.033 [main] DEBUG com.askimed.nf.test.lang.extensions.SnapshotFile - Load snapshots from file '/Users/kyle/Projects/demultiplex/tests/pipeline/fqtk.nf.test.snap'
+May-13 18:01:30.033 [main] DEBUG com.askimed.nf.test.lang.extensions.Snapshot - Snapshots 'fqtk' do not match.
+May-13 18:01:30.039 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '82ad7020: FQTK' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 54 of 54 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at fqtk_nf$_run_closure1$_closure2$_closure4.doCall(fqtk.nf.test:19)
+	at fqtk_nf$_run_closure1$_closure2$_closure4.doCall(fqtk.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:30.040 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: true, skipped tests: false, failed tests: true
+May-13 18:01:30.040 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Workflow main.nf' from file '/Users/kyle/Projects/demultiplex/tests/pipeline/sgdemux.nf.test'.
+May-13 18:01:30.040 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '5a30c2a0: SGDEMUX'. type: com.askimed.nf.test.lang.pipeline.PipelineTest
+May-13 18:01:36.511 [main] DEBUG com.askimed.nf.test.lang.extensions.SnapshotFile - Load snapshots from file '/Users/kyle/Projects/demultiplex/tests/pipeline/sgdemux.nf.test.snap'
+May-13 18:01:36.511 [main] DEBUG com.askimed.nf.test.lang.extensions.Snapshot - Snapshots 'sgdemux' do not match.
+May-13 18:01:36.518 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Test '5a30c2a0: SGDEMUX' finished. status: FAILED
+org.codehaus.groovy.runtime.powerassert.PowerAssertionError: 54 of 54 assertions failed
+	at com.askimed.nf.test.lang.extensions.GlobalMethods.assertAll(GlobalMethods.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.invoke(StaticMetaMethodSite.java:44)
+	at org.codehaus.groovy.runtime.callsite.StaticMetaMethodSite.callStatic(StaticMetaMethodSite.java:100)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCallStatic(CallSiteArray.java:55)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.callStatic(AbstractCallSite.java:217)
+	at sgdemux_nf$_run_closure1$_closure2$_closure4.doCall(sgdemux.nf.test:19)
+	at sgdemux_nf$_run_closure1$_closure2$_closure4.doCall(sgdemux.nf.test)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:107)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:323)
+	at org.codehaus.groovy.runtime.metaclass.ClosureMetaClass.invokeMethod(ClosureMetaClass.java:274)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1030)
+	at groovy.lang.Closure.call(Closure.java:427)
+	at groovy.lang.Closure.call(Closure.java:406)
+	at com.askimed.nf.test.lang.TestCode.execute(TestCode.java:16)
+	at com.askimed.nf.test.lang.pipeline.PipelineTest.execute(PipelineTest.java:135)
+	at com.askimed.nf.test.core.TestExecutionEngine.execute(TestExecutionEngine.java:214)
+	at com.askimed.nf.test.commands.RunTestsCommand.execute(RunTestsCommand.java:184)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:43)
+	at com.askimed.nf.test.commands.AbstractCommand.call(AbstractCommand.java:18)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at com.askimed.nf.test.App.run(App.java:44)
+	at com.askimed.nf.test.App.main(App.java:51)
+May-13 18:01:36.518 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Testsuite 'Test Workflow main.nf' finished. snapshot file: true, skipped tests: false, failed tests: true
+May-13 18:01:36.518 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Running testsuite 'Test Functions' from file '/Users/kyle/Projects/demultiplex/tests/functions/demultiplex.nf.test'.
+May-13 18:01:36.518 [main] INFO  com.askimed.nf.test.core.TestExecutionEngine - Run test '32793dc9: Test Function extract_csv'. type: com.askimed.nf.test.lang.function.FunctionTest
