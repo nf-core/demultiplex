@@ -19,7 +19,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 6 },
+                { assert workflow.trace.succeeded().size() == 5 },
                 { assert snapshot(
                         path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt"),
                         path("$outputDir/multiqc/multiqc_data/multiqc_fastp.txt"),
