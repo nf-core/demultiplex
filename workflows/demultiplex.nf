@@ -49,6 +49,7 @@ workflow DEMULTIPLEX {
     // Channel inputs
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    ch_multiqc_reports = Channel.empty()
 
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
@@ -232,11 +233,12 @@ workflow DEMULTIPLEX {
             ch_multiqc_custom_config.toList(),
             ch_multiqc_logo.toList()
         )
+        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
     }
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
+    versions       = ch_versions        // channel: [ path(versions.yml) ]
 
 }
 
