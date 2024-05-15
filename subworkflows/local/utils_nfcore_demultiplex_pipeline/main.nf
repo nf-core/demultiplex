@@ -150,7 +150,7 @@ def validateInputParameters() {
 //
 def validateInputSamplesheet(input) {
     // destructure the input array
-    def meta, samplesheet, lane, flowcell, per_flowcell_manifest = input
+    def meta, samplesheet, flowcell, per_flowcell_manifest = input
     
     // When using the demultiplexer fqtk, the samplesheet must contain an additional 
     // column per_flowcell_manifest. The column per_flowcell_manifest must contain 

@@ -58,24 +58,24 @@ workflow DEMULTIPLEX {
     if (demultiplexer == 'fqtk'){
   
         ch_flowcells = ch_samplesheet
-            .branch { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+            .branch { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 tar: flowcell.toString().endsWith('.tar.gz')
                 dir: true
             }
         ch_flowcells_tar = ch_flowcells.tar
-            .multiMap { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+            .multiMap { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 samplesheets: [ meta, samplesheet, per_flowcell_manifest ]
                 run_dirs: [ meta, flowcell ]
             }
     } else {
 
         ch_flowcells = ch_samplesheet
-            .branch { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+            .branch { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 tar: flowcell.toString().endsWith('.tar.gz')
                 dir: true
             }
         ch_flowcells_tar = ch_flowcells.tar
-            .multiMap { meta, samplesheet, lane, flowcell, per_flowcell_manifest ->
+            .multiMap { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 samplesheets: [ meta, samplesheet ]
                 run_dirs: [ meta, flowcell ]
             }

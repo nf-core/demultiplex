@@ -25,7 +25,8 @@
                 "type": "integer",
                 "description": "Lane number",
                 "minimum": 1,
-                "maximum": 8
+                "maximum": 8,
+                "meta": ["lane"]
             },
             "flowcell": {
                 "type": "string",
