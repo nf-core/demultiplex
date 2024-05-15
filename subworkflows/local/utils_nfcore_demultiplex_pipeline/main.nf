@@ -77,15 +77,40 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
+
     //
     // Create channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_samplesheet }
+    // When using the demultiplexer fqtk, the samplesheet must contain an additional 
+    // column per_flowcell_manifest. The column per_flowcell_manifest must contain 
+    // two headers fastq and read_structure
+    // For reference:
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
+    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
+    if( params.demultiplexer == 'fqtk' ) {
+
+        ch_samplesheet = Channel.fromSamplesheet("input")
+            .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+                if ( !file(per_flowcell_manifest).exists() ){ 
+                    error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}" 
+                } 
+                [meta, samplesheet, flowcell, per_flowcell_manifest]
+            }
+        
+        ch_flowcell_manifest = ch_samplesheet.map{ meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
+            .splitCsv(header:true, strip:true)
+            .map{ row ->
+                if( !row.containsKey("fastq") || !row.containsKey("read_structure") ) {
+                    error "[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'"
+                }
+            }
+
+    } else {
+        ch_samplesheet = Channel.fromSamplesheet("input")
+            .map { 
+                validateInputSamplesheet(it)
+            }
+    }
 
     emit:
     samplesheet = ch_samplesheet
@@ -149,27 +174,6 @@ def validateInputParameters() {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    // destructure the input array
-    def (meta, samplesheet, flowcell, per_flowcell_manifest) = input
-    
-    // When using the demultiplexer fqtk, the samplesheet must contain an additional 
-    // column per_flowcell_manifest. The column per_flowcell_manifest must contain 
-    // two headers fastq and read_structure
-    // For reference:
-    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
-    //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
-    if( params.demultiplexer == 'fqtk' ) {
-        if ( !file(per_flowcell_manifest).exists() ){ error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}" }
-        // Check the header of the per flowcell manifest
-        tmp = Channel.fromPath(per_flowcell_manifest)
-            .splitCsv(header:true, strip:true)
-            .map{ row ->
-                if( !row.containsKey("fastq") || !row.containsKey("read_structure") ) {
-                    error "[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'"
-                }
-            }
-        tmp.collect()
-    }
     return input
 }
 
