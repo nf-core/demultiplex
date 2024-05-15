@@ -81,8 +81,8 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    // When using the demultiplexer fqtk, the samplesheet must contain an additional 
-    // column per_flowcell_manifest. The column per_flowcell_manifest must contain 
+    // When using the demultiplexer fqtk, the samplesheet must contain an additional
+    // column per_flowcell_manifest. The column per_flowcell_manifest must contain
     // two headers fastq and read_structure
     // For reference:
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
@@ -91,12 +91,12 @@ workflow PIPELINE_INITIALISATION {
 
         ch_samplesheet = Channel.fromSamplesheet("input")
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
-                if ( !file(per_flowcell_manifest).exists() ){ 
-                    error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}" 
-                } 
+                if ( !file(per_flowcell_manifest).exists() ){
+                    error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}"
+                }
                 [meta, samplesheet, flowcell, per_flowcell_manifest]
             }
-        
+
         ch_flowcell_manifest = ch_samplesheet.map{ meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
             .splitCsv(header:true, strip:true)
             .map{ row ->
@@ -107,7 +107,7 @@ workflow PIPELINE_INITIALISATION {
 
     } else {
         ch_samplesheet = Channel.fromSamplesheet("input")
-            .map { 
+            .map {
                 validateInputSamplesheet(it)
             }
     }
