@@ -161,13 +161,14 @@ def validateInputSamplesheet(input) {
     if( params.demultiplexer == 'fqtk' ) {
         if ( !file(per_flowcell_manifest).exists() ){ error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}" }
         // Check the header of the per flowcell manifest
-        Channel.fromPath(per_flowcell_manifest)
+        tmp = Channel.fromPath(per_flowcell_manifest)
             .splitCsv(header:true, strip:true)
             .map{ row ->
                 if( !row.containsKey("fastq") || !row.containsKey("read_structure") ) {
                     error "[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'"
                 }
             }
+        tmp.collect()
     }
     return input
 }
