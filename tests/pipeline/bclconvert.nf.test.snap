@@ -20,20 +20,32 @@
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2023-12-11T16:38:54.135338"
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.4.1}}"
         ],
-        "timestamp": "2024-02-02T13:34:45.479857"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-15T01:34:10.930524"
     },
     "multiqc": {
         "content": [
-            "multiqc_bclconvert_bylane.txt:md5,9d7173439fd77fdec5936bddd686749f",
+            "multiqc_bclconvert_bylane.txt:md5,c796947c68cf713a8b7ef8066a7b4ec7",
             "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
-            "multiqc_bclconvert_bysample.txt:md5,61b139b34fbf503e5ec6056e0e236918"
+            "multiqc_bclconvert_bysample.txt:md5,07048c9b73ed85bdac03c476b192c4e3"
         ],
-        "timestamp": "2024-02-02T13:34:45.488139"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-15T01:34:10.988849"
     }
 }

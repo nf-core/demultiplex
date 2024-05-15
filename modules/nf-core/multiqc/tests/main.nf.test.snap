@@ -2,7 +2,7 @@
     "multiqc_versions_single": {
         "content": [
             [
-                "versions.yml:md5,14e9a2661241abd828f4f06a7b5c222d"
+                "versions.yml:md5,21f35ee29416b9b3073c28733efe4b7d"
             ]
         ],
         "meta": {
@@ -17,7 +17,7 @@
                 "multiqc_report.html",
                 "multiqc_data",
                 "multiqc_plots",
-                "versions.yml:md5,14e9a2661241abd828f4f06a7b5c222d"
+                "versions.yml:md5,21f35ee29416b9b3073c28733efe4b7d"
             ]
         ],
         "meta": {

@@ -1,9 +1,13 @@
 {
     "software_versions": {
         "content": [
-            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.4.1}}"
         ],
-        "timestamp": "2024-02-02T13:33:22.381185"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-15T01:14:30.793241"
     },
     "bcl2fastq": {
         "content": [
@@ -60,6 +64,10 @@
                 "Stats.json:md5,8e5f038b8aa9e465599d3575f930e604"
             ]
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2023-12-11T16:37:27.684322"
     },
     "multiqc": {
@@ -68,6 +76,10 @@
             "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
             "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe"
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
         "timestamp": "2023-12-11T16:55:21.680453"
     }
 }
