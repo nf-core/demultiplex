@@ -1,9 +1,9 @@
 {
     "software_versions": {
         "content": [
-            "{BASES2FASTQ={bases2fastq=1.1.0.593880262, use subject to license available at elementbiosciences.com}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, UNTAR={untar=1.3}, Workflow={nf-core/demultiplex=v1.4.1}}"
+            "{BASES2FASTQ={bases2fastq=1.1.0.593880262, use subject to license available at elementbiosciences.com}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, UNTAR={untar=1.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2024-05-15T01:16:56.776953"
+        "timestamp": "2024-05-16T08:36:50.320731"
     },
     "bases2fastq": {
         "content": [
@@ -13,6 +13,6 @@
             "DefaultSample_R1.fastq.gz:md5,0cc292ca98e126f915a6c0ea9588b752",
             "DefaultSample_R2.fastq.gz:md5,069b0ccb3069a47abd97c39377b10c34"
         ],
-        "timestamp": "2024-05-16T09:51:05.902065"
+        "timestamp": "2024-05-16T08:36:51.617503"
     }
 }
