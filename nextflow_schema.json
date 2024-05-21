@@ -20,6 +20,11 @@
                     "type": "string",
                     "default": null,
                     "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
+                },
+                "log_skipped_fastqs": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Skip and Log into a file (invalid_fastqs.log) empty or invalid fastq files"
                 }
             }
         },

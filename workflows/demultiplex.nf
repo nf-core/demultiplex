@@ -54,7 +54,7 @@ workflow DEMULTIPLEX {
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
-    // Split flowcells into separate channels containg run as tar and run as path
+    // Split flowcells into separate channels containing run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
     if (demultiplexer == 'fqtk'){
 
@@ -84,7 +84,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: untar
     // Runs when run_dir is a tar archive
-    // Except for bclconvert and bcl2fastq for wich we untar in the process
+    // Except for bclconvert and bcl2fastq for which we untar in the process
     // Re-join the metadata and the untarred run directory with the samplesheet
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
@@ -113,7 +113,7 @@ workflow DEMULTIPLEX {
         case ['bcl2fastq', 'bclconvert']:
             // SUBWORKFLOW: illumina
             // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer )
+            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer, params.log_skipped_fastqs )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
@@ -241,7 +241,6 @@ workflow DEMULTIPLEX {
     versions       = ch_versions        // channel: [ path(versions.yml) ]
 
 }
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
