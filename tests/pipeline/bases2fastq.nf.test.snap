@@ -8,11 +8,10 @@
     "bases2fastq": {
         "content": [
             "Metrics.csv:md5,87702e562aa1091e70e5d6e2e19f10b0",
-            "RunManifest.json:md5,d4ecdb19e5fbcffab3e6e770c34023fb",
             "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097",
             "DefaultSample_R1.fastq.gz:md5,0cc292ca98e126f915a6c0ea9588b752",
             "DefaultSample_R2.fastq.gz:md5,069b0ccb3069a47abd97c39377b10c34"
         ],
-        "timestamp": "2024-05-16T08:36:51.617503"
+        "timestamp": "2024-05-16T12:32:47.641095"
     }
 }
