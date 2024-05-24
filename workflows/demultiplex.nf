@@ -113,7 +113,7 @@ workflow DEMULTIPLEX {
         case ['bcl2fastq', 'bclconvert']:
             // SUBWORKFLOW: illumina
             // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
-            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer, params.log_skipped_fastqs )
+            BCL_DEMULTIPLEX( ch_flowcells, demultiplexer, params.log_empty_fastqs )
             ch_raw_fastq = ch_raw_fastq.mix( BCL_DEMULTIPLEX.out.fastq )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
