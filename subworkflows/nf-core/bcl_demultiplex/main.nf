@@ -86,7 +86,7 @@ workflow BCL_DEMULTIPLEX {
 
 // This function appends a given text to a specified log file.
 // If the log file does not exist, it creates a new one.
-def appendToLogFile(String text, File logFile) {
+def appendToLogFile(String text, Path logFile) {
     if (!logFile.exists()) {
         logFile.createNewFile()
     }
