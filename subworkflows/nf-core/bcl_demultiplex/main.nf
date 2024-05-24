@@ -87,12 +87,12 @@ workflow BCL_DEMULTIPLEX {
 // This function appends a given text to a specified log file.
 // If the log file does not exist, it creates a new one.
 def appendToLogFile(String text, Path logFile) {
-    if (!logFile.exists()) {
-        logFile.createNewFile()
-    }
     // Convert the text to String if it's a GString
     String textToWrite = text.toString()
-    logFile << textToWrite + "\n" // Appends the text to the file with a new line
+    // Append text to the log file
+    logFile.withWriterAppend { writer ->
+        writer.println(textToWrite) // Appends the text to the file with a new line
+    }
 }
 
 // Add meta values to fastq channel and skip invalid FASTQ files
