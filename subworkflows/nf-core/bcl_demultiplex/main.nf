@@ -8,7 +8,7 @@ include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
 
 // Define the log file path before the workflow starts
-def logFile = new File("${params.outdir}/skipped_fastqs.log")
+def logFile = file("${params.outdir}/skipped_fastqs.log")
 
 workflow BCL_DEMULTIPLEX {
     take:
