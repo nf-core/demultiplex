@@ -163,8 +163,8 @@ workflow DEMULTIPLEX {
 
     ch_fastq_to_qc = ch_raw_fastq
 
-    // Filter valid FASTQ files for FALCO
-    ch_valid_fastq = ch_raw_fastq.flatten().filter { meta, fastq ->
+    // Filter invalid FASTQ files (not empty, gzipped, and starts with @) for FALCO
+    ch_valid_fastq = ch_fastq_to_qc.filter { meta, fastq ->
         def isValid = fastq.withInputStream { is ->
             new java.util.zip.GZIPInputStream(is).withReader('ASCII') { reader ->
                 def line = reader.readLine()
@@ -172,7 +172,8 @@ workflow DEMULTIPLEX {
             }
         }
         isValid
-}
+    }
+
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
             FASTP(ch_raw_fastq, [], [], [])
@@ -183,18 +184,23 @@ workflow DEMULTIPLEX {
             }
     }
 
+   // Filter out empty FASTQ files before passing to FALCO
+    ch_filtered_fastq = ch_fastq_to_qc.filter { file ->
+        file_size = file.size()
+        return file_size > 0
+    }
+
     // MODULE: falco, drop in replacement for fastqc
-    // Run falco on valid FASTQ files only
-    if (!("falco" in skip_tools)) {
-        FALCO(ch_valid_fastq)
-        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt.map { meta, txt -> txt })
+    if (!("falco" in skip_tools)){
+        FALCO(ch_filtered_fastq)
+        ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
         ch_versions = ch_versions.mix(FALCO.out.versions)
-}
+    }
+
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
-    // Run MD5SUM on all FASTQ files (including potentially empty ones)
-    if (!("md5sum" in skip_tools)) {
-        MD5SUM(ch_raw_fastq.flatten().map { it -> it[1] })
+    if (!("md5sum" in skip_tools)){
+        MD5SUM(ch_fastq_to_qc.transpose())
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
