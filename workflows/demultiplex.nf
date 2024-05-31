@@ -157,27 +157,28 @@ workflow DEMULTIPLEX {
     }
     ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
-    //
+        //
     // RUN QC and TRIMMING
     //
 
-    ch_fastq_to_qc = ch_raw_fastq
-
-    // Filter tar.gz files that are not empty and log the filtered files
-    ch_fastq_to_qc = ch_fastq_to_qc.filter { file ->
-        def size = file.size()
-        println "Checking file: ${file}, size: ${size} bytes"
-        if (size > 200) {
-            println "File passed size check: ${file}"
-            return true
-        } else {
-            println "File failed size check: ${file}"
-            return false
+    // Flatten nested lists and check file sizes
+    ch_fastq_to_qc = ch_raw_fastq.flatten()
+        .map { file ->
+            def size = file.size()
+            println "File path: ${file}, File size: ${size} bytes"
+            return [file, size]
         }
-    }
-
-    // Check the content of ch_fastq_to_qc before passing to FALCO
-    ch_fastq_to_qc.view { "Files to be processed by FALCO: ${it}" }
+        .filter { item ->
+            def (file, size) = item
+            if (size > 200) {
+                println "File passed size check: ${file}"
+                return true
+            } else {
+                println "File failed size check: ${file}"
+                return false
+            }
+        }
+        .map { item -> item[0] }  // Extract file path only after filtering
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
