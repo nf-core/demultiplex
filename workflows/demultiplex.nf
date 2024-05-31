@@ -71,12 +71,15 @@ workflow DEMULTIPLEX {
     } else {
 
         ch_flowcells = ch_samplesheet
-            .branch { meta, samplesheet, flowcell, per_flowcell_manifest ->
+            .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+                [ meta, samplesheet, flowcell ]
+            }
+            .branch { meta, samplesheet, flowcell ->
                 tar: flowcell.toString().endsWith('.tar.gz')
                 dir: true
             }
         ch_flowcells_tar = ch_flowcells.tar
-            .multiMap { meta, samplesheet, flowcell, per_flowcell_manifest ->
+            .multiMap { meta, samplesheet, flowcell ->
                 samplesheets: [ meta, samplesheet ]
                 run_dirs: [ meta, flowcell ]
             }
