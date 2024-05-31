@@ -17,15 +17,13 @@ process FALCO {
     path  "versions.yml"           , emit: versions
 
     when:
-    task.ext.when == null || task.ext.when
+    (task.ext.when == null || task.ext.when) && reads.every { it.size() > 20 }
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     if ( reads.toList().size() == 1 ) {
         """
-        echo "Running falco on the following reads: ${reads}"
-
         falco $args --threads $task.cpus ${reads} -D ${prefix}_fastqc_data.txt -S ${prefix}_summary.txt -R ${prefix}_report.html
 
         cat <<-END_VERSIONS > versions.yml
