@@ -161,7 +161,16 @@ workflow DEMULTIPLEX {
     // RUN QC and TRIMMING
     //
 
-    ch_fastq_to_qc = ch_raw_fastq
+    // Check if the fastq files are valid (not empty, gzipped, and starts with @)
+    ch_fastq_to_qc = ch_raw_fastq.filter { meta, fastq ->
+        def isValid = fastq.withInputStream { is ->
+            new java.util.zip.GZIPInputStream(is).withReader('ASCII') { reader ->
+                def line = reader.readLine()
+                line != null && line.startsWith('@')
+            }
+        }
+        isValid
+    }
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
