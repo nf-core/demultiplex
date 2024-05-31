@@ -163,9 +163,11 @@ workflow DEMULTIPLEX {
 
     ch_fastq_to_qc = ch_raw_fastq
 
-   // Filter tar.gz files that are not empty and log the filtered files
+    // Filter tar.gz files that are not empty and log the filtered files
     ch_fastq_to_qc = ch_fastq_to_qc.filter { file ->
-        if (file.size() > 200) {
+        def size = file.size()
+        println "Checking file: ${file}, size: ${size} bytes"
+        if (size > 200) {
             println "File passed size check: ${file}"
             return true
         } else {
@@ -173,6 +175,9 @@ workflow DEMULTIPLEX {
             return false
         }
     }
+
+    // Check the content of ch_fastq_to_qc before passing to FALCO
+    ch_fastq_to_qc.view { "Files to be processed by FALCO: ${it}" }
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
