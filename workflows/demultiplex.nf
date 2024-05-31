@@ -163,15 +163,9 @@ workflow DEMULTIPLEX {
 
     ch_fastq_to_qc = ch_raw_fastq
 
-    // Filter invalid FASTQ files (not empty, gzipped, and starts with @) for FALCO
-    ch_valid_fastq = ch_fastq_to_qc.filter { meta, fastq ->
-        def isValid = fastq.withInputStream { is ->
-            new java.util.zip.GZIPInputStream(is).withReader('ASCII') { reader ->
-                def line = reader.readLine()
-                line != null && line.startsWith('@')
-            }
-        }
-        isValid
+    // Filter tar.gz files that are not empty
+    ch_fastq_to_qc = ch_fastq_to_qc.filter { file ->
+        file.size() > 200
     }
 
     // MODULE: fastp
@@ -184,15 +178,9 @@ workflow DEMULTIPLEX {
             }
     }
 
-   // Filter out empty FASTQ files before passing to FALCO
-    ch_filtered_fastq = ch_fastq_to_qc.filter { file ->
-        file_size = file.size()
-        return file_size > 0
-    }
-
     // MODULE: falco, drop in replacement for fastqc
     if (!("falco" in skip_tools)){
-        FALCO(ch_filtered_fastq)
+        FALCO(ch_fastq_to_qc)
         ch_multiqc_files = ch_multiqc_files.mix( FALCO.out.txt.map { meta, txt -> return txt} )
         ch_versions = ch_versions.mix(FALCO.out.versions)
     }
