@@ -157,28 +157,11 @@ workflow DEMULTIPLEX {
     }
     ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
-        //
+    //
     // RUN QC and TRIMMING
     //
 
-    // Flatten nested lists and check file sizes
-    ch_fastq_to_qc = ch_raw_fastq.flatten()
-        .map { file ->
-            def size = file.size()
-            println "File path: ${file}, File size: ${size} bytes"
-            return [file, size]
-        }
-        .filter { item ->
-            def (file, size) = item
-            if (size > 200) {
-                println "File passed size check: ${file}"
-                return true
-            } else {
-                println "File failed size check: ${file}"
-                return false
-            }
-        }
-        .map { item -> item[0] }  // Extract file path only after filtering
+    ch_fastq_to_qc = ch_raw_fastq
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
