@@ -194,7 +194,7 @@ workflow DEMULTIPLEX {
     // Split file list into separate channels entries and generate a checksum for each
     // Run MD5SUM on all FASTQ files (including potentially empty ones)
     if (!("md5sum" in skip_tools)) {
-        MD5SUM(ch_raw_fastq.map { meta, fastq -> fastq })
+        MD5SUM(ch_raw_fastq.flatten().map { it -> it[1] })
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
