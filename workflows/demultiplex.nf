@@ -163,9 +163,15 @@ workflow DEMULTIPLEX {
 
     ch_fastq_to_qc = ch_raw_fastq
 
-    // Filter tar.gz files that are not empty
+   // Filter tar.gz files that are not empty and log the filtered files
     ch_fastq_to_qc = ch_fastq_to_qc.filter { file ->
-        file.size() > 200
+        if (file.size() > 200) {
+            println "File passed size check: ${file}"
+            return true
+        } else {
+            println "File failed size check: ${file}"
+            return false
+        }
     }
 
     // MODULE: fastp
