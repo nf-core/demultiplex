@@ -22,7 +22,7 @@ process FALCO {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    if ( reads.toList().size() == 1 ) {
+    if ( reads.toList().findAll { it.size() > 200 }.size() == 1 ) {
         """
         falco $args --threads $task.cpus ${reads} -D ${prefix}_fastqc_data.txt -S ${prefix}_summary.txt -R ${prefix}_report.html
 
