@@ -162,7 +162,7 @@ workflow DEMULTIPLEX {
     //
 
     // Check if the fastq files are valid (not empty, gzipped, and starts with @)
-    ch_fastq_to_qc = ch_raw_fastq.filter { meta, fastq ->
+    ch_fastq_to_qc = ch_raw_fastq.flatten().filter { meta, fastq ->
         def isValid = fastq.withInputStream { is ->
             new java.util.zip.GZIPInputStream(is).withReader('ASCII') { reader ->
                 def line = reader.readLine()
