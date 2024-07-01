@@ -19,7 +19,7 @@ When using the demultiplexer fqtk, the samplesheet must contain an additional co
 ### Full samplesheet
 
 ```csv title="samplesheet.csv"
-id,samplesheet,lane,flowcell
+flowcell,samplesheet,lane,run_dir
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
 DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
@@ -42,7 +42,7 @@ Please see the following examples to format `SampleSheet.csv` for [sgdemux](http
 ### Samplesheet for fqtk
 
 ```csv title="samplesheet.csv"
-id,samplesheet,lane,flowcell,per_flowcell_manifest
+flowcell,samplesheet,lane,run_dir,per_flowcell_manifest
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
 DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2,/path/to/flowcell/manifest2.csv
@@ -51,7 +51,7 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,
 
 | Column                  | Description                                                                                                       |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `id`                    | flowcell id                                                                                                       |
+| `flowcell`              | flowcell id                                                                                                       |
 | `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
 | `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
 | `run_dir`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
