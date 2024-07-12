@@ -1,16 +1,16 @@
 process CELLRANGER_MKFASTQ {
-    tag "mkfastq"
+    tag "$meta.id"
     label 'process_medium'
 
     container "nf-core/cellrangermkfastq:8.0.0"
 
     input:
-    path bcl
-    path csv
+    tuple val(meta), path(bcl)
+    tuple val(meta), path(csv)
 
     output:
-    path "**/outs/fastq_path/*.fastq.gz", emit: fastq
-    path "versions.yml"                 , emit: versions
+    tuple val(meta), path("**/outs/fastq_path/*.fastq.gz"), emit: fastq
+    path "versions.yml"                                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,7 +21,7 @@ process CELLRANGER_MKFASTQ {
         error "CELLRANGER_MKFASTQ module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${bcl.getSimpleName()}"
+    def prefix = task.ext.prefix ?: "${meta.id}_id" //run_dir (bcl) and id must be different because a folder is created with the id value
     """
     cellranger \\
         mkfastq \\

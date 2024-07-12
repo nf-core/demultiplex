@@ -43,7 +43,7 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -158,7 +158,6 @@ workflow DEMULTIPLEX {
             // Runs when "demultiplexer" is set to "mkfastq"
             MKFASTQ_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
-            ch_multiqc_files = ch_multiqc_files.mix(MKFASTQ_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
             break
         default:

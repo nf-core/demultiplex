@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+### `Added`
+
+- [#167](https://github.com/nf-core/demultiplex/pull/167) Added cellranger mkfastq subworkflow for demultiplexing 10x samples. //TODO add right PR number
+
+
 ## 1.4.1 - 2024-02-27
 
 ### `Changed`

@@ -4,22 +4,29 @@
 // Demultiplex Singular Genomics bases data using mkfastq
 //
 
-include { CELLRANGER_MKFASTQ } from '../modules/nf-core/cellranger/mkfastq/main' 
+include { CELLRANGER_MKFASTQ } from '../../../modules/nf-core/cellranger/mkfastq/main' 
 
 workflow MKFASTQ_DEMULTIPLEX {
     take:
         // Input fastq's must be bgzipped for compatibility with sgdemux
         // samplesheet.csv must be a two column csv = Sample_Barcode,Sample_ID)
-        ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/fastq/files] //TODO use the right input
+        ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/fastq/files]
 
     main:
 
-        // MODULE: sgdemux
-        // Demultiplex the bases files
-        CELLRANGER_MKFASTQ( ch_flowcell ) //TODO use the right input, takes a bcl and a path to a csv
+        //Format input channel for module
+        ch_mkfastq_input = ch_flowcell
+            .multiMap { meta, samplesheet, flowcell ->
+                    csv: [ meta, samplesheet ]
+                    bcl: [ meta, flowcell ]
+            }
+
+        // MODULE: mkfastq
+        CELLRANGER_MKFASTQ( ch_mkfastq_input.bcl, ch_mkfastq_input.csv )
 
         // Generate meta for each fastq
-        ch_fastq_with_meta = generate_fastq_meta(CELLRANGER_MKFASTQ.out.sample_fastq)
+        ch_fastq_with_meta = generate_fastq_meta(CELLRANGER_MKFASTQ.out.fastq)
+
 
     emit:
         fastq                   = ch_fastq_with_meta
