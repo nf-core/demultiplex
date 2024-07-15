@@ -8,7 +8,7 @@
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`.
 
 When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
@@ -35,9 +35,9 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 
 An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
-Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk
+Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv) and [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+Each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets. Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv), [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv), and [bcl2fastq and bclconvert](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv)
 
 ### Samplesheet for fqtk
 
