@@ -44,17 +44,27 @@ process CELLRANGER_MKFASTQ {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "CELLRANGER_MKFASTQ module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    def prefix = task.ext.prefix ?: "${bcl.getSimpleName()}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir -p "${prefix}/outs/fastq_path/"
+    mkdir -p "${prefix}_outs/outs/fastq_path/"
     # data with something to avoid breaking nf-test java I/O stream
-    cat <<-FAKE_FQ > ${prefix}/outs/fastq_path/fake_file.fastq
+    cat <<-FAKE_FQ > ${prefix}_outs/outs/fastq_path/fake_file.fastq
     @SEQ_ID
     GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTCAACTCACAGTTT
     +
     !''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF>>>>>>CCCCCCC65
     FAKE_FQ
-    gzip -n ${prefix}/outs/fastq_path/fake_file.fastq
+    gzip -n ${prefix}_outs/outs/fastq_path/fake_file.fastq
+
+    # data for reports output channel
+    mkdir -p "${prefix}_outs/outs/fastq_path/Reports"
+
+    # data for stats output channel
+    mkdir -p "${prefix}_outs/outs/fastq_path/Stats"
+
+    # data for interops output channel
+    mkdir -p "${prefix}_outs/outs/interop_path/"
+    touch "${prefix}_outs/outs/interop_path/IndexMetricsOut.bin"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
