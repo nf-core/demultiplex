@@ -1,5 +1,5 @@
 process CELLRANGER_MKFASTQ {
-    tag "$meta.id"
+    tag {"$meta.lane" ? "$meta.id"+"."+"$meta.lane" : "$meta.id" }
     label 'process_medium'
 
     container "nf-core/cellrangermkfastq:8.0.0"
@@ -9,11 +9,11 @@ process CELLRANGER_MKFASTQ {
     tuple val(meta), path(csv)
 
     output:
-    tuple val(meta), path("**/outs/fastq_path/*.fastq.gz"), emit: fastq
-    // tuple val(meta), path("**/outs/fastq_path/Reports")   , emit: reports //TODO fix, nextflow not finding this files as output
-    // tuple val(meta), path("**/outs/fastq_path/Stats")     , emit: stats
-    tuple val(meta), path("**/outs/interop_path/*.bin")   , emit: interop
-    path "versions.yml"                                   , emit: versions
+    tuple val(meta), path("*_outs/outs/fastq_path/*.fastq.gz"), emit: fastq
+    tuple val(meta), path("*_outs/outs/fastq_path/Reports")   , emit: reports
+    tuple val(meta), path("*_outs/outs/fastq_path/Stats")     , emit: stats
+    tuple val(meta), path("*_outs/outs/interop_path/*.bin")   , emit: interop
+    path "versions.yml"                                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
