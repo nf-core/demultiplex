@@ -10,6 +10,9 @@ process CELLRANGER_MKFASTQ {
 
     output:
     tuple val(meta), path("**/outs/fastq_path/*.fastq.gz"), emit: fastq
+    // tuple val(meta), path("**/outs/fastq_path/Reports")   , emit: reports //TODO fix, nextflow not finding this files as output
+    // tuple val(meta), path("**/outs/fastq_path/Stats")     , emit: stats
+    tuple val(meta), path("**/outs/interop_path/*.bin")   , emit: interop
     path "versions.yml"                                   , emit: versions
 
     when:
@@ -21,11 +24,11 @@ process CELLRANGER_MKFASTQ {
         error "CELLRANGER_MKFASTQ module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}_id" //run_dir (bcl) and id must be different because a folder is created with the id value
+    def prefix = task.ext.prefix ?: "${meta.id}" //run_dir (bcl) and id must be different because a folder is created with the id value
     """
     cellranger \\
         mkfastq \\
-        --id=${prefix} \\
+        --id=${prefix}_outs \\
         --run=$bcl \\
         --csv=$csv \\
         $args

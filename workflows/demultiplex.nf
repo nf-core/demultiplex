@@ -238,7 +238,7 @@ workflow DEMULTIPLEX {
             )
         )
 
-        MULTIQC (
+        MULTIQC ( //TODO fix multiqc not resuming
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
