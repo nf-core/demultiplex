@@ -109,19 +109,17 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-| File                     | Directory                          | Description                                                  |
-| :----------------------- | :--------------------------------- | :----------------------------------------------------------- |
-| FASTQ                    | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                 |
-| `*.fastp.html`           | <OUTDIR>/<id>                      | HTML report for fastp                                        |
-| `*.fastp.json`           | <OUTDIR>/<id>                      | JSON report for fastp                                        |
-| `*_summary.txt`          | <OUTDIR>/<id>                      | Summary statistics for the sequencing run                    |
-| Fastqc summary stats     | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed FASTQ file  |
-| Fastqc summary html      | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats               |
-| Md5Sum                   | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed FASTQ file                    |
-
+| File                 | Directory                          | Description                                                 |
+| :------------------- | :--------------------------------- | :---------------------------------------------------------- |
+| FASTQ                | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                |
+| `*.fastp.html`       | <OUTDIR>/<id>                      | HTML report for fastp                                       |
+| `*.fastp.json`       | <OUTDIR>/<id>                      | JSON report for fastp                                       |
+| `*_summary.txt`      | <OUTDIR>/<id>                      | Summary statistics for the sequencing run                   |
+| Fastqc summary stats | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed FASTQ file |
+| Fastqc summary html  | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
+| Md5Sum               | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed FASTQ file                   |
 
 </details>
-
 
 ### fastp
 
