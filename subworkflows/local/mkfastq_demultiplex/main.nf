@@ -8,23 +8,14 @@ include { CELLRANGER_MKFASTQ } from '../../../modules/nf-core/cellranger/mkfastq
 
 workflow MKFASTQ_DEMULTIPLEX {
     take:
-        // Input fastq's must be bgzipped for compatibility with sgdemux
-        // samplesheet.csv must be a two column csv = Sample_Barcode,Sample_ID)
         ch_flowcell     // [[id:"", lane:""],samplesheet.csv, path/to/fastq/files]
 
     main:
 
-        //Format input channel for module
-        ch_mkfastq_input = ch_flowcell
-            .multiMap { meta, samplesheet, flowcell ->
-                    csv: [ meta, samplesheet ]
-                    bcl: [ meta, flowcell ]
-            }
-
         // MODULE: mkfastq
-        CELLRANGER_MKFASTQ( ch_mkfastq_input.bcl, ch_mkfastq_input.csv )
+        CELLRANGER_MKFASTQ( ch_flowcell )
 
-        // Generate meta for each fastq
+        // Generate meta for each FASTQ
         ch_fastq_with_meta = generate_fastq_meta(CELLRANGER_MKFASTQ.out.fastq)
 
 
