@@ -154,7 +154,7 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
         case 'mkfastq':
-            // MODULE: mkfastq 
+            // MODULE: mkfastq
             // Runs when "demultiplexer" is set to "mkfastq"
             MKFASTQ_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)

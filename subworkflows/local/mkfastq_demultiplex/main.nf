@@ -4,7 +4,7 @@
 // Demultiplex Singular Genomics bases data using mkfastq
 //
 
-include { CELLRANGER_MKFASTQ } from '../../../modules/nf-core/cellranger/mkfastq/main' 
+include { CELLRANGER_MKFASTQ } from '../../../modules/nf-core/cellranger/mkfastq/main'
 
 workflow MKFASTQ_DEMULTIPLEX {
     take:
