@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.5.0
+
+### `Added`
+
+- [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
+
 ## 1.4.1 - 2024-02-27
 
 ### `Changed`
