@@ -1,0 +1,45 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    tag "mkfastq"
+    tag "pipeline"
+
+    test("MKFASTQ") {
+
+        when {
+            params {
+                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/mkfastq-samplesheet.csv'
+                demultiplexer = 'mkfastq'
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 6 },
+                // How many directories were produced?
+                {assert path("${outputDir}").list().size() == 3},
+                // How many files were produced?
+                {assert path("$outputDir/220422_M11111_0222_000000000-K9H97_mkfastq/").list().size() == 10},
+                {assert path("$outputDir/multiqc/").list().size() == 3},
+                {assert path("$outputDir/pipeline_info/").list().size() == 5},
+                // File assertions: Files that should be exactly the same with every pipeline execution.
+                {assert snapshot(
+                    //Check output files
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_summary.txt"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_report.html"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_R1_001.fastq.gz"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_fastqc_data.txt"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.json"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.html"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz.md5"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/InterOp/IndexMetricsOut.bin")
+                )}
+            )
+        }
+    }
+}
