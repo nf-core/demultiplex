@@ -5,9 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.5.0
+
 ### `Added`
 
 - [#202](https://github.com/nf-core/demultiplex/pull/202) Added cellranger mkfastq subworkflow for demultiplexing 10x samples.
+- [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
 
 ## 1.4.1 - 2024-02-27
 
@@ -36,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#152](https://github.com/nf-core/demultiplex/pull/152) Close [#150](https://github.com/nf-core/demultiplex/issues/150)
 - [#157](https://github.com/nf-core/demultiplex/pull/157) Fix bcl2fastq and bclconvert publishDir
 - [#158](https://github.com/nf-core/demultiplex/pull/158) Update all modules
+- [#201](https://github.com/nf-core/demultiplex/pull/201) Fix samplesheet documentation issues
 
 ## `Removed`
 
