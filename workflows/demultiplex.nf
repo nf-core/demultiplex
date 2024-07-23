@@ -55,7 +55,6 @@ workflow DEMULTIPLEX {
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
         .map{meta,samplesheet,flowcell,lane ->
-            
             def samplesheet_out = new File("${samplesheet.getSimpleName()}_no_adapters.csv")
             samplesheet_out.delete()
             samplesheet_out.createNewFile()
