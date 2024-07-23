@@ -241,7 +241,7 @@
                     "fa_icon": "fas fa-cog"
                 },
                 "remove_adapter": {
-                    "type": "string",
+                    "type": "boolean",
                     "description": "Boolean whether to remove adapter information from samplesheet.",
                     "default": "true"
                 },
