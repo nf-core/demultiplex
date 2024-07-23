@@ -30,15 +30,15 @@ nextflow_pipeline {
                 {assert snapshot(
                     //Check output files
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_summary.txt"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_report.html"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_report.html").exists(),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_R1_001.fastq.gz"),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_fastqc_data.txt"),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.json"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.html"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.html").exists(),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz.md5"),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz"),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/InterOp/IndexMetricsOut.bin")
-                )}
+                ).match("file_assertions_mkfastq")}
             )
         }
     }
