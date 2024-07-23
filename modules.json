@@ -20,6 +20,11 @@
                         "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
                         "installed_by": ["bcl_demultiplex"]
                     },
+                    "checkqc": {
+                        "branch": "master",
+                        "git_sha": "5848a1effadc07d931a881b49cbdf33b07af919a",
+                        "installed_by": ["modules"]
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
