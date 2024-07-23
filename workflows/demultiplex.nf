@@ -51,15 +51,12 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
 
-    // Convenience
-    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
-
     // Remove adapter from samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
         .map{meta,samplesheet,flowcell,lane ->
             
-            def samplesheet_out = new File("samplesheet_without_adapters.txt")
+            def samplesheet_out = new File("${samplesheet.getSimpleName()}_no_adapters.csv")
             samplesheet_out.delete()
             samplesheet_out.createNewFile()
 
@@ -83,11 +80,13 @@ workflow DEMULTIPLEX {
                 if (!removal_checker) {log.warn("Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")}
 
             samplesheet_out.text=lines_out
-        
             [meta,file(samplesheet_out),flowcell,lane]
         }
         ch_samplesheet = ch_samplesheet_no_adapter
-    } 
+    }
+
+    // Convenience
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
