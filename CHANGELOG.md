@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
+- [#TBD](https://github.com/nf-core/demultiplex/pull/TBD) Added parameter for removing adapter information from samplesheets.
 
 ## 1.4.1 - 2024-02-27
 

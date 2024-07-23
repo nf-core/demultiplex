@@ -54,6 +54,42 @@ workflow DEMULTIPLEX {
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
+    // Remove adapter from samplesheet to avoid adapter trimming in demultiplexer tools
+    if (params.remove_adapter){
+        ch_samplesheet_no_adapter = ch_samplesheet
+        .map{meta,samplesheet,flowcell,lane ->
+            
+            def samplesheet_out = new File("samplesheet_without_adapters.txt")
+            samplesheet_out.delete()
+            samplesheet_out.createNewFile()
+
+            def lines_out = ''
+            def new_line = ''
+            samplesheet
+                .readLines()
+                .each { line ->
+                    if ( line =~ /Adapter,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/Adapter,[ACGT]+,/, 'Adapter,,')
+                        log.warn("Adapters were removed in samplesheet from $meta.id")
+                    }
+                    else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/AdapterRead2,[ACGT]+,/, 'AdapterRead2,,')
+                    }
+                    else {
+                        new_line = line
+                    }
+                    lines_out = lines_out + new_line + '\n'
+                }
+
+            samplesheet_out.text=lines_out
+        
+            [meta,samplesheet_out,flowcell,lane]
+        }
+    }
+    
+
+    
+
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
     if (demultiplexer == 'fqtk'){
