@@ -66,7 +66,12 @@ workflow BCL_DEMULTIPLEX {
             ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
             ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
 
-            BCL2FASTQ.out.checkqc_dir.dump(tag:"BCL2FASTQ_checkqc_dir")
+                    if (!("checkqc" in skip_tools)){
+                        BCL2FASTQ.out.checkqc_dir.dump(tag:"BCL2FASTQ_checkqc_dir")
+                        CHECKQC(BCL2FASTQ.out.checkqc_dir, [])
+                        CHECKQC.out.report.dump(tag:"CHECKQC_report")
+                    }
+            
         }
 
         // Generate meta for each fastq
