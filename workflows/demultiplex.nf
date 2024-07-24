@@ -51,7 +51,7 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
 
-    // Remove adapter from samplesheet to avoid adapter trimming in demultiplexer tools
+    // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
         .map{meta,samplesheet,flowcell,lane ->
