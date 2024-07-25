@@ -52,6 +52,39 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
 
+    // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
+    if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+        ch_samplesheet_no_adapter = ch_samplesheet
+        .map{meta,samplesheet,flowcell,lane ->
+            def samplesheet_out = new File("${samplesheet.getSimpleName()}_no_adapters.csv")
+            samplesheet_out.delete()
+            samplesheet_out.createNewFile()
+
+            def lines_out = ''
+            def new_line = ''
+            def removal_checker = false
+            samplesheet
+                .readLines()
+                .each { line ->
+                    if ( line =~ /Adapter,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/Adapter,[ACGT]+,/, 'Adapter,,')
+                        removal_checker = true
+                    } else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/AdapterRead2,[ACGT]+,/, 'AdapterRead2,,')
+                        removal_checker = true
+                    } else {
+                        new_line = line
+                    }
+                    lines_out = lines_out + new_line + '\n'
+                }
+                if (!removal_checker) {log.warn("Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")}
+
+            samplesheet_out.text=lines_out
+            [meta,file(samplesheet_out),flowcell,lane]
+        }
+        ch_samplesheet = ch_samplesheet_no_adapter
+    }
+
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
