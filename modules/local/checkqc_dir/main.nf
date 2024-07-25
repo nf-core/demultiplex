@@ -1,7 +1,6 @@
 process CHECKQC_DIR {
     tag {"$meta.id"}
     label 'process_high'
-    
 
     container "nf-core/bcl2fastq:2.20.0.422"
 
@@ -67,7 +66,7 @@ process CHECKQC_DIR {
     cp -rL $interop checkqc_dir/InterOp
 
     mkdir -p checkqc_dir/Data/Intensities/BaseCalls
-    
+
     cp -rL Stats checkqc_dir/Data/Intensities/BaseCalls/Stats
     """
 }

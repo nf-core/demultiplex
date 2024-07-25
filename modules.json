@@ -20,14 +20,14 @@
                         "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
                         "installed_by": ["bcl_demultiplex"]
                     },
-                    "checkqc": {
-                        "branch": "master",
-                        "git_sha": "5848a1effadc07d931a881b49cbdf33b07af919a",
-                        "installed_by": ["modules"]
-                    },
                     "cellranger/mkfastq": {
                         "branch": "master",
                         "git_sha": "d89faad13503f47372b8706008f7cdb2c4f1d859",
+                        "installed_by": ["modules"]
+                    },
+                    "checkqc": {
+                        "branch": "master",
+                        "git_sha": "5848a1effadc07d931a881b49cbdf33b07af919a",
                         "installed_by": ["modules"]
                     },
                     "custom/dumpsoftwareversions": {

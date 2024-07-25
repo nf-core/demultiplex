@@ -244,7 +244,7 @@
                 "remove_adapter": {
                     "type": "boolean",
                     "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
-                    "default": "true"
+                    "default": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -307,7 +307,7 @@
     "properties": {
         "checkqc_config": {
             "type": "string",
-            "default": "/workspace/demultiplex/assets/checkqc_config.yaml"
+            "default": "[]"
         }
     }
 }
