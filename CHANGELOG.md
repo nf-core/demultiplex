@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
 - [#208](https://github.com/nf-core/demultiplex/pull/208) Added parameter for removing adapter information from samplesheets.
 - [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
+- [#210](https://github.com/nf-core/demultiplex/pull/212) Add checkqc module. 
+
+### `Changed`
+
+- [#210](https://github.com/nf-core/demultiplex/pull/212) Update bcl2fastq and bcl_demultiplex.
 
 ## 1.4.1 - 2024-02-27
 
