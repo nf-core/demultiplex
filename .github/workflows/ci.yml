@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
-        profile: ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "mkfastq", "sgdemux", "skip_tools"]
+        profile: ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "skip_tools"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
