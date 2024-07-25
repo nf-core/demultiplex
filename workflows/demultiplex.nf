@@ -12,6 +12,8 @@ include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultip
 include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
 include { CHECKQC_DIR               } from '../modules/local/checkqc_dir/main'
+include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
+
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -55,7 +57,7 @@ workflow DEMULTIPLEX {
     checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
 
     // Convenience
-    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
+    //ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -126,11 +128,18 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
                 if (!("checkqc" in skip_tools)){
-                        ch_dir = ch_flowcells.join(BCL_DEMULTIPLEX.out.stats).join(BCL_DEMULTIPLEX.out.interop)
-                        CHECKQC_DIR(ch_dir)
-                        CHECKQC_DIR.out.checkqc_dir.dump(tag:"CHECKQC_DIR")
-                        CHECKQC(CHECKQC_DIR.out.checkqc_dir, checkqc_config)
-                        CHECKQC.out.report.dump(tag:"CHECKQC_report")
+                        RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config)
+                        RUNDIR_CHECKQC.out.checkqc_dir.dump(tag:"RUNDIR_DIR")
+
+                        BCL_DEMULTIPLEX.out.checkqc_dir.dump(tag:"checkqc_dir_BCL_DEMULTIPLEX")
+                        
+                        // This works:
+                        //CHECKQC(BCL_DEMULTIPLEX.out.checkqc_dir, checkqc_config)
+                        //CHECKQC.out.report.dump(tag:"CHECKQC_report")
+
+                        // This does not work:
+                        //CHECKQC(RUNDIR_CHECKQC.out.checkqc_dir, checkqc_config)
+                        //CHECKQC.out.report.dump(tag:"CHECKQC_report_RUNDIR_CHECKQC")
                     }
 
             break
@@ -167,7 +176,7 @@ workflow DEMULTIPLEX {
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
-    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
+    //ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC and TRIMMING
