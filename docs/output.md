@@ -175,6 +175,17 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 
 Creates an MD5 (128-bit) checksum of every fastq.
 
+### Adapter sequence removal from samplesheet
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<Samplesheet_name>_no_adapters.csv`
+
+</details>
+
+This is done by a custom function in the workflow, not by a module. Creates an updated samplesheet from the input by removing the adapter sequence within the "\[Settings\]" section.
+
 ### MultiQC
 
 <details markdown="1">
