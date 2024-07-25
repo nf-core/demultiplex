@@ -28,13 +28,13 @@
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-05-16T08:36:09.489747"
+        "timestamp": "2024-07-25T20:31:51.596302017"
     },
     "multiqc": {
         "content": [
