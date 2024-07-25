@@ -6,7 +6,6 @@
 
 include { BCLCONVERT } from "../../../modules/nf-core/bclconvert/main"
 include { BCL2FASTQ  } from "../../../modules/nf-core/bcl2fastq/main"
-include { CHECKQC    } from "../../../modules/nf-core/checkqc/main"
 
 // Define the log file path before the workflow starts
 def logFile = new File("${params.outdir}/invalid_fastqs.log")
@@ -65,16 +64,6 @@ workflow BCL_DEMULTIPLEX {
             ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
             ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
             ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
-
-            skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
-            checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
-
-                    if (!("checkqc" in skip_tools)){
-                        BCL2FASTQ.out.checkqc_dir.dump(tag:"BCL2FASTQ_checkqc_dir")
-                        CHECKQC(BCL2FASTQ.out.checkqc_dir, checkqc_config)
-                        CHECKQC.out.report.dump(tag:"CHECKQC_report")
-                    }
-            
         }
 
         // Generate meta for each fastq

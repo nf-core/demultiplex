@@ -7,10 +7,11 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
+include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
+include { CHECKQC_DIR               } from '../modules/local/checkqc_dir/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -20,6 +21,7 @@ include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
+include { CHECKQC                       } from "../modules/nf-core/checkqc/main"
 
 //
 // FUNCTION
@@ -50,6 +52,7 @@ workflow DEMULTIPLEX {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
+    checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
 
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
@@ -121,6 +124,15 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+
+                if (!("checkqc" in skip_tools)){
+                        ch_dir = ch_flowcells.join(BCL_DEMULTIPLEX.out.stats).join(BCL_DEMULTIPLEX.out.interop)
+                        CHECKQC_DIR(ch_dir)
+                        CHECKQC_DIR.out.checkqc_dir.dump(tag:"CHECKQC_DIR")
+                        CHECKQC(CHECKQC_DIR.out.checkqc_dir, checkqc_config)
+                        CHECKQC.out.report.dump(tag:"CHECKQC_report")
+                    }
+
             break
         case 'fqtk':
             // MODULE: fqtk
