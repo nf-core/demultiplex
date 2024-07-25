@@ -25,7 +25,6 @@ include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR                         } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
-include { CHECKQC                       } from "../modules/nf-core/checkqc/main"
 
 //
 // FUNCTION
