@@ -10,6 +10,7 @@
 include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
 include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX  } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
 
 //
@@ -42,7 +43,7 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -185,6 +186,13 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
+        case 'mkfastq':
+            // MODULE: mkfastq
+            // Runs when "demultiplexer" is set to "mkfastq"
+            MKFASTQ_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
+            ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
+            break
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
@@ -263,7 +271,7 @@ workflow DEMULTIPLEX {
             )
         )
 
-        MULTIQC (
+        MULTIQC ( //TODO fix multiqc not resuming
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),

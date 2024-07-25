@@ -40,8 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
-        profile:
-          - docker
+        profile: ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "skip_tools"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -60,7 +59,7 @@ jobs:
 
       # Run nf-test
       - name: Run nf-test
-        run: nf-test test tests/pipeline/ --profile=test,${{ matrix.profile }} --junitxml=test.xml
+        run: nf-test test tests/pipeline/${{ matrix.profile }}.nf.test --profile=test,docker --junitxml=test.xml
 
       # If the test fails, output the software_versions.yml using the 'batcat' utility
       - name: Output log on failure

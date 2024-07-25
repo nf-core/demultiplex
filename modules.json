@@ -20,6 +20,11 @@
                         "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
                         "installed_by": ["bcl_demultiplex"]
                     },
+                    "cellranger/mkfastq": {
+                        "branch": "master",
+                        "git_sha": "2bb941b6d3a01006c9f5bb49ca7eb8bb395dda9f",
+                        "installed_by": ["modules"]
+                    },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
