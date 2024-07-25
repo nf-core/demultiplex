@@ -64,8 +64,6 @@ workflow BCL_DEMULTIPLEX {
             ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
             ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
             ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
-
-                BCL2FASTQ.out.checkqc_dir.dump(tag:"BCL2FASTQ_checkqc_dir")
         }
 
         // Generate meta for each fastq
@@ -77,7 +75,6 @@ workflow BCL_DEMULTIPLEX {
         stats    = ch_stats
         interop  = ch_interop
         versions = ch_versions
-        checkqc_dir = BCL2FASTQ.out.checkqc_dir
 }
 
 /*

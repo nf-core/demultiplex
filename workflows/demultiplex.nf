@@ -128,18 +128,8 @@ workflow DEMULTIPLEX {
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
                 if (!("checkqc" in skip_tools)){
-                        RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config)
-                        RUNDIR_CHECKQC.out.checkqc_dir.dump(tag:"RUNDIR_DIR")
-
-                        BCL_DEMULTIPLEX.out.checkqc_dir.dump(tag:"checkqc_dir_BCL_DEMULTIPLEX")
-                        
-                        // This works:
-                        //CHECKQC(BCL_DEMULTIPLEX.out.checkqc_dir, checkqc_config)
-                        //CHECKQC.out.report.dump(tag:"CHECKQC_report")
-
-                        // This does not work:
-                        //CHECKQC(RUNDIR_CHECKQC.out.checkqc_dir, checkqc_config)
-                        //CHECKQC.out.report.dump(tag:"CHECKQC_report_RUNDIR_CHECKQC")
+                        RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
+                        ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
                     }
 
             break
