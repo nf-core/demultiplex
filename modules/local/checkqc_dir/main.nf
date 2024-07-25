@@ -1,6 +1,9 @@
 process CHECKQC_DIR {
     tag {"$meta.id"}
     label 'process_high'
+    
+
+    container "nf-core/bcl2fastq:2.20.0.422"
 
     input:
     tuple val(meta), path(samplesheet), path(run_dir), path(stats), path(interop)
@@ -61,9 +64,10 @@ process CHECKQC_DIR {
     fi
 
     mkdir -p checkqc_dir/Interop
-    cp -r $interop checkqc_dir/Interop
+    cp -rL $interop checkqc_dir/Interop
 
     mkdir -p checkqc_dir/Data/Intensities/BaseCalls
-    cp -r $stats checkqc_dir/Data/Intensities/BaseCalls/Stats
+    
+    cp -rL Stats checkqc_dir/Data/Intensities/BaseCalls/Stats
     """
 }
