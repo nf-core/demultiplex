@@ -63,8 +63,8 @@ process CHECKQC_DIR {
         cp ${input_dir}/RunParameters.xml checkqc_dir
     fi
 
-    mkdir -p checkqc_dir/Interop
-    cp -rL $interop checkqc_dir/Interop
+    mkdir -p checkqc_dir/InterOp
+    cp -rL $interop checkqc_dir/InterOp
 
     mkdir -p checkqc_dir/Data/Intensities/BaseCalls
     
