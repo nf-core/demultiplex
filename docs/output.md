@@ -15,6 +15,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - demultiplexing fastq files (CONDITIONAL)
+- [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
@@ -80,6 +81,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | Md5Sum                           | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed fastq file                                                   |
 
 </details>
+
+### checkqc
+
+[checkqc](https://github.com/Molmed/checkQC/) - (optional) CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder. Available for outputs from bcl2fastq only. The program will summarize the type of run it has identified and output any warnings and/or errors in finds. If any qc errors were found the CheckQC will output a non-zero exit status. The output is written to a json file.
 
 ### fqtk
 

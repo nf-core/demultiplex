@@ -40,10 +40,11 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)
 
-2. [fastp](#fastp) - Adapter and quality trimming
-3. [Falco](#falco) - Raw read QC
-4. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
-5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+2. [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
+3. [fastp](#fastp) - Adapter and quality trimming
+4. [Falco](#falco) - Raw read QC
+5. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
+6. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ![subway map](docs/demultiplex.png)
 
