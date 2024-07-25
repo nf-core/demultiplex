@@ -15,7 +15,6 @@ process BCL2FASTQ {
     tuple val(meta), path("Reports")                             , emit: reports
     tuple val(meta), path("Stats")                               , emit: stats
     tuple val(meta), path("InterOp/*.bin")                       , emit: interop
-    tuple val(meta), path("checkqc_dir")                         , emit: checkqc_dir
     path("versions.yml")                                         , emit: versions
 
     when:
@@ -65,26 +64,6 @@ process BCL2FASTQ {
         --processing-threads ${task.cpus}
 
     cp -r ${input_dir}/InterOp .
-
-     echo "Directory for checkQC"
-    # custom dir for checkqc
-    mkdir checkqc_dir
-    cp $samplesheet checkqc_dir/SampleSheet.csv
-
-    if [ -f ${input_dir}/RunInfo.xml ]; then
-        cp ${input_dir}/RunInfo.xml checkqc_dir
-    fi
-    if [ -f ${input_dir}/runParameters.xml ]; then
-        cp ${input_dir}/runParameters.xml checkqc_dir
-    fi
-    if [ -f ${input_dir}/RunParameters.xml ]; then
-        cp ${input_dir}/RunParameters.xml checkqc_dir
-    fi
-
-    mkdir -p checkqc_dir/Data/Intensities/BaseCalls
-    cp -r Stats checkqc_dir/Data/Intensities/BaseCalls/Stats
-
-    cp -r ${input_dir}/InterOp checkqc_dir/InterOp
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
