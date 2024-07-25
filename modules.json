@@ -17,7 +17,7 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
+                        "git_sha": "54cd970e633efbd6adab9fc5610dd280e50ab32c",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "cellranger/mkfastq": {
@@ -81,7 +81,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "98dec3970368aa6e058c792ae1e451bb09624ed3",
+                        "git_sha": "cc87c4d42fd05816b289bd9a6b87f778bdf61d06",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
