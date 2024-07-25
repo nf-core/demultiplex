@@ -15,6 +15,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - demultiplexing fastq files (CONDITIONAL)
+- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)
 - [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
@@ -103,6 +104,25 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | Fastqc summary stats       | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed fastq file |
 | Fastq summary html         | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
 | Md5Sum                     | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed fastq file                   |
+
+</details>
+
+### mkfastq
+
+[mkfastq](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq) A tool for converting BCL files to FASTQ and demultiplexing for single-cell sequencing data.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+| File                 | Directory                          | Description                                                 |
+| :------------------- | :--------------------------------- | :---------------------------------------------------------- |
+| FASTQ                | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                |
+| `*.fastp.html`       | <OUTDIR>/<id>                      | HTML report for fastp                                       |
+| `*.fastp.json`       | <OUTDIR>/<id>                      | JSON report for fastp                                       |
+| `*_summary.txt`      | <OUTDIR>/<id>                      | Summary statistics for the sequencing run                   |
+| Fastqc summary stats | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed FASTQ file |
+| Fastqc summary html  | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
+| Md5Sum               | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed FASTQ file                   |
 
 </details>
 

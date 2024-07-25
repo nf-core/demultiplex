@@ -7,9 +7,11 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
+
 include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
 include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
 include { CHECKQC_DIR               } from '../modules/local/checkqc_dir/main'
 include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
@@ -46,7 +48,7 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
+    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
 
@@ -55,6 +57,39 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
     checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
+
+    // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
+    if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+        ch_samplesheet_no_adapter = ch_samplesheet
+        .map{meta,samplesheet,flowcell,lane ->
+            def samplesheet_out = new File("${samplesheet.getSimpleName()}_no_adapters.csv")
+            samplesheet_out.delete()
+            samplesheet_out.createNewFile()
+
+            def lines_out = ''
+            def new_line = ''
+            def removal_checker = false
+            samplesheet
+                .readLines()
+                .each { line ->
+                    if ( line =~ /Adapter,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/Adapter,[ACGT]+,/, 'Adapter,,')
+                        removal_checker = true
+                    } else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
+                        new_line = line.replaceAll(/AdapterRead2,[ACGT]+,/, 'AdapterRead2,,')
+                        removal_checker = true
+                    } else {
+                        new_line = line
+                    }
+                    lines_out = lines_out + new_line + '\n'
+                }
+                if (!removal_checker) {log.warn("Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")}
+
+            samplesheet_out.text=lines_out
+            [meta,file(samplesheet_out),flowcell,lane]
+        }
+        ch_samplesheet = ch_samplesheet_no_adapter
+    }
 
     // Convenience
     //ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
@@ -163,6 +198,13 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
             break
+        case 'mkfastq':
+            // MODULE: mkfastq
+            // Runs when "demultiplexer" is set to "mkfastq"
+            MKFASTQ_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
+            ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
+            break
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
@@ -241,7 +283,7 @@ workflow DEMULTIPLEX {
             )
         )
 
-        MULTIQC (
+        MULTIQC ( //TODO fix multiqc not resuming
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
