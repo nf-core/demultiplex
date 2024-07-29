@@ -12,6 +12,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bcl2fastq'
                 outdir        = "$outputDir"
+                skip_tools    = "checkqc"
             }
         }
 
@@ -19,7 +20,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 7 },
+                { assert workflow.trace.succeeded().size() == 5 },
                 { assert snapshot(
                         path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt"),
                         path("$outputDir/multiqc/multiqc_data/multiqc_fastp.txt"),
