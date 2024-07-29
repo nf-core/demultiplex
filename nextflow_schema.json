@@ -18,7 +18,7 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "default": null,
+                    "default": "[]",
                     "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
                 }
             }
@@ -72,7 +72,8 @@
                     "type": "string",
                     "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "mkfastq"],
                     "description": "Demultiplexer to use.",
-                    "fa_icon": "fas fa-microscope"
+                    "fa_icon": "fas fa-microscope",
+                    "default": "bclconvert"
                 }
             }
         },
@@ -243,7 +244,7 @@
                 "remove_adapter": {
                     "type": "boolean",
                     "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
-                    "default": "true"
+                    "default": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -302,5 +303,11 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "checkqc_config": {
+            "type": "string",
+            "default": "[]"
+        }
+    }
 }

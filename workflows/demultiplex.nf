@@ -7,11 +7,14 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
-include { MKFASTQ_DEMULTIPLEX  } from '../subworkflows/local/mkfastq_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
+
+include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
+include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
+
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -51,6 +54,7 @@ workflow DEMULTIPLEX {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
+    checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
@@ -86,7 +90,7 @@ workflow DEMULTIPLEX {
     }
 
     // Convenience
-    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
+    //ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -155,6 +159,12 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+
+                if (!("checkqc" in skip_tools)){
+                        RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
+                        ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
+                    }
+
             break
         case 'fqtk':
             // MODULE: fqtk
@@ -196,7 +206,7 @@ workflow DEMULTIPLEX {
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
-    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
+    //ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC and TRIMMING
