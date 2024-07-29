@@ -85,7 +85,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### checkqc
 
-[checkqc](https://github.com/Molmed/checkQC/) - (optional) CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder. Available for outputs from bcl2fastq only. The program will summarize the type of run it has identified and output any warnings and/or errors in finds. If any qc errors were found the CheckQC will output a non-zero exit status. The output is written to a json file.
+[checkqc](https://github.com/Molmed/checkQC/) - (optional) CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder. Available for outputs from bcl2fastq only. The program will summarize the type of run it has identified and output any warnings and/or errors in finds. The CheckQC module in demultiplex will output the summary of the QC, along with its warnings and errors in the `checkqc_report.json`. In addition, a `checkqc_log.txt` will contain the log of the program for inspection. If the run directory misses some input files, it will return a non-zero exit status and also the information in the `checkqc_log.txt`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `checkqc/checkqc_report.json`
+  - QC report of bcl2fastq run
+
+</details>
 
 ### fqtk
 

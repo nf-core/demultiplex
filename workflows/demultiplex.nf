@@ -13,7 +13,6 @@ include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultip
 include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
-include { CHECKQC_DIR               } from '../modules/local/checkqc_dir/main'
 include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
 
 
