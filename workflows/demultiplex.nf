@@ -77,7 +77,7 @@ workflow DEMULTIPLEX {
                     } else {
                         // keep original line otherwise
                         lines_out = lines_out + line + '\n'
-                    }                    
+                    }
                 }
                 if (!removal_checker) {log.warn("Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")}
 
