@@ -20,12 +20,6 @@ sp:
   fastqc/data:
     fn: "*_fastqc_data.txt"
 
-run_modules:
-  - fastqc
-  - bcl2fastq
-  - checkqc
-  - fastp
-
 top_modules:
   - "bcl2fastq"
   - "checkqc"
