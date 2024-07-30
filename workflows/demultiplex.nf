@@ -67,10 +67,14 @@ workflow DEMULTIPLEX {
             def lines_out = ''
             def new_line = ''
             def removal_checker = false
-            file(samplesheet)
+            samplesheet
                 .readLines()
                 .each { line ->
-                    if ( line =~ /Adapter.*,[ACGT]+,/ ) {
+                    if ( line =~ /Adapter,[ACGT]+,/ ) {
+                        removal_checker = true
+                    } else if ( line =~ /AdapterRead1,[ACGT]+,/ ) {
+                        removal_checker = true
+                    } else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
                         removal_checker = true
                     } else {
                         // keep original line otherwise
