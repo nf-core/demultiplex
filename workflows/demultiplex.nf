@@ -163,6 +163,7 @@ workflow DEMULTIPLEX {
                 if (!("checkqc" in skip_tools)){
                         RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
                         ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
+                        ch_multiqc_files = ch_multiqc_files.mix( RUNDIR_CHECKQC.out.report.map { meta, json -> return json} )
                     }
 
             break
