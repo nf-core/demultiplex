@@ -71,15 +71,13 @@ workflow DEMULTIPLEX {
                 .readLines()
                 .each { line ->
                     if ( line =~ /Adapter,[ACGT]+,/ ) {
-                        new_line = line.replaceAll(/Adapter,[ACGT]+,/, 'Adapter,,')
                         removal_checker = true
                     } else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
-                        new_line = line.replaceAll(/AdapterRead2,[ACGT]+,/, 'AdapterRead2,,')
                         removal_checker = true
                     } else {
-                        new_line = line
-                    }
-                    lines_out = lines_out + new_line + '\n'
+                        // keep original line otherwise
+                        lines_out = lines_out + line + '\n'
+                    }                    
                 }
                 if (!removal_checker) {log.warn("Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")}
 
