@@ -15,6 +15,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - demultiplexing fastq files (CONDITIONAL)
+- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)
+- [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
@@ -81,6 +83,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
+### checkqc
+
+[checkqc](https://github.com/Molmed/checkQC/) - (optional) CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder. Available for outputs from bcl2fastq only. The program will summarize the type of run it has identified and output any warnings and/or errors in finds. The CheckQC module in demultiplex will output the summary of the QC, along with its warnings and errors in the `checkqc_report.json`. In addition, a `checkqc_log.txt` will contain the log of the program for inspection. If the run directory misses some input files, it will return a non-zero exit status and also the information in the `checkqc_log.txt`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `checkqc/checkqc_report.json`
+  - QC report of bcl2fastq run
+
+</details>
+
 ### fqtk
 
 [fqtk](https://github.com/fulcrumgenomics/fqtk) A toolkit for working with FASTQ files, written in Rust.
@@ -98,6 +112,25 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 | Fastqc summary stats       | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed fastq file |
 | Fastq summary html         | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
 | Md5Sum                     | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed fastq file                   |
+
+</details>
+
+### mkfastq
+
+[mkfastq](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq) A tool for converting BCL files to FASTQ and demultiplexing for single-cell sequencing data.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+| File                 | Directory                          | Description                                                 |
+| :------------------- | :--------------------------------- | :---------------------------------------------------------- |
+| FASTQ                | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                |
+| `*.fastp.html`       | <OUTDIR>/<id>                      | HTML report for fastp                                       |
+| `*.fastp.json`       | <OUTDIR>/<id>                      | JSON report for fastp                                       |
+| `*_summary.txt`      | <OUTDIR>/<id>                      | Summary statistics for the sequencing run                   |
+| Fastqc summary stats | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed FASTQ file |
+| Fastqc summary html  | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
+| Md5Sum               | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed FASTQ file                   |
 
 </details>
 
@@ -154,6 +187,17 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 </details>
 
 Creates an MD5 (128-bit) checksum of every fastq.
+
+### Adapter sequence removal from samplesheet
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<Samplesheet_name>_no_adapters.csv`
+
+</details>
+
+This is done by a custom function in the workflow, not by a module. Creates an updated samplesheet from the input by removing the adapter sequence within the "\[Settings\]" section.
 
 ### MultiQC
 

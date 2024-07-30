@@ -25,6 +25,7 @@
 2. Element Biosciences (via `bases2fastq`)
 3. Singular Genomics (via [`sgdemux`](https://github.com/Singular-Genomics/singular-demux))
 4. FASTQ files with user supplied read structures (via [`fqtk`](https://github.com/fulcrumgenomics/fqtk))
+5. 10x Genomics (via [`mkfastq`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq))
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
@@ -39,11 +40,13 @@ On release, automated continuous integration tests run the pipeline on a full-si
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)
+- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)
 
-2. [fastp](#fastp) - Adapter and quality trimming
-3. [Falco](#falco) - Raw read QC
-4. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
-5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+2. [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
+3. [fastp](#fastp) - Adapter and quality trimming
+4. [Falco](#falco) - Raw read QC
+5. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
+6. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ![subway map](docs/demultiplex.png)
 
