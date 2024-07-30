@@ -18,3 +18,54 @@ disable_version_detection: true
 sp:
   fastqc/data:
     fn: "*_fastqc_data.txt"
+
+extra_fn_clean_exts:
+    - .gz
+    - .zip
+    - .fastq
+    - .fq
+    - _fastqc
+    - .kraken2.report.txt
+    - _R1.
+    - _R1_001
+    - _R2.
+    - _R2_001
+    - type: regex
+      pattern: '_S[1-9][0-9]{0,2}_[1-2]{1}$'
+    - type: regex
+      pattern: '_S[1-9][0-9]{0,2}$'
+
+module_order:
+    - bcl2fastq
+    - fastqc:
+        name: 'FastQC (R1)'
+        info: 'This section of the report shows FastQC results for R1.'
+        target: ''
+        path_filters:
+            - '*_R1*_fastqc.zip'
+            - '*_S[1-9]_1_fastqc.zip'
+            - '*_S[1-9][0-9]_1_fastqc.zip'
+            - '*_S[1-9][0-9][0-9]_1_fastqc.zip'
+            - '*_S[1-9][0-9][0-9][0-9]_1_fastqc.zip'
+    - fastqc:
+        name: 'FastQC (R2)'
+        info: 'This section of the report shows FastQC results for R2.'
+        target: ''
+        path_filters:
+            - '*_R2*_fastqc.zip'
+            - '*_S[1-9]_2_fastqc.zip'
+            - '*_S[1-9][0-9]_2_fastqc.zip'
+            - '*_S[1-9][0-9][0-9]_2_fastqc.zip'
+            - '*_S[1-9][0-9][0-9][0-9]_2_fastqc.zip'
+    - fastqc:
+        name: 'FastQC'
+        info: 'This section of the report shows FastQC results for unpaired data.'
+        target: ''
+        path_filters:
+            - '*_S[1-9]_fastqc.zip'
+            - '*_S[1-9][0-9]_fastqc.zip'
+            - '*_S[1-9][0-9][0-9]_fastqc.zip'
+            - '*_S[1-9][0-9][0-9][0-9]_fastqc.zip'
+    - checkqc
+    - fastp
+    - falco
