@@ -72,6 +72,8 @@ workflow DEMULTIPLEX {
                 .each { line ->
                     if ( line =~ /Adapter,[ACGT]+,/ ) {
                         removal_checker = true
+                    } else if ( line =~ /AdapterRead1,[ACGT]+,/ ) {
+                        removal_checker = true
                     } else if ( line =~ /AdapterRead2,[ACGT]+,/ ) {
                         removal_checker = true
                     } else {
