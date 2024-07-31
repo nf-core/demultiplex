@@ -21,7 +21,7 @@ nextflow_pipeline {
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
                 { assert workflow.trace.succeeded().size() == 6 },
                 // How many directories were produced?
-                {assert path("${outputDir}").list().size() == 3},
+                {assert path("${outputDir}").list().size() == 4},
                 // How many files were produced?
                 {assert path("$outputDir/220422_M11111_0222_000000000-K9H97_mkfastq/").list().size() == 10},
                 {assert path("$outputDir/multiqc/").list().size() == 3},
