@@ -235,7 +235,7 @@ workflow DEMULTIPLEX {
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     if (!("md5sum" in skip_tools)){
-        MD5SUM(ch_fastq_to_qc.transpose())
+        MD5SUM(ch_fastq_to_qc.transpose(), true)
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 

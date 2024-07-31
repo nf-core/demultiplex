@@ -57,7 +57,7 @@
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "1164836d4d3922ab937865b17086485f0f472748",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
