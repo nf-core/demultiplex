@@ -217,7 +217,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
-            FASTP(ch_raw_fastq, [], [], [])
+            FASTP(ch_raw_fastq, [], [], [], [])
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             if (trim_fastq) {
