@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#202](https://github.com/nf-core/demultiplex/pull/202) Added cellranger mkfastq subworkflow for demultiplexing 10x samples.
 - [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
 - [#208](https://github.com/nf-core/demultiplex/pull/208) Added parameter for removing adapter information from samplesheets.
-- [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
 - [#210](https://github.com/nf-core/demultiplex/pull/210) Add checkqc module.
+- [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
+- [#214](https://github.com/nf-core/demultiplex/pull/214) Added test_pe (paired end) profile.
 
 ### `Changed`
 
