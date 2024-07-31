@@ -15,6 +15,30 @@ report_section_order:
 export_plots: true
 
 disable_version_detection: true
+
 sp:
   fastqc/data:
     fn: "*_fastqc_data.txt"
+
+top_modules:
+  - "bcl2fastq"
+  - "checkqc"
+  - "fastqc":
+      name: "FastQC / Falco (Unpaired data)"
+      info: "This section of the report shows FastQC / Falco results for unpaired data."
+      path_filters:
+        - "*fastqc_data.txt"
+      path_filters_exclude:
+        - "*_S*_L*_1.*_fastqc_data.txt*"
+        - "*_S*_L*_2.*_fastqc_data.txt*"
+  - "fastqc":
+      name: "FastQC / Falco (R1)"
+      info: "This section of the report shows FastQC results for R1."
+      path_filters:
+        - "*_S*_L*_1.*_fastqc_data.txt"
+  - "fastqc":
+      name: "FastQC / Falco (R2)"
+      info: "This section of the report shows FastQC results for R2."
+      path_filters:
+        - "*_S*_L*_2.*_fastqc_data.txt"
+  - "fastp"

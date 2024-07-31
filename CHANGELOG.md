@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#204](https://github.com/nf-core/demultiplex/pull/204) Update to latest bcl_demultiplex sub workflow.
-- [#210](https://github.com/nf-core/demultiplex/pull/210) Update bcl2fastq and bcl_demultiplex.
+- [#210](https://github.com/nf-core/demultiplex/pull/212) Update bcl2fastq and bcl_demultiplex.
+- [#216](https://github.com/nf-core/demultiplex/pull/216) List fastq reports for R1 and R2 separately in multiqc report.
 
 ## 1.4.1 - 2024-02-27
 
