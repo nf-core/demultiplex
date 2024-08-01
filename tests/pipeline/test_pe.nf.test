@@ -25,6 +25,7 @@ nextflow_pipeline {
                         path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
                         path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
                         path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt")
+
                     ).match("multiqc") },
                 { assert snapshot(
                         path("$outputDir/PE_Sample.csv"),
