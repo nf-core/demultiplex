@@ -1,9 +1,13 @@
 {
     "software_versions": {
         "content": [
-            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, SGDEMUX={sgdemux=1.1.1}, UNTAR={untar=1.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
+            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, SGDEMUX={sgdemux=1.1.1}, UNTAR={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2024-05-16T08:38:19.437888"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.4"
+        },
+        "timestamp": "2024-08-01T15:34:26.559747868"
     },
     "sgdemux": {
         "content": [
@@ -12,6 +16,10 @@
             "per_sample_metrics.tsv:md5,fb8ce024ad2508e7b22a4af65fe44358",
             "sample_barcode_hop_metrics.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.4"
+        },
         "timestamp": "2023-10-17T08:01:14+0000"
     }
 }
