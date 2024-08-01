@@ -70,6 +70,11 @@ workflow DEMULTIPLEX {
         .map{ id,meta,flowcell,lane,samplesheet -> [meta,samplesheet,flowcell,lane]}
 
         ch_samplesheet = ch_samplesheet_new
+    } else {
+        ch_samplesheet
+            .collectFile( storeDir: "${params.outdir}" ){ item ->
+                [ "${item[0].id}.csv", item[1] ]
+            }
     }
 
     // Convenience
