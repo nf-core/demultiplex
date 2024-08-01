@@ -195,12 +195,14 @@ Creates an MD5 (128-bit) checksum of every fastq.
 <summary>Output files</summary>
 
 - `<flowcell_id>/` 
-  - `*.kraken2.report.txt`: Kraken2 report file, i.e. taxonomic classification.
-  - `*.kraken2.classifiedreads.txt`: Classified sequence file, i.e. taxonomic classification (leaf)
+  - `*.*report.txt`: A Kraken2 report that summarises the fraction abundance, taxonomic ID, number of Kmers, taxonomic path of all the hits in the Kraken2 run for a given sample.
+  - `*.classified.fastq.gz`: FASTQ file containing all reads that had a hit against a reference in the database for a given sample.
+  - `*.unclassified.fastq.gz`: FASTQ file containing all reads that did not have a hit in the database for a given sample.
+  - `*.classifiedreads.txt`: A list of read IDs and the hits each read had against each database for a given sample.
 
 </details>
 
-Kraken2 taxonomically classifies ASVs using exact k-mer matches. Kraken2 matches each k-mer within a query sequence to the lowest common ancestor (LCA) of all genomes/sequences containing the given k-mer.
+[Kraken](https://ccb.jhu.edu/software/kraken2/) is a taxonomic sequence classifier that assigns taxonomic labels to DNA sequences. Kraken examines the k-mers within a query sequence and uses the information within those k-mers to query a database. That database maps -mers to the lowest common ancestor (LCA) of all genomes known to contain a given k-mer.
 
 
 ### Adapter sequence removal from samplesheet
