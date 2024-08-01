@@ -11,15 +11,15 @@
     },
     "bases2fastq": {
         "content": [
-            "Metrics.csv:md5,87702e562aa1091e70e5d6e2e19f10b0",
+            "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
             "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097",
-            "DefaultSample_R1.fastq.gz:md5,0cc292ca98e126f915a6c0ea9588b752",
-            "DefaultSample_R2.fastq.gz:md5,069b0ccb3069a47abd97c39377b10c34"
+            "DefaultSample_R1.fastq.gz:md5,6c73b924e4eb53b716614aa6fd8b791a",
+            "DefaultSample_R2.fastq.gz:md5,54e2c0894844e42605b7cd567b1c7dbe"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "23.10.4"
         },
-        "timestamp": "2024-05-16T12:32:47.641095"
+        "timestamp": "2024-08-01T16:13:10.44486715"
     }
 }
