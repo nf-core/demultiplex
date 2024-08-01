@@ -90,7 +90,7 @@ workflow DEMULTIPLEX {
     }
 
     // Convenience
-    //ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -207,7 +207,7 @@ workflow DEMULTIPLEX {
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
-    //ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
+    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC and TRIMMING
