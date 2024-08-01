@@ -20,6 +20,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
+- [kraken2](#kraken2) - Kraken2 is a taxonomic sequence classifier that assigns taxonomic labels to sequence reads.
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ### bcl-convert
@@ -188,12 +189,26 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 
 Creates an MD5 (128-bit) checksum of every fastq.
 
+### kraken2
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<flowcell_id>/` 
+  - `*.kraken2.report.txt`: Kraken2 report file, i.e. taxonomic classification.
+  - `*.kraken2.classifiedreads.txt`: Classified sequence file, i.e. taxonomic classification (leaf)
+
+</details>
+
+Kraken2 taxonomically classifies ASVs using exact k-mer matches. Kraken2 matches each k-mer within a query sequence to the lowest common ancestor (LCA) of all genomes/sequences containing the given k-mer.
+
+
 ### Adapter sequence removal from samplesheet
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<Samplesheet_name>_no_adapters.csv`
+- `<flowcell_id>.csv`
 
 </details>
 

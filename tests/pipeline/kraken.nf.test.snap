@@ -1,0 +1,87 @@
+{
+    "kraken": {
+        "content": [
+            "Sample1_S1_L001.kraken2.report.txt:md5,54e4fd75a10294da57ce0c5cc5d9cbf4",
+            "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+            "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
+            [
+                [
+                    [
+                        [
+                            [
+                                [
+                                    "lane.html:md5,794e48287f47a9f22dcb6b6d0c22c3eb",
+                                    "laneBarcode.html:md5,2bbdae3ee57151eab520c966597d7438"
+                                ],
+                                [
+                                    
+                                ]
+                            ]
+                        ],
+                        [
+                            [
+                                [
+                                    "lane.html:md5,f741870307050dcea79a838f5971770f",
+                                    "laneBarcode.html:md5,ffe2e863811c76cb9da27d5d124e0611"
+                                ],
+                                [
+                                    "lane.html:md5,cca97e771d3491dbc8cd3fe389595b09",
+                                    "laneBarcode.html:md5,cca97e771d3491dbc8cd3fe389595b09"
+                                ]
+                            ],
+                            [
+                                [
+                                    "lane.html:md5,c383b0768d9978733d3f5d3b91c15af0",
+                                    "laneBarcode.html:md5,48842c23b9a2816aec540177df870968"
+                                ],
+                                [
+                                    
+                                ]
+                            ]
+                        ]
+                    ],
+                    "Report.css:md5,eb7d3eb68fc1539f411404987246b59b",
+                    "index.html:md5,5747c407854ae2c358d0ec201ce622d8",
+                    "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34"
+                ]
+            ],
+            [
+                "AdapterTrimming.txt:md5,48ed2b914b1246c0b5d8667525550946",
+                "ConversionStats.xml:md5,8fe0f57f3f5d256a0762dba75ac62d05",
+                "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
+                "DemuxSummaryF1L1.txt:md5,03e5fd0c1e3079c5f8c7b4d0501b37ff",
+                "FastqSummaryF1L1.txt:md5,0c6f2d87ee183b84d1051cde9a5643d1",
+                "Stats.json:md5,8e5f038b8aa9e465599d3575f930e604"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-08-01T22:34:15.186958444"
+    },
+    "software_versions": {
+        "content": [
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, KRAKEN2={kraken2=2.1.3, pigz=2.8}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-08-01T22:34:15.140488001"
+    },
+    "multiqc": {
+        "content": [
+            "multiqc_bcl2fastq_bylane.txt:md5,1425b49f727306a50a8792e7c779a52d",
+            "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
+            "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
+            "multiqc_kraken.txt:md5,803e7942aa3eda36b64253e6f8b79fb1"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-08-01T22:34:15.166314968"
+    }
+}
