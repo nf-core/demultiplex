@@ -8,7 +8,7 @@
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`.
 
 When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
@@ -18,7 +18,7 @@ When using the demultiplexer fqtk, the samplesheet must contain an additional co
 
 ### Full samplesheet
 
-```console
+```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
@@ -26,22 +26,22 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
-| Column        | Description                                                                                                       |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `flowcell`    | flowcell id                                                                                                       |
-| `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
-| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`     | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
+| Column        | Description                                                                                                                                         |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Flowcell id                                                                                                                                         |
+| `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                                                               |
+| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
+| `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
 
 An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
-Note `run_dir` must lead to a `tar.gz` for compatability with the demultiplexers sgdemux and fqtk
+Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv) and [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)
+Each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets. Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv), [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv), and [bcl2fastq and bclconvert](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv)
 
 ### Samplesheet for fqtk
 
-```console
+```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output,/path/to/flowcell/manifest.csv
 DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet1.csv,2,/path/to/sequencer/output,/path/to/flowcell/manifest1.csv
@@ -49,13 +49,13 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2,
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,/path/to/flowcell/manifest3.csv
 ```
 
-| Column                  | Description                                                                                                       |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `id`                    | flowcell id                                                                                                       |
-| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                             |
-| `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                   |
-| `run_dir`               | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the contents of said directory |
-| `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                           |
+| Column                  | Description                                                                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                    | Flowcell id                                                                                                                                         |
+| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                                                               |
+| `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
+| `flowcell`              | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
+| `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                                                             |
 
 ## Running the pipeline
 
@@ -161,6 +161,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
@@ -193,6 +195,10 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+
+### Trimming
+
+The trimming process in our demultiplexing pipeline has been updated to ensure compatibility with 10x Genomics recommendations. By default, trimming in the pipeline is performed using fastp, which reliably auto-detects and removes adapter sequences without the need for storing adapter sequences. As users can also supply adapter sequences in a samplesheet and thereby triggering trimming in any `bcl2fastq` or `bclconvert` subworkflows, we have added a new parameter, `remove_adapter`, which is set to true by default. When `remove_adapter` is true, the pipeline automatically removes any adapter sequences listed in the `[Settings]` section of the Illumina sample sheet, replacing them with an empty string in order to not provoke this behaviour. This approach aligns with 10x Genomics' guidelines, as they advise against pre-processing FASTQ reads before inputting them into their software pipelines. If the `remove_adapter` setting is true but no adapter is removed, a warning will be displayed; however, this does not necessarily indicate an error, as some sample sheets may already lack these adapter sequences. Users can disable this behavior by setting `--remove_adapter false` in the command line, though this is not recommended.
 
 ### nf-core/configs
 

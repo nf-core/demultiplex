@@ -1,15 +1,19 @@
 {
     "software_versions_skip_trimming": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:38:35.033660203"
     },
     "skip_fastqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -20,18 +24,22 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-07-23T22:27:37.881306832"
     },
     "skip_fastp": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -42,18 +50,22 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-07-23T22:25:35.140271903"
     },
     "skip_multiqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -64,18 +76,22 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-07-23T22:30:34.614021228"
     },
     "skip_fastp_fastqc": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -86,42 +102,62 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-07-23T22:28:46.845866763"
     },
     "software_versions_skip_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:40:12.591107775"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:40:52.373539308"
     },
     "software_versions_skip_multiqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:41:53.704450617"
     },
     "software_versions_skip_fastp": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.0.3}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:39:04.450501154"
     },
     "skip_trimming": {
         "content": [
-            "Sample1_S1_L001_R1_001.fastq.gz:md5,0a0341e2990b4fa1d9ad4b4c603144c1",
-            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,c547a3c03e7c60c871d78018ec5d933f",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,febef808ae5397ea4ee7ee40e5fd39e0",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+            "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
             [
                 "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
                 "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
@@ -132,11 +168,15 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
             ]
         ],
-        "timestamp": "2023-10-17T08:05:28+0000"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-07-23T22:23:53.234471432"
     }
 }

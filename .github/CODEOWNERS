@@ -1,5 +1,7 @@
 # Maintainers
-* @matthdsm @emiller88
+* @nf-core/demultiplex
+*.nf.test* @nf-core/nf-test
+.github/workflows/ @nf-core/a-team
 
 # Element
 modules/nf-core/bases2fastq/ @blajoie

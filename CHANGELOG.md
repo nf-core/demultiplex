@@ -5,19 +5,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unpublished Version / DEV]
 
+## 1.5.0
+
+### `Added`
+
+- [#202](https://github.com/nf-core/demultiplex/pull/202) Added cellranger mkfastq subworkflow for demultiplexing 10x samples.
+- [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
+- [#208](https://github.com/nf-core/demultiplex/pull/208) Added parameter for removing adapter information from samplesheets.
+- [#210](https://github.com/nf-core/demultiplex/pull/210) Add checkqc module.
+- [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
+- [#214](https://github.com/nf-core/demultiplex/pull/214) Added test_pe (paired end) profile.
+
+### `Changed`
+
+- [#204](https://github.com/nf-core/demultiplex/pull/204) Update to latest bcl_demultiplex sub workflow.
+- [#210](https://github.com/nf-core/demultiplex/pull/210) Update bcl2fastq and bcl_demultiplex.
+- [#214](https://github.com/nf-core/demultiplex/pull/214) Updated method for removing adapters from samplesheet, added custom AdapterRemover function.
+- [#210](https://github.com/nf-core/demultiplex/pull/212) Update bcl2fastq and bcl_demultiplex.
+- [#216](https://github.com/nf-core/demultiplex/pull/216) List fastq reports for R1 and R2 separately in multiqc report.
+
+## 1.4.1 - 2024-02-27
+
+### `Changed`
+
+- [#167](https://github.com/nf-core/demultiplex/pull/167) Updated template to nf-core/tools v2.12
+- [#162](https://github.com/nf-core/demultiplex/pull/162) Updated template to nf-core/tools v2.11
+- [#163](https://github.com/nf-core/demultiplex/pull/163) Updated template to nf-core/tools v2.11.1
+
+## 1.4.0 - 2023-12-14
+
+### `Added`
+
+- [#148](https://github.com/nf-core/demultiplex/pull/148) Update CODEOWNERS to use GitHub teams
+
 ### `Changed`
 
 - [#141](https://github.com/nf-core/demultiplex/pull/141) Updated template to nf-core/tools v2.10
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Updated bclconvert module to 4.2.4
 
 ### `Fixed`
 
 - [#127](https://github.com/nf-core/demultiplex/pull/127) Add `singularity.registry = 'quay.io'` and bump NF version to 23.04.0
 - [#140](https://github.com/nf-core/demultiplex/pull/140) Make it possible to skip MultiQC, fix error raising
 - [#145](https://github.com/nf-core/demultiplex/pull/145) Fix MultiQC report generation
+- [#152](https://github.com/nf-core/demultiplex/pull/152) Close [#150](https://github.com/nf-core/demultiplex/issues/150)
+- [#157](https://github.com/nf-core/demultiplex/pull/157) Fix bcl2fastq and bclconvert publishDir
+- [#158](https://github.com/nf-core/demultiplex/pull/158) Update all modules
+- [#201](https://github.com/nf-core/demultiplex/pull/201) Fix samplesheet documentation issues
 
 ## `Removed`
 
-- Remove `public_aws_ecr` profile.
+- [#130](https://github.com/nf-core/demultiplex/pull/130) Remove `public_aws_ecr` profile.
 
 ## 1.3.2 - 2023-06-07
 
@@ -73,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Replace fastqc with falco for speedier QC, fixes Replace fastqc with falco [#62](https://github.com/nf-core/demultiplex/issues/62) (@matthdsm)
 - [#64](https://github.com/nf-core/demultiplex/pull/64) Add subway map by @nvnieuwk
 - [#70](https://github.com/nf-core/demultiplex/pull/70) Make tools and trimming optional (@matthdsm)
-- [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test (@emiller88)
+- [#71](https://github.com/nf-core/demultiplex/pull/71) Add nf-test (@edmundmiller)
 
 ### `Changed`
 
@@ -82,10 +120,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#63](https://github.com/nf-core/demultiplex/pull/63) Fix MultiQC report inputs, fixes MultiQC report is empty (@matthdsm)
-- [#67](https://github.com/nf-core/demultiplex/pull/67) Enable institutional configs (@emiller88)
+- [#67](https://github.com/nf-core/demultiplex/pull/67) Enable institutional configs (@edmundmiller)
 - [#83](https://github.com/nf-core/demultiplex/pull/83) Fix skip_tools (@glichtenstein)
 - [#80](https://github.com/nf-core/demultiplex/issues/80) When NoLaneSplitting is true the process fails because of a glob. See [nf-core/modules #2745](https://github.com/nf-core/modules/pull/2745). (@matthdsm)
-- [#79](https://github.com/nf-core/demultiplex/issues/79) Update link in docs to samplesheet (@glichtenstein & @emiller88)
+- [#79](https://github.com/nf-core/demultiplex/issues/79) Update link in docs to samplesheet (@glichtenstein & @edmundmiller)
 
 ## v1.0.0 - 2022-10-06
 

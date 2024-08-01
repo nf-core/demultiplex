@@ -23,9 +23,9 @@ workflow SINGULAR_DEMULTIPLEX {
 
     emit:
         fastq                   = ch_fastq_with_meta
-        generated_run_manifest  = SGDEMUX.out.per_project_metrics 
-        metrics                 = SGDEMUX.out.metrics 
-        unassigned              = SGDEMUX.out.most_frequent_unmatched 
+        generated_run_manifest  = SGDEMUX.out.per_project_metrics
+        metrics                 = SGDEMUX.out.metrics
+        unassigned              = SGDEMUX.out.most_frequent_unmatched
         versions                = SGDEMUX.out.versions
 }
 

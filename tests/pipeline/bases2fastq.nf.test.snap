@@ -1,18 +1,17 @@
 {
     "software_versions": {
         "content": [
-            "{BASES2FASTQ={bases2fastq=1.1.0.593880262, use subject to license available at elementbiosciences.com}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.4, yaml=6.0}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, UNTAR={untar=1.30}, Workflow={nf-core/demultiplex=1.4.0dev}}"
+            "{BASES2FASTQ={bases2fastq=1.1.0.593880262, use subject to license available at elementbiosciences.com}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, UNTAR={untar=1.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
-        "timestamp": "2023-10-17T07:59:51+0000"
+        "timestamp": "2024-05-16T08:36:50.320731"
     },
     "bases2fastq": {
         "content": [
             "Metrics.csv:md5,87702e562aa1091e70e5d6e2e19f10b0",
-            "RunManifest.json:md5,d4ecdb19e5fbcffab3e6e770c34023fb",
             "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097",
-            "DefaultSample_R1.fastq.gz:md5,5b631c9bec4fe8227a467bfcc382654c",
-            "DefaultSample_R2.fastq.gz:md5,7318b86370fdbc87f989c45c73331e38"
+            "DefaultSample_R1.fastq.gz:md5,0cc292ca98e126f915a6c0ea9588b752",
+            "DefaultSample_R2.fastq.gz:md5,069b0ccb3069a47abd97c39377b10c34"
         ],
-        "timestamp": "2023-10-17T07:59:51+0000"
+        "timestamp": "2024-05-16T12:32:47.641095"
     }
 }
