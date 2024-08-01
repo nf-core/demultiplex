@@ -110,6 +110,9 @@ We thank the following people for their extensive assistance in the development 
 - [`@nh13`](https://github.com/nh13)
 - [`@sam-white04`](https://github.com/sam-white04)
 - [`@maxulysse`](https://github.com/maxulysse)
+- [`@atrigila`](https://github.com/atrigila)
+- [`@nschcolnicov`](https://github.com/nschcolnicov)
+- [`@aratz`](https://github.com/aratz)
 
 ## Contributions and Support
 
