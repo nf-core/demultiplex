@@ -240,7 +240,6 @@ workflow DEMULTIPLEX {
         } else {
             kraken_db = file(kraken_db)
         }
-        
         FASTQ_CONTAM_SEQTK_KRAKEN(
             ch_fastq_to_qc,
             [sample_size],
@@ -249,7 +248,6 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
     }
-    
     //
     // Collate and save software versions
     //
