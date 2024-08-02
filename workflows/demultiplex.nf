@@ -230,8 +230,10 @@ workflow DEMULTIPLEX {
     // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
     if ((!("kraken" in skip_tools) && kraken_db)){
         if (kraken_db.endsWith(".tar.gz")){
-            UNTAR_KRAKEN_DB ( [[],kraken_db] )
+            UNTAR_KRAKEN_DB ( [[],file(kraken_db)] )
             kraken_db = UNTAR_KRAKEN_DB.out.untar.map{ meta,file -> file }
+        } else {
+            kraken_db = file(kraken_db)
         }
         
         FASTQ_CONTAM_SEQTK_KRAKEN(
