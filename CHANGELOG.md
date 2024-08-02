@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#210](https://github.com/nf-core/demultiplex/pull/210) Add checkqc module.
 - [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
 - [#214](https://github.com/nf-core/demultiplex/pull/214) Added test_pe (paired end) profile.
+- [#221](https://github.com/nf-core/demultiplex/pull/221) Added checkqc_config to pipeline schema.
 
 ### `Changed`
 
