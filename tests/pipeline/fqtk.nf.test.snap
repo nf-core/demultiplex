@@ -11,12 +11,12 @@
     },
     "software_versions": {
         "content": [
-            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, FQTK={fqtk=0.2.1}, MD5SUM={md5sum=8.3}, UNTAR={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
+            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, FQTK={fqtk=0.2.1}, MD5SUM={md5sum=8.3}, UNTAR_FLOWCELL={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-07-31T19:23:30.422062626"
+        "timestamp": "2024-08-02T19:57:17.122084549"
     }
 }

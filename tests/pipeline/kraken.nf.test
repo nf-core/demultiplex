@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    tag "bcl2fastq"
+    tag "kraken"
     tag "pipeline"
 
     test("kraken2") {
@@ -23,10 +23,10 @@ nextflow_pipeline {
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
                 { assert workflow.trace.succeeded().size() == 8 },
                 { assert snapshot(
-                        path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt"),
-                        path("$outputDir/multiqc/multiqc_data/multiqc_fastp.txt"),
-                        path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bysample.txt"),
-                        path("$outputDir/multiqc/multiqc_data/multiqc_kraken.txt")
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/kraken-top-n-plot.txt"),
                     ).match("multiqc") },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.kraken2.report.txt"),
