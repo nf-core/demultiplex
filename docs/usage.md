@@ -101,6 +101,10 @@ genome: 'GRCh37'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
+## Optional parameters
+
+If you are running this pipeline with the bcl2fastq demultiplexer, the checkqc module is run. In this case, the default run will include the default config file for checkqc, but you can additionally provide your own checkqc config file using the parameter `--checkqc_config` and a path to a `yml`. See an example of a config file in the [checkqc repository](https://github.com/Molmed/checkQC/blob/dfba84ec63e1df60c0f84ccc96a154a330b28ce4/checkQC/default_config/config.yaml).
+
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
