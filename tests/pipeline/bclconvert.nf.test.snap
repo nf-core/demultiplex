@@ -38,14 +38,14 @@
     },
     "multiqc": {
         "content": [
-            "multiqc_bclconvert_bylane.txt:md5,c796947c68cf713a8b7ef8066a7b4ec7",
-            "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
-            "multiqc_bclconvert_bysample.txt:md5,07048c9b73ed85bdac03c476b192c4e3"
+            "bclconvert_lane_counts.txt:md5,68de4c4513456af9fd15e90c7145596a",
+            "fastp_filtered_reads_plot.txt:md5,fe76dc8c1650e83e16f547c1fe8a0767",
+            "bclconvert_sample_counts_Counts_per_lane.txt:md5,f12a2fb8c83cfd6262fcb1ea6dada571"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "23.10.4"
         },
-        "timestamp": "2024-05-15T01:34:10.988849"
+        "timestamp": "2024-08-01T14:51:11.574966834"
     }
 }

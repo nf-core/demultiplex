@@ -136,6 +136,20 @@
                 }
             }
         },
+        "checkqc_options": {
+            "title": "CheckQC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "checkqc_config": {
+                    "type": "string",
+                    "default": "[]",
+                    "description": "Path to the checkqc config yml file.",
+                    "fa_icon": "far fa-check-square"
+                }
+            }
+        },
         "max_job_request_options": {
             "title": "Max job request options",
             "type": "object",
@@ -309,16 +323,13 @@
             "$ref": "#/definitions/institutional_config_options"
         },
         {
+            "$ref": "#/definitions/checkqc_options"
+        },
+        {
             "$ref": "#/definitions/max_job_request_options"
         },
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "checkqc_config": {
-            "type": "string",
-            "default": "[]"
-        }
-    }
+    ]
 }

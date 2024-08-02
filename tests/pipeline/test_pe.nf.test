@@ -22,9 +22,10 @@ nextflow_pipeline {
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
                 { assert workflow.trace.succeeded().size() == 6 },
                 { assert snapshot(
-                        path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt"),
-                        path("$outputDir/multiqc/multiqc_data/multiqc_fastp.txt"),
-                        path("$outputDir/multiqc/multiqc_data/multiqc_bcl2fastq_bysample.txt")
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt")
+
                     ).match("multiqc") },
                 { assert snapshot(
                         path("$outputDir/PE_Sample.csv"),

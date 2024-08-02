@@ -76,14 +76,14 @@
     },
     "multiqc": {
         "content": [
-            "multiqc_bcl2fastq_bylane.txt:md5,681c30bc0bcb6b7d57eee461bfcbbcfa",
-            "multiqc_fastp.txt:md5,0345dff47fcb697c5f76289fdf179322",
-            "multiqc_bcl2fastq_bysample.txt:md5,2c50a344793417587572062c9ca0f526"
+            "bcl2fastq_lane_counts.txt:md5,617ee87ca15a85232d9fd58808453204",
+            "fastp_filtered_reads_plot.txt:md5,bc473fbbdae16865669a66d5c3180ca3",
+            "bcl2fastq_sample_counts.txt:md5,6454d154d69ffa563878f5b7fd3d9879"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T13:03:01.068145681"
+        "timestamp": "2024-08-01T16:33:58.242361926"
     }
 }

@@ -214,7 +214,7 @@ Creates an MD5 (128-bit) checksum of every fastq.
 
 </details>
 
-This is done by a custom function in the workflow, not by a module. Creates an updated samplesheet from the input by removing the adapter sequence within the "\[Settings\]" section.
+This is done by a custom function in the workflow, not by a module. Creates an updated samplesheet from the input by removing the adapter sequence within the "\[Settings\]" section. If the samplesheet doesn't require any adapter removal, it will still be published in the specified output folder.
 
 ### MultiQC
 

@@ -7,7 +7,7 @@
                 "nf-core": {
                     "bases2fastq": {
                         "branch": "master",
-                        "git_sha": "c2342b45bbfc5d6fe19cc4154b38fa57177c67dd",
+                        "git_sha": "c651992bf8425fecefe14085ff486f42172cba77",
                         "installed_by": [
                             "modules"
                         ]
@@ -21,7 +21,7 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "54cd970e633efbd6adab9fc5610dd280e50ab32c",
+                        "git_sha": "1eed98385a32f1cd2bc38784450e200113b395e6",
                         "installed_by": [
                             "bcl_demultiplex"
                         ]
@@ -42,7 +42,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
+                        "git_sha": "82024cf6325d2ee194e7f056d841ecad2f6856e9",
                         "installed_by": [
                             "modules"
                         ]
@@ -56,21 +56,21 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
                         "installed_by": [
                             "modules"
                         ]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
                         "installed_by": [
                             "modules"
                         ]
                     },
                     "fqtk": {
                         "branch": "master",
-                        "git_sha": "97a796133cd9644ba3dd83d3c0fd09a9a63b1a84",
+                        "git_sha": "c60c14b285b89bdd0607e371417dadb80385ad6e",
                         "installed_by": [
                             "modules"
                         ]
@@ -84,14 +84,14 @@
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "1164836d4d3922ab937865b17086485f0f472748",
                         "installed_by": [
                             "modules"
                         ]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "git_sha": "b80f5fd12ff7c43938f424dd76392a2704fa2396",
                         "installed_by": [
                             "modules"
                         ]
@@ -112,7 +112,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "4e5f4687318f24ba944a13609d3ea6ebd890737d",
                         "installed_by": [
                             "modules"
                         ]

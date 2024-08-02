@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
 - [#214](https://github.com/nf-core/demultiplex/pull/214) Added test_pe (paired end) profile.
 - [#220](https://github.com/nf-core/demultiplex/pull/220) Added kraken2.
+- [#221](https://github.com/nf-core/demultiplex/pull/221) Added checkqc_config to pipeline schema.
 
 ### `Changed`
 
@@ -24,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#214](https://github.com/nf-core/demultiplex/pull/214) Updated method for removing adapters from samplesheet, added custom AdapterRemover function.
 - [#210](https://github.com/nf-core/demultiplex/pull/212) Update bcl2fastq and bcl_demultiplex.
 - [#216](https://github.com/nf-core/demultiplex/pull/216) List fastq reports for R1 and R2 separately in multiqc report.
+- [#219](https://github.com/nf-core/demultiplex/pull/219) Modified workflow to store samplesheet in results folder.
+- [#217](https://github.com/nf-core/demultiplex/pull/217) Update all nf-core modules and tests.
 
 ## 1.4.1 - 2024-02-27
 

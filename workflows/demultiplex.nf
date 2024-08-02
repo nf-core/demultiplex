@@ -75,10 +75,15 @@ workflow DEMULTIPLEX {
         .map{ id,meta,flowcell,lane,samplesheet -> [meta,samplesheet,flowcell,lane]}
 
         ch_samplesheet = ch_samplesheet_new
+    } else {
+        ch_samplesheet
+            .collectFile( storeDir: "${params.outdir}" ){ item ->
+                [ "${item[0].id}.csv", item[1] ]
+            }
     }
 
     // Convenience
-    //ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -195,7 +200,7 @@ workflow DEMULTIPLEX {
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
     }
-    //ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
+    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq",{FormattingService.prettyFormat(it)})
 
     //
     // RUN QC and TRIMMING
@@ -205,7 +210,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
-            FASTP(ch_raw_fastq, [], [], [])
+            FASTP(ch_raw_fastq, [], [], [], [])
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             if (trim_fastq) {
@@ -223,7 +228,7 @@ workflow DEMULTIPLEX {
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     if (!("md5sum" in skip_tools)){
-        MD5SUM(ch_fastq_to_qc.transpose())
+        MD5SUM(ch_fastq_to_qc.transpose(), true)
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
@@ -292,7 +297,9 @@ workflow DEMULTIPLEX {
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
+            ch_multiqc_logo.toList(),
+            [],
+            []
         )
         ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
     }
