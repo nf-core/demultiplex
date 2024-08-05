@@ -29,10 +29,10 @@ nextflow_pipeline {
                         path("$outputDir/multiqc/multiqc_data/kraken-top-n-plot.txt"),
                     ).match("multiqc") },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.kraken2.report.txt"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.kraken2.report.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Stats/").list(),
                     ).match("kraken") }

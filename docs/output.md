@@ -30,7 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `samplename/sample.fastq.gz`
+- `<flowcell_id>/sample.fastq.gz` or `<flowcell_id>/L00<meta.lane>/sample.fastq.gz`
   - Untrimmed raw fastq files
 
 </details>
@@ -140,7 +140,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*.fastp.html`: Trimming report in html format.
   - `*.fastp.json`: Trimming report in json format.
   - `*.fastp.log`: Trimming log file.
@@ -156,7 +156,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.txt`: Txt containing the FastQC report, tab-delimited data file.
   - `*_summary.txt`: Txt containing the summary metrics.
@@ -182,7 +182,7 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*.fastq.gz.md5`: MD5 checksum of fastq
 
 </details>
@@ -194,7 +194,7 @@ Creates an MD5 (128-bit) checksum of every fastq.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*.*report.txt`: A Kraken2 report that summarises the fraction abundance, taxonomic ID, number of Kmers, taxonomic path of all the hits in the Kraken2 run for a given sample.
   - `*.classified.fastq.gz`: FASTQ file containing all reads that had a hit against a reference in the database for a given sample.
   - `*.unclassified.fastq.gz`: FASTQ file containing all reads that did not have a hit in the database for a given sample.
@@ -209,7 +209,7 @@ Creates an MD5 (128-bit) checksum of every fastq.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>.csv`
+- `<flowcell_id>.lane<meta.lane>_no_adapters.csv`
 
 </details>
 
