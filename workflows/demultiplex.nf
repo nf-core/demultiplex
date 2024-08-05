@@ -77,7 +77,6 @@ workflow DEMULTIPLEX {
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
             .map{ meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
         ch_samplesheet = ch_samplesheet_new
-        
     } else {
         ch_samplesheet
             .collectFile( storeDir: "${params.outdir}" ){ item ->
