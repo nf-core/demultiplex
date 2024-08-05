@@ -70,14 +70,12 @@ workflow DEMULTIPLEX {
             }
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /([^\/]+)(?=\.(lane|_no_adapters))/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters" 
-                // def meta_lane = (file =~ /\.lane(\d+)/)[0][1] //extracts number after ".lane" until next "_"
-                // def meta = [id: meta_id, lane: meta_lane]
-                [meta_id, file]
+                def meta_lane = (file =~ /\.lane(\d+)/)[0][1].toInteger() //extracts number after ".lane" until next "_", must be int to match lane value from meta
+                [[id: meta_id, lane: meta_lane],file]
             }
         ch_samplesheet_new = ch_samplesheet
-            .map{ meta,samplesheet,flowcell,lane -> [meta.id,meta,samplesheet,flowcell,lane] }
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
-            .map{ id,meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
+            .map{ meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
         ch_samplesheet = ch_samplesheet_new
         
     } else {
