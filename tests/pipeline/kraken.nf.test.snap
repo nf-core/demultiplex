@@ -1,7 +1,7 @@
 {
     "kraken": {
         "content": [
-            "Sample1_S1_L001.kraken2.report.txt:md5,54e4fd75a10294da57ce0c5cc5d9cbf4",
+            "Sample1_S1_L001.kraken2.report.txt:md5,726f60beda853ebb9134f6a712c4196b",
             "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
@@ -59,7 +59,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-08-01T22:34:15.186958444"
+        "timestamp": "2024-08-05T15:07:49.463457221"
     },
     "software_versions": {
         "content": [
@@ -76,12 +76,12 @@
             "bcl2fastq_lane_counts.txt:md5,eed04dae0bae4250ac5f4ab580e32b0b",
             "fastp_filtered_reads_plot.txt:md5,fe76dc8c1650e83e16f547c1fe8a0767",
             "bcl2fastq_sample_counts.txt:md5,6454d154d69ffa563878f5b7fd3d9879",
-            "kraken-top-n-plot.txt:md5,021ca9ba8867fc1461a0915014ef549d"
+            "kraken-top-n-plot.txt:md5,84f10e652a1e2b98f96ffbe1a8ffe114"
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-08-02T21:29:31.528070966"
+        "timestamp": "2024-08-05T15:07:45.690953174"
     }
 }
