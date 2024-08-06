@@ -74,7 +74,13 @@ jobs:
           sudo mv nf-test /usr/local/bin/
 
       - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
-        run: nf-test test --ci --shard ${{ matrix.shard }}/${{ strategy.job-total }} --changed-since HEAD^ --profile "+${{ matrix.profile }}" --filter pipeline,subworkflow
+        run: |
+          nf-test test \
+              --ci \
+              --shard ${{ matrix.shard }}/${{ strategy.job-total }} \
+              --changed-since HEAD^ \
+              --profile "+${{ matrix.profile }}" \
+              --filter pipeline,subworkflow
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
