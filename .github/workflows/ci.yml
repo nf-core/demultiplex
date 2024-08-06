@@ -54,7 +54,7 @@ jobs:
       # Install nf-test
       - name: Install nf-test
         run: |
-          conda install -c bioconda nf-test=$NTEST_VER
+          conda install -c bioconda nf-test=$NFTEST_VER
 
       # Run nf-test
       - name: Run nf-test
