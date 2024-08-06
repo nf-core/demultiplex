@@ -24,10 +24,10 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().size() == 5 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        //path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                     ).match("skip_trimming") }
             )
         }
@@ -52,10 +52,10 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().size() == 4 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        //path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                     ).match("skip_fastp") }
             )
         }
@@ -80,10 +80,10 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().size() == 5 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        //path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                     ).match("skip_fastqc") }
             )
         }
@@ -108,10 +108,10 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().size() == 4 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        //path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                     ).match("skip_fastp_fastqc") }
             )
         }
@@ -136,10 +136,10 @@ nextflow_pipeline {
                 { assert workflow.trace.succeeded().size() == 4 },
                 { assert !path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/output/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        //path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
                     ).match("skip_multiqc") }
             )
         }

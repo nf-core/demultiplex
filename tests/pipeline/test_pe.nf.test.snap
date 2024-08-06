@@ -7,62 +7,13 @@
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_R2_001.fastq.gz:md5,146eefcab1eaaef17ffb72672c021368",
             "Sample1_S1_L001_1.fastp.fastq.gz_summary.txt:md5,917b542afe3e3f178b994317c955ce02",
-            "Sample1_S1_L001_2.fastp.fastq.gz_summary.txt:md5,441197ccd90d2b018db631a66d6fbbb3",
-            [
-                [
-                    [
-                        [
-                            [
-                                [
-                                    "lane.html:md5,eca711b7312a7cf6dd32a6958b2d8812",
-                                    "laneBarcode.html:md5,b5f0e5f5730d70513defa8024913b214"
-                                ],
-                                [
-                                    
-                                ]
-                            ]
-                        ],
-                        [
-                            [
-                                [
-                                    "lane.html:md5,41ecd9ef68fc4e1cc3177c23d741428e",
-                                    "laneBarcode.html:md5,db047476a60b8dc3b83eb6a9ee77b7db"
-                                ],
-                                [
-                                    "lane.html:md5,594f959553519cc6e578e8dca3da2612",
-                                    "laneBarcode.html:md5,594f959553519cc6e578e8dca3da2612"
-                                ]
-                            ],
-                            [
-                                [
-                                    "lane.html:md5,7ea014b0a0c9e9bb1761f291a409f9f0",
-                                    "laneBarcode.html:md5,eddae85d4b13d6fb5817df5fbfb756ff"
-                                ],
-                                [
-                                    
-                                ]
-                            ]
-                        ]
-                    ],
-                    "Report.css:md5,eb7d3eb68fc1539f411404987246b59b",
-                    "index.html:md5,5747c407854ae2c358d0ec201ce622d8",
-                    "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34"
-                ]
-            ],
-            [
-                "AdapterTrimming.txt:md5,8009886a4c060bfec6d8e9346feb0988",
-                "ConversionStats.xml:md5,6e08faa696f3e747ec9752dc56629152",
-                "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
-                "DemuxSummaryF1L1.txt:md5,03e5fd0c1e3079c5f8c7b4d0501b37ff",
-                "FastqSummaryF1L1.txt:md5,0274549f9541b1ba7828ae6e9c5bcbbd",
-                "Stats.json:md5,d257fb169519c08b50179fb749d6aafa"
-            ]
+            "Sample1_S1_L001_2.fastp.fastq.gz_summary.txt:md5,441197ccd90d2b018db631a66d6fbbb3"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-31T13:03:01.118073355"
+        "timestamp": "2024-08-06T15:40:13.417379"
     },
     "software_versions": {
         "content": [

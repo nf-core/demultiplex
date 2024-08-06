@@ -11,7 +11,7 @@ on:
 env:
   NXF_ANSI_LOG: false
   CAPSULE_LOG: none
-  NFTEST_VER: "0.8.4"
+  NFTEST_VER: "0.9.0"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -27,9 +27,9 @@ jobs:
       - id: nxf_versions
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "dev" && "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
-            echo matrix='["latest-everything"]' | tee -a $GITHUB_OUTPUT
+            echo matrix='["latest-stable"]' | tee -a $GITHUB_OUTPUT
           else
-            echo matrix='["latest-everything", "23.04.0"]' | tee -a $GITHUB_OUTPUT
+            echo matrix='["latest-stable", "23.04.0"]' | tee -a $GITHUB_OUTPUT
           fi
 
   test:
@@ -54,12 +54,12 @@ jobs:
       # Install nf-test
       - name: Install nf-test
         run: |
-          wget -qO- https://code.askimed.com/install/nf-test | bash -s $NFTEST_VER
-          sudo mv nf-test /usr/local/bin/
+          conda install -c bioconda nf-test=$NFTEST_VER
 
       # Run nf-test
       - name: Run nf-test
-        run: nf-test test tests/pipeline/${{ matrix.profile }}.nf.test --profile=test,docker --junitxml=test.xml
+        run: |
+          $CONDA/bin/nf-test test tests/pipeline/${{ matrix.profile }}.nf.test --profile=test,docker --junitxml=test.xml
 
       # If the test fails, output the software_versions.yml using the 'batcat' utility
       - name: Output log on failure

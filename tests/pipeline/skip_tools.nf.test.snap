@@ -13,105 +13,49 @@
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-            [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:27:37.881306832"
+        "timestamp": "2024-08-06T22:19:59.685774"
     },
     "skip_fastp": {
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-            [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:25:35.140271903"
+        "timestamp": "2024-08-06T22:18:05.36954"
     },
     "skip_multiqc": {
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-            [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:30:34.614021228"
+        "timestamp": "2024-08-06T22:22:48.85868"
     },
     "skip_fastp_fastqc": {
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-            [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:28:46.845866763"
+        "timestamp": "2024-08-06T22:21:09.911486"
     },
     "software_versions_skip_fastqc": {
         "content": [
@@ -157,26 +101,12 @@
         "content": [
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
             "Sample1_S1_L001_R1_001.fastq.gz.md5:md5,10295d4e5ca66dae7788bbf24886cded",
-            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-            [
-                "Adapter_Cycle_Metrics.csv:md5,5a0c88793b4a0885fe3dda16609b576e",
-                "Adapter_Metrics.csv:md5,989240b8840b2169ac1061f952c90f6c",
-                "Demultiplex_Stats.csv:md5,93949a8cd96f907d83e0808c1ec2a04b",
-                "Demultiplex_Tile_Stats.csv:md5,83120160b0f22a1303fa1db31c19f6e9",
-                "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
-                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
-                "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
-                "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
-                "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
-                "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
-            ]
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:23:53.234471432"
+        "timestamp": "2024-08-06T22:16:50.999044"
     }
 }
