@@ -68,9 +68,10 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      # Install nf-test
       - name: Install nf-test
         run: |
-          wget -qO- https://get.nf-test.com | bash
+          wget -qO- https://get.nf-test.com | bash -s $NFTEST_VER
           sudo mv nf-test /usr/local/bin/
 
       - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
