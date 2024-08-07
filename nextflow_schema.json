@@ -20,6 +20,17 @@
                     "type": "string",
                     "default": "[]",
                     "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
+                },
+                "sample_size": {
+                    "type": "integer",
+                    "default": 100000,
+                    "description": "Number of reads to subsample for contamination detection."
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "format": "path",
+                    "default": null,
+                    "description": "path to Kraken2 DB to use for screening"
                 }
             }
         },

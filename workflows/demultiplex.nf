@@ -9,6 +9,7 @@
 //
 
 include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { FASTQ_CONTAM_SEQTK_KRAKEN } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
 include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
 include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
@@ -22,7 +23,8 @@ include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc
 include { FASTP                         } from '../modules/nf-core/fastp/main'
 include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
-include { UNTAR                         } from '../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_FLOWCELL       } from '../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_KRAKEN_DB      } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 
 //
@@ -49,6 +51,9 @@ workflow DEMULTIPLEX {
     demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
     trim_fastq    = params.trim_fastq                                      // boolean: true, false
     skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+    sample_size   = params.sample_size                                     // int
+    kraken_db     = params.kraken_db                                       // path
+
 
     // Channel inputs
     ch_versions = Channel.empty()
@@ -118,8 +123,8 @@ workflow DEMULTIPLEX {
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
     else {
-        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
-        ch_versions = ch_versions.mix(UNTAR.out.versions)
+        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR_FLOWCELL ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
+        ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
     }
 
     // Merge the two channels back together
@@ -166,7 +171,7 @@ workflow DEMULTIPLEX {
 
             // Combine the directory containing the fastq with the fastq name and read structure
             // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
-            fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
+            fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect{it[1]}).toList()
 
             // Format ch_samplesheet like so:
             // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
@@ -227,6 +232,22 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
+    // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
+    if ((!("kraken" in skip_tools) && kraken_db)){
+        if (kraken_db.endsWith(".tar.gz")){
+            UNTAR_KRAKEN_DB ( [[],file(kraken_db)] )
+            kraken_db = UNTAR_KRAKEN_DB.out.untar.map{ meta,file -> file }
+        } else {
+            kraken_db = file(kraken_db)
+        }
+        FASTQ_CONTAM_SEQTK_KRAKEN(
+            ch_fastq_to_qc,
+            [sample_size],
+            kraken_db
+        )
+        ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
+    }
     //
     // Collate and save software versions
     //

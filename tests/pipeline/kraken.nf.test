@@ -1,0 +1,44 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    tag "kraken"
+    tag "pipeline"
+
+    test("kraken2") {
+
+        when {
+            params {
+                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
+                demultiplexer = 'bcl2fastq'
+                outdir        = "$outputDir"
+                skip_tools    = "checkqc"
+                kraken_db     = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/db/kraken2.tar.gz'
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 8 },
+                { assert snapshot(
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/kraken-top-n-plot.txt"),
+                    ).match("multiqc") },
+                { assert snapshot(
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.kraken2.report.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001.fastp.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Stats/").list(),
+                    ).match("kraken") }
+            )
+        }
+
+    }
+
+}

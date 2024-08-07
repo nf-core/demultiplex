@@ -1,13 +1,13 @@
 {
     "software_versions": {
         "content": [
-            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, SGDEMUX={sgdemux=1.1.1}, UNTAR={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
+            "{FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, SGDEMUX={sgdemux=1.1.1}, UNTAR_FLOWCELL={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.4"
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-08-01T15:34:26.559747868"
+        "timestamp": "2024-08-02T19:58:24.75171605"
     },
     "sgdemux": {
         "content": [
