@@ -31,7 +31,7 @@ nextflow_pipeline {
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_R1_001.fastq.gz"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/Sample1_S1_L001_summary.txt"),
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Stats/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Stats/").list()
                     ).match("bcl2fastq") }
             )
         }

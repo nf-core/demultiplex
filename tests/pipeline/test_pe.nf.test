@@ -36,7 +36,7 @@ nextflow_pipeline {
                         path("$outputDir/PE_Sample/Sample1_S1_L001_1.fastp.fastq.gz_summary.txt"),
                         path("$outputDir/PE_Sample/Sample1_S1_L001_2.fastp.fastq.gz_summary.txt"),
                         path("$outputDir/PE_Sample/L001/Reports/").list(),
-                        path("$outputDir/PE_Sample/L001/Stats/").list(),
+                        path("$outputDir/PE_Sample/L001/Stats/").list()
                     ).match("bcl2fastq_pe") }
             )
         }

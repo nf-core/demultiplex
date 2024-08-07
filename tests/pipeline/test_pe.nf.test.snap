@@ -59,10 +59,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-31T13:03:01.118073355"
+        "timestamp": "2024-08-07T15:19:05.728175"
     },
     "software_versions": {
         "content": [
