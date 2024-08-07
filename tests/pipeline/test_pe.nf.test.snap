@@ -1,7 +1,7 @@
 {
     "bcl2fastq_pe": {
         "content": [
-            "PE_Sample.csv:md5,c31cca10b3a1aed8ec68daf779217d91",
+            "PE_Sample.lane1_no_adapters.csv:md5,c31cca10b3a1aed8ec68daf779217d91",
             "Sample1_S1_L001_1.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
             "Sample1_S1_L001_2.fastp.fastq.gz:md5,adbc8e47c8e7e902777a01ea3d73b306",
             "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",

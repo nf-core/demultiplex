@@ -23,20 +23,20 @@ nextflow_pipeline {
                 // How many directories were produced?
                 {assert path("${outputDir}").list().size() == 4},
                 // How many files were produced?
-                {assert path("$outputDir/220422_M11111_0222_000000000-K9H97_mkfastq/").list().size() == 10},
+                {assert path("$outputDir/220422_M11111_0222_000000000-K9H97_mkfastq/").list().size() == 2},
                 {assert path("$outputDir/multiqc/").list().size() == 3},
                 {assert path("$outputDir/pipeline_info/").list().size() == 5},
                 // File assertions: Files that should be exactly the same with every pipeline execution.
                 {assert snapshot(
                     //Check output files
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_summary.txt"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_report.html").exists(),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_R1_001.fastq.gz"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001_fastqc_data.txt"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.json"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.html").exists(),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz.md5"),
-                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/Sample1_S1_L001.fastp.fastq.gz"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001_summary.txt"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001_report.html").exists(),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001_R1_001.fastq.gz"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001_fastqc_data.txt"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001.fastp.json"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001.fastp.html").exists(),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001.fastp.fastq.gz.md5"),
+                    path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/L001/Sample1_S1_L001.fastp.fastq.gz"),
                     path("${outputDir}/220422_M11111_0222_000000000-K9H97_mkfastq/InterOp/IndexMetricsOut.bin")
                 ).match("file_assertions_mkfastq")}
             )
