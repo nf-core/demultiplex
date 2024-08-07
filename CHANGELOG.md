@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#219](https://github.com/nf-core/demultiplex/pull/219) Modified workflow to store samplesheet in results folder.
 - [#217](https://github.com/nf-core/demultiplex/pull/217) Update all nf-core modules and tests.
 
+### `Fixed`
+
+- [#224](https://github.com/nf-core/demultiplex/pull/217) Fix input filename collision.
+
 ## 1.4.1 - 2024-02-27
 
 ### `Changed`
