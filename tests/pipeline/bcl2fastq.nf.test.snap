@@ -4,10 +4,10 @@
             "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-07-29T17:32:39.206192787"
+        "timestamp": "2024-08-07T17:06:30.73934962"
     },
     "bcl2fastq": {
         "content": [
@@ -65,10 +65,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2023-12-11T16:37:27.684322"
+        "timestamp": "2024-08-07T17:06:30.762919351"
     },
     "multiqc": {
         "content": [
@@ -77,9 +77,9 @@
             "bcl2fastq_sample_counts.txt:md5,6454d154d69ffa563878f5b7fd3d9879"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.4"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-08-01T14:36:32.878473033"
+        "timestamp": "2024-08-07T17:06:30.754480121"
     }
 }

@@ -26,14 +26,14 @@
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
                 "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:27:37.881306832"
+        "timestamp": "2024-08-07T15:11:46.12688"
     },
     "skip_fastp": {
         "content": [
@@ -52,14 +52,14 @@
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
                 "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:25:35.140271903"
+        "timestamp": "2024-08-07T15:09:48.227109"
     },
     "skip_multiqc": {
         "content": [
@@ -78,14 +78,14 @@
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
                 "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:30:34.614021228"
+        "timestamp": "2024-08-07T15:14:47.991287"
     },
     "skip_fastp_fastqc": {
         "content": [
@@ -104,14 +104,14 @@
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
                 "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:28:46.845866763"
+        "timestamp": "2024-08-07T15:13:01.794999"
     },
     "software_versions_skip_fastqc": {
         "content": [
@@ -170,13 +170,13 @@
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
                 "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-07-23T22:23:53.234471432"
+        "timestamp": "2024-08-07T15:08:34.10467"
     }
 }

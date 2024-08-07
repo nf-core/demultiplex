@@ -27,12 +27,12 @@ nextflow_pipeline {
                     path("$outputDir/sim-data/Metrics.csv"),
                     path("$outputDir/sim-data/UnassignedSequences.csv"),
                     path("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R1.fastq.gz"),
-                    path("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R2.fastq.gz"),
+                    path("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R2.fastq.gz")
                 ).match("bases2fastq") },
                 { assert new File("$outputDir/sim-data/20230404-Bases2Fastq-Sim_QC.html").exists() },
                 { assert new File("$outputDir/sim-data/RunStats.json").exists() },
                 { assert new File("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_stats.json").exists() },
-                { assert new File("$outputDir/sim-data/RunManifest.json").exists() },
+                { assert new File("$outputDir/sim-data/RunManifest.json").exists() }
             )
         }
 
