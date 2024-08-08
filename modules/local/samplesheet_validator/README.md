@@ -54,7 +54,7 @@ Here’s an example of a `validation.json` schema file for an Illumina® Sample 
       "properties": {
         "Index": {
           "type": "string",
-          "pattern": "^[ACGT]{8}$"  // Example pattern for 8-base indices
+          "pattern": "^[ACGT]{8}$" // Example pattern for 8-base indices
         }
       }
     }

@@ -91,8 +91,8 @@ workflow DEMULTIPLEX {
     }
 
     // RUN samplesheet_validator
-    if (!("samplesheet_validator" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){        
-        SAMPLESHEET_VALIDATOR ( 
+    if (!("samplesheet_validator" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
+        SAMPLESHEET_VALIDATOR (
             ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
             ch_validator_schema
         )

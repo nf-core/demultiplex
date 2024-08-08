@@ -13,7 +13,7 @@ process SAMPLESHEET_VALIDATOR {
     when:
     task.ext.when == null || task.ext.when
 
-    script: 
+    script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
@@ -22,7 +22,6 @@ process SAMPLESHEET_VALIDATOR {
     # Run validation command and capture output
     output=\$(validate_samplesheet.py "${samplesheet}" "${arg_validator_schema}" 2>&1)
     status=\$?
-    
     # Check if validation failed
     if echo "\$output" | grep -q "Validation failed:"; then
         echo "\$output"  # Print output for debugging
@@ -107,7 +106,6 @@ process SAMPLESHEET_VALIDATOR {
     # Run validation command and capture output
     output=\$(validate_samplesheet.py minimal_samplesheet.csv minimal_schema.json  2>&1)
     status=\$?
-    
     # Check if validation failed
     if echo "\$output" | grep -q "Validation failed:"; then
         echo "\$output"  # Print output for debugging

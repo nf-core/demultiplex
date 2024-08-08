@@ -18,7 +18,6 @@ def validate_samplesheet(filename, custom_schema_file=None):
     validators = [illuminasamplesheetv2schema, illuminasamplesheetv2logic]
     if custom_validator:
         validators.append(custom_validator)
-    
     # Read and validate the sample sheet
     try:
         sheet = read_samplesheetv2(filename, validation=validators)
@@ -30,7 +29,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         print("Usage: validate_samplesheet.py <SampleSheet.csv> [custom_schema.json]")
         sys.exit(1)
-    
     samplesheet_file = sys.argv[1]
     schema_file = sys.argv[2] if len(sys.argv) == 3 else None
 

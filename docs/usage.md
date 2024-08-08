@@ -208,8 +208,6 @@ The trimming process in our demultiplexing pipeline has been updated to ensure c
 
 The Samplesheet validator (samshee) module ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validator file. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the path to the JSON schema validator file via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information about the tool or how to write the schema JSON file, please refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
-
-
 ### nf-core/configs
 
 In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
