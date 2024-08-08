@@ -2,7 +2,10 @@ process SAMPLESHEET_VALIDATOR {
     tag {"$meta.id"}
     label 'process_low'
 
-    container "community.wave.seqera.io/library/pip_samshee:9f3c0736b7c44dc8"
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'oras://community.wave.seqera.io/library/python_pip_samshee:84a770c9853c725d' :
+        'community.wave.seqera.io/library/python_pip_samshee:e8a5c47ec32efa42' }"
 
     input:
     tuple val(meta), path(samplesheet)
