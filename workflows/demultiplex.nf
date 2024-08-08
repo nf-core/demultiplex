@@ -28,6 +28,11 @@ include { UNTAR as UNTAR_KRAKEN_DB      } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 
 //
+// MODULE: Local modules
+//
+include { SAMPLESHEET_VALIDATOR         } from '../modules/local/samplesheet_validator/main'
+
+//
 // FUNCTION
 //
 include { paramsSummaryMap       } from 'plugin/nf-validation'
@@ -60,6 +65,7 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_reports = Channel.empty()
     checkqc_config    = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []  // file checkqc_config.yaml
+    ch_validator_schema = params.validator_schema ? Channel.fromPath(params.validator_schema, checkIfExists: true) : []  // file validator_schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
@@ -82,6 +88,14 @@ workflow DEMULTIPLEX {
             .collectFile( storeDir: "${params.outdir}" ){ item ->
                 [ "${item[0].id}.csv", item[1] ]
             }
+    }
+
+    // RUN samplesheet_validator
+    if (!("samplesheet_validator" in skip_tools)){
+        SAMPLESHEET_VALIDATOR ( 
+            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
+            ch_validator_schema        
+        )
     }
 
     // Convenience
