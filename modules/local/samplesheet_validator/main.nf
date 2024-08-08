@@ -5,7 +5,8 @@ process SAMPLESHEET_VALIDATOR {
     container "nschcolnicov/samshee:latest" //TODO replace with nf-core container
 
     input:
-    tuple val(meta), path(samplesheet), path (validator_schema)
+    tuple val(meta), path(samplesheet)
+    path(validator_schema)              //optional
 
     // output: //Module is meant to crash pipeline if validation fails, output is not needed
 
