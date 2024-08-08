@@ -2,7 +2,7 @@ process SAMPLESHEET_VALIDATOR {
     tag {"$meta.id"}
     label 'process_low'
 
-    container "nschcolnicov/samshee:latest" //TODO replace with nf-core container
+    container "community.wave.seqera.io/library/pip_samshee:9f3c0736b7c44dc8"
 
     input:
     tuple val(meta), path(samplesheet)
