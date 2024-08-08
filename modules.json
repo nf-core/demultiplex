@@ -27,7 +27,7 @@
                     },
                     "checkqc": {
                         "branch": "master",
-                        "git_sha": "b4d87af248a2e9484fe94a39bb71e06c671e9052",
+                        "git_sha": "337bc962d03c2e08a728c9bf731a2148e323e731",
                         "installed_by": ["modules"]
                     },
                     "custom/dumpsoftwareversions": {

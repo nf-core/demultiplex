@@ -155,7 +155,7 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
-                if (!("checkqc" in skip_tools)){
+                if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq'){
                         RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
                         ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
                         ch_multiqc_files = ch_multiqc_files.mix( RUNDIR_CHECKQC.out.report.map { meta, json -> return json} )

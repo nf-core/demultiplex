@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#224](https://github.com/nf-core/demultiplex/pull/217) Fix input filename collision.
+- [#231](https://github.com/nf-core/demultiplex/pull/231) Fix checkqc error message and .command.log emission.
 
 ## 1.4.1 - 2024-02-27
 
