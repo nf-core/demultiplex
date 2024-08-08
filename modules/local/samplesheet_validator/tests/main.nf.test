@@ -13,8 +13,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id: 'test', lane:1 ], file("https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/NextSeq2000/SampleSheet.csv", checkIfExists: true) ]
-                input[1] = []
+                input[0] = [ [ id: 'test', lane:1 ], file("https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/NextSeq2000/SampleSheet.csv", checkIfExists: true), [] ]
                 """
             }
         }
@@ -34,8 +33,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id: 'test', lane:1 ], file("https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/NextSeq2000/SampleSheet.csv", checkIfExists: true) ]
-                input[1] = []
+                input[0] = [ [ id: 'test', lane:1 ], file("https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/NextSeq2000/SampleSheet.csv", checkIfExists: true), [] ]
                 """
             }
         }

@@ -93,8 +93,7 @@ workflow DEMULTIPLEX {
     // RUN samplesheet_validator
     if (!("samplesheet_validator" in skip_tools)){
         SAMPLESHEET_VALIDATOR ( 
-            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
-            ch_validator_schema        
+            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] }.combine( ch_validator_schema )                    
         )
     }
 

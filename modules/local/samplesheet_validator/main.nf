@@ -5,8 +5,7 @@ process SAMPLESHEET_VALIDATOR {
     container "nschcolnicov/samshee:latest" //TODO replace with nf-core container
 
     input:
-    tuple val(meta), path(samplesheet)
-    path (validator_schema)
+    tuple val(meta), path(samplesheet), path (validator_schema)
 
     // output: //Module is meant to crash pipeline if validation fails, output is not needed
 
@@ -19,7 +18,18 @@ process SAMPLESHEET_VALIDATOR {
     def args3 = task.ext.args3 ?: ''
     def arg_validator_schema = validator_schema ? "${validator_schema}" : ""
     """
-    validate_samplesheet.py  "${samplesheet}" "${arg_validator_schema}"
+    # Run validation command and capture output
+    output=\$(validate_samplesheet.py "${samplesheet}" "${arg_validator_schema}" 2>&1)
+    status=\$?
+    
+    # Check if validation failed
+    if echo "\$output" | grep -q "Validation failed:"; then
+        echo "\$output"  # Print output for debugging
+        exit 1  # Fail the process if validation failed
+    fi
+
+    # If no validation errors, process exits with status 0
+    exit \$status
     """
 
     stub:
@@ -93,8 +103,17 @@ process SAMPLESHEET_VALIDATOR {
     }
     END_SCHEMA
 
-    #Run command
-    validate_samplesheet.py minimal_samplesheet.csv minimal_schema.json
+    # Run validation command and capture output
+    output=\$(validate_samplesheet.py minimal_samplesheet.csv minimal_schema.json  2>&1)
+    status=\$?
+    
+    # Check if validation failed
+    if echo "\$output" | grep -q "Validation failed:"; then
+        echo "\$output"  # Print output for debugging
+        exit 1  # Fail the process if validation failed
+    fi
 
+    # If no validation errors, process exits with status 0
+    exit \$status
     """
 }
