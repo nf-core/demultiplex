@@ -29,13 +29,11 @@
                 "kraken_db": {
                     "type": "string",
                     "format": "path",
-                    "default": "None",
                     "description": "Path to Kraken2 DB to use for screening"
                 },
                 "validator_schema": {
                     "type": "string",
                     "format": "file-path",
-                    "default": "None",
                     "description": "Path to Illumina v2 samplesheet validator .json file"
                 }
             }
