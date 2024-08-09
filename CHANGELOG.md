@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#220](https://github.com/nf-core/demultiplex/pull/220) Added kraken2.
 - [#221](https://github.com/nf-core/demultiplex/pull/221) Added checkqc_config to pipeline schema.
 - [#225](https://github.com/nf-core/demultiplex/pull/225) Added test profile for multi-lane samples, updated handling of such samples and adapter trimming.
+- [#236](https://github.com/nf-core/demultiplex/pull/236) Add samplesheet generation.
 
 ### `Changed`
 
