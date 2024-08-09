@@ -33,9 +33,9 @@
                 },
                 "downstream_pipeline": {
                     "type": "string",
-                    "description": "Name of downstream Nextflow pipeline (one of: rnaseq, atacseq or taxprofiler). Used to produce the input samplesheet for that pipeline.",
-                    "default": "rnaseq",
-                    "enum": ["rnaseq", "atacseq", "taxprofiler"]
+                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
+                    "default": "default",
+                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
                 }
             }
         },

@@ -13,22 +13,14 @@ process FASTQ_TO_SAMPLESHEET {
     tuple val(meta), path("*samplesheet.csv"), emit: samplesheet
 
     exec:
-    // Clone metadata and remove unnecessary keys
-    def meta_clone = meta.clone()
-    meta_clone.remove("id")
-    meta_clone.remove("single_end")
-    meta_clone.remove("fcid")
-    meta_clone.remove("readgroup")
-    meta_clone.remove("empty")
-    meta_clone.remove("lane")
 
-    // // Add relevant fields to the map
+    // Add relevant fields to the map
     def pipeline_map = [
         sample  : meta.samplename,
         fastq_1 : meta.fastq_1
     ]
 
-    // // Add fastq_2 if it's a paired-end sample
+    // Add fastq_2 if it's a paired-end sample
     if (!meta.single_end) {
         pipeline_map.fastq_2 = meta.fastq_2
     }
