@@ -29,8 +29,13 @@
                 "kraken_db": {
                     "type": "string",
                     "format": "path",
-                    "default": null,
-                    "description": "path to Kraken2 DB to use for screening"
+                    "description": "Path to Kraken2 DB to use for screening"
+                },
+                "downstream_pipeline": {
+                    "type": "string",
+                    "description": "Name of downstream Nextflow pipeline (one of: rnaseq, atacseq or taxprofiler). Used to produce the input samplesheet for that pipeline.",
+                    "default": "rnaseq",
+                    "enum": ["rnaseq", "atacseq", "taxprofiler"]
                 }
             }
         },
