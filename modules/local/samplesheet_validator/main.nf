@@ -1,6 +1,6 @@
 process SAMPLESHEET_VALIDATOR {
-    tag {"$meta.id"}
-    label 'process_low'
+    tag "$meta.id"
+    label 'process_single'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -11,7 +11,10 @@ process SAMPLESHEET_VALIDATOR {
     tuple val(meta), path(samplesheet)
     path(validator_schema)              //optional
 
-    // output: //Module is meant to crash pipeline if validation fails, output is not needed
+    output:
+    // Module is meant to stop the pipeline if validation fails
+    stdout
+        path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
