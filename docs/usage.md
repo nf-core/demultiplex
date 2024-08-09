@@ -45,9 +45,9 @@ An [example _pipeline_ samplesheet](https://raw.githubusercontent.com/nf-core/te
 
 Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Below are examples for demultiplexer-specific _flowcell_ samplesheets. Please see the following examples to format the _flowcell_ `SampleSheet.csv`:
+### Flowcell samplesheet
 
-Here's the information in a table format:
+Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Below are examples for demultiplexer-specific _flowcell_ samplesheets. Please see the following examples to format the _flowcell_ `SampleSheet.csv`:
 
 | Demultiplexer                | Example _flowcell_ `SampleSheet.csv` Format                                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -55,7 +55,7 @@ Here's the information in a table format:
 | **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
 | **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
 
-### Samplesheet for fqtk
+#### Example: pipeline samplesheet for fqtk
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
