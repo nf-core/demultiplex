@@ -13,8 +13,7 @@ process SAMPLESHEET_VALIDATOR {
 
     output:
     // Module is meant to stop the pipeline if validation fails
-    stdout
-        path "versions.yml", emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,6 +32,12 @@ process SAMPLESHEET_VALIDATOR {
         echo "\$output"  # Print output for debugging
         exit 1  # Fail the process if validation failed
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samshee: \$( python -m pip show --version samshee | grep "Version" | sed -e "s/Version: //g" )
+        python: \$( python --version | sed -e "s/Python //g" )
+    END_VERSIONS
 
     # If no validation errors, process exits with status 0
     exit \$status
@@ -60,7 +65,6 @@ process SAMPLESHEET_VALIDATOR {
     Sample_ID,Sample_Name,Description,Sample_Project
     Sample1,Sample1,,
     END_SAMPLE_SHEET
-
 
 
     #Generate minimal schema validator file
@@ -117,6 +121,12 @@ process SAMPLESHEET_VALIDATOR {
         echo "\$output"  # Print output for debugging
         exit 1  # Fail the process if validation failed
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samshee: \$( python -m pip show --version samshee | grep "Version" | sed -e "s/Version: //g" )
+        python: \$( python --version | sed -e "s/Python //g" )
+    END_VERSIONS
 
     # If no validation errors, process exits with status 0
     exit \$status

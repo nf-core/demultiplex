@@ -96,6 +96,7 @@ workflow DEMULTIPLEX {
             ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
             ch_validator_schema
         )
+        ch_versions = ch_versions.mix(SAMPLESHEET_VALIDATOR.out.versions)
     }
 
     // Convenience
