@@ -2,6 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
+    config "../../conf/test_pe.config"
     tag "bcl2fastq_pe"
     tag "pipeline"
 
@@ -9,11 +10,6 @@ nextflow_pipeline {
 
         when {
             params {
-                // Limit resources so that this can run on GitHub Actions
-                max_cpus   = 2
-                max_memory = '6.GB'
-                max_time   = '6.h'
-
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/pe_samplesheet.csv'
                 demultiplexer = 'bcl2fastq'
                 skip_tools    = "checkqc"
