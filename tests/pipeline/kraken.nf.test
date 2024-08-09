@@ -21,7 +21,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 8 },
+                { assert workflow.trace.succeeded().size() == 9 },
                 { assert snapshot(
                         path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
                         path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
