@@ -41,7 +41,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastp,samplesheet_validator"
+                skip_tools    = "fastp,samshee"
             }
         }
 
@@ -69,7 +69,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastqc,samplesheet_validator"
+                skip_tools    = "fastqc,samshee"
             }
         }
 
@@ -97,7 +97,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastp,fastqc,samplesheet_validator"
+                skip_tools    = "fastp,fastqc,samshee"
             }
         }
 
@@ -125,7 +125,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "multiqc,samplesheet_validator"
+                skip_tools    = "multiqc,samshee"
             }
         }
 

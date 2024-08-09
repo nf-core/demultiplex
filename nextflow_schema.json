@@ -19,7 +19,7 @@
                 "skip_tools": {
                     "type": "string",
                     "default": "[]",
-                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samplesheet_validator)"
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
                 },
                 "sample_size": {
                     "type": "integer",

@@ -1,4 +1,4 @@
-name: samplesheet_validator
+name: samshee
 description: Module to validate illumina® Sample Sheet v2 files.
 keywords:
   - samplesheet

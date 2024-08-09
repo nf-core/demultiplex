@@ -30,7 +30,7 @@ include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
 //
 // MODULE: Local modules
 //
-include { SAMPLESHEET_VALIDATOR         } from '../modules/local/samplesheet_validator/main'
+include { SAMSHEE                       } from '../modules/local/samshee/main'
 
 //
 // FUNCTION
@@ -90,13 +90,13 @@ workflow DEMULTIPLEX {
             }
     }
 
-    // RUN samplesheet_validator
-    if (!("samplesheet_validator" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
-        SAMPLESHEET_VALIDATOR (
+    // RUN samplesheet_validator samshee
+    if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
+        SAMSHEE (
             ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
             ch_validator_schema
         )
-        ch_versions = ch_versions.mix(SAMPLESHEET_VALIDATOR.out.versions)
+        ch_versions = ch_versions.mix(SAMSHEE.out.versions)
     }
 
     // Convenience

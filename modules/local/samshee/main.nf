@@ -1,4 +1,4 @@
-process SAMPLESHEET_VALIDATOR {
+process SAMSHEE {
     tag "$meta.id"
     label 'process_single'
 

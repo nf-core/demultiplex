@@ -1,10 +1,10 @@
 // nf-core modules test cellranger/mkfastq
 nextflow_process {
 
-    name "Test Process SAMPLESHEET_VALIDATOR"
+    name "Test Process samshee"
     script "../main.nf"
     config "./nextflow.config"
-    process "SAMPLESHEET_VALIDATOR"
+    process "SAMSHEE"
 
     tag "modules"
 
