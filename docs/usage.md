@@ -6,13 +6,11 @@
 
 ## Introduction
 
-## Introduction
-
 > [!IMPORTANT]
 > It is relevant to distinguish between the _pipeline_ samplesheet and the _flowcell_ samplesheet before working with this pipeline.
 >
 > - The **_pipeline_ samplesheet** is a file provided as input to the nf-core pipeline itself. It contains the overall configuration for your run, specifying the paths to individual _flowcell_ samplesheets, flowcell directories, and other metadata required to manage multiple sequencing runs. This is the primary configuration file that directs the pipeline on how to process your data.
-> - The **_flowcell_ samplesheet** is specific to a particular sequencing run. It is typically created by the sequencing facility and contains the sample information, including barcodes, lane numbers, and indexes. Each demultiplexer may require a different format for this file, which must be adhered to for proper data processing.
+> - The **_flowcell_ samplesheet** is specific to a particular sequencing run. It is typically created by the sequencing facility and contains the sample information, including barcodes, lane numbers, and indexes. The typical name is `SampleSheet.csv`. Each demultiplexer may require a different format for this file, which must be adhered to for proper data processing.
 
 ## Pipeline samplesheet input
 
@@ -21,10 +19,10 @@ You will need to create a _pipeline_ samplesheet with information about the samp
 When using the demultiplexer fqtk, the _pipeline_ samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
 ```bash
---input '[path to samplesheet file]'
+--input '[path to pipeline samplesheet file]'
 ```
 
-### Full samplesheet
+#### Example: Pipeline samplesheet
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell
@@ -45,17 +43,7 @@ An [example _pipeline_ samplesheet](https://raw.githubusercontent.com/nf-core/te
 
 Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-### Flowcell samplesheet
-
-Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Below are examples for demultiplexer-specific _flowcell_ samplesheets. Please see the following examples to format the _flowcell_ `SampleSheet.csv`:
-
-| Demultiplexer                | Example _flowcell_ `SampleSheet.csv` Format                                                                                                            |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **sgdemux**                  | [sgdemux SampleSheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv)                             |
-| **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
-| **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
-
-#### Example: pipeline samplesheet for fqtk
+#### Example: Pipeline samplesheet for fqtk
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
@@ -73,12 +61,25 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,
 | `flowcell`              | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
 | `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                                                             |
 
+### Flowcell samplesheet
+
+Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Below are examples for demultiplexer-specific _flowcell_ samplesheets. Please see the following examples to format the _flowcell_ `SampleSheet.csv`:
+
+| Demultiplexer                | Example _flowcell_ `SampleSheet.csv` Format                                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **sgdemux**                  | [sgdemux SampleSheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv)                             |
+| **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
+| **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
+
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/demultiplex --input pipeline_samplesheet.csv --outdir results -profile docker
+nextflow run nf-core/demultiplex \
+    --input pipeline_samplesheet.csv \
+    --outdir results \
+    -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
