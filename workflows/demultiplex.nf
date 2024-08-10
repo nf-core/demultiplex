@@ -15,6 +15,7 @@ include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultipl
 include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
 include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
+include { FASTQ_TO_SAMPLESHEET      } from '../modules/local/fastq_to_samplesheet/main'
 
 
 //
@@ -53,11 +54,12 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
-    trim_fastq    = params.trim_fastq                                      // boolean: true, false
-    skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
-    sample_size   = params.sample_size                                     // int
-    kraken_db     = params.kraken_db                                       // path
+    demultiplexer       = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
+    trim_fastq          = params.trim_fastq                                      // boolean: true, false
+    skip_tools          = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+    sample_size         = params.sample_size                                     // int
+    kraken_db           = params.kraken_db                                       // path
+    downstream_pipeline = params.downstream_pipeline                             // string: rnaseq, atacseq, taxprofiler
 
 
     // Channel inputs
@@ -265,6 +267,30 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
     }
+
+    // Prepare metamap with fastq info
+    ch_meta_fastq = ch_raw_fastq.map { meta, fastq_files ->
+        // Determine the publish directory based on the lane information
+        def publish_dir = meta.lane ? "${params.outdir}/${meta.id}/L00${meta.lane}" : "${params.outdir}/${meta.id}"
+        meta.fastq_1 = "${publish_dir}/${fastq_files[0].getName()}"
+
+        // Add full path for fastq_2 to the metadata if the sample is not single-end
+        if (!meta.single_end) {
+            meta.fastq_2 = "${publish_dir}/${fastq_files[1].getName()}"
+        }
+        return meta
+    }
+
+    // Module: FASTQ to samplesheet
+    FASTQ_TO_SAMPLESHEET(ch_meta_fastq, downstream_pipeline, 'auto')
+
+    FASTQ_TO_SAMPLESHEET.out.samplesheet
+            .map { it[1] }
+            .collectFile(name:'tmp_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
+            .map { it.text.tokenize('\n').join('\n') }
+            .collectFile(name:'samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
+            .set { ch_samplesheet }
+
     //
     // Collate and save software versions
     //
