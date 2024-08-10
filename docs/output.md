@@ -21,6 +21,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 - [kraken2](#kraken2) - Kraken2 is a taxonomic sequence classifier that assigns taxonomic labels to sequence reads.
+- [samplesheet](#samplesheet) - Samplesheet generation for downstream nf-core pipelines.
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ### bcl-convert
@@ -203,6 +204,16 @@ Creates an MD5 (128-bit) checksum of every fastq.
 </details>
 
 [Kraken](https://ccb.jhu.edu/software/kraken2/) is a taxonomic sequence classifier that assigns taxonomic labels to DNA sequences. Kraken examines the k-mers within a query sequence and uses the information within those k-mers to query a database. That database maps -mers to the lowest common ancestor (LCA) of all genomes known to contain a given k-mer.
+
+### Downstream pipeline samplesheet
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<outputdir>/samplesheet/`
+  - `*.csv`: Samplesheet with the generated FASTQ files formatted according to the selected downstream nf-core pipeline. Default: rnaseq format.
+
+</details>
 
 ### Adapter sequence removal from samplesheet
 
