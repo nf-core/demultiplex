@@ -4,10 +4,10 @@
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:10:00.298491082"
+        "timestamp": "2024-08-12T17:21:22.50969783"
     },
     "skip_fastqc": {
         "content": [
@@ -30,10 +30,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:13:45.68600951"
+        "timestamp": "2024-08-12T17:24:04.288349648"
     },
     "skip_fastp": {
         "content": [
@@ -56,10 +56,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:11:10.977146544"
+        "timestamp": "2024-08-12T17:22:17.56007143"
     },
     "skip_multiqc": {
         "content": [
@@ -82,10 +82,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:16:50.422490047"
+        "timestamp": "2024-08-12T17:27:14.471150173"
     },
     "skip_fastp_fastqc": {
         "content": [
@@ -108,50 +108,50 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:15:14.973440084"
+        "timestamp": "2024-08-12T17:25:09.780834994"
     },
     "software_versions_skip_fastqc": {
         "content": [
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:13:40.000621044"
+        "timestamp": "2024-08-12T17:23:59.039256258"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:15:06.589630757"
+        "timestamp": "2024-08-12T17:25:01.70585844"
     },
     "software_versions_skip_multiqc": {
         "content": [
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:16:39.766616774"
+        "timestamp": "2024-08-12T17:27:03.685153368"
     },
     "software_versions_skip_fastp": {
         "content": [
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0dev}}"
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:11:08.013153743"
+        "timestamp": "2024-08-12T17:22:14.728243247"
     },
     "skip_trimming": {
         "content": [
@@ -174,9 +174,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
+            "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-12T17:10:00.32545302"
+        "timestamp": "2024-08-12T17:21:22.530325808"
     }
 }
