@@ -118,9 +118,19 @@ genome: 'GRCh37'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
-## Optional parameters
+### Optional parameters
+
+## checkQC
 
 If you are running this pipeline with the bcl2fastq demultiplexer, the checkqc module is run. In this case, the default run will include the default config file for checkqc, but you can additionally provide your own checkqc config file using the parameter `--checkqc_config` and a path to a `yml`. See an example of a config file in the [checkqc repository](https://github.com/Molmed/checkQC/blob/dfba84ec63e1df60c0f84ccc96a154a330b28ce4/checkQC/default_config/config.yaml).
+
+### Trimming
+
+The trimming process in our demultiplexing pipeline has been updated to ensure compatibility with 10x Genomics recommendations. By default, trimming in the pipeline is performed using fastp, which reliably auto-detects and removes adapter sequences without the need for storing adapter sequences. As users can also supply adapter sequences in a samplesheet and thereby triggering trimming in any `bcl2fastq` or `bclconvert` subworkflows, we have added a new parameter, `remove_adapter`, which is set to true by default. When `remove_adapter` is true, the pipeline automatically removes any adapter sequences listed in the `[Settings]` section of the Illumina sample sheet, replacing them with an empty string in order to not provoke this behaviour. This approach aligns with 10x Genomics' guidelines, as they advise against pre-processing FASTQ reads before inputting them into their software pipelines. If the `remove_adapter` setting is true but no adapter is removed, a warning will be displayed; however, this does not necessarily indicate an error, as some sample sheets may already lack these adapter sequences. Users can disable this behavior by setting `--remove_adapter false` in the command line, though this is not recommended.
+
+## samshee (Samplesheet validator)
+
+samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validator file. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the path to the JSON schema validator file via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information about the tool or how to write the schema JSON file, please refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
 ### Updating the pipeline
 
@@ -216,14 +226,6 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
-
-### Trimming
-
-The trimming process in our demultiplexing pipeline has been updated to ensure compatibility with 10x Genomics recommendations. By default, trimming in the pipeline is performed using fastp, which reliably auto-detects and removes adapter sequences without the need for storing adapter sequences. As users can also supply adapter sequences in a samplesheet and thereby triggering trimming in any `bcl2fastq` or `bclconvert` subworkflows, we have added a new parameter, `remove_adapter`, which is set to true by default. When `remove_adapter` is true, the pipeline automatically removes any adapter sequences listed in the `[Settings]` section of the Illumina sample sheet, replacing them with an empty string in order to not provoke this behaviour. This approach aligns with 10x Genomics' guidelines, as they advise against pre-processing FASTQ reads before inputting them into their software pipelines. If the `remove_adapter` setting is true but no adapter is removed, a warning will be displayed; however, this does not necessarily indicate an error, as some sample sheets may already lack these adapter sequences. Users can disable this behavior by setting `--remove_adapter false` in the command line, though this is not recommended.
-
-## samshee (Samplesheet validator)
-
-samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validator file. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the path to the JSON schema validator file via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information about the tool or how to write the schema JSON file, please refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
 ### nf-core/configs
 

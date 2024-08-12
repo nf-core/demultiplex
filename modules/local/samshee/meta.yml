@@ -23,10 +23,6 @@ input:
       description: "illumina v2 samplesheet"
       pattern: "*.{csv}"
 output:
-  - fastq:
-      type: file
-      description: Unaligned FastQ files
-      pattern: "*.fastq.gz"
   - versions:
       type: file
       description: File containing software version
