@@ -1,7 +1,8 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - BCL2FASTQ"
     script "main.nf"
+    profile "test_bcl2fastq"
     tag "bcl2fastq"
     tag "pipeline"
 
@@ -9,10 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
-                demultiplexer = 'bcl2fastq'
                 outdir        = "$outputDir"
-                skip_tools    = "checkqc,samshee"
             }
         }
 

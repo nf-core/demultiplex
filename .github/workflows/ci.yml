@@ -10,8 +10,10 @@ on:
 
 env:
   NXF_ANSI_LOG: false
-  CAPSULE_LOG: none
-  NFTEST_VER: "0.9.0"
+  NFT_VER: "0.9.0"
+  NFT_WORKDIR: "~"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -39,35 +41,43 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        shard: [1, 2, 3, 4, 5, 6]
         NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
-        profile:
-          ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "skip_tools", "mkfastq", "test_pe", "kraken"]
+        profile: ["docker"]
+    env:
+      SHARDS: "6"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        with:
+          fetch-depth: 0
 
-      # Install Nextflow
-      - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+
+      - name: Install pdiff to see diff between nf-test snapshots
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdiff
+
+      - uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      # Install nf-test
-      - name: Install nf-test
-        run: |
-          conda install -c bioconda nf-test=$NFTEST_VER
+      - uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
 
-      # Run nf-test
-      - name: Run nf-test
+      - name: Run Tests (Shard ${{ matrix.shard }}/${{ env.SHARDS }})
         run: |
-          $CONDA/bin/nf-test test tests/pipeline/${{ matrix.profile }}.nf.test --profile=test,docker --junitxml=test.xml
-
-      # If the test fails, output the software_versions.yml using the 'batcat' utility
-      - name: Output log on failure
-        if: failure()
-        run: |
-          sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always .nf-test/tests/*/output/pipeline_info/software_versions.yml
+          nf-test test \
+              --ci \
+              --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
+              --changed-since HEAD^ \
+              --profile "+${{ matrix.profile }}" \
+              --filter pipeline,workflow
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3

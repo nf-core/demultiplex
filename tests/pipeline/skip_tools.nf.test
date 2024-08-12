@@ -1,7 +1,8 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - Skip Tools"
     script "main.nf"
+    profile "test"
     tag "skip_trimming"
     tag "pipeline"
 
