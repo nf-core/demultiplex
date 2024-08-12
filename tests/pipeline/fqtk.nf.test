@@ -2,16 +2,13 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf - FQTK"
     script "main.nf"
-    config "../../conf/test_fqtk.config"
-    profile "test"
+    profile "test_fqtk"
     tag "fqtk"
 
     test("FQTK") {
 
         when {
             params {
-                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv'
-                demultiplexer = 'fqtk'
                 outdir        = "$outputDir"
             }
         }

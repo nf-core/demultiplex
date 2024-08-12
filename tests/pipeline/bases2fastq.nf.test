@@ -2,8 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf - BASES2FASTQ"
     script "main.nf"
-    config "../../conf/test_bases2fastq.config"
-    profile "test"
+    profile "test_bases2fastq"
     tag "bases2fastq"
     tag "pipeline"
 
@@ -11,8 +10,6 @@ nextflow_pipeline {
 
         when {
             params {
-                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv'
-                demultiplexer = 'bases2fastq'
                 outdir        = "$outputDir"
             }
         }
