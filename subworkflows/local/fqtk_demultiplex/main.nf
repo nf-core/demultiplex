@@ -21,11 +21,14 @@ workflow FQTK_DEMULTIPLEX {
         // Generate meta for each fastq
         ch_fastq_with_meta = generate_fastq_meta(FQTK.out.sample_fastq)
 
+        // Add versions to versions channel
+        ch_versions = FQTK.out.versions.mix(CSV2TSV.out.versions)
+
     emit:
         fastq                   = ch_fastq_with_meta
         metrics                 = FQTK.out.metrics
         unassigned              = FQTK.out.most_frequent_unmatched
-        versions                = FQTK.out.versions
+        versions                = ch_versions
 }
 
 /*
