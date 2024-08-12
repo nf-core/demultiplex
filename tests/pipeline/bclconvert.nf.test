@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - BCLCONVERT"
     script "main.nf"
     profile "test"
     tag "bclconvert"

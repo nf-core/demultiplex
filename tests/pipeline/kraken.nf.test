@@ -1,6 +1,6 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - Kraken"
     script "main.nf"
     config "../../conf/test_kraken.config"
     profile "test"
