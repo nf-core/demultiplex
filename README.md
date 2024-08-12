@@ -114,6 +114,8 @@ We thank the following people for their extensive assistance in the development 
 - [`@atrigila`](https://github.com/atrigila)
 - [`@nschcolnicov`](https://github.com/nschcolnicov)
 - [`@aratz`](https://github.com/aratz)
+- [`@gsturm`](https://github.com/gsturm)
+- [`@apeltzer`](https://github.com/apeltzer)
 
 ## Contributions and Support
 
