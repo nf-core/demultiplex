@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#216](https://github.com/nf-core/demultiplex/pull/216) List fastq reports for R1 and R2 separately in multiqc report.
 - [#219](https://github.com/nf-core/demultiplex/pull/219) Modified workflow to store samplesheet in results folder.
 - [#217](https://github.com/nf-core/demultiplex/pull/217) Update all nf-core modules and tests.
+- [#240](https://github.com/nf-core/demultiplex/pull/240) Updated samshee, stub script and error strategy
 
 ### `Fixed`
 
