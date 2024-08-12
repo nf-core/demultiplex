@@ -1,7 +1,9 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - Kraken"
     script "main.nf"
+    config "../../conf/test_kraken.config"
+    profile "test"
     tag "kraken"
     tag "pipeline"
 
@@ -14,6 +16,7 @@ nextflow_pipeline {
                 outdir        = "$outputDir"
                 skip_tools    = "checkqc,samshee"
                 kraken_db     = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/db/kraken2.tar.gz'
+
             }
         }
 

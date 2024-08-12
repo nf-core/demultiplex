@@ -1,7 +1,8 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test Workflow main.nf - mkfastq"
     script "main.nf"
+    profile "test_mkfastq"
     tag "mkfastq"
     tag "pipeline"
 
@@ -9,8 +10,6 @@ nextflow_pipeline {
 
         when {
             params {
-                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/mkfastq-samplesheet.csv'
-                demultiplexer = 'mkfastq'
                 outdir        = "$outputDir"
             }
         }
