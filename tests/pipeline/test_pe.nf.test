@@ -2,7 +2,7 @@ nextflow_pipeline {
 
     name "Test Workflow main.nf"
     script "main.nf"
-    config "../../conf/test_pe.config"
+    profile "test"
     tag "bcl2fastq_pe"
     tag "pipeline"
 
