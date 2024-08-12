@@ -5,9 +5,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-25T20:38:35.033660203"
+        "timestamp": "2024-08-12T17:10:00.298491082"
     },
     "skip_fastqc": {
         "content": [
@@ -30,10 +30,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "23.10.1"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-07T15:11:46.12688"
+        "timestamp": "2024-08-12T17:13:45.68600951"
     },
     "skip_fastp": {
         "content": [
@@ -56,10 +56,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "23.10.1"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-07T15:09:48.227109"
+        "timestamp": "2024-08-12T17:11:10.977146544"
     },
     "skip_multiqc": {
         "content": [
@@ -82,10 +82,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "23.10.1"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-07T15:14:47.991287"
+        "timestamp": "2024-08-12T17:16:50.422490047"
     },
     "skip_fastp_fastqc": {
         "content": [
@@ -108,10 +108,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "23.10.1"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-07T15:13:01.794999"
+        "timestamp": "2024-08-12T17:15:14.973440084"
     },
     "software_versions_skip_fastqc": {
         "content": [
@@ -119,9 +119,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-25T20:40:12.591107775"
+        "timestamp": "2024-08-12T17:13:40.000621044"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
@@ -129,9 +129,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-25T20:40:52.373539308"
+        "timestamp": "2024-08-12T17:15:06.589630757"
     },
     "software_versions_skip_multiqc": {
         "content": [
@@ -139,9 +139,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-25T20:41:53.704450617"
+        "timestamp": "2024-08-12T17:16:39.766616774"
     },
     "software_versions_skip_fastp": {
         "content": [
@@ -149,9 +149,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-25T20:39:04.450501154"
+        "timestamp": "2024-08-12T17:11:08.013153743"
     },
     "skip_trimming": {
         "content": [
@@ -174,9 +174,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "23.10.1"
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-07T15:08:34.10467"
+        "timestamp": "2024-08-12T17:10:00.32545302"
     }
 }
