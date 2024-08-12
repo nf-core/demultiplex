@@ -17,7 +17,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 104 },
+                { assert workflow.trace.succeeded().size() == 129 },
                 { assert snapshot(path("$outputDir/test/demux-metrics.txt")).match("fqtk") },
                 { assert new File("$outputDir/test/unmatched_1.fastp.fastq.gz").exists() },
                 { assert new File("$outputDir/test/unmatched_2.fastp.fastq.gz").exists() },

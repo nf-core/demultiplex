@@ -10,6 +10,9 @@ nextflow_pipeline {
 
         when {
             params {
+                input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/pe_samplesheet.csv'
+                demultiplexer = 'bcl2fastq'
+                skip_tools    = "checkqc,samshee"
                 outdir        = "$outputDir"
             }
         }
@@ -18,7 +21,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 6 },
+                { assert workflow.trace.succeeded().size() == 7 },
                 { assert snapshot(
                         path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
                         path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),

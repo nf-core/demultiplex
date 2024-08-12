@@ -6,17 +6,23 @@
 
 ## Introduction
 
-## Samplesheet input
+> [!IMPORTANT]
+> It is relevant to distinguish between the _pipeline_ samplesheet and the _flowcell_ samplesheet before working with this pipeline.
+>
+> - The **_pipeline_ samplesheet** is a file provided as input to the nf-core pipeline itself. It contains the overall configuration for your run, specifying the paths to individual _flowcell_ samplesheets, flowcell directories, and other metadata required to manage multiple sequencing runs. This is the primary configuration file that directs the pipeline on how to process your data.
+> - The **_flowcell_ samplesheet** is specific to a particular sequencing run. It is typically created by the sequencing facility and contains the sample information, including barcodes, lane numbers, and indexes. The typical name is `SampleSheet.csv`. Each demultiplexer may require a different format for this file, which must be adhered to for proper data processing.
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`.
+## Pipeline samplesheet input
 
-When using the demultiplexer fqtk, the samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
+You will need to create a _pipeline_ samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input _pipeline_ samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`.
+
+When using the demultiplexer fqtk, the _pipeline_ samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
 ```bash
---input '[path to samplesheet file]'
+--input '[path to pipeline samplesheet file]'
 ```
 
-### Full samplesheet
+#### Example: Pipeline samplesheet
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell
@@ -29,17 +35,15 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 | Column        | Description                                                                                                                                         |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`          | Flowcell id                                                                                                                                         |
-| `samplesheet` | Full path to the `SampleSheet.csv` file containing the sample information and indexes                                                               |
+| `samplesheet` | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                    |
 | `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
 | `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
 
-An [example samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
+An [example _pipeline_ samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
 Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-Each demultiplexing software uses a distinct samplesheet format. Below are examples for demultiplexer-specific samplesheets. Please see the following examples to format `SampleSheet.csv` for [sgdemux](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv), [fqtk](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv), and [bcl2fastq and bclconvert](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv)
-
-### Samplesheet for fqtk
+#### Example: Pipeline samplesheet for fqtk
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
@@ -52,17 +56,30 @@ DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3,
 | Column                  | Description                                                                                                                                         |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`                    | Flowcell id                                                                                                                                         |
-| `samplesheet`           | Full path to the `SampleSheet.csv` file containing the sample information and indexes                                                               |
+| `samplesheet`           | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                    |
 | `lane`                  | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
 | `flowcell`              | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
 | `per_flowcell_manifest` | Full path to the flowcell manifest, containing the fastq file names and read structures                                                             |
+
+### Flowcell samplesheet
+
+Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Below are examples for demultiplexer-specific _flowcell_ samplesheets. Please see the following examples to format the _flowcell_ `SampleSheet.csv`:
+
+| Demultiplexer                | Example _flowcell_ `SampleSheet.csv` Format                                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **sgdemux**                  | [sgdemux SampleSheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv)                             |
+| **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
+| **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/demultiplex --input ./samplesheet.csv --outdir ./results -profile docker
+nextflow run nf-core/demultiplex \
+    --input pipeline_samplesheet.csv \
+    --outdir results \
+    -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -101,9 +118,19 @@ genome: 'GRCh37'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
-## Optional parameters
+### Optional parameters
+
+## checkQC
 
 If you are running this pipeline with the bcl2fastq demultiplexer, the checkqc module is run. In this case, the default run will include the default config file for checkqc, but you can additionally provide your own checkqc config file using the parameter `--checkqc_config` and a path to a `yml`. See an example of a config file in the [checkqc repository](https://github.com/Molmed/checkQC/blob/dfba84ec63e1df60c0f84ccc96a154a330b28ce4/checkQC/default_config/config.yaml).
+
+### Trimming
+
+The trimming process in our demultiplexing pipeline has been updated to ensure compatibility with 10x Genomics recommendations. By default, trimming in the pipeline is performed using fastp, which reliably auto-detects and removes adapter sequences without the need for storing adapter sequences. As users can also supply adapter sequences in a samplesheet and thereby triggering trimming in any `bcl2fastq` or `bclconvert` subworkflows, we have added a new parameter, `remove_adapter`, which is set to true by default. When `remove_adapter` is true, the pipeline automatically removes any adapter sequences listed in the `[Settings]` section of the Illumina sample sheet, replacing them with an empty string in order to not provoke this behaviour. This approach aligns with 10x Genomics' guidelines, as they advise against pre-processing FASTQ reads before inputting them into their software pipelines. If the `remove_adapter` setting is true but no adapter is removed, a warning will be displayed; however, this does not necessarily indicate an error, as some sample sheets may already lack these adapter sequences. Users can disable this behavior by setting `--remove_adapter false` in the command line, though this is not recommended.
+
+## samshee (Samplesheet validator)
+
+samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validator file. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the path to the JSON schema validator file via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information about the tool or how to write the schema JSON file, please refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
 ### Updating the pipeline
 
@@ -199,10 +226,6 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
-
-### Trimming
-
-The trimming process in our demultiplexing pipeline has been updated to ensure compatibility with 10x Genomics recommendations. By default, trimming in the pipeline is performed using fastp, which reliably auto-detects and removes adapter sequences without the need for storing adapter sequences. As users can also supply adapter sequences in a samplesheet and thereby triggering trimming in any `bcl2fastq` or `bclconvert` subworkflows, we have added a new parameter, `remove_adapter`, which is set to true by default. When `remove_adapter` is true, the pipeline automatically removes any adapter sequences listed in the `[Settings]` section of the Illumina sample sheet, replacing them with an empty string in order to not provoke this behaviour. This approach aligns with 10x Genomics' guidelines, as they advise against pre-processing FASTQ reads before inputting them into their software pipelines. If the `remove_adapter` setting is true but no adapter is removed, a warning will be displayed; however, this does not necessarily indicate an error, as some sample sheets may already lack these adapter sequences. Users can disable this behavior by setting `--remove_adapter false` in the command line, though this is not recommended.
 
 ### nf-core/configs
 

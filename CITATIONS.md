@@ -22,6 +22,8 @@
 
 - [CheckQC](https://github.com/Molmed/checkQC)
 
+- [samshee](https://github.com/lit-regensburg/samshee)
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)

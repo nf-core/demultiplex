@@ -18,7 +18,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 7 },
+                { assert workflow.trace.succeeded().size() == 8 },
                 { assert snapshot(
                     // FIXME
                     // path("$outputDir/sim-data/DefaultSample_R1.fastq.gz.md5"),

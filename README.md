@@ -47,6 +47,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 4. [Falco](#falco) - Raw read QC
 5. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
 6. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+7. [samshee](#samshee) - Validates illumina v2 samplesheets.
 
 ![subway map](docs/demultiplex.png)
 

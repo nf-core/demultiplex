@@ -22,7 +22,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_trimming") },
-                { assert workflow.trace.succeeded().size() == 5 },
+                { assert workflow.trace.succeeded().size() == 6 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
@@ -42,7 +42,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastp"
+                skip_tools    = "fastp,samshee"
             }
         }
 
@@ -50,7 +50,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp") },
-                { assert workflow.trace.succeeded().size() == 4 },
+                { assert workflow.trace.succeeded().size() == 5 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
@@ -70,7 +70,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastqc"
+                skip_tools    = "fastqc,samshee"
             }
         }
 
@@ -78,7 +78,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastqc") },
-                { assert workflow.trace.succeeded().size() == 5 },
+                { assert workflow.trace.succeeded().size() == 6 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
@@ -98,7 +98,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "fastp,fastqc"
+                skip_tools    = "fastp,fastqc,samshee"
             }
         }
 
@@ -106,7 +106,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp_fastqc") },
-                { assert workflow.trace.succeeded().size() == 4 },
+                { assert workflow.trace.succeeded().size() == 5 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
@@ -126,7 +126,7 @@ nextflow_pipeline {
                 input         = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
                 demultiplexer = 'bclconvert'
                 outdir        = "$outputDir"
-                skip_tools    = "multiqc"
+                skip_tools    = "multiqc,samshee"
             }
         }
 
@@ -134,7 +134,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_multiqc") },
-                { assert workflow.trace.succeeded().size() == 4 },
+                { assert workflow.trace.succeeded().size() == 5 },
                 { assert !path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),

@@ -19,7 +19,7 @@
                 "skip_tools": {
                     "type": "string",
                     "default": "[]",
-                    "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
                 },
                 "sample_size": {
                     "type": "integer",
@@ -29,8 +29,18 @@
                 "kraken_db": {
                     "type": "string",
                     "format": "path",
-                    "default": null,
-                    "description": "path to Kraken2 DB to use for screening"
+                    "description": "Path to Kraken2 DB to use for screening"
+                },
+                "validator_schema": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to Illumina v2 samplesheet validator .json file"
+                },
+                "downstream_pipeline": {
+                    "type": "string",
+                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
+                    "default": "default",
+                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
                 }
             }
         },
