@@ -18,7 +18,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 128 },
+                { assert workflow.trace.succeeded().size() == 129 },
                 { assert snapshot(
                         path("$outputDir/sim-data/metrics.tsv"),
                         path("$outputDir/sim-data/per_project_metrics.tsv"),
