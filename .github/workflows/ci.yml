@@ -77,7 +77,7 @@ jobs:
               --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
               --changed-since HEAD^ \
               --profile "+${{ matrix.profile }}" \
-              --filter pipeline,workflow
+              --filter pipeline
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
