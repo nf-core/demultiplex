@@ -15,9 +15,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - demultiplexing fastq files (CONDITIONAL)
+- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)
+- [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
 - [fastp](#fastp) - Adapter and quality trimming
 - [Falco](#falco) - Raw read QC
 - [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
+- [kraken2](#kraken2) - Kraken2 is a taxonomic sequence classifier that assigns taxonomic labels to sequence reads.
+- [samplesheet](#samplesheet) - Samplesheet generation for downstream nf-core pipelines.
 - [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ### bcl-convert
@@ -27,7 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `samplename/sample.fastq.gz`
+- `<flowcell_id>/sample.fastq.gz` or `<flowcell_id>/L00<meta.lane>/sample.fastq.gz`
   - Untrimmed raw fastq files
 
 </details>
@@ -81,6 +85,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
+### checkqc
+
+[checkqc](https://github.com/Molmed/checkQC/) - (optional) CheckQC is a program designed to check a set of quality criteria against an Illumina runfolder. Available for outputs from bcl2fastq only. The program will summarize the type of run it has identified and output any warnings and/or errors in finds. The CheckQC module in demultiplex will output the summary of the QC, along with its warnings and errors in the `checkqc_report.json`. In addition, a `checkqc_log.txt` will contain the log of the program for inspection. If the run directory misses some input files, it will return a non-zero exit status and also the information in the `checkqc_log.txt`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `checkqc/checkqc_report.json`
+  - QC report of bcl2fastq run
+
+</details>
+
 ### fqtk
 
 [fqtk](https://github.com/fulcrumgenomics/fqtk) A toolkit for working with FASTQ files, written in Rust.
@@ -101,12 +117,31 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
+### mkfastq
+
+[mkfastq](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq) A tool for converting BCL files to FASTQ and demultiplexing for single-cell sequencing data.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+| File                 | Directory                          | Description                                                 |
+| :------------------- | :--------------------------------- | :---------------------------------------------------------- |
+| FASTQ                | <OUTDIR>/<id>                      | Demultiplexed fastq.gz files                                |
+| `*.fastp.html`       | <OUTDIR>/<id>                      | HTML report for fastp                                       |
+| `*.fastp.json`       | <OUTDIR>/<id>                      | JSON report for fastp                                       |
+| `*_summary.txt`      | <OUTDIR>/<id>                      | Summary statistics for the sequencing run                   |
+| Fastqc summary stats | <OUTDIR>/<id>/\*fastqc_data.txt    | Per base quality summary, for each demultiplexed FASTQ file |
+| Fastqc summary html  | <OUTDIR>/<id>/\*fastqc_report.html | Interactive html link for fastqc summary stats              |
+| Md5Sum               | <OUTDIR>/<id>/\*.md5               | Md5Sums for each demultiplexed FASTQ file                   |
+
+</details>
+
 ### fastp
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*.fastp.html`: Trimming report in html format.
   - `*.fastp.json`: Trimming report in json format.
   - `*.fastp.log`: Trimming log file.
@@ -122,7 +157,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.txt`: Txt containing the FastQC report, tab-delimited data file.
   - `*_summary.txt`: Txt containing the summary metrics.
@@ -148,12 +183,48 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 <details markdown="1">
 <summary>Output files</summary>
 
-- `<flowcell_id>/`
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
   - `*.fastq.gz.md5`: MD5 checksum of fastq
 
 </details>
 
 Creates an MD5 (128-bit) checksum of every fastq.
+
+### kraken2
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<flowcell_id>/`or `<flowcell_id>/L00<meta.lane>/`
+  - `*.*report.txt`: A Kraken2 report that summarises the fraction abundance, taxonomic ID, number of Kmers, taxonomic path of all the hits in the Kraken2 run for a given sample.
+  - `*.classified.fastq.gz`: FASTQ file containing all reads that had a hit against a reference in the database for a given sample.
+  - `*.unclassified.fastq.gz`: FASTQ file containing all reads that did not have a hit in the database for a given sample.
+  - `*.classifiedreads.txt`: A list of read IDs and the hits each read had against each database for a given sample.
+
+</details>
+
+[Kraken](https://ccb.jhu.edu/software/kraken2/) is a taxonomic sequence classifier that assigns taxonomic labels to DNA sequences. Kraken examines the k-mers within a query sequence and uses the information within those k-mers to query a database. That database maps -mers to the lowest common ancestor (LCA) of all genomes known to contain a given k-mer.
+
+### Downstream pipeline samplesheet
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<outputdir>/samplesheet/`
+  - `*.csv`: Samplesheet with the generated FASTQ files formatted according to the selected downstream nf-core pipeline. Default: rnaseq format.
+
+</details>
+
+### Adapter sequence removal from samplesheet
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `<flowcell_id>.lane<meta.lane>_no_adapters.csv`
+
+</details>
+
+This is done by a custom function in the workflow, not by a module. Creates an updated samplesheet from the input by removing the adapter sequence within the "\[Settings\]" section. If the samplesheet doesn't require any adapter removal, it will still be published in the specified output folder.
 
 ### MultiQC
 

@@ -15,25 +15,37 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:38:54.135338"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-08-07T15:04:02.812091"
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:34:45.479857"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-25T20:31:51.596302017"
     },
     "multiqc": {
         "content": [
-            "multiqc_bclconvert_bylane.txt:md5,9d7173439fd77fdec5936bddd686749f",
-            "multiqc_fastp.txt:md5,d65cc0ccd033e949132c2e46b1f81717",
-            "multiqc_bclconvert_bysample.txt:md5,61b139b34fbf503e5ec6056e0e236918"
+            "bclconvert_lane_counts.txt:md5,68de4c4513456af9fd15e90c7145596a",
+            "fastp_filtered_reads_plot.txt:md5,fe76dc8c1650e83e16f547c1fe8a0767",
+            "bclconvert_sample_counts_Counts_per_lane.txt:md5,f12a2fb8c83cfd6262fcb1ea6dada571"
         ],
-        "timestamp": "2024-02-02T13:34:45.488139"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.4"
+        },
+        "timestamp": "2024-08-01T14:51:11.574966834"
     }
 }

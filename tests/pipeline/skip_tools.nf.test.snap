@@ -1,9 +1,13 @@
 {
     "software_versions_skip_trimming": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:38:37.024188"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:21:22.50969783"
     },
     "skip_fastqc": {
         "content": [
@@ -20,12 +24,16 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:45:17.736105"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:24:04.288349648"
     },
     "skip_fastp": {
         "content": [
@@ -42,12 +50,16 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:43:54.005346"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:22:17.56007143"
     },
     "skip_multiqc": {
         "content": [
@@ -64,12 +76,16 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:47:17.03681"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:27:14.471150173"
     },
     "skip_fastp_fastqc": {
         "content": [
@@ -86,36 +102,56 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:46:00.460287"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:25:09.780834994"
     },
     "software_versions_skip_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:40:31.135957"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:23:59.039256258"
     },
     "software_versions_skip_fastp_fastqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:41:03.9175"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:25:01.70585844"
     },
     "software_versions_skip_multiqc": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:42:24.103372"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:27:03.685153368"
     },
     "software_versions_skip_fastp": {
         "content": [
-            "{BCLCONVERT={bclconvert=00.000.000.4.2.7}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.7, yaml=5.4.1}, FALCO={falco=1.2.1}, Workflow={nf-core/demultiplex=1.4.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
         ],
-        "timestamp": "2024-02-02T13:39:08.036992"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:22:14.728243247"
     },
     "skip_trimming": {
         "content": [
@@ -132,11 +168,15 @@
                 "Quality_Metrics.csv:md5,6614accb1bb414fe312b17b81f5521f7",
                 "Quality_Tile_Metrics.csv:md5,cdc89fd2962bdd4a24f71e186112118a",
                 "RunInfo.xml:md5,03038959f4dd181c86bc97ae71fe270a",
-                "SampleSheet.csv:md5,2df2e405991814571c021dc8749c2a89",
+                "SampleSheet.csv:md5,ee5db2e12754e069998b0a96e535238c",
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
-                "fastq_list.csv:md5,05bc84f51840f5754cfb8381b36f2cb0"
+                "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9"
             ]
         ],
-        "timestamp": "2023-12-11T16:43:15.513271"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-12T17:21:22.530325808"
     }
 }

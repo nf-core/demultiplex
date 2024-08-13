@@ -5,15 +5,15 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/demultiplex/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/demultiplex/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/nf-core/demultiplex/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/demultiplex/actions?query=workflow%3A%22nf-core+linting%22)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.7153103-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.7153103)
+[![GitHub Actions CI Status](https://github.com/nf-core/demultiplex/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.7153103-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.7153103)
+[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/demultiplex)
-[![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/demultiplex)
 
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23demultiplex-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/demultiplex)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
@@ -25,6 +25,7 @@
 2. Element Biosciences (via `bases2fastq`)
 3. Singular Genomics (via [`sgdemux`](https://github.com/Singular-Genomics/singular-demux))
 4. FASTQ files with user supplied read structures (via [`fqtk`](https://github.com/fulcrumgenomics/fqtk))
+5. 10x Genomics (via [`mkfastq`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq))
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
@@ -32,18 +33,21 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-1. Demultiplexing
+1. [samshee](#samshee) - Validates illumina v2 samplesheets.
+2. Demultiplexing
 
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)
 - [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)
 - [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)
 - [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)
+- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)
 
-2. [fastp](#fastp) - Adapter and quality trimming
-3. [Falco](#falco) - Raw read QC
-4. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
-5. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
+3. [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)
+4. [fastp](#fastp) - Adapter and quality trimming
+5. [Falco](#falco) - Raw read QC
+6. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.
+7. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline
 
 ![subway map](docs/demultiplex.png)
 
@@ -107,6 +111,11 @@ We thank the following people for their extensive assistance in the development 
 - [`@nh13`](https://github.com/nh13)
 - [`@sam-white04`](https://github.com/sam-white04)
 - [`@maxulysse`](https://github.com/maxulysse)
+- [`@atrigila`](https://github.com/atrigila)
+- [`@nschcolnicov`](https://github.com/nschcolnicov)
+- [`@aratz`](https://github.com/aratz)
+- [`@grst`](https://github.com/grst)
+- [`@apeltzer`](https://github.com/apeltzer)
 
 ## Contributions and Support
 

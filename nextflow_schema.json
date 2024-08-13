@@ -18,8 +18,29 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "default": null,
-                    "description": "Comma-separated list of tools to skip (fastp,falco,multiqc)"
+                    "default": "[]",
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
+                },
+                "sample_size": {
+                    "type": "integer",
+                    "default": 100000,
+                    "description": "Number of reads to subsample for contamination detection."
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "format": "path",
+                    "description": "Path to Kraken2 DB to use for screening"
+                },
+                "validator_schema": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to Illumina v2 samplesheet validator .json file"
+                },
+                "downstream_pipeline": {
+                    "type": "string",
+                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
+                    "default": "default",
+                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
                 }
             }
         },
@@ -70,9 +91,10 @@
             "properties": {
                 "demultiplexer": {
                     "type": "string",
-                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux"],
+                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "mkfastq"],
                     "description": "Demultiplexer to use.",
-                    "fa_icon": "fas fa-microscope"
+                    "fa_icon": "fas fa-microscope",
+                    "default": "bclconvert"
                 }
             }
         },
@@ -121,6 +143,20 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "checkqc_options": {
+            "title": "CheckQC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "checkqc_config": {
+                    "type": "string",
+                    "default": "[]",
+                    "description": "Path to the checkqc config yml file.",
+                    "fa_icon": "far fa-check-square"
                 }
             }
         },
@@ -240,6 +276,11 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
+                "remove_adapter": {
+                    "type": "boolean",
+                    "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
+                    "default": true
+                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -267,6 +308,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
                 }
             }
         }
@@ -283,6 +331,9 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/checkqc_options"
         },
         {
             "$ref": "#/definitions/max_job_request_options"

@@ -3,7 +3,37 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unpublished Version / DEV]
+## 1.5.0 - 2024-08-12
+
+### `Added`
+
+- [#202](https://github.com/nf-core/demultiplex/pull/202) Added cellranger mkfastq subworkflow for demultiplexing 10x samples.
+- [#206](https://github.com/nf-core/demultiplex/pull/206) Add test with uncompressed data.
+- [#208](https://github.com/nf-core/demultiplex/pull/208) Added parameter for removing adapter information from samplesheets.
+- [#210](https://github.com/nf-core/demultiplex/pull/210) Add checkqc module.
+- [#212](https://github.com/nf-core/demultiplex/pull/212) Added resource setting arguments to mkfastq module to work with github CI.
+- [#214](https://github.com/nf-core/demultiplex/pull/214) Added test_pe (paired end) profile.
+- [#220](https://github.com/nf-core/demultiplex/pull/220) Added kraken2.
+- [#221](https://github.com/nf-core/demultiplex/pull/221) Added checkqc_config to pipeline schema.
+- [#225](https://github.com/nf-core/demultiplex/pull/225) Added test profile for multi-lane samples, updated handling of such samples and adapter trimming.
+- [#234](https://github.com/nf-core/demultiplex/pull/234) Added module for samplesheet validation.
+- [#236](https://github.com/nf-core/demultiplex/pull/236) Add samplesheet generation.
+
+### `Changed`
+
+- [#204](https://github.com/nf-core/demultiplex/pull/204) Update to latest bcl_demultiplex sub workflow.
+- [#210](https://github.com/nf-core/demultiplex/pull/210) Update bcl2fastq and bcl_demultiplex.
+- [#214](https://github.com/nf-core/demultiplex/pull/214) Updated method for removing adapters from samplesheet, added custom AdapterRemover function.
+- [#210](https://github.com/nf-core/demultiplex/pull/212) Update bcl2fastq and bcl_demultiplex.
+- [#216](https://github.com/nf-core/demultiplex/pull/216) List fastq reports for R1 and R2 separately in multiqc report.
+- [#219](https://github.com/nf-core/demultiplex/pull/219) Modified workflow to store samplesheet in results folder.
+- [#217](https://github.com/nf-core/demultiplex/pull/217) Update all nf-core modules and tests.
+- [#240](https://github.com/nf-core/demultiplex/pull/240) Updated samshee, stub script and error strategy
+
+### `Fixed`
+
+- [#224](https://github.com/nf-core/demultiplex/pull/217) Fix input filename collision.
+- [#231](https://github.com/nf-core/demultiplex/pull/231) Fix checkqc error message and .command.log emission.
 
 ## 1.4.1 - 2024-02-27
 
@@ -32,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#152](https://github.com/nf-core/demultiplex/pull/152) Close [#150](https://github.com/nf-core/demultiplex/issues/150)
 - [#157](https://github.com/nf-core/demultiplex/pull/157) Fix bcl2fastq and bclconvert publishDir
 - [#158](https://github.com/nf-core/demultiplex/pull/158) Update all modules
+- [#201](https://github.com/nf-core/demultiplex/pull/201) Fix samplesheet documentation issues
 
 ## `Removed`
 
