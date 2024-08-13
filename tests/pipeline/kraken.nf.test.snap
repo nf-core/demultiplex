@@ -63,7 +63,7 @@
     },
     "software_versions": {
         "content": [
-            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, KRAKEN2={kraken2=2.1.3, pigz=2.8}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.0}}"
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, KRAKEN2={kraken2=2.1.3, pigz=2.8}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.1dev}}"
         ],
         "meta": {
             "nf-test": "0.9.0",

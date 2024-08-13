@@ -1,7 +1,7 @@
 {
     "software_versions": {
         "content": [
-            "{BASES2FASTQ={bases2fastq=1.8.0.1260801529, use subject to license available at elementbiosciences.com}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, UNTAR_FLOWCELL={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.0}}"
+            "{BASES2FASTQ={bases2fastq=1.8.0.1260801529, use subject to license available at elementbiosciences.com}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, UNTAR_FLOWCELL={untar=1.34}, Workflow={nf-core/demultiplex=v1.5.1dev}}"
         ],
         "meta": {
             "nf-test": "0.9.0",
