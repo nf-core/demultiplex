@@ -26,7 +26,7 @@ workflow UTILS_NEXTFLOW_PIPELINE {
     // Print workflow version and exit on --version
     //
     if (print_version) {
-        log.info "${workflow.manifest.name} ${getWorkflowVersion()}"
+        println "${workflow.manifest.name} ${getWorkflowVersion()}"
         System.exit(0)
     }
 

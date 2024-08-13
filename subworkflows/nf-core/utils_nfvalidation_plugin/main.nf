@@ -41,7 +41,7 @@ workflow UTILS_NFVALIDATION_PLUGIN {
     // Print help message if needed
     //
     if (print_help) {
-        log.info pre_help_text + paramsHelp(workflow_command, parameters_schema: schema_filename) + post_help_text
+        println pre_help_text + paramsHelp(workflow_command, parameters_schema: schema_filename) + post_help_text
         System.exit(0)
     }
 
