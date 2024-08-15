@@ -40,7 +40,7 @@ nextflow_pipeline {
                     path("${outputDir}/cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz"),
                     path("${outputDir}/cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R2_001.fastq.gz"),
                     path("${outputDir}/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.html").exists(),
-                    path("${outputDir}/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001.fastp.html").exists(),                    
+                    path("${outputDir}/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001.fastp.html").exists(),
                     path("${outputDir}/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001.fastp.json"),
                     path("${outputDir}/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.json"),
                     path("${outputDir}/cellranger-tiny-bcl-simple/InterOp/IndexMetricsOut.bin")
