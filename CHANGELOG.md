@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.5.2dev (UNRELEASED)
 
+### `Changed`
+
+- [#253](https://github.com/nf-core/demultiplex/pull/256) Updated all modules and subworkflows, and added new bclconvert test profile.
+
 ## 1.5.1
 
 ### `Fixed`
