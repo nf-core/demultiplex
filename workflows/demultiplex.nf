@@ -76,7 +76,7 @@ workflow DEMULTIPLEX {
                 def suffix = item[0].lane ? ".lane${item[0].lane}" : "" //need to produce one file per item in the channel else join fails
                 [ "${item[0].id}${suffix}_no_adapters.csv", AdapterRemover.removeAdaptersFromSampleSheet(item[1]) ]
             }
-            .map { file -> //build meta again from file name               
+            .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
                 [[id: meta_id, lane: meta_lane],file]
