@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#253](https://github.com/nf-core/demultiplex/pull/253) Fixed mkfastq output channels.
+- [#264](https://github.com/nf-core/demultiplex/pull/264) Fixed adapter removal for input samplesheets without lane information.
 
 ## 1.5.0 - 2024-08-12
 
