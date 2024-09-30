@@ -1,0 +1,55 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - BCLCONVERT-mini"
+    script "main.nf"
+    profile "test_bclconvert"
+    tag "bclconvert"
+    tag "pipeline"
+
+    test("BCL-CONVERT-mini") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 26 },
+                { assert snapshot(
+                        path("$outputDir/multiqc/multiqc_data/bclconvert_lane_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
+                        path("$outputDir/multiqc/multiqc_data/bclconvert_sample_counts_Counts_per_lane.txt")
+                    ).match("multiqc") },
+                { assert snapshot(
+                        path("$outputDir/miniseq_truseq_smrna/HBRR1_S1_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR1_S1_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR2_S2_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR2_S2_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR2_S2_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR3_S3_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR3_S3_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/HBRR3_S3_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR1_S4_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR1_S4_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR1_S4_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR2_S5_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR2_S5_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR2_S5_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR3_S6_L001.fastp.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR3_S6_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/UHRR3_S6_L001_summary.txt"),
+                        path("$outputDir/miniseq_truseq_smrna/Undetermined_S0_L001_R1_001.fastq.gz"),
+                        path("$outputDir/miniseq_truseq_smrna/Reports/").list(),
+                        path("$outputDir/miniseq_truseq_smrna/InterOp/").list()
+                    ).match("bclconvert") }
+            )
+        }
+
+    }
+
+}
