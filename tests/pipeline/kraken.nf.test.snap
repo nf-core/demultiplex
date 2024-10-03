@@ -15,7 +15,7 @@
                                     "laneBarcode.html:md5,2bbdae3ee57151eab520c966597d7438"
                                 ],
                                 [
-
+                                    
                                 ]
                             ]
                         ],
@@ -36,7 +36,7 @@
                                     "laneBarcode.html:md5,48842c23b9a2816aec540177df870968"
                                 ],
                                 [
-
+                                    
                                 ]
                             ]
                         ]
@@ -73,15 +73,15 @@
     },
     "multiqc": {
         "content": [
-            "bcl2fastq_lane_counts.txt:md5,eed04dae0bae4250ac5f4ab580e32b0b",
-            "fastp_filtered_reads_plot.txt:md5,fe76dc8c1650e83e16f547c1fe8a0767",
-            "bcl2fastq_sample_counts.txt:md5,6454d154d69ffa563878f5b7fd3d9879",
-            "kraken-top-n-plot.txt:md5,84f10e652a1e2b98f96ffbe1a8ffe114"
+            "bcl2fastq_lane_counts.txt:md5,9404ab530f43e442093337dd10c351c5",
+            "fastp_filtered_reads_plot.txt:md5,fa14a1941e109d4104c33db0e5fe20fc",
+            "bcl2fastq_sample_counts.txt:md5,93cb0cd1aee1b464f0e640e1c3d0c142",
+            "kraken-top-n-plot.txt:md5,add0b89a8b3d1729dac311870959b1e7"
         ],
         "meta": {
-            "nf-test": "0.9.0",
+            "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-09T17:17:23.014483899"
+        "timestamp": "2024-10-02T20:52:55.269657852"
     }
 }

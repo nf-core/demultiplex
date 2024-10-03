@@ -63,21 +63,21 @@
             "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.1}}"
         ],
         "meta": {
-            "nf-test": "0.9.0",
+            "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-30T15:27:18.472169"
+        "timestamp": "2024-10-03T12:19:24.67962222"
     },
     "multiqc": {
         "content": [
-            "bclconvert_lane_counts.txt:md5,7c8bdcf459b8900c88f3426a324a9368",
-            "fastp_filtered_reads_plot.txt:md5,181ce851d1ab86f434b12082e8513ec4",
-            "bclconvert_sample_counts_Counts_per_lane.txt:md5,76cf037883c6c8b71ac5fa181a41fec6"
+            "bclconvert_lane_counts.txt:md5,32e8acea6fd6ef76943100329be22fee",
+            "fastp_filtered_reads_plot.txt:md5,8ab004632691b04b665920977beb8924",
+            "bclconvert_sample_counts_Counts_per_lane.txt:md5,2eb58439a3eb1eee508bdce0ee340649"
         ],
         "meta": {
-            "nf-test": "0.9.0",
+            "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-09-30T15:27:18.49554"
+        "timestamp": "2024-10-03T12:19:24.749587693"
     }
 }
