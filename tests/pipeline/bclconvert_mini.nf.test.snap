@@ -1,0 +1,83 @@
+{
+    "bclconvert": {
+        "content": [
+            "HBRR1_S1_L001.fastp.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
+            "HBRR1_S1_L001_R1_001.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
+            "HBRR1_S1_L001_summary.txt:md5,53a5e6bac1e853f23d27d6966e52df81",
+            "HBRR2_S2_L001.fastp.fastq.gz:md5,3b9e4fc70ebc608b48d1f0027265e9b8",
+            "HBRR2_S2_L001_R1_001.fastq.gz:md5,3b9e4fc70ebc608b48d1f0027265e9b8",
+            "HBRR2_S2_L001_summary.txt:md5,f3e0bc27d30d0f6e10ad76be47017881",
+            "HBRR3_S3_L001.fastp.fastq.gz:md5,a110eefaee1da4d99398500e55919f0c",
+            "HBRR3_S3_L001_R1_001.fastq.gz:md5,a110eefaee1da4d99398500e55919f0c",
+            "HBRR3_S3_L001_summary.txt:md5,fbe9c4281a768a826429e328f5eb2a34",
+            "UHRR1_S4_L001.fastp.fastq.gz:md5,03f215bcb4005804f60acccfe4aaef78",
+            "UHRR1_S4_L001_R1_001.fastq.gz:md5,b470c82d2002c563c42786060ae364b9",
+            "UHRR1_S4_L001_summary.txt:md5,c6c342cbcad3fc68343284c24e4a8b4a",
+            "UHRR2_S5_L001.fastp.fastq.gz:md5,2186d5f37865f970d223953e9a5412ae",
+            "UHRR2_S5_L001_R1_001.fastq.gz:md5,47c36adf557bf4d37b0a84d055125290",
+            "UHRR2_S5_L001_summary.txt:md5,121a0aeaf860fae497a27e8eceff3283",
+            "UHRR3_S6_L001.fastp.fastq.gz:md5,674c4989c2270d88612fcf221e3e0950",
+            "UHRR3_S6_L001_R1_001.fastq.gz:md5,bdb407e3ded3691479ec25f5f1df3b07",
+            "UHRR3_S6_L001_summary.txt:md5,d7d5a014b51d64e4da1a113a4ad79eda",
+            "Undetermined_S0_L001_R1_001.fastq.gz:md5,b0b4daae001636cf033ff760a5ab479d",
+            [
+                "Adapter_Cycle_Metrics.csv:md5,757778bb0ee048463c423dff14133a51",
+                "Adapter_Metrics.csv:md5,5cbba841c650097f1e759c2b75c7a005",
+                "Demultiplex_Stats.csv:md5,40c3efd7ffb9d02fcc97028f6ee98c96",
+                "Demultiplex_Tile_Stats.csv:md5,916e3e488c4ed847249d7d46401a57ff",
+                "IndexMetricsOut.bin:md5,9a6ad90fd45b3abd2360285feff76509",
+                "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
+                "Quality_Metrics.csv:md5,215e001631d9383f73360975d5726f14",
+                "Quality_Tile_Metrics.csv:md5,122f967d30318f79f5a7ef59339f8275",
+                "RunInfo.xml:md5,d3d94b916915b35224ec362c64542190",
+                "SampleSheet.csv:md5,c32433167a5c56d5c15952c2e7948898",
+                "Top_Unknown_Barcodes.csv:md5,b5fa3ea9ba12fd35650e36e6c5cbdc99",
+                "fastq_list.csv:md5,07cbe4173e18cbdef16ee8feb4adaf7d"
+            ],
+            [
+                "CorrectedIntMetricsOut.bin:md5,4d82e208f18bfd51a5f9275e05d073ba",
+                "EmpiricalPhasingMetricsOut.bin:md5,0e9d6b71c90661d800b1129a0097c301",
+                "ErrorMetricsOut.bin:md5,dbc41ced845d7645451c6995e5774c0b",
+                "EventMetricsOut.bin:md5,5a93a812df6a55e6d7a0f26bdf176e93",
+                "ExtendedTileMetricsOut.bin:md5,5ffaee26c4ed0074f69d8c62293118f9",
+                "ExtractionMetricsOut.bin:md5,a4d4c0d3b9afe453fae7ca6118c9346d",
+                "FWHMGridMetricsOut.bin:md5,80e7c3652f72edbc5f661a1f1b3b28fc",
+                "ImageMetricsOut.bin:md5,2dddf68f924261ab37f83e8ee750b6f2",
+                "IndexMetricsOut.bin:md5,e63ea5cfa848feab8a40ba469ff46845",
+                "PFGridMetricsOut.bin:md5,e65fed6f9594655657521a5359759b01",
+                "QMetrics2030Out.bin:md5,670b3c089d4d264103a01105d12abbe8",
+                "QMetricsByLaneOut.bin:md5,b6d8d8ff4144f33a3f4304743db53f97",
+                "QMetricsOut.bin:md5,13fee543cefb5d5ae1c108ccbb07f0e6",
+                "RegistrationMetricsOut.bin:md5,b201979275957afbbcea634698afc352",
+                "TileMetricsOut.bin:md5,0d2aa2c7e39eb33e61d2ed248068ed9d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-30T15:27:18.543806"
+    },
+    "software_versions": {
+        "content": [
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.2}}"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-03T12:19:24.67962222"
+    },
+    "multiqc": {
+        "content": [
+            "bclconvert_lane_counts.txt:md5,32e8acea6fd6ef76943100329be22fee",
+            "fastp_filtered_reads_plot.txt:md5,8ab004632691b04b665920977beb8924",
+            "bclconvert_sample_counts_Counts_per_lane.txt:md5,2eb58439a3eb1eee508bdce0ee340649"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-03T12:19:24.749587693"
+    }
+}

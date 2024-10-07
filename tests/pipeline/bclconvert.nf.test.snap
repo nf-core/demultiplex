@@ -28,7 +28,7 @@
     },
     "software_versions": {
         "content": [
-            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.1}}"
+            "{BCLCONVERT={bclconvert=4.3.6}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.2}}"
         ],
         "meta": {
             "nf-test": "0.8.4",
@@ -38,14 +38,14 @@
     },
     "multiqc": {
         "content": [
-            "bclconvert_lane_counts.txt:md5,68de4c4513456af9fd15e90c7145596a",
-            "fastp_filtered_reads_plot.txt:md5,fe76dc8c1650e83e16f547c1fe8a0767",
-            "bclconvert_sample_counts_Counts_per_lane.txt:md5,f12a2fb8c83cfd6262fcb1ea6dada571"
+            "bclconvert_lane_counts.txt:md5,a327047d0d6c7de32eef9535bb159110",
+            "fastp_filtered_reads_plot.txt:md5,fa14a1941e109d4104c33db0e5fe20fc",
+            "bclconvert_sample_counts_Counts_per_lane.txt:md5,a7e57ab911ba2cf74ec7bd93b921036d"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.4"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-01T14:51:11.574966834"
+        "timestamp": "2024-10-02T20:50:32.184940324"
     }
 }

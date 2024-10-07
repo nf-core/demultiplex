@@ -66,7 +66,7 @@
     },
     "software_versions": {
         "content": [
-            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.1}}"
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.2}}"
         ],
         "meta": {
             "nf-test": "0.9.0",
@@ -76,9 +76,9 @@
     },
     "multiqc": {
         "content": [
-            "bcl2fastq_lane_counts.txt:md5,617ee87ca15a85232d9fd58808453204",
-            "fastp_filtered_reads_plot.txt:md5,bc473fbbdae16865669a66d5c3180ca3",
-            "bcl2fastq_sample_counts.txt:md5,6454d154d69ffa563878f5b7fd3d9879"
+            "bcl2fastq_lane_counts.txt:md5,d6054e1ec3c2e8d33c3fdee5b250dfbc",
+            "fastp_filtered_reads_plot.txt:md5,136a1d755ba6e790227f80cfcb4c1d62",
+            "bcl2fastq_sample_counts.txt:md5,93cb0cd1aee1b464f0e640e1c3d0c142"
         ],
         "meta": {
             "nf-test": "0.9.0",
