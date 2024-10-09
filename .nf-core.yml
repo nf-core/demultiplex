@@ -4,7 +4,7 @@ lint:
   files_unchanged:
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .github/workflows/linting.yml
-nf_core_version: 3.0.0
+nf_core_version: 3.0.1
 org_path: null
 repository_type: pipeline
 template:
