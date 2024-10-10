@@ -132,10 +132,9 @@ The trimming process in our demultiplexing pipeline has been updated to ensure c
 samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--json_schema_validator`, which accepts a JSON schema validation string; the `--name_schema_validator`, which accepts a schema name string; and the `--file_schema_validator` which accepts a JSON schema validation file. Users can specify additional validation rules beyond the default ones provided by the tool using all or any of these parameters, this enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
 > [!NOTE]
-
-> - Samshee assumes all illumina samplesheets are v2. If working with samples that have an illumina samplesheet v1 set the parameter `--v1_schema` to true.
-> - When indicating `--json_schema_validator` or `--name_schema_validator`, please note that it expects a JSON reference value in string format. For example:
-
+> Samshee assumes all illumina samplesheets are v2. If working with samples that have an illumina samplesheet v1 set the parameter `--v1_schema` to true.
+> When indicating `--json_schema_validator` or `--name_schema_validator`, please note that it expects a JSON reference value in string format. For example:
+>
 > ```bash
 > --json_schema_validator '{"required": ["Data"]}'
 > --name_schema_validator '{"$ref": "urn:samshee:illuminav2/v1"}'
@@ -173,7 +172,7 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
-> [!INFO]
+> [!NOTE]
 > We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
 
 The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
