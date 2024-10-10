@@ -33,8 +33,7 @@
                 },
                 "validator_schema": {
                     "type": "string",
-                    "format": "file-path",
-                    "description": "Path to Illumina v2 samplesheet validator .json file"
+                    "description": "String in json format to be passed to samshee module for samplesheet validation"
                 },
                 "downstream_pipeline": {
                     "type": "string",

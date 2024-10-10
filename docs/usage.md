@@ -130,7 +130,7 @@ The trimming process in our demultiplexing pipeline has been updated to ensure c
 
 ## samshee (Samplesheet validator)
 
-samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validator file. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the path to the JSON schema validator file via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information about the tool or how to write the schema JSON file, please refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
+samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validation string. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the JSON string via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
 
 ### Updating the pipeline
 
