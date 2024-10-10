@@ -28,7 +28,7 @@ input:
       type: boolean
       description: |
         Validate the parameters and error if invalid.
-  - schema_filename:
+  - file_schema_validatorname:
       type: string
       description: |
         The filename of the schema to validate against.
