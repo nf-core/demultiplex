@@ -130,7 +130,19 @@ The trimming process in our demultiplexing pipeline has been updated to ensure c
 
 ## samshee (Samplesheet validator)
 
-samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--validator_schema`, which accepts a JSON schema validation string. Users can specify this file to enforce additional validation rules beyond the default ones provided by the tool. To use this feature, simply provide the JSON string via the `--validator_schema` parameter in the pipeline configuration. This enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
+samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--json_schema_validator`, which accepts a JSON schema validation string; the `--name_schema_validator`, which accepts a schema name string; and the `--file_schema_validator` which accepts a JSON schema validation file. Users can specify additional validation rules beyond the default ones provided by the tool using all or any of these parameters, this enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
+
+:::note
+
+- Samshee assumes all illumina samplesheets are v2. If working with samples that have an illumina samplesheet v1 set the parameter `--v1_schema` to true.
+- When indicating `--json_schema_validator` or `--name_schema_validator`, please note that it expects a JSON reference value in string format. For example:
+
+```bash
+--json_schema_validator '{"required": ["Data"]}'
+--name_schema_validator '{"$ref": "urn:samshee:illuminav2/v1"}'
+```
+
+:::
 
 ### Updating the pipeline
 

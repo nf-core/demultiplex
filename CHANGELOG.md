@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#225](https://github.com/nf-core/demultiplex/pull/225) Added test profile for multi-lane samples, updated handling of such samples and adapter trimming.
 - [#234](https://github.com/nf-core/demultiplex/pull/234) Added module for samplesheet validation.
 - [#236](https://github.com/nf-core/demultiplex/pull/236) Add samplesheet generation.
+- [#TBD](TBD) Update samshee module from nf-core.
 
 ### `Changed`
 

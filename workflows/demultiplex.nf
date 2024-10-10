@@ -59,11 +59,13 @@ workflow DEMULTIPLEX {
 
 
     // Channel inputs
-    ch_versions         = Channel.empty()
-    ch_multiqc_files    = Channel.empty()
-    ch_multiqc_reports  = Channel.empty()
-    checkqc_config      = params.checkqc_config   ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : [] // file checkqc_config.yaml
-    ch_validator_schema = params.validator_schema ? Channel.value(params.validator_schema)                       : [] // string validator_schema.json
+    ch_versions              = Channel.empty()
+    ch_multiqc_files         = Channel.empty()
+    ch_multiqc_reports       = Channel.empty()
+    checkqc_config           = params.checkqc_config        ? Channel.fromPath(params.checkqc_config, checkIfExists: true)        : [] // file checkqc_config.yaml
+    ch_json_schema_validator = params.json_schema_validator ? Channel.value(params.json_schema_validator)                         : [] // string schema in json format
+    ch_name_schema_validator = params.name_schema_validator ? Channel.value(params.name_schema_validator)                         : [] // string schema name
+    ch_file_schema_validator = params.file_schema_validator ? Channel.fromPath(params.file_schema_validator, checkIfExists: true) : [] // file schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
@@ -92,7 +94,9 @@ workflow DEMULTIPLEX {
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
             ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
-            ch_validator_schema
+            ch_json_schema_validator,
+            ch_name_schema_validator,
+            ch_file_schema_validator
         )
         ch_versions = ch_versions.mix(SAMSHEE.out.versions)
         ch_samplesheet = ch_samplesheet

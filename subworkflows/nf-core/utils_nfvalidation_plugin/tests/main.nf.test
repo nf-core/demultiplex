@@ -26,14 +26,14 @@ nextflow_workflow {
                 pre_help_text    = null
                 post_help_text   = null
                 validate_params  = false
-                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+                file_schema_validatorname  = "$moduleTestDir/nextflow_schema.json"
 
                 input[0] = help
                 input[1] = workflow_command
                 input[2] = pre_help_text
                 input[3] = post_help_text
                 input[4] = validate_params
-                input[5] = schema_filename
+                input[5] = file_schema_validatorname
                 """
             }
         }
@@ -61,14 +61,14 @@ nextflow_workflow {
                 pre_help_text    = null
                 post_help_text   = null
                 validate_params  = false
-                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+                file_schema_validatorname  = "$moduleTestDir/nextflow_schema.json"
 
                 input[0] = help
                 input[1] = workflow_command
                 input[2] = pre_help_text
                 input[3] = post_help_text
                 input[4] = validate_params
-                input[5] = schema_filename
+                input[5] = file_schema_validatorname
                 """
             }
         }
@@ -98,14 +98,14 @@ nextflow_workflow {
                 pre_help_text    = null
                 post_help_text   = null
                 validate_params  = false
-                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+                file_schema_validatorname  = "$moduleTestDir/nextflow_schema.json"
 
                 input[0] = help
                 input[1] = workflow_command
                 input[2] = pre_help_text
                 input[3] = post_help_text
                 input[4] = validate_params
-                input[5] = schema_filename
+                input[5] = file_schema_validatorname
                 """
             }
         }
@@ -137,14 +137,14 @@ nextflow_workflow {
                 pre_help_text    = "pre-help-text"
                 post_help_text   = "post-help-text"
                 validate_params  = false
-                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+                file_schema_validatorname  = "$moduleTestDir/nextflow_schema.json"
 
                 input[0] = help
                 input[1] = workflow_command
                 input[2] = pre_help_text
                 input[3] = post_help_text
                 input[4] = validate_params
-                input[5] = schema_filename
+                input[5] = file_schema_validatorname
                 """
             }
         }
@@ -178,14 +178,14 @@ nextflow_workflow {
                 pre_help_text    = null
                 post_help_text   = null
                 validate_params  = true
-                schema_filename  = "$moduleTestDir/nextflow_schema.json"
+                file_schema_validatorname  = "$moduleTestDir/nextflow_schema.json"
 
                 input[0] = help
                 input[1] = workflow_command
                 input[2] = pre_help_text
                 input[3] = post_help_text
                 input[4] = validate_params
-                input[5] = schema_filename
+                input[5] = file_schema_validatorname
                 """
             }
         }
