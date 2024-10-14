@@ -15,30 +15,23 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 7 },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
-                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
-                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt")
-
-                    ).match("multiqc") },
-                { assert snapshot(
-                        path("$outputDir/PE_Sample.lane1_no_adapters.csv"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_1.fastp.fastq.gz"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_2.fastp.fastq.gz"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_R2_001.fastq.gz"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_1.fastp.fastq.gz_summary.txt"),
-                        path("$outputDir/PE_Sample/L001/Sample1_S1_L001_2.fastp.fastq.gz_summary.txt"),
-                        path("$outputDir/PE_Sample/L001/Reports/").list(),
-                        path("$outputDir/PE_Sample/L001/Stats/").list()
-                    ).match("bcl2fastq_pe") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
-
 }

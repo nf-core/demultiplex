@@ -19,20 +19,24 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_trimming") },
-                { assert workflow.trace.succeeded().size() == 6 },
-                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                    ).match("skip_trimming") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
 
     test("Skip Fastp") {
@@ -47,20 +51,24 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp") },
-                { assert workflow.trace.succeeded().size() == 5 },
-                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                    ).match("skip_fastp") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
 
     test("Skip Fastqc") {
@@ -75,20 +83,24 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastqc") },
-                { assert workflow.trace.succeeded().size() == 6 },
-                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                    ).match("skip_fastqc") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
 
     test("Skip Fastp & Fastqc") {
@@ -103,20 +115,24 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_fastp_fastqc") },
-                { assert workflow.trace.succeeded().size() == 5 },
-                { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                    ).match("skip_fastp_fastqc") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
 
     test("Skip MultiQC") {
@@ -131,20 +147,23 @@ nextflow_pipeline {
         }
 
         then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
-                { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_multiqc") },
-                { assert workflow.trace.succeeded().size() == 5 },
-                { assert !path("$outputDir/multiqc/multiqc_report.html").exists() },
+                { assert workflow.success},
                 { assert snapshot(
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz.md5"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz"),
-                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
-                    ).match("skip_multiqc") }
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
             )
         }
-
     }
-
 }
