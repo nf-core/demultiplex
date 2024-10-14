@@ -1,0 +1,89 @@
+{
+    "bcl2fastq_pe": {
+        "content": [
+            "PE_Sample.lane1_no_adapters.csv:md5,c31cca10b3a1aed8ec68daf779217d91",
+            "Sample1_S1_L001_1.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
+            "Sample1_S1_L001_2.fastp.fastq.gz:md5,adbc8e47c8e7e902777a01ea3d73b306",
+            "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+            "Sample1_S1_L001_R2_001.fastq.gz:md5,146eefcab1eaaef17ffb72672c021368",
+            "Sample1_S1_L001_1.fastp.fastq.gz_summary.txt:md5,917b542afe3e3f178b994317c955ce02",
+            "Sample1_S1_L001_2.fastp.fastq.gz_summary.txt:md5,441197ccd90d2b018db631a66d6fbbb3",
+            [
+                [
+                    [
+                        [
+                            [
+                                [
+                                    "lane.html:md5,eca711b7312a7cf6dd32a6958b2d8812",
+                                    "laneBarcode.html:md5,b5f0e5f5730d70513defa8024913b214"
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ],
+                        [
+                            [
+                                [
+                                    "lane.html:md5,41ecd9ef68fc4e1cc3177c23d741428e",
+                                    "laneBarcode.html:md5,db047476a60b8dc3b83eb6a9ee77b7db"
+                                ],
+                                [
+                                    "lane.html:md5,594f959553519cc6e578e8dca3da2612",
+                                    "laneBarcode.html:md5,594f959553519cc6e578e8dca3da2612"
+                                ]
+                            ],
+                            [
+                                [
+                                    "lane.html:md5,7ea014b0a0c9e9bb1761f291a409f9f0",
+                                    "laneBarcode.html:md5,eddae85d4b13d6fb5817df5fbfb756ff"
+                                ],
+                                [
+
+                                ]
+                            ]
+                        ]
+                    ],
+                    "Report.css:md5,eb7d3eb68fc1539f411404987246b59b",
+                    "index.html:md5,5747c407854ae2c358d0ec201ce622d8",
+                    "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34"
+                ]
+            ],
+            [
+                "AdapterTrimming.txt:md5,8009886a4c060bfec6d8e9346feb0988",
+                "ConversionStats.xml:md5,6e08faa696f3e747ec9752dc56629152",
+                "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
+                "DemuxSummaryF1L1.txt:md5,03e5fd0c1e3079c5f8c7b4d0501b37ff",
+                "FastqSummaryF1L1.txt:md5,0274549f9541b1ba7828ae6e9c5bcbbd",
+                "Stats.json:md5,d257fb169519c08b50179fb749d6aafa"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-08-07T15:19:05.728175"
+    },
+    "software_versions": {
+        "content": [
+            "{BCL2FASTQ={bcl2fastq=2.20.0.422}, FALCO={falco=1.2.1}, FASTP={fastp=0.23.4}, MD5SUM={md5sum=8.3}, Workflow={nf-core/demultiplex=v1.5.2}}"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T13:03:01.047096473"
+    },
+    "multiqc": {
+        "content": [
+            "bcl2fastq_lane_counts.txt:md5,d6054e1ec3c2e8d33c3fdee5b250dfbc",
+            "fastp_filtered_reads_plot.txt:md5,136a1d755ba6e790227f80cfcb4c1d62",
+            "bcl2fastq_sample_counts.txt:md5,93cb0cd1aee1b464f0e640e1c3d0c142"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-01T16:33:58.242361926"
+    }
+}

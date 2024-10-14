@@ -5,6 +5,45 @@
     "description": "Demultiplexing pipeline for Illumina sequencing data",
     "type": "object",
     "$defs": {
+        "workflow_options": {
+            "title": "Workflow options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether or not to skip trimming"
+                },
+                "skip_tools": {
+                    "type": "string",
+                    "default": "[]",
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
+                },
+                "sample_size": {
+                    "type": "integer",
+                    "default": 100000,
+                    "description": "Number of reads to subsample for contamination detection."
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "format": "path",
+                    "description": "Path to Kraken2 DB to use for screening"
+                },
+                "validator_schema": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to Illumina v2 samplesheet validator .json file"
+                },
+                "downstream_pipeline": {
+                    "type": "string",
+                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
+                    "default": "default",
+                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -16,9 +55,9 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
@@ -43,42 +82,19 @@
                 }
             }
         },
-        "reference_genome_options": {
-            "title": "Reference genome options",
+        "demultiplex_options": {
+            "title": "Demultiplexing options",
             "type": "object",
-            "fa_icon": "fas fa-dna",
-            "description": "Reference genome related files and options required for the workflow.",
+            "fa_icon": "fas fa-microscope",
+            "description": "Options for demultiplexing.",
+            "required": ["demultiplexer"],
             "properties": {
-                "genome": {
+                "demultiplexer": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
-                    "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
-                },
-                "fasta": {
-                    "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "mimetype": "text/plain",
-                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                    "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
-                    "fa_icon": "far fa-file-code"
-                },
-                "igenomes_ignore": {
-                    "type": "boolean",
-                    "description": "Do not load the iGenomes reference config.",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
-                },
-                "igenomes_base": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "description": "The base path to the igenomes reference files",
-                    "fa_icon": "fas fa-ban",
-                    "hidden": true,
-                    "default": "s3://ngi-igenomes/igenomes/"
+                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "mkfastq"],
+                    "description": "Demultiplexer to use.",
+                    "fa_icon": "fas fa-microscope",
+                    "default": "bclconvert"
                 }
             }
         },
@@ -127,6 +143,20 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "checkqc_options": {
+            "title": "CheckQC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "checkqc_config": {
+                    "type": "string",
+                    "default": "[]",
+                    "description": "Path to the checkqc config yml file.",
+                    "fa_icon": "far fa-check-square"
                 }
             }
         },
@@ -205,6 +235,11 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
+                "remove_adapter": {
+                    "type": "boolean",
+                    "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
+                    "default": true
+                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -224,13 +259,19 @@
     },
     "allOf": [
         {
+            "$ref": "#/$defs/workflow_options"
+        },
+        {
             "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/$defs/reference_genome_options"
+            "$ref": "#/$defs/demultiplex_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
+        },
+        {
+            "$ref": "#/$defs/checkqc_options"
         },
         {
             "$ref": "#/$defs/generic_options"

@@ -1,0 +1,39 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - BCL2FASTQ"
+    script "main.nf"
+    profile "test_bcl2fastq"
+    tag "bcl2fastq"
+    tag "pipeline"
+
+    test("Bcl2Fastq") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 6 },
+                { assert snapshot(
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_lane_counts.txt"),
+                        path("$outputDir/multiqc/multiqc_data/fastp_filtered_reads_plot.txt"),
+                        path("$outputDir/multiqc/multiqc_data/bcl2fastq_sample_counts.txt")
+                    ).match("multiqc") },
+                { assert snapshot(
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt"),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Reports/").list(),
+                        path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Stats/").list()
+                    ).match("bcl2fastq") }
+            )
+        }
+
+    }
+
+}

@@ -1,0 +1,40 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - BASES2FASTQ"
+    script "main.nf"
+    profile "test_bases2fastq"
+    tag "bases2fastq"
+    tag "pipeline"
+
+    test("Bases2Fastq") {
+
+        when {
+            params {
+                outdir        = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert workflow.trace.succeeded().size() == 8 },
+                { assert snapshot(
+                    // FIXME
+                    // path("$outputDir/sim-data/DefaultSample_R1.fastq.gz.md5"),
+                    // path("$outputDir/sim-data/DefaultSample_R2.fastq.gz.md5"),
+                    path("$outputDir/sim-data/Metrics.csv"),
+                    path("$outputDir/sim-data/UnassignedSequences.csv"),
+                    path("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R1.fastq.gz"),
+                    path("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R2.fastq.gz")
+                ).match("bases2fastq") },
+                { assert new File("$outputDir/sim-data/20230404-Bases2Fastq-Sim_QC.html").exists() },
+                { assert new File("$outputDir/sim-data/RunStats.json").exists() },
+                { assert new File("$outputDir/sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_stats.json").exists() },
+                { assert new File("$outputDir/sim-data/RunManifest.json").exists() }
+            )
+        }
+
+    }
+
+}

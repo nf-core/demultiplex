@@ -15,6 +15,7 @@ template:
   name: demultiplex
   org: nf-core
   outdir: .
-  skip_features: null
+  skip_features:
+    - igenomes
   version: 1.5.2
 update: null
