@@ -68,7 +68,6 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
-
     //
     // Create channel from input file provided through params.input
     //
