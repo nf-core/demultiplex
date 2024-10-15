@@ -20,17 +20,10 @@ process SAMSHEE {
 
     script:
     def arg_file_schema_validator = file_schema_validator ? "--schema '{\"\$ref\": \"file:${file_schema_validator}\"}'"   : ""
-    def arg_json_schema_validator = task.ext.json_schema_validator   ?: ""
-    def arg_name_schema_validator = task.ext.name_schema_validator   ?: ""
-    def arg_v1                    = task.ext.v1                      ?: ""
-    def args                      = task.ext.args                    ?: ""
+    def args = task.ext.args ?: ""
     """
     # Run validation command and capture output
     python -m samshee $samplesheet \
-    $arg_json_schema_validator \
-    $arg_name_schema_validator \
-    $arg_file_schema_validator \
-    $arg_v1 \
     $args \
     > ${samplesheet.baseName}_formatted.csv
 
