@@ -35,7 +35,6 @@ jobs:
           - "24.04.2"
           - "latest-everything"
         profile:
-          - "conda"
           - "docker"
           - "singularity"
         isMaster:
