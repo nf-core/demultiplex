@@ -229,13 +229,11 @@
                 "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-                "Sample1_S1_L001.fastp.html:md5,c45131c81bf72c16afdbb3c63a6cae3d",
                 "Sample1_S1_L001.fastp.json:md5,d9d2d702f3c64412a04cd0768863b1ab",
                 "Sample1_S1_L001.kraken2.report.txt:md5,726f60beda853ebb9134f6a712c4196b",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz:md5,53bf34dad1f8269eeed36e661ef036fb",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
-                "Sample1_S1_L001_report.html:md5,92d51c9726f30cfd2d0cf7c6d245fc61",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
                 "AdapterTrimming.txt:md5,48ed2b914b1246c0b5d8667525550946",
                 "ConversionStats.xml:md5,a2eaeb8dab2e605db56af05c53855f55",
@@ -243,7 +241,6 @@
                 "DemuxSummaryF1L1.txt:md5,f9782d533f8ac08e2f107f681068c605",
                 "FastqSummaryF1L1.txt:md5,0c6f2d87ee183b84d1051cde9a5643d1",
                 "Stats.json:md5,199fdf6292e0250385110bebca28b2dc",
-                "Sample1_S1_L001.samplesheet.csv:md5,70049a6ff8851343acd078e00ff54781",
                 "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
                 "bcl2fastq_lane_counts.txt:md5,9404ab530f43e442093337dd10c351c5",
                 "bcl2fastq_sample_counts.txt:md5,93cb0cd1aee1b464f0e640e1c3d0c142",
@@ -271,14 +268,13 @@
                 "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
                 "multiqc_general_stats.txt:md5,2b86df713f6998ec0468bc4c9a6ec7a3",
-                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654",
-                "samplesheet.csv:md5,70049a6ff8851343acd078e00ff54781"
+                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T10:18:22.502979"
+        "timestamp": "2024-10-15T11:11:03.560171"
     }
 }

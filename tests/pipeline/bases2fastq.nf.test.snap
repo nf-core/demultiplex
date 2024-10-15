@@ -202,14 +202,11 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-                "Sample1_S1_L001.fastp.html:md5,c048d31e8b5ae3750a2472e9b1d15dd2",
                 "Sample1_S1_L001.fastp.json:md5,d9d2d702f3c64412a04cd0768863b1ab",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
-                "Sample1_S1_L001_report.html:md5,e2252c40edd00317cea86a9689869b30",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "Sample1_S1_L001.samplesheet.csv:md5,bd224699e8306dcc3df78c6eea26f100",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,a6edf6b192981bd296c1eba968e4333c",
                 "bclconvert_lane_counts.txt:md5,a327047d0d6c7de32eef9535bb159110",
@@ -236,14 +233,13 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
-                "multiqc_general_stats.txt:md5,d2da854f7adc41c86d91b30ff0d758c4",
-                "samplesheet.csv:md5,bd224699e8306dcc3df78c6eea26f100"
+                "multiqc_general_stats.txt:md5,d2da854f7adc41c86d91b30ff0d758c4"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T10:10:48.63615"
+        "timestamp": "2024-10-15T11:03:18.330528"
     }
 }
