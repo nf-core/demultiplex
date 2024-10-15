@@ -1,5 +1,5 @@
 {
-    "BCL-CONVERT-mini": {
+    "Bases2Fastq": {
         "content": [
             0,
             {
@@ -8,19 +8,18 @@
                 }
             },
             [
-                "miniseq_truseq_smrna_no_adapters.csv",
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet"
             ],
             [
-                "miniseq_truseq_smrna_no_adapters.csv:md5,c32433167a5c56d5c15952c2e7948898"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T13:16:42.877259"
+        "timestamp": "2024-10-15T16:37:55.855747"
     }
 }

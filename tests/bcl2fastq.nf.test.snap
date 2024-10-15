@@ -235,7 +235,6 @@
                 "fastqc_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
                 "multiqc_general_stats.txt:md5,9aed65a87e63b8c0c5f7ef639eea81f3"
             ]
         ],
@@ -243,6 +242,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T14:28:50.309978"
+        "timestamp": "2024-10-15T16:39:25.304794"
     }
 }
