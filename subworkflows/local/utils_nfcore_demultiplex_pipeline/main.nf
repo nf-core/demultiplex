@@ -84,7 +84,7 @@ workflow PIPELINE_INITIALISATION {
                 if ( !file(per_flowcell_manifest).exists() ){
                     error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}"
                 }
-                [meta, samplesheet, flowcell, per_flowcell_manifest]
+                [ meta, samplesheet, flowcell, per_flowcell_manifest ]
             }
 
         ch_flowcell_manifest = ch_samplesheet.map{ meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
@@ -98,7 +98,6 @@ workflow PIPELINE_INITIALISATION {
     } else {
         ch_samplesheet = Channel
             .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-            .map{ validateInputSamplesheet(it) }
     }
 
     emit:
@@ -165,12 +164,6 @@ def validateInputParameters() {
     genomeExistsError()
 }
 
-//
-// Validate channels from input samplesheet
-//
-def validateInputSamplesheet(input) {
-    return input
-}
 //
 // Get attribute from genome config file e.g. fasta
 //
