@@ -50,6 +50,7 @@ workflow DEMULTIPLEX {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+
     main:
     // Value inputs
     demultiplexer       = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
@@ -75,7 +76,7 @@ workflow DEMULTIPLEX {
             }
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
-                def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
+                def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : [] //extracts number after ".lane" until next "_", must be int to match lane value from meta
                 [[id: meta_id, lane: meta_lane],file]
             }
         ch_samplesheet_new = ch_samplesheet
