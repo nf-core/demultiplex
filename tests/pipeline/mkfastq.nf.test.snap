@@ -167,11 +167,8 @@
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
                 "IndexMetricsOut.bin:md5,e2ac28695537336b53a509f48e93ed1f",
                 "AdapterTrimming.txt:md5,522b8c57ed2a84da31ec3edda9424b60",
-                "ConversionStats.xml:md5,8e43230be20c13f7a006403ce6f3d128",
                 "DemultiplexingStats.xml:md5,60cce68e6a27371dc257ca9f65e14cc1",
-                "DemuxSummaryF1L1.txt:md5,ecf4d48c2b6b8cbb68e1facda9a53b43",
                 "FastqSummaryF1L1.txt:md5,876f188644f5e12eca513baeff158306",
-                "Stats.json:md5,cbf83f5b483d355d0d7cfcaabb41f195",
                 "test_sample_S1_L001.fastp.json:md5,e4321caea21d0c44d0d7269065bdb79d",
                 "test_sample_S1_L001_1.fastp.fastq.gz:md5,b348491a3b1afa096fde514dbdf55215",
                 "test_sample_S1_L001_1.fastp.fastq.gz.md5:md5,43d7882f3aaae47b56df56da6c802236",
@@ -180,9 +177,9 @@
                 {
                     "directory": false,
                     "file": true,
-                    "freeSpace": 21943513088,
+                    "freeSpace": 21964668928,
                     "canonicalPath": "/home/max/workspace/demultiplex/.nf-test/tests/ed2ff7c0bb8147747cb278f737effd34/output/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz",
-                    "usableSpace": 9293074432,
+                    "usableSpace": 9314230272,
                     "hidden": false,
                     "totalSpace": 247570337792,
                     "path": "/home/max/workspace/demultiplex/.nf-test/tests/ed2ff7c0bb8147747cb278f737effd34/output/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz",
@@ -213,7 +210,7 @@
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
                 "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,2f4f61ce50ab02186485b57f9d1c5c1b",
+                "multiqc_fastp.txt:md5,949744c3ef2f89e4a26432cd33307138",
                 "multiqc_general_stats.txt:md5,94b2ad1b21c8f69fd2b57102d52aa7c2"
             ]
         ],
@@ -221,6 +218,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T13:23:06.229274"
+        "timestamp": "2024-10-15T14:13:47.87567"
     }
 }

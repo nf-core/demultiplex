@@ -202,14 +202,6 @@
                 "IndexMetricsOut.bin:md5,9e688c58a5487b8eaf69c9e1005ad0bf",
                 "QMetricsOut.bin:md5,7e9f198d53ebdfbb699a5f94cf1ed51c",
                 "TileMetricsOut.bin:md5,83891751ec1c91a425a524b476b6ca3c",
-                "lane.html:md5,794e48287f47a9f22dcb6b6d0c22c3eb",
-                "laneBarcode.html:md5,b3ee2b3d9b55c0744789e1e73847d8a2",
-                "lane.html:md5,f741870307050dcea79a838f5971770f",
-                "laneBarcode.html:md5,ffe2e863811c76cb9da27d5d124e0611",
-                "lane.html:md5,8b58e9ebb82123d09209ad66ddb4e20e",
-                "laneBarcode.html:md5,8b58e9ebb82123d09209ad66ddb4e20e",
-                "lane.html:md5,c383b0768d9978733d3f5d3b91c15af0",
-                "laneBarcode.html:md5,48842c23b9a2816aec540177df870968",
                 "Report.css:md5,eb7d3eb68fc1539f411404987246b59b",
                 "index.html:md5,5747c407854ae2c358d0ec201ce622d8",
                 "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34",
@@ -220,15 +212,11 @@
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
                 "AdapterTrimming.txt:md5,48ed2b914b1246c0b5d8667525550946",
-                "ConversionStats.xml:md5,a2eaeb8dab2e605db56af05c53855f55",
                 "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
-                "DemuxSummaryF1L1.txt:md5,f9782d533f8ac08e2f107f681068c605",
                 "FastqSummaryF1L1.txt:md5,0c6f2d87ee183b84d1051cde9a5643d1",
-                "Stats.json:md5,199fdf6292e0250385110bebca28b2dc",
                 "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
                 "bcl2fastq_lane_counts.txt:md5,9404ab530f43e442093337dd10c351c5",
                 "bcl2fastq_sample_counts.txt:md5,93cb0cd1aee1b464f0e640e1c3d0c142",
-                "bcl2fastq_undetermined.txt:md5,980cf7e7e430b596392297bc5fc126c7",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,8105d4ce1d752e1f8a26e4291e8d9c6c",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,0ac68e41c4de8ca35a1cd6ee7c6cb3f3",
                 "fastp-seq-content-n-plot_Read_1_After_filtering.txt:md5,1ec69a9fd0d46a39dfb59e377733e98b",
@@ -245,10 +233,8 @@
                 "fastqc_sequence_counts_plot.txt:md5,662c69090978601ca7d39504b1ac736b",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "fastqc_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multiqc_bcl2fastq_bylane.txt:md5,bde78aa8394c4b7bc4f3cd017e3d29a4",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
                 "multiqc_general_stats.txt:md5,9aed65a87e63b8c0c5f7ef639eea81f3"
             ]
@@ -257,6 +243,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T13:14:47.922692"
+        "timestamp": "2024-10-15T14:28:50.309978"
     }
 }
