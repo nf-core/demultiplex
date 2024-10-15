@@ -252,7 +252,6 @@
                 "kraken-top-n-plot.txt:md5,add0b89a8b3d1729dac311870959b1e7",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
                 "multiqc_citations.txt:md5,97f1dcb4348072ce2865c29c5c306a3d",
-                "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
                 "multiqc_general_stats.txt:md5,2b86df713f6998ec0468bc4c9a6ec7a3",
                 "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654"
@@ -262,6 +261,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T14:00:41.237358"
+        "timestamp": "2024-10-15T14:32:46.690205"
     }
 }

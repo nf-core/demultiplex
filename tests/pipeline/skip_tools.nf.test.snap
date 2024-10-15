@@ -424,7 +424,6 @@
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,a894d852b250ee902d805b358c173b88",
                 "multiqc_general_stats.txt:md5,365ea22923184f063b3ad7bd75d7d910"
             ]
@@ -433,7 +432,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T11:15:36.996226"
+        "timestamp": "2024-10-15T14:36:31.319794"
     },
     "Skip MultiQC": {
         "content": [
@@ -959,7 +958,6 @@
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,5bce10ca195204bf43b5ef9d17717119",
                 "multiqc_fastqc.txt:md5,340a4f3f2e805633ca3490d0297be938",
                 "multiqc_general_stats.txt:md5,d2da854f7adc41c86d91b30ff0d758c4"
             ]
@@ -968,6 +966,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T11:18:06.856313"
+        "timestamp": "2024-10-15T14:38:35.728344"
     }
 }

@@ -177,9 +177,9 @@
                 {
                     "directory": false,
                     "file": true,
-                    "freeSpace": 21964668928,
+                    "freeSpace": 19969302528,
                     "canonicalPath": "/home/max/workspace/demultiplex/.nf-test/tests/ed2ff7c0bb8147747cb278f737effd34/output/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz",
-                    "usableSpace": 9314230272,
+                    "usableSpace": 7318863872,
                     "hidden": false,
                     "totalSpace": 247570337792,
                     "path": "/home/max/workspace/demultiplex/.nf-test/tests/ed2ff7c0bb8147747cb278f737effd34/output/cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz",
@@ -210,7 +210,6 @@
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
                 "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_fastp.txt:md5,949744c3ef2f89e4a26432cd33307138",
                 "multiqc_general_stats.txt:md5,94b2ad1b21c8f69fd2b57102d52aa7c2"
             ]
         ],
@@ -218,6 +217,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.2"
         },
-        "timestamp": "2024-10-15T14:13:47.87567"
+        "timestamp": "2024-10-15T14:34:23.682439"
     }
 }
