@@ -97,7 +97,9 @@ workflow PIPELINE_INITIALISATION {
             }
 
     } else {
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        ch_samplesheet = Channel
+            .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+            .map{ validateInputSamplesheet(it) }
     }
 
     emit:
@@ -164,6 +166,12 @@ def validateInputParameters() {
     genomeExistsError()
 }
 
+//
+// Validate channels from input samplesheet
+//
+def validateInputSamplesheet(input) {
+    return input
+}
 //
 // Get attribute from genome config file e.g. fasta
 //
