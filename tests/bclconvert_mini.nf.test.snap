@@ -342,8 +342,7 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,70de269b5d06021f286c44d3ac91b54b",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,29634775947e43972c864bdb08ceb61e",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_general_stats.txt:md5,deb3d4f0bd64562ee425ddd34705e832"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {

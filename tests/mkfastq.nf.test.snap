@@ -209,8 +209,7 @@
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,d6fc359d4e2be31d802b8553bcf5af93",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
                 "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_general_stats.txt:md5,94b2ad1b21c8f69fd2b57102d52aa7c2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {

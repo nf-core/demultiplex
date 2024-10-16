@@ -317,8 +317,7 @@
                 "fastqc-2_sequence_duplication_levels_plot.txt:md5,02c6dcf1a65b7b3a21d8deaf70c8f3ca",
                 "fastqc-2_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multiqc_bcl2fastq_bysample.txt:md5,bc5b6bbdcd75ead5a552cef09fc9aaec",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_general_stats.txt:md5,2b3479c83a80205dca8db22279aac0fe"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
