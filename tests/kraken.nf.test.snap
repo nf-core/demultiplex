@@ -248,7 +248,6 @@
                 "fastqc_per_sequence_quality_scores_plot.txt:md5,edbe64e0545cb866af73a649349d2a42",
                 "fastqc_sequence_counts_plot.txt:md5,662c69090978601ca7d39504b1ac736b",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
-                "fastqc_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "kraken-top-n-plot.txt:md5,add0b89a8b3d1729dac311870959b1e7",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
                 "multiqc_citations.txt:md5,97f1dcb4348072ce2865c29c5c306a3d",

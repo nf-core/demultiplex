@@ -340,7 +340,6 @@
                 "fastqc_sequence_counts_plot.txt:md5,4b906147cf7e362c83df2bf639d9c213",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,6da1431aca488bb451e8a2b03dcb1d59",
                 "fastqc_sequence_length_distribution_plot.txt:md5,70de269b5d06021f286c44d3ac91b54b",
-                "fastqc_top_overrepresented_sequences_table.txt:md5,e38e7acf07858211dd44a8dddaec16a7",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,29634775947e43972c864bdb08ceb61e",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
