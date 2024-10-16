@@ -7,7 +7,7 @@
 **/Stats/Stats.json
 fastq/*.samplesheet.csv
 multiqc/multiqc_data/bcl2fastq_undetermined.txt
-multiqc/multiqc_data/fastqc-*-status-check-heatmap.txt
+multiqc/multiqc_data/fastqc*status-check-heatmap.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt

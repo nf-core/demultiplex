@@ -224,7 +224,6 @@
                 "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,1701b40c23dca068210f5410788e3be1",
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,35de9aebdc467b1bbc9fd1f40d3aece4",
                 "fastp_filtered_reads_plot.txt:md5,fa14a1941e109d4104c33db0e5fe20fc",
-                "fastqc-status-check-heatmap.txt:md5,ba346b48736a57f50aa1ef5ce468f5df",
                 "fastqc_per_base_n_content_plot.txt:md5,d7db99124db8f53d82c51c779ce77463",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,31c51bbd7d4dbb32107efa95c8a58ee5",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,842eaa1c62a8e6676b4b07226bda998b",
