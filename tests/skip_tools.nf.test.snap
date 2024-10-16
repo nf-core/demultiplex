@@ -419,8 +419,7 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,a3bf17370e71c501f610c5fc6b2ec292",
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_general_stats.txt:md5,365ea22923184f063b3ad7bd75d7d910"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
@@ -709,8 +708,7 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,a3bf17370e71c501f610c5fc6b2ec292",
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "multiqc_general_stats.txt:md5,9e6cd051b09056263f269029b21a643b"
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
         "meta": {
@@ -949,8 +947,7 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "multiqc_general_stats.txt:md5,d2da854f7adc41c86d91b30ff0d758c4"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
