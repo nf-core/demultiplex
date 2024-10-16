@@ -25,6 +25,7 @@
                 "type": "integer",
                 "description": "Lane number",
                 "minimum": 1,
+                "default": null,
                 "maximum": 8,
                 "meta": ["lane"]
             },
