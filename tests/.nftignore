@@ -22,9 +22,12 @@ multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
 samplesheet/samplesheet.csv
+sim-data/*-Bases2Fastq-Sim_QC.html
 sim-data/*.fastp.fastq.gz
 sim-data/*.fastp.fastq.gz.md5
 sim-data/*.fastp.fastq.gz_fastqc_data.txt
 sim-data/*.fastp.fastq.gz_fastqc_report.html
 sim-data/*.fastp.fastq.gz_summary.txt
+sim-data/RunStats.json
+sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_stats.json
 sim-data/most_frequent_unmatched.tsv
