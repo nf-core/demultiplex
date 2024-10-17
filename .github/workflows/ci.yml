@@ -7,50 +7,83 @@ on:
       - master
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
-  NXF_ANSI_LOG: false
-  NFT_VER: "0.9.0"
-  NFT_WORKDIR: "~"
   NFT_DIFF: "pdiff"
   NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NFT_VER: "0.9.0"
+  NFT_WORKDIR: "~"
+  NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
-  define_nxf_versions:
-    name: Choose nextflow versions to test against depending on target branch
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.nxf_versions.outputs.matrix }}
-    steps:
-      - id: nxf_versions
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.base_ref }}" == "dev" && "${{ matrix.NXF_VER }}" != "latest-everything" ]]; then
-            echo matrix='["latest-stable"]' | tee -a $GITHUB_OUTPUT
-          else
-            echo matrix='["latest-stable", "23.04.0"]' | tee -a $GITHUB_OUTPUT
-          fi
-
   test:
-    name: Run pipeline with test data
-    needs: define_nxf_versions
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.shard }}/6"
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/demultiplex') }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        NXF_VER:
+          - "24.04.2"
+          - "latest-everything"
+        profile:
+          - "docker"
+          - "singularity"
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMaster: false
+            profile: "conda"
+          - isMaster: false
+            profile: "singularity"
         shard: [1, 2, 3, 4, 5, 6]
-        NXF_VER: ${{ fromJson(needs.define_nxf_versions.outputs.matrix) }}
-        profile: ["docker"]
-    env:
-      SHARDS: "6"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
           fetch-depth: 0
+
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up Apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Set up Miniconda
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          conda-solver: libmamba
+          channels: conda-forge,bioconda
+
+      - name: Set up Conda
+        if: matrix.profile == 'conda'
+        run: |
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
+
+      - name: Clean up Disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - uses: actions/setup-python@v4
         with:
@@ -62,19 +95,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install pdiff
 
-      - uses: nf-core/setup-nextflow@v2
-        with:
-          version: "${{ matrix.NXF_VER }}"
-
       - uses: nf-core/setup-nf-test@v1
         with:
           version: ${{ env.NFT_VER }}
 
-      - name: Run Tests (Shard ${{ matrix.shard }}/${{ env.SHARDS }})
+      - name: Run Tests (Shard ${{ matrix.shard }}/6)
         run: |
           nf-test test \
+              --debug \
+              --verbose \
               --ci \
-              --shard ${{ matrix.shard }}/${{ env.SHARDS }} \
+              --shard ${{ matrix.shard }}/6 \
               --changed-since HEAD^ \
               --profile "+${{ matrix.profile }}" \
               --filter pipeline \
