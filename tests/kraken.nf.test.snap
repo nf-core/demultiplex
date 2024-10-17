@@ -1,7 +1,7 @@
 {
     "kraken2": {
         "content": [
-            9,
+            11,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
@@ -205,7 +205,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -250,13 +252,16 @@
                 "kraken-top-n-plot.txt:md5,add0b89a8b3d1729dac311870959b1e7",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
                 "multiqc_citations.txt:md5,97f1dcb4348072ce2865c29c5c306a3d",
-                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654"
+                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654",
+                "atacseq_samplesheet.csv:md5,4ec94f762cdd68490c6efd7b4f1b476a",
+                "rnaseq_samplesheet.csv:md5,7ba7608a843bc9887af098bc6f4d8a08",
+                "taxprofiler_samplesheet.csv:md5,5fe3bde653a4a2d748f4fbbb8f043652"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:57:22.70902"
+        "timestamp": "2024-10-17T18:40:14.136394606"
     }
 }

@@ -1,7 +1,7 @@
 {
     "Bcl2Fastq": {
         "content": [
-            6,
+            8,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
@@ -191,7 +191,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -232,13 +234,16 @@
                 "fastqc_sequence_counts_plot.txt:md5,662c69090978601ca7d39504b1ac736b",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "multiqc_bcl2fastq_bysample.txt:md5,baaa56d8315c18633f6ce6568d6f0657",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "atacseq_samplesheet.csv:md5,9bcb1c0013047759567b318030d2f683",
+                "rnaseq_samplesheet.csv:md5,10ef4bf601cf15f399466f486657103d",
+                "taxprofiler_samplesheet.csv:md5,0967d7e933f4d186923f2317ffd5dad3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:39:25.304794"
+        "timestamp": "2024-10-17T18:31:41.999930695"
     }
 }

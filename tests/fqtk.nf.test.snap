@@ -1,7 +1,7 @@
 {
     "FQTK": {
         "content": [
-            129,
+            179,
             {
                 "CSV2TSV": {
                     "sed": 4.8
@@ -169,7 +169,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv",
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv",
                 "test",
                 "test.csv",
                 "test/demux-metrics.txt",
@@ -497,6 +499,9 @@
                 "fastqc_sequence_counts_plot.txt:md5,5168b647c4bbd6b3be17373e134fb296",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,d6db81670f1240dda7a91e14a29557c0",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "atacseq_samplesheet.csv:md5,449aad4e862548aa012f86e08af24400",
+                "rnaseq_samplesheet.csv:md5,80dab2378e072b91e5fb989160cf537c",
+                "taxprofiler_samplesheet.csv:md5,50dff691a23d86a2d3a8052feba9d388",
                 "test.csv:md5,c01a880241575a67e3eb5dc461a4972c",
                 "demux-metrics.txt:md5,1d587fa959f9129155314cf531103347",
                 "s1.fastp.json:md5,be9a4b1838890e0ef5c586a3dc83b728",
@@ -728,8 +733,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:56:01.494868"
+        "timestamp": "2024-10-17T18:38:44.767695631"
     }
 }

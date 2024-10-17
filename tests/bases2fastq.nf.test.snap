@@ -1,7 +1,7 @@
 {
     "Bases2Fastq": {
         "content": [
-            8,
+            10,
             {
                 "BASES2FASTQ": {
                     "bases2fastq": "1.8.0.1260801529, use subject to license available at elementbiosciences.com"
@@ -23,7 +23,7 @@
                 }
             },
             [
-        "fastq",
+                "fastq",
                 "fastq/DefaultSample.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -148,7 +148,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv",
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv",
                 "sim-data",
                 "sim-data.csv",
                 "sim-data/20230404-Bases2Fastq-Sim_QC.html",
@@ -199,6 +201,9 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,4b372fcce4dbb8b0dbe685c6380f4a97",
                 "fastqc_sequence_length_distribution_plot.txt:md5,5b002b51364b518093ad98ebe0a0ca39",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "atacseq_samplesheet.csv:md5,cbcd0c351176a3af8220e4d7ea0aa5fc",
+                "rnaseq_samplesheet.csv:md5,b801f052db66f58dde575504fb506a71",
+                "taxprofiler_samplesheet.csv:md5,e408437751e7d42d5dc54d634f0340c7",
                 "sim-data.csv:md5,1d1dab697bd88c411fff89c102024295",
                 "DefaultSample.fastp.json:md5,9c10bbfbc4beb9523ca3a114f95709db",
                 "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
@@ -210,8 +215,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:37:55.855747"
+        "timestamp": "2024-10-17T18:30:22.925323602"
     }
 }

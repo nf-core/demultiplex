@@ -1,7 +1,7 @@
 {
     "MKFASTQ": {
         "content": [
-            10,
+            14,
             {
                 "CELLRANGER_MKFASTQ": {
                     "cellranger": "8.0.0"
@@ -161,7 +161,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
@@ -195,13 +197,16 @@
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,d6fc359d4e2be31d802b8553bcf5af93",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
                 "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "atacseq_samplesheet.csv:md5,ffde237bdd8a473b76cfec227fd3de29",
+                "rnaseq_samplesheet.csv:md5,ad629e23c7e89d50559363faeaae585e",
+                "taxprofiler_samplesheet.csv:md5,c6fbf9b56975f504f1243f1bc93143a7"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T14:34:23.682439"
+        "timestamp": "2024-10-17T18:42:31.446555384"
     }
 }

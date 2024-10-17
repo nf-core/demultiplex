@@ -1,7 +1,7 @@
 {
     "BCL-CONVERT-mini": {
         "content": [
-            26,
+            38,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -248,7 +248,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "HBRR1_S1_L001.fastp.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
@@ -341,13 +343,16 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,70de269b5d06021f286c44d3ac91b54b",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,29634775947e43972c864bdb08ceb61e",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "atacseq_samplesheet.csv:md5,8aa449c77bc73e004747485f7879f0fa",
+                "rnaseq_samplesheet.csv:md5,e3fecf57a1e946c380c1da1d6f32d67a",
+                "taxprofiler_samplesheet.csv:md5,39d06ae1eae4a6398ee41e990c22d0f1"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-16T10:59:08.175426"
+        "timestamp": "2024-10-17T18:35:59.027921384"
     }
 }
