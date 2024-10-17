@@ -22,7 +22,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions_skip_trimming") },
-                { assert workflow.trace.succeeded().size() == 6 },
+                { assert workflow.trace.succeeded().size() == 8 },
                 { assert path("$outputDir/multiqc/multiqc_report.html").exists() },
                 { assert snapshot(
                         path("$outputDir/220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz"),

@@ -18,7 +18,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
-                { assert workflow.trace.succeeded().size() == 10 },
+                { assert workflow.trace.succeeded().size() == 12 },
                 // How many directories were produced?
                 {assert path("${outputDir}").list().size() == 6},
                 // How many files were produced?
