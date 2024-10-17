@@ -5,6 +5,7 @@
 **/Stats/ConversionStats.xml
 **/Stats/DemuxSummaryF1L1.txt
 **/Stats/Stats.json
+cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz
 fastq/*.samplesheet.csv
 multiqc/multiqc_data/bcl2fastq_undetermined.txt
 multiqc/multiqc_data/fastqc*status-check-heatmap.txt
