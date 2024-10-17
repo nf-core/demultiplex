@@ -19,7 +19,6 @@ include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER      } from '../modules/local/fastq_to_samplesheet/main'
 
-
 //
 // MODULE: Installed directly from nf-core/modules
 //
@@ -38,7 +37,7 @@ include { SAMSHEE                       } from '../modules/local/samshee/main'
 //
 // FUNCTION
 //
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
@@ -63,7 +62,6 @@ workflow DEMULTIPLEX {
     kraken_db           = params.kraken_db                                       // path
     strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
 
-
     // Channel inputs
     ch_versions         = Channel.empty()
     ch_multiqc_files    = Channel.empty()
@@ -81,11 +79,11 @@ workflow DEMULTIPLEX {
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
-                [[id: meta_id, lane: meta_lane],file]
+                [ [id: meta_id, lane: meta_lane], file ]
             }
         ch_samplesheet_new = ch_samplesheet
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
-            .map{ meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
+            .map{ meta, samplesheet, flowcell, lane, new_samplesheet -> [meta, new_samplesheet, flowcell, lane] }
         ch_samplesheet = ch_samplesheet_new
     } else {
         ch_samplesheet
@@ -97,7 +95,7 @@ workflow DEMULTIPLEX {
     // RUN samplesheet_validator samshee
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
-            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
+            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [ meta, samplesheet ] },
             ch_validator_schema
         )
         ch_versions = ch_versions.mix(SAMSHEE.out.versions)
@@ -317,7 +315,7 @@ workflow DEMULTIPLEX {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
