@@ -230,16 +230,13 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,6a1ababe7d8242995ba5c5f78699cd63",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "atacseq_samplesheet.csv:md5,e1392ffbaf78a5f37d54cacc4f49eab6",
-                "rnaseq_samplesheet.csv:md5,c4def806947a14a032e69d8309fbd807",
-                "taxprofiler_samplesheet.csv:md5,3c27f6f279e3c1c7c995756c8500b014"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T18:33:04.837079854"
+        "timestamp": "2024-10-17T23:31:58.719385372"
     }
 }

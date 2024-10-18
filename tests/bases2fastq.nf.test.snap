@@ -201,9 +201,6 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,4b372fcce4dbb8b0dbe685c6380f4a97",
                 "fastqc_sequence_length_distribution_plot.txt:md5,5b002b51364b518093ad98ebe0a0ca39",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "atacseq_samplesheet.csv:md5,cbcd0c351176a3af8220e4d7ea0aa5fc",
-                "rnaseq_samplesheet.csv:md5,b801f052db66f58dde575504fb506a71",
-                "taxprofiler_samplesheet.csv:md5,e408437751e7d42d5dc54d634f0340c7",
                 "sim-data.csv:md5,1d1dab697bd88c411fff89c102024295",
                 "DefaultSample.fastp.json:md5,9c10bbfbc4beb9523ca3a114f95709db",
                 "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
@@ -217,6 +214,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T18:30:22.925323602"
+        "timestamp": "2024-10-17T23:29:10.785062467"
     }
 }

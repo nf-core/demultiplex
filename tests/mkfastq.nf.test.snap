@@ -197,16 +197,13 @@
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,d6fc359d4e2be31d802b8553bcf5af93",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
                 "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
-                "atacseq_samplesheet.csv:md5,ffde237bdd8a473b76cfec227fd3de29",
-                "rnaseq_samplesheet.csv:md5,ad629e23c7e89d50559363faeaae585e",
-                "taxprofiler_samplesheet.csv:md5,c6fbf9b56975f504f1243f1bc93143a7"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T18:42:31.446555384"
+        "timestamp": "2024-10-17T23:40:20.21203835"
     }
 }
