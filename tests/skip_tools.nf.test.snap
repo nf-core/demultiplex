@@ -1,7 +1,7 @@
 {
     "Skip Fastp": {
         "content": [
-            5,
+            7,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -139,7 +139,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -186,13 +188,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T11:16:29.215413"
+        "timestamp": "2024-10-18T00:25:42.942384924"
     },
     "Skip Trimming": {
         "content": [
-            6,
+            8,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -367,7 +369,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -422,13 +426,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T14:36:31.319794"
+        "timestamp": "2024-10-18T00:24:59.739085162"
     },
     "Skip MultiQC": {
         "content": [
-            5,
+            7,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -485,7 +489,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -519,13 +525,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T11:20:29.598072"
+        "timestamp": "2024-10-18T00:29:21.376431772"
     },
     "Skip Fastp & Fastqc": {
         "content": [
-            5,
+            7,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -663,7 +669,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -710,13 +718,13 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T11:19:11.741332"
+        "timestamp": "2024-10-18T00:28:05.245862992"
     },
     "Skip Fastqc": {
         "content": [
-            6,
+            8,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -892,7 +900,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -948,8 +958,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T14:38:35.728344"
+        "timestamp": "2024-10-18T00:27:11.29098668"
     }
 }
