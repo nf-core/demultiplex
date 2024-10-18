@@ -103,7 +103,6 @@ jobs:
           nf-test test \
               --ci \
               --shard ${{ matrix.shard }}/6 \
-              --changed-since HEAD^ \
               --profile "+${{ matrix.profile }}" \
               --filter pipeline \
               --junitxml=test.xml
