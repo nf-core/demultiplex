@@ -102,8 +102,6 @@ jobs:
       - name: Run Tests (Shard ${{ matrix.shard }}/6)
         run: |
           nf-test test \
-              --debug \
-              --verbose \
               --ci \
               --shard ${{ matrix.shard }}/6 \
               --changed-since HEAD^ \
