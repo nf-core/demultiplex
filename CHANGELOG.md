@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#275](https://github.com/nf-core/demultiplex/pull/275) Update samshee module from nf-core.
 - [#276](https://github.com/nf-core/demultiplex/pull/276) Template update for nf-core/tools v3.0.2
 
 ### `Fixed`
@@ -43,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#225](https://github.com/nf-core/demultiplex/pull/225) Added test profile for multi-lane samples, updated handling of such samples and adapter trimming.
 - [#234](https://github.com/nf-core/demultiplex/pull/234) Added module for samplesheet validation.
 - [#236](https://github.com/nf-core/demultiplex/pull/236) Add samplesheet generation.
-- [#275](https://github.com/nf-core/demultiplex/pull/275) Update samshee module from nf-core.
 
 ### `Changed`
 

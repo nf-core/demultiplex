@@ -47,12 +47,6 @@
                 "v1_schema": {
                     "type": "boolean",
                     "description": "Whether or not illumina samplesheet is v1 "
-                },
-                "downstream_pipeline": {
-                    "type": "string",
-                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
-                    "default": "default",
-                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
                 }
             }
         },
