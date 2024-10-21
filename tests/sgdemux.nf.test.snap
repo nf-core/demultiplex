@@ -1,7 +1,7 @@
 {
     "SGDEMUX": {
         "content": [
-            128,
+            178,
             {
                 "FALCO": {
                     "falco": "1.2.1"
@@ -204,7 +204,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv",
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv",
                 "sim-data",
                 "sim-data.csv",
                 "sim-data/Undetermined_S25_L001.fastp.html",
@@ -580,6 +582,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:07:45.042862"
+        "timestamp": "2024-10-18T00:54:45.989490742"
     }
 }

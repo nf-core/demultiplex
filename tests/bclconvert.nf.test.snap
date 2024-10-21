@@ -1,7 +1,7 @@
 {
     "BCL-CONVERT": {
         "content": [
-            6,
+            8,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -177,7 +177,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -233,8 +235,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:41:01.01928"
+        "timestamp": "2024-10-17T23:31:58.719385372"
     }
 }

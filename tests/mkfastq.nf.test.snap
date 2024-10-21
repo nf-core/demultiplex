@@ -1,7 +1,7 @@
 {
     "MKFASTQ": {
         "content": [
-            10,
+            14,
             {
                 "CELLRANGER_MKFASTQ": {
                     "cellranger": "8.0.0"
@@ -161,7 +161,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv"
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
@@ -200,8 +202,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T14:34:23.682439"
+        "timestamp": "2024-10-17T23:40:20.21203835"
     }
 }

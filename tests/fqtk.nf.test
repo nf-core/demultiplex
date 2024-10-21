@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     profile "test_fqtk"
     tag "fqtk"
+    tag "pipeline"
 
     test("FQTK") {
 

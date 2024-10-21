@@ -35,12 +35,6 @@
                     "type": "string",
                     "format": "file-path",
                     "description": "Path to Illumina v2 samplesheet validator .json file"
-                },
-                "downstream_pipeline": {
-                    "type": "string",
-                    "description": "Name of downstream nf-core pipeline (one of: rnaseq, atacseq, taxprofiler or default). Used to produce the input samplesheet for that pipeline.",
-                    "default": "default",
-                    "enum": ["rnaseq", "atacseq", "taxprofiler", "default"]
                 }
             }
         },
@@ -276,5 +270,11 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "strandedness": {
+            "type": "string",
+            "default": "auto"
+        }
+    }
 }

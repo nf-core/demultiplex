@@ -1,7 +1,7 @@
 {
     "Bases2Fastq": {
         "content": [
-            8,
+            10,
             {
                 "BASES2FASTQ": {
                     "bases2fastq": "1.8.0.1260801529, use subject to license available at elementbiosciences.com"
@@ -23,7 +23,7 @@
                 }
             },
             [
-        "fastq",
+                "fastq",
                 "fastq/DefaultSample.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -148,7 +148,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
-                "samplesheet/samplesheet.csv",
+                "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/taxprofiler_samplesheet.csv",
                 "sim-data",
                 "sim-data.csv",
                 "sim-data/20230404-Bases2Fastq-Sim_QC.html",
@@ -210,8 +212,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-15T16:37:55.855747"
+        "timestamp": "2024-10-17T23:29:10.785062467"
     }
 }
