@@ -8,15 +8,16 @@
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 
-include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { FASTQ_CONTAM_SEQTK_KRAKEN } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
-include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
-include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
-include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
-include { FASTQ_TO_SAMPLESHEET      } from '../modules/local/fastq_to_samplesheet/main'
-
+include { BCL_DEMULTIPLEX                                               } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { FASTQ_CONTAM_SEQTK_KRAKEN                                     } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
+include { BASES_DEMULTIPLEX                                             } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER      } from '../modules/local/fastq_to_samplesheet/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -32,7 +33,7 @@ include { SAMSHEE                       } from '../modules/nf-core/samshee/main'
 //
 // FUNCTION
 //
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
@@ -55,8 +56,7 @@ workflow DEMULTIPLEX {
     skip_tools          = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
     sample_size         = params.sample_size                                     // int
     kraken_db           = params.kraken_db                                       // path
-    downstream_pipeline = params.downstream_pipeline                             // string: rnaseq, atacseq, taxprofiler
-
+    strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
 
     // Channel inputs
     ch_versions              = Channel.empty()
@@ -75,11 +75,11 @@ workflow DEMULTIPLEX {
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
-                [[id: meta_id, lane: meta_lane],file]
+                [ [id: meta_id, lane: meta_lane], file ]
             }
         ch_samplesheet_new = ch_samplesheet
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
-            .map{ meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
+            .map{ meta, samplesheet, flowcell, lane, new_samplesheet -> [meta, new_samplesheet, flowcell, lane] }
         ch_samplesheet = ch_samplesheet_new
     } else {
         ch_samplesheet
@@ -281,13 +281,31 @@ workflow DEMULTIPLEX {
     }
 
     // Module: FASTQ to samplesheet
-    FASTQ_TO_SAMPLESHEET(ch_meta_fastq, downstream_pipeline, 'auto')
-
-    FASTQ_TO_SAMPLESHEET.out.samplesheet
+    ch_meta_fastq_rnaseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq, "rnaseq", strandedness)
+    FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet
             .map { it[1] }
-            .collectFile(name:'tmp_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
+            .collectFile(name:'tmp_rnaseq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
             .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
+            .collectFile(name:'rnaseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
+            .set { ch_samplesheet }
+
+    ch_meta_fastq_atacseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq, "atacseq", strandedness)
+    FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet
+            .map { it[1] }
+            .collectFile(name:'tmp_atac_seq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
+            .map { it.text.tokenize('\n').join('\n') }
+            .collectFile(name:'atacseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
+            .set { ch_samplesheet }
+
+    ch_meta_fastq_taxprofiler = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler, "taxprofiler", strandedness)
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet
+            .map { it[1] }
+            .collectFile(name:'tmp_taxprofiler_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
+            .map { it.text.tokenize('\n').join('\n') }
+            .collectFile(name:'taxprofiler_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
             .set { ch_samplesheet }
 
     //
@@ -296,7 +314,7 @@ workflow DEMULTIPLEX {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
