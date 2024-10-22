@@ -31,10 +31,22 @@
                     "format": "path",
                     "description": "Path to Kraken2 DB to use for screening"
                 },
-                "validator_schema": {
+                "json_schema_validator": {
+                    "type": "string",
+                    "description": "String in JSON format to be passed to samshee module for samplesheet validation"
+                },
+                "name_schema_validator": {
+                    "type": "string",
+                    "description": "Schema name to be passed to samshee module for samplesheet validation"
+                },
+                "file_schema_validator": {
                     "type": "string",
                     "format": "file-path",
-                    "description": "Path to Illumina v2 samplesheet validator .json file"
+                    "description": "Local JSON file to be passed to samshee module for samplesheet validation"
+                },
+                "v1_schema": {
+                    "type": "boolean",
+                    "description": "Whether or not illumina samplesheet is v1 "
                 }
             }
         },

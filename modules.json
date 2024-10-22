@@ -65,6 +65,11 @@
                         "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
                         "installed_by": ["modules"]
                     },
+                    "samshee": {
+                        "branch": "master",
+                        "git_sha": "3c464e75051db485c1b37ab9f1ea2182fb3d3533",
+                        "installed_by": ["modules"]
+                    },
                     "seqtk/sample": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
