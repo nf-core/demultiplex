@@ -101,6 +101,10 @@
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope",
                     "default": "bclconvert"
+                },
+                "strandedness": {
+                    "type": "string",
+                    "default": "auto"
                 }
             }
         },
@@ -282,11 +286,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "strandedness": {
-            "type": "string",
-            "default": "auto"
-        }
-    }
+    ]
 }
