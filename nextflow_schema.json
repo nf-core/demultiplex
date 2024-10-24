@@ -101,10 +101,20 @@
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope",
                     "default": "bclconvert"
-                },
+                }
+            }
+        },
+        "downstream_csv_options": {
+            "title": "Downstream CSV options",
+            "type": "object",
+            "description": "Options to customize downstream csv creation",
+            "default": "",
+            "properties": {
                 "strandedness": {
                     "type": "string",
-                    "default": "auto"
+                    "default": "auto",
+                    "description": "Specifies the strandedness of RNA-Seq data for downstream sample sheet generation. This parameter does not affect the demultiplexing process but is used to generate the appropriate field in the nf-core/rnaseq samplesheet. Accepted values are 'unstranded', 'auto', 'forward', or 'reverse'.",
+                    "fa_icon": "fas fa-arrows-alt-v"
                 }
             }
         },
@@ -276,6 +286,9 @@
         },
         {
             "$ref": "#/$defs/demultiplex_options"
+        },
+        {
+            "$ref": "#/$defs/downstream_csv_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
