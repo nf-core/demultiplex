@@ -114,7 +114,7 @@
                     "type": "string",
                     "enum": ["unstranded", "auto", "reverse", "forward"],
                     "default": "auto",
-                    "description": "Specifies the strandedness of RNA-Seq data for downstream sample sheet generation. This parameter does not affect the demultiplexing process but is used to generate the appropriate field in the nf-core/rnaseq samplesheet. Accepted values are 'unstranded', 'auto', 'forward', or 'reverse'.",
+                    "description": "Specifies the strandedness of RNA-Seq data for downstream sample sheet generation. This parameter does not affect the demultiplexing process but is used to generate the appropriate field in the nf-core/rnaseq samplesheet,
                     "fa_icon": "fas fa-arrows-alt-v"
                 }
             }
