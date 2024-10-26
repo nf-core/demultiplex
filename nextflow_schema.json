@@ -104,6 +104,21 @@
                 }
             }
         },
+        "downstream_csv_options": {
+            "title": "Downstream CSV options",
+            "type": "object",
+            "description": "Options to customize downstream csv creation",
+            "default": "",
+            "properties": {
+                "strandedness": {
+                    "type": "string",
+                    "enum": ["unstranded", "auto", "reverse", "forward"],
+                    "default": "auto",
+                    "description": "Specifies the strandedness of RNA-Seq data for downstream sample sheet generation. This parameter does not affect the demultiplexing process but is used to generate the appropriate field in the nf-core/rnaseq samplesheet",
+                    "fa_icon": "fas fa-arrows-alt-v"
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -274,6 +289,9 @@
             "$ref": "#/$defs/demultiplex_options"
         },
         {
+            "$ref": "#/$defs/downstream_csv_options"
+        },
+        {
             "$ref": "#/$defs/institutional_config_options"
         },
         {
@@ -282,11 +300,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "strandedness": {
-            "type": "string",
-            "default": "auto"
-        }
-    }
+    ]
 }
