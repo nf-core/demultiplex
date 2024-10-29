@@ -10,12 +10,12 @@ process FASTQ_TO_SAMPLESHEET {
     val strandedness
 
     output:
-    tuple val(meta), path("*samplesheet.csv"), emit: samplesheet
+    tuple val(meta_clone), path("*samplesheet.csv"), emit: samplesheet
 
     exec:
 
     // Calculate the dynamic output directory based on meta.lane
-    def outputDir = meta.lane ? "${params.outdir}/${meta.id}/L00${meta.lane}" : "${params.outdir}/${meta.id}"
+    def outputDir = meta.publish_dir
 
     // Add relevant fields to the map
     def pipeline_map = [
@@ -44,5 +44,8 @@ process FASTQ_TO_SAMPLESHEET {
     // Write samplesheet to file
     def samplesheet_file = task.workDir.resolve("${meta.id}.samplesheet.csv")
     samplesheet_file.text = samplesheet
+
+    meta_clone = meta.clone()
+    meta_clone.remove('publishdir')
 
 }
