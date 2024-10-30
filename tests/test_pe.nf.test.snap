@@ -1,4 +1,24 @@
 {
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:49:50.982685279"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:49:40.878739318"
+    },
     "Bcl2Fastq_pe": {
         "content": [
             9,
@@ -71,8 +91,6 @@
                 "PE_Sample/L001/Stats/DemuxSummaryF1L1.txt",
                 "PE_Sample/L001/Stats/FastqSummaryF1L1.txt",
                 "PE_Sample/L001/Stats/Stats.json",
-                "fastq",
-                "fastq/Sample1_S1_L001.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcl2fastq-lane-stats-table.txt",
@@ -324,6 +342,16 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-18T00:32:00.49132579"
+        "timestamp": "2024-10-30T15:49:30.696307692"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:50:01.08084426"
     }
 }

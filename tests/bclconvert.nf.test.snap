@@ -1,4 +1,14 @@
 {
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:28:48.222041833"
+    },
     "BCL-CONVERT": {
         "content": [
             8,
@@ -53,8 +63,6 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
-                "fastq",
-                "fastq/Sample1_S1_L001.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -237,6 +245,26 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T23:31:58.719385372"
+        "timestamp": "2024-10-30T15:28:38.170386268"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:28:43.215827644"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:28:53.253703589"
     }
 }

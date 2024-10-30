@@ -36,7 +36,10 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path
-                ).match() }
+                ).match() },
+                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/atacseq_samplesheet.csv")).match("atacseq_samplesheet") },
+                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/rnaseq_samplesheet.csv")).match("rnaseq_samplesheet") },
+                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/taxprofiler_samplesheet.csv")).match("taxprofiler_samplesheet") }
             )
         }
     }

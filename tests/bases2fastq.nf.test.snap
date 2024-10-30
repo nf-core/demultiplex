@@ -23,8 +23,6 @@
                 }
             },
             [
-                "fastq",
-                "fastq/DefaultSample.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-insert-size-plot.txt",
@@ -211,6 +209,36 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-29T17:48:00.306378134"
+        "timestamp": "2024-10-30T15:25:52.803280321"
+    },
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:55.693738747"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:54.286158931"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:57.12531458"
     }
 }

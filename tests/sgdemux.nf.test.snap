@@ -1,7 +1,17 @@
 {
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:42:08.871060618"
+    },
     "SGDEMUX": {
         "content": [
-            178,
+            106,
             {
                 "FALCO": {
                     "falco": "1.2.1"
@@ -23,32 +33,6 @@
                 }
             },
             [
-                "fastq",
-                "fastq/Undetermined_S25_L001.samplesheet.csv",
-                "fastq/s10_S10_L001.samplesheet.csv",
-                "fastq/s11_S11_L001.samplesheet.csv",
-                "fastq/s12_S12_L001.samplesheet.csv",
-                "fastq/s13_S13_L001.samplesheet.csv",
-                "fastq/s14_S14_L001.samplesheet.csv",
-                "fastq/s15_S15_L001.samplesheet.csv",
-                "fastq/s16_S16_L001.samplesheet.csv",
-                "fastq/s17_S17_L001.samplesheet.csv",
-                "fastq/s18_S18_L001.samplesheet.csv",
-                "fastq/s19_S19_L001.samplesheet.csv",
-                "fastq/s1_S1_L001.samplesheet.csv",
-                "fastq/s20_S20_L001.samplesheet.csv",
-                "fastq/s21_S21_L001.samplesheet.csv",
-                "fastq/s22_S22_L001.samplesheet.csv",
-                "fastq/s23_S23_L001.samplesheet.csv",
-                "fastq/s24_S24_L001.samplesheet.csv",
-                "fastq/s2_S2_L001.samplesheet.csv",
-                "fastq/s3_S3_L001.samplesheet.csv",
-                "fastq/s4_S4_L001.samplesheet.csv",
-                "fastq/s5_S5_L001.samplesheet.csv",
-                "fastq/s6_S6_L001.samplesheet.csv",
-                "fastq/s7_S7_L001.samplesheet.csv",
-                "fastq/s8_S8_L001.samplesheet.csv",
-                "fastq/s9_S9_L001.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
@@ -632,6 +616,26 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-29T17:49:16.207647882"
+        "timestamp": "2024-10-30T15:42:08.793174743"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:42:08.83444814"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:42:08.908513986"
     }
 }

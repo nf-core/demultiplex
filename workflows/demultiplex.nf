@@ -282,32 +282,13 @@ workflow DEMULTIPLEX {
 
     // Module: FASTQ to samplesheet
     ch_meta_fastq_rnaseq = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq, "rnaseq", strandedness)
-    FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_rnaseq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'rnaseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
+    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq.collect(), "rnaseq", strandedness)
 
     ch_meta_fastq_atacseq = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq, "atacseq", strandedness)
-    FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_atac_seq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'atacseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
+    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq.collect(), "atacseq", strandedness)
 
     ch_meta_fastq_taxprofiler = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler, "taxprofiler", strandedness)
-    FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_taxprofiler_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'taxprofiler_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
-
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler.collect(), "taxprofiler", strandedness)
     //
     // Collate and save software versions
     //

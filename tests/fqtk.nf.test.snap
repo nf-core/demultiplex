@@ -1,7 +1,7 @@
 {
     "FQTK": {
         "content": [
-            179,
+            107,
             {
                 "CSV2TSV": {
                     "sed": 4.8
@@ -28,32 +28,6 @@
             [
                 "csv2tsv",
                 "csv2tsv/samplesheet.tsv",
-                "fastq",
-                "fastq/s1.samplesheet.csv",
-                "fastq/s10.samplesheet.csv",
-                "fastq/s11.samplesheet.csv",
-                "fastq/s12.samplesheet.csv",
-                "fastq/s13.samplesheet.csv",
-                "fastq/s14.samplesheet.csv",
-                "fastq/s15.samplesheet.csv",
-                "fastq/s16.samplesheet.csv",
-                "fastq/s17.samplesheet.csv",
-                "fastq/s18.samplesheet.csv",
-                "fastq/s19.samplesheet.csv",
-                "fastq/s2.samplesheet.csv",
-                "fastq/s20.samplesheet.csv",
-                "fastq/s21.samplesheet.csv",
-                "fastq/s22.samplesheet.csv",
-                "fastq/s23.samplesheet.csv",
-                "fastq/s24.samplesheet.csv",
-                "fastq/s3.samplesheet.csv",
-                "fastq/s4.samplesheet.csv",
-                "fastq/s5.samplesheet.csv",
-                "fastq/s6.samplesheet.csv",
-                "fastq/s7.samplesheet.csv",
-                "fastq/s8.samplesheet.csv",
-                "fastq/s9.samplesheet.csv",
-                "fastq/unmatched.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
@@ -832,6 +806,36 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-29T17:33:21.811056238"
+        "timestamp": "2024-10-30T15:37:06.039601101"
+    },
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:37:09.37721135"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:37:07.737922949"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:37:11.05337654"
     }
 }
