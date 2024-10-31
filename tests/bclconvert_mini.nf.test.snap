@@ -1,7 +1,17 @@
 {
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:33:18.621857802"
+    },
     "BCL-CONVERT-mini": {
         "content": [
-            38,
+            23,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -20,13 +30,6 @@
                 }
             },
             [
-                "fastq",
-                "fastq/HBRR1_S1_L001.samplesheet.csv",
-                "fastq/HBRR2_S2_L001.samplesheet.csv",
-                "fastq/HBRR3_S3_L001.samplesheet.csv",
-                "fastq/UHRR1_S4_L001.samplesheet.csv",
-                "fastq/UHRR2_S5_L001.samplesheet.csv",
-                "fastq/UHRR3_S6_L001.samplesheet.csv",
                 "miniseq_truseq_smrna",
                 "miniseq_truseq_smrna/HBRR1_S1_L001.fastp.fastq.gz",
                 "miniseq_truseq_smrna/HBRR1_S1_L001.fastp.fastq.gz.md5",
@@ -350,6 +353,26 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T23:34:50.670465424"
+        "timestamp": "2024-10-30T15:30:52.179362614"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:32:05.328537478"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:34:31.69965379"
     }
 }

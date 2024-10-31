@@ -270,44 +270,25 @@ workflow DEMULTIPLEX {
     // Prepare metamap with fastq info
     ch_meta_fastq = ch_raw_fastq.map { meta, fastq_files ->
         // Determine the publish directory based on the lane information
-        def publish_dir = meta.lane ? "${params.outdir}/${meta.id}/L00${meta.lane}" : "${params.outdir}/${meta.id}"
-        meta.fastq_1 = "${publish_dir}/${fastq_files[0].getName()}"
+        meta.publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}" //Must be fcid because id gets modified
+        meta.fastq_1 = "${meta.publish_dir}/${fastq_files[0].getName()}"
 
         // Add full path for fastq_2 to the metadata if the sample is not single-end
         if (!meta.single_end) {
-            meta.fastq_2 = "${publish_dir}/${fastq_files[1].getName()}"
+            meta.fastq_2 = "${meta.publish_dir}/${fastq_files[1].getName()}"
         }
         return meta
     }
 
     // Module: FASTQ to samplesheet
     ch_meta_fastq_rnaseq = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq, "rnaseq", strandedness)
-    FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_rnaseq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'rnaseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
+    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq.collect(), "rnaseq", strandedness)
 
     ch_meta_fastq_atacseq = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq, "atacseq", strandedness)
-    FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_atac_seq_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'atacseq_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
+    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq.collect(), "atacseq", strandedness)
 
     ch_meta_fastq_taxprofiler = ch_meta_fastq
-    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler, "taxprofiler", strandedness)
-    FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_taxprofiler_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'taxprofiler_samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
-
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler.collect(), "taxprofiler", strandedness)
     //
     // Collate and save software versions
     //

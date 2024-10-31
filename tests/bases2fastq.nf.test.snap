@@ -23,8 +23,6 @@
                 }
             },
             [
-                "fastq",
-                "fastq/DefaultSample.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-insert-size-plot.txt",
@@ -166,15 +164,12 @@
                 "sim-data/DefaultSample_2.fastp.fastq.gz_fastqc_data.txt",
                 "sim-data/DefaultSample_2.fastp.fastq.gz_fastqc_report.html",
                 "sim-data/DefaultSample_2.fastp.fastq.gz_summary.txt",
+                "sim-data/DefaultSample_R1.fastq.gz",
+                "sim-data/DefaultSample_R2.fastq.gz",
+                "sim-data/DefaultSample_stats.json",
                 "sim-data/Metrics.csv",
                 "sim-data/RunManifest.json",
                 "sim-data/RunStats.json",
-                "sim-data/Samples",
-                "sim-data/Samples/DefaultProject",
-                "sim-data/Samples/DefaultProject/DefaultSample",
-                "sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R1.fastq.gz",
-                "sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_R2.fastq.gz",
-                "sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_stats.json",
                 "sim-data/UnassignedSequences.csv"
             ],
             [
@@ -203,10 +198,10 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "sim-data.csv:md5,1d1dab697bd88c411fff89c102024295",
                 "DefaultSample.fastp.json:md5,9c10bbfbc4beb9523ca3a114f95709db",
-                "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
-                "RunManifest.json:md5,cdb8051690645d0f070191286323f1c8",
                 "DefaultSample_R1.fastq.gz:md5,6c73b924e4eb53b716614aa6fd8b791a",
                 "DefaultSample_R2.fastq.gz:md5,54e2c0894844e42605b7cd567b1c7dbe",
+                "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
+                "RunManifest.json:md5,cdb8051690645d0f070191286323f1c8",
                 "UnassignedSequences.csv:md5,11c1693830ce941b8cfb8d2431a59097"
             ]
         ],
@@ -214,6 +209,36 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T23:29:10.785062467"
+        "timestamp": "2024-10-30T15:25:52.803280321"
+    },
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:55.693738747"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:54.286158931"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:25:57.12531458"
     }
 }

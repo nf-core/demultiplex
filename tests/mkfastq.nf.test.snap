@@ -1,7 +1,7 @@
 {
     "MKFASTQ": {
         "content": [
-            14,
+            11,
             {
                 "CELLRANGER_MKFASTQ": {
                     "cellranger": "8.0.0"
@@ -83,9 +83,6 @@
                 "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_I1_001.fastq.gz",
                 "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R2_001.fastq.gz",
-                "fastq",
-                "fastq/test_sample_S1_L001.samplesheet.csv",
-                "fastq/test_sample_S1_L001_I1_001.samplesheet.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
@@ -204,6 +201,36 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-17T23:40:20.21203835"
+        "timestamp": "2024-10-30T15:39:40.224337223"
+    },
+    "rnaseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:40:09.552438955"
+    },
+    "atacseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:39:54.928437506"
+    },
+    "taxprofiler_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-30T15:40:24.166541035"
     }
 }

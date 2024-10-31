@@ -29,6 +29,7 @@ sim-data/*.fastp.fastq.gz.md5
 sim-data/*.fastp.fastq.gz_fastqc_data.txt
 sim-data/*.fastp.fastq.gz_fastqc_report.html
 sim-data/*.fastp.fastq.gz_summary.txt
+sim-data/{Undetermined,s}*L001*.fastq.gz
 sim-data/RunStats.json
-sim-data/Samples/DefaultProject/DefaultSample/DefaultSample_stats.json
+sim-data/DefaultSample_stats.json
 sim-data/most_frequent_unmatched.tsv
