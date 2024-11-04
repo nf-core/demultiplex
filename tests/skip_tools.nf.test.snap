@@ -13,7 +13,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -186,9 +186,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T16:00:27.087776653"
+        "timestamp": "2024-11-04T22:19:55.20106833"
     },
     "rnaseq_samplesheet": {
         "content": [
@@ -217,7 +217,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -432,9 +432,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T15:59:43.275844831"
+        "timestamp": "2024-11-04T22:19:14.365042"
     },
     "Skip MultiQC": {
         "content": [
@@ -453,7 +453,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -529,9 +529,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T16:03:37.651038824"
+        "timestamp": "2024-11-04T22:23:16.963681621"
     },
     "atacseq_samplesheet": {
         "content": [
@@ -557,7 +557,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -730,9 +730,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T16:02:29.281437154"
+        "timestamp": "2024-11-04T22:22:04.618283549"
     },
     "Skip Fastqc": {
         "content": [
@@ -751,7 +751,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -968,9 +968,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T16:01:45.089730924"
+        "timestamp": "2024-11-04T22:21:16.816355313"
     },
     "taxprofiler_samplesheet": {
         "content": [
