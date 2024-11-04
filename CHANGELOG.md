@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#277](https://github.com/nf-core/demultiplex/pull/277) Improved samplesheet generation to always produce all types of samplesheets, added the ability to explicitly set strandedness, and fixed output paths to correctly reflect the `publishDir` subdirectory structure.
+- [#281](https://github.com/nf-core/modules/pull/6932) Update cellranges/mkfastq module to fix missing reports and stats outputs.
 - [#282](https://github.com/nf-core/demultiplex/pull/282) Fixed downstream samplesheet paths and `publishDir` config.
 
 ## 1.5.2 - 2024-10-07
