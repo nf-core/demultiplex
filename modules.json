@@ -22,7 +22,7 @@
                     },
                     "cellranger/mkfastq": {
                         "branch": "master",
-                        "git_sha": "a90a8863a3408e15d5a339b06413e57cf9ca9860",
+                        "git_sha": "f7d2d43086b48d3cedd9e2df52bf098ee5a50542",
                         "installed_by": ["modules"]
                     },
                     "checkqc": {
