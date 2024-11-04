@@ -67,7 +67,7 @@
                     },
                     "samshee": {
                         "branch": "master",
-                        "git_sha": "3c464e75051db485c1b37ab9f1ea2182fb3d3533",
+                        "git_sha": "467c202a876d26af544fa8c4b22a050a535462a7",
                         "installed_by": ["modules"]
                     },
                     "seqtk/sample": {
@@ -101,7 +101,7 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "3aa0aec1d52d492fe241919f0c6100ebf0074082",
+                        "git_sha": "56372688d8979092cafbe0c5c3895b491166ca1c",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
@@ -111,7 +111,7 @@
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "bbd5a41f4535a8defafe6080e00ea74c45f4f96c",
+                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
                         "installed_by": ["subworkflows"]
                     }
                 }
