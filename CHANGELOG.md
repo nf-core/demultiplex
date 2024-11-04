@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#275](https://github.com/nf-core/demultiplex/pull/275) Update samshee module from nf-core.
 - [#276](https://github.com/nf-core/demultiplex/pull/276) Template update for nf-core/tools v3.0.2
-- [#283](https://github.com/nf-core/demultiplex/pull/283) nf-core modules and subworkflows update. nf-test version update.
+- [#284](https://github.com/nf-core/demultiplex/pull/284) nf-core modules and subworkflows update. nf-test version update.
 
 ### `Fixed`
 
