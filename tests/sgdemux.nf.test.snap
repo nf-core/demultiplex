@@ -29,7 +29,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.2"
+                    "nf-core/demultiplex": "v1.5.3"
                 }
             },
             [
@@ -614,9 +614,9 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-30T15:42:08.793174743"
+        "timestamp": "2024-11-04T22:17:55.775005215"
     },
     "atacseq_samplesheet": {
         "content": [
