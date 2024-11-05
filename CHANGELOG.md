@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.5.2dev - (UNRELEASED)
+## 1.5.3 - 2024-11-06
 
 ### `Added`
 
@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#275](https://github.com/nf-core/demultiplex/pull/275) Update samshee module from nf-core.
 - [#276](https://github.com/nf-core/demultiplex/pull/276) Template update for nf-core/tools v3.0.2
 - [#284](https://github.com/nf-core/demultiplex/pull/284) nf-core modules and subworkflows update. nf-test version update.
+- [#285](https://github.com/nf-core/demultiplex/pull/285) Bump to version 1.5.3.
 
 ### `Fixed`
 
