@@ -22,7 +22,7 @@
                     },
                     "cellranger/mkfastq": {
                         "branch": "master",
-                        "git_sha": "a90a8863a3408e15d5a339b06413e57cf9ca9860",
+                        "git_sha": "f7d2d43086b48d3cedd9e2df52bf098ee5a50542",
                         "installed_by": ["modules"]
                     },
                     "checkqc": {
@@ -62,7 +62,12 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "b8d36829fa84b6e404364abff787e8b07f6d058c",
+                        "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
+                        "installed_by": ["modules"]
+                    },
+                    "samshee": {
+                        "branch": "master",
+                        "git_sha": "467c202a876d26af544fa8c4b22a050a535462a7",
                         "installed_by": ["modules"]
                     },
                     "seqtk/sample": {
@@ -96,17 +101,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "d20fb2a9cc3e2835e9d067d1046a63252eb17352",
+                        "git_sha": "56372688d8979092cafbe0c5c3895b491166ca1c",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "2fdce49d30c0254f76bc0f13c55c17455c1251ab",
+                        "git_sha": "1b6b9a3338d011367137808b49b923515080e3ba",
                         "installed_by": ["subworkflows"]
                     },
-                    "utils_nfvalidation_plugin": {
+                    "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
                         "installed_by": ["subworkflows"]
                     }
                 }

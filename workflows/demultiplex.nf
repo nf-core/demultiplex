@@ -8,15 +8,16 @@
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 
-include { BCL_DEMULTIPLEX           } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { FASTQ_CONTAM_SEQTK_KRAKEN } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
-include { BASES_DEMULTIPLEX         } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX          } from '../subworkflows/local/fqtk_demultiplex/main'
-include { MKFASTQ_DEMULTIPLEX       } from '../subworkflows/local/mkfastq_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX      } from '../subworkflows/local/singular_demultiplex/main'
-include { RUNDIR_CHECKQC            } from '../subworkflows/local/rundir_checkqc/main'
-include { FASTQ_TO_SAMPLESHEET      } from '../modules/local/fastq_to_samplesheet/main'
-
+include { BCL_DEMULTIPLEX                                               } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { FASTQ_CONTAM_SEQTK_KRAKEN                                     } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
+include { BASES_DEMULTIPLEX                                             } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER      } from '../modules/local/fastq_to_samplesheet/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -27,16 +28,12 @@ include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 include { UNTAR as UNTAR_FLOWCELL       } from '../modules/nf-core/untar/main'
 include { UNTAR as UNTAR_KRAKEN_DB      } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
-
-//
-// MODULE: Local modules
-//
-include { SAMSHEE                       } from '../modules/local/samshee/main'
+include { SAMSHEE                       } from '../modules/nf-core/samshee/main'
 
 //
 // FUNCTION
 //
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
@@ -59,15 +56,14 @@ workflow DEMULTIPLEX {
     skip_tools          = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
     sample_size         = params.sample_size                                     // int
     kraken_db           = params.kraken_db                                       // path
-    downstream_pipeline = params.downstream_pipeline                             // string: rnaseq, atacseq, taxprofiler
-
+    strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
 
     // Channel inputs
-    ch_versions         = Channel.empty()
-    ch_multiqc_files    = Channel.empty()
-    ch_multiqc_reports  = Channel.empty()
-    checkqc_config      = params.checkqc_config ? Channel.fromPath(params.checkqc_config, checkIfExists: true) : []      // file checkqc_config.yaml
-    ch_validator_schema = params.validator_schema ? Channel.fromPath(params.validator_schema, checkIfExists: true) : []  // file validator_schema.json
+    ch_versions              = Channel.empty()
+    ch_multiqc_files         = Channel.empty()
+    ch_multiqc_reports       = Channel.empty()
+    checkqc_config           = params.checkqc_config        ? Channel.fromPath(params.checkqc_config, checkIfExists: true)        : [] // file checkqc_config.yaml
+    ch_file_schema_validator = params.file_schema_validator ? Channel.fromPath(params.file_schema_validator, checkIfExists: true) : [] // file schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
@@ -79,11 +75,11 @@ workflow DEMULTIPLEX {
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
-                [[id: meta_id, lane: meta_lane],file]
+                [ [id: meta_id, lane: meta_lane], file ]
             }
         ch_samplesheet_new = ch_samplesheet
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
-            .map{ meta,samplesheet,flowcell,lane,new_samplesheet -> [meta,new_samplesheet,flowcell,lane] }
+            .map{ meta, samplesheet, flowcell, lane, new_samplesheet -> [meta, new_samplesheet, flowcell, lane] }
         ch_samplesheet = ch_samplesheet_new
     } else {
         ch_samplesheet
@@ -96,9 +92,12 @@ workflow DEMULTIPLEX {
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
             ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
-            ch_validator_schema
+            ch_file_schema_validator
         )
         ch_versions = ch_versions.mix(SAMSHEE.out.versions)
+        ch_samplesheet = ch_samplesheet
+            .join(SAMSHEE.out.samplesheet)
+            .map{ meta, samplesheet, flowcell, lane, samplesheet_formatted -> [ meta, samplesheet_formatted, flowcell, lane ] }
     }
 
     // Convenience
@@ -271,33 +270,32 @@ workflow DEMULTIPLEX {
     // Prepare metamap with fastq info
     ch_meta_fastq = ch_raw_fastq.map { meta, fastq_files ->
         // Determine the publish directory based on the lane information
-        def publish_dir = meta.lane ? "${params.outdir}/${meta.id}/L00${meta.lane}" : "${params.outdir}/${meta.id}"
-        meta.fastq_1 = "${publish_dir}/${fastq_files[0].getName()}"
+        meta.publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}" //Must be fcid because id gets modified
+        meta.fastq_1 = "${meta.publish_dir}/${fastq_files[0].getName()}"
 
         // Add full path for fastq_2 to the metadata if the sample is not single-end
         if (!meta.single_end) {
-            meta.fastq_2 = "${publish_dir}/${fastq_files[1].getName()}"
+            meta.fastq_2 = "${meta.publish_dir}/${fastq_files[1].getName()}"
         }
         return meta
     }
 
     // Module: FASTQ to samplesheet
-    FASTQ_TO_SAMPLESHEET(ch_meta_fastq, downstream_pipeline, 'auto')
+    ch_meta_fastq_rnaseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq.collect(), "rnaseq", strandedness)
 
-    FASTQ_TO_SAMPLESHEET.out.samplesheet
-            .map { it[1] }
-            .collectFile(name:'tmp_samplesheet.csv', newLine: true, keepHeader: true, sort: { it.baseName })
-            .map { it.text.tokenize('\n').join('\n') }
-            .collectFile(name:'samplesheet.csv', storeDir: "${params.outdir}/samplesheet")
-            .set { ch_samplesheet }
+    ch_meta_fastq_atacseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq.collect(), "atacseq", strandedness)
 
+    ch_meta_fastq_taxprofiler = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler.collect(), "taxprofiler", strandedness)
     //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
