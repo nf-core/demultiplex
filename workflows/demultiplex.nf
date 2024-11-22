@@ -66,6 +66,8 @@ workflow DEMULTIPLEX {
     ch_file_schema_validator = params.file_schema_validator ? Channel.fromPath(params.file_schema_validator, checkIfExists: true) : [] // file schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
+    ch_samplesheet = ch_samplesheet
+        .map{ meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] } // Make meta.id be always a string
     if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
             .collectFile(storeDir: "${params.outdir}") { item ->
@@ -75,7 +77,7 @@ workflow DEMULTIPLEX {
             .map { file -> //build meta again from file name
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
-                [ [id: meta_id, lane: meta_lane], file ]
+                [ [id: meta_id.toString(), lane: meta_lane], file ] // Make meta.id be always a string
             }
         ch_samplesheet_new = ch_samplesheet
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )

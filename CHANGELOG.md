@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#288](https://github.com/nf-core/demultiplex/pull/288) Fix `test_full` by validating parameters in `lenientMode` and fix workflow megatest workflow dispatch.
+
 ## 1.5.3 - 2024-11-06
 
 ### `Added`
