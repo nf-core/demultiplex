@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/demultiplex/master/assets/schema_input.json",
@@ -41,3 +42,49 @@
         }
     }
 }
+=======
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/demultiplex/master/assets/schema_input.json",
+    "title": "nf-core/demultiplex pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": ["id", "samplesheet", "flowcell"],
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Flowcell ID",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
+            },
+            "samplesheet": {
+                "type": "string",
+                "format": "file-path",
+                "description": "Sample sheet file",
+                "pattern": "^\\S+\\.csv$"
+            },
+            "lane": {
+                "type": "integer",
+                "description": "Lane number",
+                "minimum": 1,
+                "default": null,
+                "maximum": 8,
+                "meta": ["lane"]
+            },
+            "flowcell": {
+                "type": "string",
+                "format": "path",
+                "description": "Run directory"
+            },
+            "per_flowcell_manifest": {
+                "type": "string",
+                "format": "file-path",
+                "description": "Per flowcell manifest file"
+            }
+        }
+    }
+}
+>>>>>>> 7bce648bb542d1d2cee4fdf9d491f48585655808

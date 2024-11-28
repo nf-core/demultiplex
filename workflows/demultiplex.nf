@@ -7,11 +7,18 @@
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/main'
-include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
-include { MGIKIT_DEMULTIPLEX } from '../subworkflows/local/mgikit_demultiplex/main'
+
+include { BCL_DEMULTIPLEX                                               } from '../subworkflows/nf-core/bcl_demultiplex/main'
+include { FASTQ_CONTAM_SEQTK_KRAKEN                                     } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
+include { BASES_DEMULTIPLEX                                             } from '../subworkflows/local/bases_demultiplex/main'
+include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
+include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
+include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
+include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER      } from '../modules/local/fastq_to_samplesheet/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -19,13 +26,15 @@ include { MGIKIT_DEMULTIPLEX } from '../subworkflows/local/mgikit_demultiplex/ma
 include { FASTP                         } from '../modules/nf-core/fastp/main'
 include { FALCO                         } from '../modules/nf-core/falco/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
-include { UNTAR                         } from '../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_FLOWCELL       } from '../modules/nf-core/untar/main'
+include { UNTAR as UNTAR_KRAKEN_DB      } from '../modules/nf-core/untar/main'
 include { MD5SUM                        } from '../modules/nf-core/md5sum/main'
+include { SAMSHEE                       } from '../modules/nf-core/samshee/main'
 
 //
 // FUNCTION
 //
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
@@ -43,14 +52,56 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux
-    trim_fastq    = params.trim_fastq                                      // boolean: true, false
-    skip_tools    = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+    demultiplexer       = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
+    trim_fastq          = params.trim_fastq                                      // boolean: true, false
+    skip_tools          = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
+    sample_size         = params.sample_size                                     // int
+    kraken_db           = params.kraken_db                                       // path
+    strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
 
     // Channel inputs
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_reports = Channel.empty()
+    ch_versions              = Channel.empty()
+    ch_multiqc_files         = Channel.empty()
+    ch_multiqc_reports       = Channel.empty()
+    checkqc_config           = params.checkqc_config        ? Channel.fromPath(params.checkqc_config, checkIfExists: true)        : [] // file checkqc_config.yaml
+    ch_file_schema_validator = params.file_schema_validator ? Channel.fromPath(params.file_schema_validator, checkIfExists: true) : [] // file schema.json
+
+    // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
+    ch_samplesheet = ch_samplesheet
+        .map{ meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] } // Make meta.id be always a string
+    if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+        ch_samplesheet_no_adapter = ch_samplesheet
+            .collectFile(storeDir: "${params.outdir}") { item ->
+                def suffix = item[0].lane ? ".lane${item[0].lane}" : "" //need to produce one file per item in the channel else join fails
+                [ "${item[0].id}${suffix}_no_adapters.csv", AdapterRemover.removeAdaptersFromSampleSheet(item[1]) ]
+            }
+            .map { file -> //build meta again from file name
+                def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
+                def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
+                [ [id: meta_id.toString(), lane: meta_lane], file ] // Make meta.id be always a string
+            }
+        ch_samplesheet_new = ch_samplesheet
+            .join( ch_samplesheet_no_adapter, failOnMismatch: true )
+            .map{ meta, samplesheet, flowcell, lane, new_samplesheet -> [meta, new_samplesheet, flowcell, lane] }
+        ch_samplesheet = ch_samplesheet_new
+    } else {
+        ch_samplesheet
+            .collectFile( storeDir: "${params.outdir}" ){ item ->
+                [ "${item[0].id}.csv", item[1] ]
+            }
+    }
+
+    // RUN samplesheet_validator samshee
+    if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
+        SAMSHEE (
+            ch_samplesheet.map{ meta, samplesheet, flowcell, lane -> [meta,samplesheet] },
+            ch_file_schema_validator
+        )
+        ch_versions = ch_versions.mix(SAMSHEE.out.versions)
+        ch_samplesheet = ch_samplesheet
+            .join(SAMSHEE.out.samplesheet)
+            .map{ meta, samplesheet, flowcell, lane, samplesheet_formatted -> [ meta, samplesheet_formatted, flowcell, lane ] }
+    }
 
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
@@ -92,10 +143,10 @@ workflow DEMULTIPLEX {
     // Re-join the metadata and the untarred run directory with the samplesheet
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
-    else if (demultiplexer == 'mgikit'){ch_flowcells_tar_merged = Channel.empty()}
+    else if (demultiplexer == 'mgikit'){ ch_flowcells_tar_merged = Channel.empty() } 
     else {
-        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
-        ch_versions = ch_versions.mix(UNTAR.out.versions)
+        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR_FLOWCELL ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
+        ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
     }
 
     // Merge the two channels back together
@@ -104,6 +155,7 @@ workflow DEMULTIPLEX {
     // RUN demultiplexing
     //
     ch_raw_fastq = Channel.empty()
+
     switch (demultiplexer) {
         case 'bases2fastq':
             // MODULE: bases2fastq
@@ -122,6 +174,13 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.reports.map { meta, report -> return report} )
             ch_multiqc_files = ch_multiqc_files.mix( BCL_DEMULTIPLEX.out.stats.map   { meta, stats  -> return stats } )
             ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+
+                if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq'){
+                        RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
+                        ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
+                        ch_multiqc_files = ch_multiqc_files.mix( RUNDIR_CHECKQC.out.report.map { meta, json -> return json} )
+                    }
+
             break
         case 'fqtk':
             // MODULE: fqtk
@@ -134,7 +193,7 @@ workflow DEMULTIPLEX {
 
             // Combine the directory containing the fastq with the fastq name and read structure
             // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
-            fastqs_with_paths = fastq_read_structure.combine(UNTAR.out.untar.collect{it[1]}).toList()
+            fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect{it[1]}).toList()
 
             // Format ch_samplesheet like so:
             // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
@@ -152,6 +211,13 @@ workflow DEMULTIPLEX {
             ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
+            break
+        case 'mkfastq':
+            // MODULE: mkfastq
+            // Runs when "demultiplexer" is set to "mkfastq"
+            MKFASTQ_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
+            ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
             break
         case 'mgikit':
             // MODULE: mgikit
@@ -174,7 +240,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: fastp
     if (!("fastp" in skip_tools)){
-            FASTP(ch_raw_fastq, [], [], [])
+            FASTP(ch_raw_fastq, [], [], [], [])
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
             if (trim_fastq) {
@@ -192,17 +258,56 @@ workflow DEMULTIPLEX {
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     if (!("md5sum" in skip_tools)){
-        MD5SUM(ch_fastq_to_qc.transpose())
+        MD5SUM(ch_fastq_to_qc.transpose(), true)
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
+    // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
+    if ((!("kraken" in skip_tools) && kraken_db)){
+        if (kraken_db.endsWith(".tar.gz")){
+            UNTAR_KRAKEN_DB ( [[],file(kraken_db)] )
+            kraken_db = UNTAR_KRAKEN_DB.out.untar.map{ meta,file -> file }
+        } else {
+            kraken_db = file(kraken_db)
+        }
+        FASTQ_CONTAM_SEQTK_KRAKEN(
+            ch_fastq_to_qc,
+            [sample_size],
+            kraken_db
+        )
+        ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix( FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { meta, log -> return log })
+    }
+
+    // Prepare metamap with fastq info
+    ch_meta_fastq = ch_raw_fastq.map { meta, fastq_files ->
+        // Determine the publish directory based on the lane information
+        meta.publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}" //Must be fcid because id gets modified
+        meta.fastq_1 = "${meta.publish_dir}/${fastq_files[0].getName()}"
+
+        // Add full path for fastq_2 to the metadata if the sample is not single-end
+        if (!meta.single_end) {
+            meta.fastq_2 = "${meta.publish_dir}/${fastq_files[1].getName()}"
+        }
+        return meta
+    }
+
+    // Module: FASTQ to samplesheet
+    ch_meta_fastq_rnaseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_RNASEQ(ch_meta_fastq_rnaseq.collect(), "rnaseq", strandedness)
+
+    ch_meta_fastq_atacseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_ATACSEQ(ch_meta_fastq_atacseq.collect(), "atacseq", strandedness)
+
+    ch_meta_fastq_taxprofiler = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler.collect(), "taxprofiler", strandedness)
     //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
@@ -239,11 +344,13 @@ workflow DEMULTIPLEX {
             )
         )
 
-        MULTIQC (
+        MULTIQC ( //TODO fix multiqc not resuming
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
+            ch_multiqc_logo.toList(),
+            [],
+            []
         )
         ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
     }

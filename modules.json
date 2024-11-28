@@ -7,47 +7,57 @@
                 "nf-core": {
                     "bases2fastq": {
                         "branch": "master",
-                        "git_sha": "c2342b45bbfc5d6fe19cc4154b38fa57177c67dd",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "e1e42c1312400df268a0c92e14bd33552e782448",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["bcl_demultiplex"]
                     },
-                    "custom/dumpsoftwareversions": {
+                    "cellranger/mkfastq": {
                         "branch": "master",
-                        "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
+                        "git_sha": "f7d2d43086b48d3cedd9e2df52bf098ee5a50542",
+                        "installed_by": ["modules"]
+                    },
+                    "checkqc": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "falco": {
                         "branch": "master",
-                        "git_sha": "a236d2c2ec9e68db9b8501105d804acb359552b5",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "fqtk": {
                         "branch": "master",
-                        "git_sha": "97a796133cd9644ba3dd83d3c0fd09a9a63b1a84",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
+                    },
+                    "kraken2/kraken2": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["fastq_contam_seqtk_kraken"]
                     },
                     "md5sum": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "mgikit/demultiplex": {
@@ -57,17 +67,27 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
                         "installed_by": ["modules"]
+                    },
+                    "samshee": {
+                        "branch": "master",
+                        "git_sha": "467c202a876d26af544fa8c4b22a050a535462a7",
+                        "installed_by": ["modules"]
+                    },
+                    "seqtk/sample": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["fastq_contam_seqtk_kraken"]
                     },
                     "sgdemux": {
                         "branch": "master",
-                        "git_sha": "574074e6ea2497b53df1f226473a8c71524af0d0",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     }
                 }
@@ -76,22 +96,27 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "98dec3970368aa6e058c792ae1e451bb09624ed3",
+                        "git_sha": "a6e6bec1b1da613b89a6c0a3a46713f880cf5aca",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "fastq_contam_seqtk_kraken": {
+                        "branch": "master",
+                        "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "56372688d8979092cafbe0c5c3895b491166ca1c",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "92de218a329bfc9a9033116eb5f65fd270e72ba3",
+                        "git_sha": "1b6b9a3338d011367137808b49b923515080e3ba",
                         "installed_by": ["subworkflows"]
                     },
-                    "utils_nfvalidation_plugin": {
+                    "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
                         "installed_by": ["subworkflows"]
                     }
                 }
