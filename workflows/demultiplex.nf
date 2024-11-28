@@ -11,6 +11,7 @@ include { BCL_DEMULTIPLEX      } from '../subworkflows/nf-core/bcl_demultiplex/m
 include { BASES_DEMULTIPLEX    } from '../subworkflows/local/bases_demultiplex/main'
 include { FQTK_DEMULTIPLEX     } from '../subworkflows/local/fqtk_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_DEMULTIPLEX } from '../subworkflows/local/mgikit_demultiplex/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -91,6 +92,7 @@ workflow DEMULTIPLEX {
     // Re-join the metadata and the untarred run directory with the samplesheet
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
+    else if (demultiplexer == 'mgikit'){ch_flowcells_tar_merged = Channel.empty()}
     else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
         ch_versions = ch_versions.mix(UNTAR.out.versions)
@@ -102,7 +104,6 @@ workflow DEMULTIPLEX {
     // RUN demultiplexing
     //
     ch_raw_fastq = Channel.empty()
-
     switch (demultiplexer) {
         case 'bases2fastq':
             // MODULE: bases2fastq
@@ -151,6 +152,14 @@ workflow DEMULTIPLEX {
             ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
             ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
+            break
+        case 'mgikit':
+            // MODULE: mgikit
+            // Runs when "demultiplexer" is set to "mgikit"
+            MGIKIT_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(MGIKIT_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
             break
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
