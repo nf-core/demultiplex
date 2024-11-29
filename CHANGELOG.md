@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#291](https://github.com/nf-core/demultiplex/pull/291) Updated `samshee` module to the latest version
+
 ### `Fixed`
 
 - [#288](https://github.com/nf-core/demultiplex/pull/288) Fix `test_full` by validating parameters in `lenientMode` and fix workflow megatest workflow dispatch.
