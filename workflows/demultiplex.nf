@@ -143,7 +143,7 @@ workflow DEMULTIPLEX {
     // Re-join the metadata and the untarred run directory with the samplesheet
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
-    else if (demultiplexer == 'mgikit'){ ch_flowcells_tar_merged = Channel.empty() } 
+    else if (demultiplexer == 'mgikit'){ ch_flowcells_tar_merged = Channel.empty() }
     else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR_FLOWCELL ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
         ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
