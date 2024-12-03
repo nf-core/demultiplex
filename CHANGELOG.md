@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#291](https://github.com/nf-core/demultiplex/pull/291) Updated `samshee` module to the latest version
-- [#295](https://github.com/nf-core/demultiplex/pull/295) Bump to version 1.5.4.
+- [#296](https://github.com/nf-core/demultiplex/pull/296) Bump to version 1.5.4.
 
 ### `Fixed`
 
