@@ -3,13 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - [unreleased]
+## 1.5.4 - 2024-12-03
 
 ### `Added`
 
 ### `Changed`
 
 - [#291](https://github.com/nf-core/demultiplex/pull/291) Updated `samshee` module to the latest version
+- [#296](https://github.com/nf-core/demultiplex/pull/296) Bump to version 1.5.4.
 
 ### `Fixed`
 
