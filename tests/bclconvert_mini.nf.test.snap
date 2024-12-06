@@ -26,7 +26,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.3"
+                    "nf-core/demultiplex": "v1.5.4"
                 }
             },
             [
@@ -350,10 +350,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-11-04T22:09:33.510548826"
+        "timestamp": "2024-11-21T18:49:10.86724814"
     },
     "atacseq_samplesheet": {
         "content": [
