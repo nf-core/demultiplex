@@ -1,11 +1,9 @@
-bump_version: null
 lint:
   actions_ci: false
   files_unchanged:
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .github/workflows/linting.yml
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.1.0
 repository_type: pipeline
 template:
   author: Chelsea Sawyer, Edmund Miller, Matthias De Smet
@@ -15,6 +13,6 @@ template:
   name: demultiplex
   org: nf-core
   outdir: .
-  skip_features: null
-  version: 1.5.2
-update: null
+  skip_features:
+    - igenomes
+  version: 1.5.4dev
