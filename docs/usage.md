@@ -32,12 +32,12 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
-| Column        | Description                                                                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Flowcell id                                                                                                                                         |
-| `samplesheet` | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                    |
-| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
-| `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory. mgikit demultiplexing expects a path to a directory here containing the compressed fastq files and `BioInfo.csv` file. |
+| Column        | Description                                                                                                                                                                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Flowcell id                                                                                                                                                                                                                                                                   |
+| `samplesheet` | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                                                                                                                                              |
+| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                                                                                                                                               |
+| `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory. `mgikit` demultiplexing expects a path to a directory here containing the compressed fastq files and `BioInfo.csv` file. |
 
 An [example _pipeline_ samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
@@ -70,7 +70,7 @@ Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Belo
 | **sgdemux**                  | [sgdemux SampleSheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv)                             |
 | **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
 | **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
-| **mgikit**                   | [mgikit samplesheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/mgi/fc01_sample_sheet.csv) |
+| **mgikit**                   | [mgikit samplesheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/mgi/fc01_sample_sheet.csv)                                 |
 
 ## Running the pipeline
 
