@@ -3,7 +3,7 @@ lint:
   files_unchanged:
     - .github/ISSUE_TEMPLATE/bug_report.yml
     - .github/workflows/linting.yml
-nf_core_version: 3.1.1
+nf_core_version: 3.1.2
 repository_type: pipeline
 template:
   author: Chelsea Sawyer, Edmund Miller, Matthias De Smet
