@@ -1,7 +1,7 @@
 {
     "MKFASTQ": {
         "content": [
-            11,
+            13,
             {
                 "CELLRANGER_MKFASTQ": {
                     "cellranger": "8.0.0"
@@ -160,7 +160,9 @@
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv"
             ],
             [
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
@@ -199,9 +201,19 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-11-21T18:56:58.036201181"
+        "timestamp": "2025-01-29T13:49:58.036201181"
+    },
+    "methylseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T12:07:23.082839552"
     },
     "rnaseq_samplesheet": {
         "content": [
@@ -233,4 +245,15 @@
         },
         "timestamp": "2024-10-30T15:40:24.166541035"
     }
+    "sarek_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T13:46:18.996219292"
+    },
+
 }
