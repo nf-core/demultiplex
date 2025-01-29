@@ -23,7 +23,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.5.4dev"
                 }
             },
             [
@@ -239,7 +239,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.5.4dev"
                 }
             },
             [
@@ -477,7 +477,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.5.4dev"
                 }
             },
             [
@@ -583,7 +583,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.5.4dev"
                 }
             },
             [
@@ -779,7 +779,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.5.4dev"
                 }
             },
             [
