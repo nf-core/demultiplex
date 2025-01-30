@@ -1,4 +1,14 @@
 {
+    "sarek_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T13:46:18.996219292"
+    },
     "MKFASTQ": {
         "content": [
             13,
@@ -159,10 +169,10 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv"
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
-                "samplesheet/methylseq_samplesheet.csv"
             ],
             [
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
@@ -203,17 +213,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.3"
         },
-        "timestamp": "2025-01-29T13:49:58.036201181"
-    },
-    "methylseq_samplesheet": {
-        "content": [
-            true
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
-        },
-        "timestamp": "2025-01-29T12:07:23.082839552"
+        "timestamp": "2025-01-30T11:26:28.516270432"
     },
     "rnaseq_samplesheet": {
         "content": [
@@ -224,6 +224,16 @@
             "nextflow": "24.04.4"
         },
         "timestamp": "2024-10-30T15:40:09.552438955"
+    },
+    "methylseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T12:07:23.082839552"
     },
     "atacseq_samplesheet": {
         "content": [
@@ -244,15 +254,5 @@
             "nextflow": "24.04.4"
         },
         "timestamp": "2024-10-30T15:40:24.166541035"
-    },
-    "sarek_samplesheet": {
-        "content": [
-            true
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
-        },
-        "timestamp": "2025-01-29T13:46:18.996219292"
     }
 }
