@@ -172,7 +172,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
-                "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv"
             ],
             [
                 "cellranger-tiny-bcl-simple.lane1_no_adapters.csv:md5,86a945ab9d579c7bc98d43f76a07118b",
