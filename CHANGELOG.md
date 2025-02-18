@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#310](https://github.com/nf-core/demultiplex/pull/310) Replace [] with null as default
+
 ## 1.5.4 - 2024-12-03
 
 ### `Added`
