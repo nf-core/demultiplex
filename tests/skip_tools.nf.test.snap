@@ -1,7 +1,17 @@
 {
+    "sarek_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2025-01-29T12:45:08.409384951"
+    },
     "Skip Fastp": {
         "content": [
-            7,
+            9,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -13,7 +23,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -138,7 +148,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -186,9 +198,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T19:01:00.766139602"
+        "timestamp": "2025-01-29T12:45:50.607230929"
     },
     "rnaseq_samplesheet": {
         "content": [
@@ -200,9 +212,19 @@
         },
         "timestamp": "2024-10-30T15:59:48.514552807"
     },
+    "methylseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2025-01-29T12:45:10.292860136"
+    },
     "Skip Trimming": {
         "content": [
-            8,
+            10,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -217,7 +239,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -376,7 +398,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -432,13 +456,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T19:00:16.803505471"
+        "timestamp": "2025-01-29T12:45:06.49511401"
     },
     "Skip MultiQC": {
         "content": [
-            7,
+            9,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -453,7 +477,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -494,7 +518,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -529,9 +555,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T19:04:48.811944071"
+        "timestamp": "2025-01-29T12:48:49.935733332"
     },
     "atacseq_samplesheet": {
         "content": [
@@ -545,7 +571,7 @@
     },
     "Skip Fastp & Fastqc": {
         "content": [
-            7,
+            9,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -557,7 +583,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -682,7 +708,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -730,13 +758,13 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T19:03:31.839655727"
+        "timestamp": "2025-01-29T12:47:51.431701403"
     },
     "Skip Fastqc": {
         "content": [
-            8,
+            10,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.3.6"
@@ -751,7 +779,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -911,7 +939,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -968,9 +998,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T19:02:38.043654338"
+        "timestamp": "2025-01-29T12:47:04.451964424"
     },
     "taxprofiler_samplesheet": {
         "content": [

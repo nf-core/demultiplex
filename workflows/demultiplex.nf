@@ -18,6 +18,8 @@ include { RUNDIR_CHECKQC                                                } from '
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER      } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_SAREK            } from '../modules/local/fastq_to_samplesheet/main'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_METHYLSEQ        } from '../modules/local/fastq_to_samplesheet/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -291,6 +293,12 @@ workflow DEMULTIPLEX {
 
     ch_meta_fastq_taxprofiler = ch_meta_fastq
     FASTQ_TO_SAMPLESHEET_TAXPROFILER(ch_meta_fastq_taxprofiler.collect(), "taxprofiler", strandedness)
+
+    ch_meta_fastq_sarek = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_SAREK(ch_meta_fastq_sarek.collect(), "sarek", strandedness)
+
+    ch_meta_fastq_methylseq = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_METHYLSEQ(ch_meta_fastq_methylseq.collect(), "methylseq", strandedness)
     //
     // Collate and save software versions
     //

@@ -18,7 +18,6 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "default": "[]",
                     "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
                 },
                 "sample_size": {
@@ -175,9 +174,9 @@
             "properties": {
                 "checkqc_config": {
                     "type": "string",
-                    "default": "[]",
                     "description": "Path to the checkqc config yml file.",
-                    "fa_icon": "far fa-check-square"
+                    "fa_icon": "far fa-check-square",
+                    "format": "file-path"
                 }
             }
         },

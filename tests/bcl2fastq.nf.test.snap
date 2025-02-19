@@ -1,4 +1,14 @@
 {
+    "sarek_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T12:01:07.040806142"
+    },
     "rnaseq_samplesheet": {
         "content": [
             true
@@ -8,6 +18,16 @@
             "nextflow": "24.04.4"
         },
         "timestamp": "2024-10-30T15:27:18.557192574"
+    },
+    "methylseq_samplesheet": {
+        "content": [
+            true
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-01-29T12:01:10.627094695"
     },
     "atacseq_samplesheet": {
         "content": [
@@ -21,7 +41,7 @@
     },
     "Bcl2Fastq": {
         "content": [
-            8,
+            10,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
@@ -36,7 +56,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.5.4"
+                    "nf-core/demultiplex": "v1.6.0"
                 }
             },
             [
@@ -210,7 +230,9 @@
                 "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
+                "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
+                "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -257,9 +279,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T18:44:03.754694052"
+        "timestamp": "2025-01-29T12:13:13.740205653"
     },
     "taxprofiler_samplesheet": {
         "content": [
