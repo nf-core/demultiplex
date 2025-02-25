@@ -17,5 +17,5 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 1.6.0
+  version: 1.6.0dev
 update:
