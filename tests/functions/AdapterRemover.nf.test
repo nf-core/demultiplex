@@ -1,0 +1,72 @@
+nextflow_function {
+    name "Test SampleSheetUtils.removeAdaptersFromSampleSheet"
+
+    test("Should recognize and remove adapters in 'AdapterRead1,ACGTACGT' format (without trailing comma)") {
+        function "SampleSheetUtils.removeAdaptersFromSampleSheet"
+
+        // Read samplesheet from file
+        def samplesheetFile = new File("${projectDir}/tests/data/samplesheets/without_trailing_comma.csv")
+        def samplesheet = samplesheetFile.text
+
+        // Read expected output from file
+        def expectedOutputFile = new File("${projectDir}/tests/data/samplesheets/expected_without_trailing_comma.csv")
+        def expectedOutput = expectedOutputFile.text
+
+        when {
+            result = function.call(samplesheet)
+        }
+
+        then {
+            // This test will now pass with the fixed implementation
+            assert result.trim() == expectedOutput.trim()
+        }
+    }
+
+    test("Should recognize and remove adapters in 'Adapter,ACGTACGT,' format (with trailing comma)") {
+        function "SampleSheetUtils.removeAdaptersFromSampleSheet"
+
+        // Read samplesheet from file
+        def samplesheetFile = new File("${projectDir}/tests/data/samplesheets/with_trailing_comma.csv")
+        def samplesheet = samplesheetFile.text
+
+        // Read expected output from file
+        def expectedOutputFile = new File("${projectDir}/tests/data/samplesheets/expected_with_trailing_comma.csv")
+        def expectedOutput = expectedOutputFile.text
+
+        when {
+            result = function.call(samplesheet)
+        }
+
+        then {
+            // This test should pass with the fixed implementation
+            assert result.trim() == expectedOutput.trim()
+        }
+    }
+
+    test("Should show info message when no adapters are found") {
+        function "SampleSheetUtils.removeAdaptersFromSampleSheet"
+
+        // Read samplesheet from file
+        def samplesheetFile = new File("${projectDir}/tests/data/samplesheets/no_adapters.csv")
+        def samplesheet = samplesheetFile.text
+
+        // Create a mock PrintStream to capture System.out
+        def originalOut = System.out
+        def outputStream = new ByteArrayOutputStream()
+        System.setOut(new PrintStream(outputStream))
+
+        when {
+            result = function.call(samplesheet)
+            // Reset System.out
+            System.setOut(originalOut)
+        }
+
+        then {
+            // The function should return the original samplesheet unchanged
+            assert result.trim() == samplesheet.trim() + '\n'
+
+            // Verify that the info message was printed
+            assert outputStream.toString().contains("[INFO] Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")
+        }
+    }
+}
