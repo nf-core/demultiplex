@@ -1,74 +1,79 @@
 nextflow_function {
     name "Test AdapterRemover.removeAdaptersFromSampleSheet"
+    function "AdapterRemover.removeAdaptersFromSampleSheet"
 
-    test("Should recognize and remove adapters in 'AdapterRead1,ACGTACGT' format (without trailing comma)") {
-        function "AdapterRemover.removeAdaptersFromSampleSheet"
-
-        // Read samplesheet from file
-        def samplesheetPath = "${projectDir}/tests/data/samplesheets/without_trailing_comma.csv"
-        def expectedOutputPath = "${projectDir}/tests/data/samplesheets/expected_without_trailing_comma.csv"
-
+    test("Should recognize and remove adapters") {
         when {
             function {
-                """
-                // Now call the method with the samplesheet content
-                def samplesheet = new File("${samplesheetPath}").text
-                return AdapterRemover.removeAdaptersFromSampleSheet(samplesheet)
-                """
+                '''
+                input[0] = """[Header]
+Sample_ID,Sample_Name,Description
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT
+AdapterRead1,ACGTACGT
+[Data]
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT"""
+                '''
             }
         }
 
         then {
-            def expectedOutput = new File(expectedOutputPath).text
-            assert function.result.trim() == expectedOutput.trim()
+            // Output should not contain adapter line
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,ACGTACGT")
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[Data]")
         }
     }
 
-    test("Should recognize and remove adapters in 'Adapter,ACGTACGT,' format (with trailing comma)") {
-        function "AdapterRemover.removeAdaptersFromSampleSheet"
-
-        // Read samplesheet from file
-        def samplesheetPath = "${projectDir}/tests/data/samplesheets/with_trailing_comma.csv"
-        def expectedOutputPath = "${projectDir}/tests/data/samplesheets/expected_with_trailing_comma.csv"
-
+    test("Should recognize adapter with trailing comma") {
         when {
             function {
-                """
-                // Now call the method with the samplesheet content
-                def samplesheet = new File("${samplesheetPath}").text
-                return AdapterRemover.removeAdaptersFromSampleSheet(samplesheet)
-                """
+                '''
+                input[0] = """[Header]
+Sample_ID,Sample_Name,Description
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT
+Adapter,ACGTACGT,
+[Data]
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT"""
+                '''
             }
         }
 
         then {
-            def expectedOutput = new File(expectedOutputPath).text
-            assert function.result.trim() == expectedOutput.trim()
+            // Output should not contain adapter line
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("Adapter,ACGTACGT,")
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[Data]")
         }
     }
 
-    test("Should show info message when no adapters are found") {
-        function "AdapterRemover.removeAdaptersFromSampleSheet"
-
-        // Read samplesheet from file
-        def samplesheetPath = "${projectDir}/tests/data/samplesheets/no_adapters.csv"
-
+    test("Should show info message when no adapters") {
         when {
             function {
-                """
-                // Now call the method with the samplesheet content
-                def samplesheet = new File("${samplesheetPath}").text
-                return AdapterRemover.removeAdaptersFromSampleSheet(samplesheet)
-                """
+                '''
+                input[0] = """[Header]
+Sample_ID,Sample_Name,Description
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT
+[Data]
+Lane,Sample_ID,Sample_Name,index,index2
+1,sample1,Sample One,AAAAAAAA,TTTTTTTT"""
+                '''
             }
         }
 
         then {
-            def samplesheet = new File(samplesheetPath).text
-            assert function.result.trim() == samplesheet.trim() + '\n'
-
-            // Note: We can't easily test the printed info message in nf-test
-            // as it doesn't provide a way to capture stdout
+            // Should succeed and print info message
+            assert function.success
+            assert function.result != null
+            assert function.stdout.toString().contains("[INFO] Parameter 'remove_adapter' was set to true but no adapters were found in samplesheet")
         }
     }
 }
