@@ -1,0 +1,45 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        [
+                            {
+                                "id": "Sample1_S1_L001",
+                                "samplename": "Sample1",
+                                "fcid": "220422_M11111_0222_000000000-K9H97",
+                                "lane": "1",
+                                "empty": false,
+                                "single_end": true,
+                                "fastq_1": "Sample1_S1_L001_R1_001.fastq.gz"
+                            }
+                        ],
+                        "[Sample1_S1_L001].samplesheet.csv:md5,bc779a8b2302a093cbb04a118bb5c90f"
+                    ]
+                ],
+                "samplesheet": [
+                    [
+                        [
+                            {
+                                "id": "Sample1_S1_L001",
+                                "samplename": "Sample1",
+                                "fcid": "220422_M11111_0222_000000000-K9H97",
+                                "lane": "1",
+                                "empty": false,
+                                "single_end": true,
+                                "fastq_1": "Sample1_S1_L001_R1_001.fastq.gz"
+                            }
+                        ],
+                        "[Sample1_S1_L001].samplesheet.csv:md5,bc779a8b2302a093cbb04a118bb5c90f"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-09T22:00:18.282617632"
+    }
+}
