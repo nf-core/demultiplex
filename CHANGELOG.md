@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#315](https://github.com/nf-core/demultiplex/pull/315) Fix adapter removal tests for various samplesheet formats
+
 ## 1.6.0 - 2025-02-18
 
 ### `Added`
