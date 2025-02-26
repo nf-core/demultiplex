@@ -71,4 +71,62 @@ nextflow_function {
             assert function.result.normalize() == inputContent.normalize()
         }
     }
+
+    test("Should remove adapters from SampleSheet_1") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_1.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter lines
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+
+            // Verify essential sections are still present
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[BCLConvert_Settings]")
+            assert function.result.contains("[BCLConvert_Data]")
+            assert function.result.contains("[DragenGermline_Settings]")
+            assert function.result.contains("[Cloud_Settings]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_1.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
+
+    test("Should remove adapters from SampleSheet_2") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_2.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter lines
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+
+            // Verify essential sections are still present
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[BCLConvert_Settings]")
+            assert function.result.contains("[BCLConvert_Data]")
+            assert function.result.contains("[DragenGermline_Settings]")
+            assert function.result.contains("[Cloud_Settings]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_2.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
 }
