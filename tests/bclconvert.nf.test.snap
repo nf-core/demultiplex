@@ -46,7 +46,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0"
+                    "nf-core/demultiplex": "v1.6.0dev"
                 }
             },
             [

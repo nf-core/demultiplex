@@ -1,0 +1,11 @@
+[Header]
+FileFormatVersion,2
+Investigator Name,Researcher
+
+[Settings]
+SomeSetting,Value
+
+[Data]
+Sample_ID,index,index2
+Sample01,CTGATCGT,GCGCATAT
+Sample02,ACTCTCGA,CTGTACCA

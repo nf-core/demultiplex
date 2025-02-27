@@ -3,13 +3,13 @@
  *
  */
 
-class SampleSheetUtils {
+class AdapterRemover {
 
     public static String removeAdaptersFromSampleSheet(samplesheet) {
         def lines_out = ''
         def removal_checker = false
         samplesheet.readLines().each { line ->
-            if ( line =~ /Adapter(Read[12])?,[ACGT]+,/ ) {
+            if ( line =~ /Adapter(Read[12])?,[ACGT]+,?/ ) {
                 removal_checker = true
             } else {
                 // keep original line otherwise
