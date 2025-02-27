@@ -22,7 +22,7 @@ When using the demultiplexer fqtk, the _pipeline_ samplesheet must contain an ad
 --input '[path to pipeline samplesheet file]'
 ```
 
-#### Example: Pipeline samplesheet
+### Example: Pipeline samplesheet
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell
@@ -32,18 +32,18 @@ DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2
 DDMMYY_SERIAL_NUMBER_FC3,/path/to/SampleSheet3.csv,3,/path/to/sequencer/output3
 ```
 
-| Column        | Description                                                                                                                                         |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | Flowcell id                                                                                                                                         |
-| `samplesheet` | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                    |
-| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                     |
-| `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory |
+| Column        | Description                                                                                                                                                                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | Flowcell id                                                                                                                                                                                                                                                                   |
+| `samplesheet` | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes                                                                                                                                                                              |
+| `lane`        | Optional lane number. When a lane number is provided, only the given lane will be demultiplexed                                                                                                                                                                               |
+| `flowcell`    | Full path to the Illumina sequencer output directory (often referred as run directory) or a `tar.gz` file containing the contents of said directory. `mgikit` demultiplexing expects a path to a directory here containing the compressed fastq files and `BioInfo.csv` file. |
 
 An [example _pipeline_ samplesheet](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv) has been provided with the pipeline.
 
 Note that the run directory in the `flowcell` column must lead to a `tar.gz` for compatibility with the demultiplexers sgdemux and fqtk.
 
-#### Example: Pipeline samplesheet for fqtk
+### Example: Pipeline samplesheet for fqtk
 
 ```csv title="samplesheet.csv"
 id,samplesheet,lane,flowcell,per_flowcell_manifest
@@ -70,6 +70,7 @@ Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Belo
 | **sgdemux**                  | [sgdemux SampleSheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/sim-data/out.sample_meta.csv)                             |
 | **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
 | **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
+| **mgikit**                   | [mgikit samplesheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/mgi/fc01_sample_sheet.csv)                                 |
 
 ## Running the pipeline
 
@@ -198,7 +199,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 

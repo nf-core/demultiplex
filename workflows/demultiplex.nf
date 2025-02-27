@@ -14,6 +14,7 @@ include { BASES_DEMULTIPLEX                                             } from '
 include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
@@ -144,6 +145,7 @@ workflow DEMULTIPLEX {
     // Re-join the metadata and the untarred run directory with the samplesheet
 
     if (demultiplexer in ['bclconvert', 'bcl2fastq']) ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch:true, failOnDuplicate:true)
+    else if (demultiplexer == 'mgikit'){ ch_flowcells_tar_merged = Channel.empty() }
     else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join( UNTAR_FLOWCELL ( ch_flowcells_tar.run_dirs ).untar, failOnMismatch:true, failOnDuplicate:true )
         ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
@@ -218,6 +220,14 @@ workflow DEMULTIPLEX {
             MKFASTQ_DEMULTIPLEX ( ch_flowcells )
             ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
             ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
+            break
+        case 'mgikit':
+            // MODULE: mgikit
+            // Runs when "demultiplexer" is set to "mgikit"
+            MGIKIT_DEMULTIPLEX ( ch_flowcells )
+            ch_raw_fastq = ch_raw_fastq.mix(MGIKIT_DEMULTIPLEX.out.fastq)
+            ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { meta, metrics -> return metrics} )
+            ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
             break
         default:
             error "Unknown demultiplexer: ${demultiplexer}"
