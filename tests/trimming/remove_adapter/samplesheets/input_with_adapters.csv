@@ -1,0 +1,2 @@
+id,samplesheet,lane,flowcell
+test_adapter,https://raw.githubusercontent.com/nf-core/demultiplex/0cfc1ebf1641c8322c946fd0d104a76c7def1ed7/tests/functions/AdapterRemover/test-data/samplesheets/without_trailing_comma.csv,1,s3://ngi-igenomes/test-data/demultiplex/miseq_35147139.tar.gz

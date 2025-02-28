@@ -1,0 +1,48 @@
+{
+    "remove_adapter = false": {
+        "content": [
+            0,
+            {
+                "Workflow": {
+                    "nf-core/demultiplex": "v1.6.0dev"
+                }
+            },
+            [
+                "220422_M11111_0222_000000000-K9H97.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml"
+            ],
+            [
+                "220422_M11111_0222_000000000-K9H97.csv:md5,2df2e405991814571c021dc8749c2a89"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.01.0"
+        },
+        "timestamp": "2025-02-26T15:09:38.979909"
+    },
+    "remove_adapter = true": {
+        "content": [
+            0,
+            {
+                "Workflow": {
+                    "nf-core/demultiplex": "v1.6.0dev"
+                }
+            },
+            [
+                "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml"
+            ],
+            [
+                "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.01.0"
+        },
+        "timestamp": "2025-02-26T15:09:32.699974"
+    }
+}
