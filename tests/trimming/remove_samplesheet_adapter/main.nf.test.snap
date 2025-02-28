@@ -1,5 +1,5 @@
 {
-    "remove_adapter = false": {
+    "remove_samplesheet_adapter = false": {
         "content": [
             0,
             {
@@ -22,7 +22,7 @@
         },
         "timestamp": "2025-02-26T15:09:38.979909"
     },
-    "remove_adapter = true": {
+    "remove_samplesheet_adapter = true": {
         "content": [
             0,
             {

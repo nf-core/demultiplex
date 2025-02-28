@@ -70,7 +70,7 @@ workflow DEMULTIPLEX {
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     ch_samplesheet = ch_samplesheet
         .map{ meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] } // Make meta.id be always a string
-    if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+    if (params.remove_samplesheet_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
             .collectFile(storeDir: "${params.outdir}") { item ->
                 def suffix = item[0].lane ? ".lane${item[0].lane}" : "" //need to produce one file per item in the channel else join fails
