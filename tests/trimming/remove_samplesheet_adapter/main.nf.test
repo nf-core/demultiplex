@@ -40,8 +40,8 @@ nextflow_pipeline {
                 { assert removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
-                // FIXME: This shouldn't be printed? Or maybe it should be printed once because of the samplesheet?
-                { assert workflow.stdout.contains("[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet") },
+                // NOTE: This should be printed once because one of the samplesheets has no adapters
+                { assert workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
             )
         }
     }
@@ -77,8 +77,7 @@ nextflow_pipeline {
                 { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
-                { assert !workflow.stdout.contains("[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet")},
-
+                { assert !workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
             )
         }
     }
@@ -116,8 +115,8 @@ nextflow_pipeline {
                 { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
-                // FIXME: This shouldn't be printed? Or maybe it should be printed once because of the samplesheet?
-                { assert workflow.stdout.contains("[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet") },
+                // NOTE: This should be printed once because one of the samplesheets has no adapters
+                { assert workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
             )
         }
     }
