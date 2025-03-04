@@ -36,7 +36,10 @@ nextflow_pipeline {
                     stable_path
                 ).match() },
                 // TODO: Check that generated samplesheet has no adapter lines
-                // TODO: Check for fastp execution and outputs
+                // Check that fastp IS executed
+                { assert removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
             )
         }
     }
@@ -68,7 +71,11 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path
                 ).match() },
-                // TODO: Check that fastp was NOT executed
+                // Check that fastp was NOT executed
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
+                // NOTE:   [INFO] Parameter 'remove_samplesheet_adapter' was set to true but no adapters were found in samplesheet
             )
         }
     }
@@ -101,9 +108,12 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path
                 ).match() },
-                // TODO: Check that fastp was NOT executed
                 // TODO: Check that generated samplesheet has no adapter lines
-                // TODO: Check that fastp was NOT executed
+                // Check that fastp was NOT executed
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
+                // NOTE:   [INFO] Parameter 'remove_samplesheet_adapter' was set to true but no adapters were found in samplesheet
             )
         }
     }
