@@ -64,7 +64,7 @@ nextflow_function {
             // Should succeed and print info message
             assert function.success
             assert function.result != null
-            assert function.stdout.toString().contains("[INFO] Parameter 'remove_samplesheet_adapter' was set to true but no adapters were found in samplesheet")
+            assert function.stdout.toString().contains("[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet")
 
             // The input should be unchanged as there are no adapters to remove
             def inputContent = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/no_adapters.csv").text

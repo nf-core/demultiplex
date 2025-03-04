@@ -17,7 +17,7 @@ class AdapterRemover {
             }
         }
         if (!removal_checker) {
-            System.out.println("\u001B[94m[INFO] Parameter 'remove_samplesheet_adapter' was set to true but no adapters were found in samplesheet\u001B[0m")
+            System.out.println("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m")
         }
         return lines_out
     }
