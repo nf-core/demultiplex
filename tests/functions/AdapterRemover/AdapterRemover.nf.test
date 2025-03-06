@@ -1,0 +1,132 @@
+nextflow_function {
+    name "Test AdapterRemover.removeAdaptersFromSampleSheet"
+    function "AdapterRemover.removeAdaptersFromSampleSheet"
+
+    test("Should recognize and remove adapters") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/without_trailing_comma.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter line
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[BCLConvert_Data]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_without_trailing_comma.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
+
+    test("Should recognize adapter with trailing comma") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/with_trailing_comma.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter line
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,")
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,")
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[Data]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_with_trailing_comma.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
+
+    test("Should show info message when no adapters") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/no_adapters.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Should succeed and print info message
+            assert function.success
+            assert function.result != null
+            assert function.stdout.toString().contains("[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet")
+
+            // The input should be unchanged as there are no adapters to remove
+            def inputContent = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/no_adapters.csv").text
+            assert function.result.normalize() == inputContent.normalize()
+        }
+    }
+
+    test("Should remove adapters from SampleSheet_1") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_1.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter lines
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+
+            // Verify essential sections are still present
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[BCLConvert_Settings]")
+            assert function.result.contains("[BCLConvert_Data]")
+            assert function.result.contains("[DragenGermline_Settings]")
+            assert function.result.contains("[Cloud_Settings]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_1.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
+
+    test("Should remove adapters from SampleSheet_2") {
+        when {
+            function {
+                '''
+                input[0] = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_2.csv").text
+                '''
+            }
+        }
+
+        then {
+            // Output should not contain adapter lines
+            assert function.success
+            assert function.result != null
+            assert !function.result.contains("AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA")
+            assert !function.result.contains("AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT")
+
+            // Verify essential sections are still present
+            assert function.result.contains("[Header]")
+            assert function.result.contains("[BCLConvert_Settings]")
+            assert function.result.contains("[BCLConvert_Data]")
+            assert function.result.contains("[DragenGermline_Settings]")
+            assert function.result.contains("[Cloud_Settings]")
+
+            // Compare with expected output
+            def expectedOutput = file("${projectDir}/tests/functions/AdapterRemover/test-data/samplesheets/expected_SampleSheet_2.csv").text
+            assert function.result.normalize() == expectedOutput.normalize()
+        }
+    }
+}
