@@ -31,7 +31,7 @@
             },
             "flowcell": {
                 "type": "string",
-                "format": "path",
+                "format": "directory-path",
                 "description": "Run directory"
             },
             "per_flowcell_manifest": {
