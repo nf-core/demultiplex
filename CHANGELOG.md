@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#323](https://github.com/nf-core/demultiplex/pull/323) Update `samshee` to 0.2.10.
+
 ### `Fixed`
 
 - [#315](https://github.com/nf-core/demultiplex/pull/315) Fix adapter removal tests for various samplesheet formats
