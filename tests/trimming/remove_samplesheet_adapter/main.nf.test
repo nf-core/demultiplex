@@ -29,7 +29,7 @@ nextflow_pipeline {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -37,7 +37,7 @@ nextflow_pipeline {
                 ).match() },
                 // TODO: Check that generated samplesheet has no adapter lines
                 // Check that fastp IS executed
-                { assert removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
                 // NOTE: This should be printed once because one of the samplesheets has no adapters
@@ -67,14 +67,14 @@ nextflow_pipeline {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
                     stable_path
                 ).match() },
                 // Check that fastp was NOT executed
-                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
                 { assert !workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
@@ -104,7 +104,7 @@ nextflow_pipeline {
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
                     // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -112,7 +112,7 @@ nextflow_pipeline {
                 ).match() },
                 // TODO: Check that generated samplesheet has no adapter lines
                 // Check that fastp was NOT executed
-                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
                 { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
                 // NOTE: This should be printed once because one of the samplesheets has no adapters

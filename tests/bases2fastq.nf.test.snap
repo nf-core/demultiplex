@@ -144,7 +144,7 @@
                 "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
+                "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
                 "samplesheet/methylseq_samplesheet.csv",
@@ -188,7 +188,7 @@
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,559b29beffa82c35c71a82c3ff459a40",
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,62a344d18de885a880e8a9fe48c7816f",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,5ef421e1df317a359c8b27ff65f2b758",
-                "fastp_filtered_reads_plot.txt:md5,5a5a98b82c02875b4d9da92e7577e802",
+                "fastp_filtered_reads_plot.txt:md5,1869c7c12bf873614dbb8d9d74e9f745",
                 "fastqc_per_base_n_content_plot.txt:md5,7a1a9b3df3ce3bcca265dd13f2e23dc0",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,9f62301e59b368cdd6738cbd871a964e",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,ebee4de078cbb125ba741a21d3552900",
@@ -209,9 +209,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-01-29T12:10:09.87929194"
+        "timestamp": "2025-04-20T17:18:39.74636091"
     },
     "sarek_samplesheet": {
         "content": [

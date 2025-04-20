@@ -269,7 +269,7 @@
                 "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
+                "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
                 "samplesheet/methylseq_samplesheet.csv",
@@ -348,14 +348,14 @@
                 "bclconvert_lane_counts.txt:md5,32e8acea6fd6ef76943100329be22fee",
                 "bclconvert_sample_counts_Counts_per_lane.txt:md5,2eb58439a3eb1eee508bdce0ee340649",
                 "bclconvert_sample_counts_Index_mismatches.txt:md5,94023737055873c151ea9f7e3f563f73",
-                "bclconvert_undetermined.txt:md5,3fda7704b2b8cbab81a48ad4e5552243",
+                "bclconvert_undetermined.txt:md5,2cac05222da27b5e9550f5fc31267943",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,f34d80cbc50fb151f04c9739c62412f0",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,c50799d5b2e88aaf6d134a0c91799617",
                 "fastp-seq-content-n-plot_Read_1_After_filtering.txt:md5,1787c362916517c9b922b7bcd5940bf7",
                 "fastp-seq-content-n-plot_Read_1_Before_filtering.txt:md5,ae11e4c047b4f2933fe09261c305c520",
                 "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,d1c9f76c20c4940880126246fa2c3412",
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,f8b94a819f2b15b5a47c4b1003c32a18",
-                "fastp_filtered_reads_plot.txt:md5,8ab004632691b04b665920977beb8924",
+                "fastp_filtered_reads_plot.txt:md5,aa96a48de4276cf110f416cec0861db1",
                 "fastqc_adapter_content_plot.txt:md5,a209adf87470f3a106e95a8636199b66",
                 "fastqc_overrepresented_sequences_plot.txt:md5,bf4b46c609cb609742c369cb251f2e2c",
                 "fastqc_per_base_n_content_plot.txt:md5,b7793753c3e72a9ecf52e9be83024cb2",
@@ -373,9 +373,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-01-29T12:17:19.340504442"
+        "timestamp": "2025-04-20T17:23:30.754214588"
     },
     "atacseq_samplesheet": {
         "content": [

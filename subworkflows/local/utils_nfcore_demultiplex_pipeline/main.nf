@@ -126,7 +126,6 @@ workflow PIPELINE_COMPLETION {
     //
     // We need to ensure that the multiqc_report is a value channel (DataflowVariable).
     // Queue channels will not be available in the workflow.onComplete block.
-    def multiqc_reports = multiqc_report.toList()
 
     workflow.onComplete {
         assert multiqc_reports instanceof groovyx.gpars.dataflow.DataflowVariable : "Expected a value channel (DataflowVariable) for multiqc_reports inside workflow.onComplete block."
