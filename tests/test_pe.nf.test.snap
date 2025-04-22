@@ -56,7 +56,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0dev"
+                    "nf-core/demultiplex": "v1.6.1"
                 }
             },
             [
@@ -364,7 +364,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-20T17:37:21.067192858"
+        "timestamp": "2025-04-22T19:39:19.683438162"
     },
     "taxprofiler_samplesheet": {
         "content": [

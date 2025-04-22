@@ -13,7 +13,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0dev"
+                    "nf-core/demultiplex": "v1.6.1"
                 }
             },
             [
@@ -237,7 +237,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-20T17:38:39.610965661"
+        "timestamp": "2025-04-22T19:40:59.007579225"
     },
     "User wants to trim with the demultiplexer": {
         "content": [
@@ -250,7 +250,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0dev"
+                    "nf-core/demultiplex": "v1.6.1"
                 }
             },
             [
@@ -419,9 +419,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-04T18:19:46.242096473"
+        "timestamp": "2025-04-22T19:41:53.749961378"
     },
     "User wants to skip trimming all together": {
         "content": [
@@ -434,7 +434,7 @@
                     "md5sum": 8.3
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0dev"
+                    "nf-core/demultiplex": "v1.6.1"
                 }
             },
             [
@@ -603,8 +603,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-04T22:30:01.946107507"
+        "timestamp": "2025-04-22T19:42:55.163401484"
     }
 }
