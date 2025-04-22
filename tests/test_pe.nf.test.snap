@@ -295,7 +295,7 @@
                 "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
+                "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
                 "samplesheet/methylseq_samplesheet.csv",
@@ -339,7 +339,7 @@
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,35de9aebdc467b1bbc9fd1f40d3aece4",
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,feb0492fc4a011f49b0ae771af00fad2",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,ced1654945cd8c6a85dbe3353959e4b1",
-                "fastp_filtered_reads_plot.txt:md5,136a1d755ba6e790227f80cfcb4c1d62",
+                "fastp_filtered_reads_plot.txt:md5,f9b385aa7a3ccd4d480e5cfcba2e61f6",
                 "fastqc-1_per_base_n_content_plot.txt:md5,2c2e1e7e982151328380d462bf3da96a",
                 "fastqc-1_per_base_sequence_quality_plot.txt:md5,16c2db072409c63e9e72cc8b8efd7c1d",
                 "fastqc-1_per_sequence_gc_content_plot_Counts.txt:md5,9e2aa8732545bf8544e03e8451d5d200",
@@ -356,15 +356,15 @@
                 "fastqc-2_sequence_counts_plot.txt:md5,266ea49ebc560e003e3dd1b9f4a21e0d",
                 "fastqc-2_sequence_duplication_levels_plot.txt:md5,02c6dcf1a65b7b3a21d8deaf70c8f3ca",
                 "fastqc-2_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multiqc_bcl2fastq_bysample.txt:md5,bc5b6bbdcd75ead5a552cef09fc9aaec",
+                "multiqc_bcl2fastq_bysample.txt:md5,2c50a344793417587572062c9ca0f526",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-01-29T12:43:22.114271349"
+        "timestamp": "2025-04-20T17:37:21.067192858"
     },
     "taxprofiler_samplesheet": {
         "content": [
