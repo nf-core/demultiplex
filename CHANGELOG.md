@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#306](https://github.com/nf-core/demultiplex/pull/306) Update template to v3.2.0.
 - [#323](https://github.com/nf-core/demultiplex/pull/323) Update `samshee` to 0.2.10.
+- [#327](https://github.com/nf-core/demultiplex/pull/327) Changed the manifest to new style and added contributors.
 
 ### `Fixed`
 
