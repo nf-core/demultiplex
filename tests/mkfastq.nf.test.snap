@@ -26,7 +26,7 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/demultiplex": "v1.6.0"
+                    "nf-core/demultiplex": "v1.6.1"
                 }
             },
             [
@@ -166,7 +166,7 @@
                 "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml",
+                "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
                 "samplesheet/atacseq_samplesheet.csv",
                 "samplesheet/methylseq_samplesheet.csv",
@@ -205,15 +205,15 @@
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,701d4a7b730bbd3e8b457fa2b1264854",
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,d6fc359d4e2be31d802b8553bcf5af93",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,e80f62d45ca21cacbd19f899f768c308",
-                "fastp_filtered_reads_plot.txt:md5,39d2e637c3e1482821c62c00482c8421",
+                "fastp_filtered_reads_plot.txt:md5,9b7d2138a41b2898386c73bc6c0861ff",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.3"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-01-30T11:26:28.516270432"
+        "timestamp": "2025-04-22T19:28:44.634480832"
     },
     "rnaseq_samplesheet": {
         "content": [

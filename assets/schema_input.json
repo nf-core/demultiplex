@@ -18,7 +18,7 @@
             "samplesheet": {
                 "type": "string",
                 "format": "file-path",
-                "description": "Sample sheet file",
+                "description": "Sample sheet CSV file",
                 "pattern": "^\\S+\\.csv$"
             },
             "lane": {

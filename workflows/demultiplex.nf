@@ -70,7 +70,7 @@ workflow DEMULTIPLEX {
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     ch_samplesheet = ch_samplesheet
         .map{ meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] } // Make meta.id be always a string
-    if (params.remove_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+    if (params.remove_samplesheet_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
         ch_samplesheet_no_adapter = ch_samplesheet
             .collectFile(storeDir: "${params.outdir}") { item ->
                 def suffix = item[0].lane ? ".lane${item[0].lane}" : "" //need to produce one file per item in the channel else join fails
@@ -231,13 +231,11 @@ workflow DEMULTIPLEX {
     ch_fastq_to_qc = ch_raw_fastq
 
     // MODULE: fastp
-    if (!("fastp" in skip_tools)){
+    if (!("fastp" in skip_tools) && trim_fastq){
             FASTP(ch_raw_fastq, [], [], [], [])
             ch_multiqc_files = ch_multiqc_files.mix( FASTP.out.json.map { meta, json -> return json} )
             ch_versions = ch_versions.mix(FASTP.out.versions)
-            if (trim_fastq) {
-                ch_fastq_to_qc = FASTP.out.reads
-            }
+            ch_fastq_to_qc = FASTP.out.reads
     }
 
     // MODULE: falco, drop in replacement for fastqc
@@ -305,7 +303,7 @@ workflow DEMULTIPLEX {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
+            name: 'nf_core_'  +  'demultiplex_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }

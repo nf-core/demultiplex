@@ -18,6 +18,7 @@
                 },
                 "skip_tools": {
                     "type": "string",
+                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samshee)?,?)*(?<!,)$",
                     "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
                 },
                 "sample_size": {
@@ -64,7 +65,7 @@
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
+                    "help_text": "You will need to create a design file (e.g. `samplesheet.csv`) with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -134,6 +135,7 @@
                 },
                 "custom_config_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
@@ -248,14 +250,16 @@
                     "type": "string",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
+                    "format": "file-path",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "remove_adapter": {
+                "remove_samplesheet_adapter": {
                     "type": "boolean",
                     "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
                     "default": true
@@ -272,6 +276,12 @@
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
                 }
             }

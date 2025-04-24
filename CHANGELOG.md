@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.6.1 - 2025-04-23
+
+### `Added`
+
+### `Changed`
+
+- [#306](https://github.com/nf-core/demultiplex/pull/306) Update template to v3.2.0.
+- [#323](https://github.com/nf-core/demultiplex/pull/323) Update `samshee` to 0.2.10.
+- [#327](https://github.com/nf-core/demultiplex/pull/327) Changed the manifest to new style and added contributors.
+
+### `Fixed`
+
+- [#315](https://github.com/nf-core/demultiplex/pull/315) Fix adapter removal tests for various samplesheet formats
+- [#316](https://github.com/nf-core/demultiplex/pull/316) Fixed fastp module to properly respect the `trim_fastq` parameter and not run when set to false
+
 ## 1.6.0 - 2025-02-18
 
 ### `Added`
