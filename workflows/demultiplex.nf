@@ -190,14 +190,18 @@ workflow DEMULTIPLEX {
             fastq_read_structure = ch_flowcells.map{it[2]}
                 .splitCsv(header:true)
                 .map{[it.fastq, it.read_structure]}
+                .collect{it -> [it]}
 
             // Combine the directory containing the fastq with the fastq name and read structure
             // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
-            fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect{it[1]}).toList()
-
+            //fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect{it[1]}).toList()
+            //ch_flowcells.merge( fastqs_with_paths ).view()
             // Format ch_samplesheet like so:
-            // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
-            ch_samplesheet = ch_flowcells.merge( fastqs_with_paths ) { a,b -> tuple(a[0], a[1], b)}
+            // [[meta:id], <path to sample names and barcodes in tsv: path>, <path to fastqs: path>, [<fastq name: string>, <read structure: string>]]]
+            ch_flowcells.view()
+            fastq_read_structure.view()
+            ch_samplesheet = ch_flowcells.map{meta, samplesheet, per_flowcell_manifest, path -> [meta, samplesheet, path]}.concat( fastq_read_structure )
+            ch_samplesheet.view { tuple -> "ch_samplesheet has ${tuple.size()} elements: $tuple" }
 
             FQTK_DEMULTIPLEX ( ch_samplesheet )
             ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)

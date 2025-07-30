@@ -9,12 +9,14 @@ include { CSV2TSV } from "../../../modules/local/csv2tsv"
 
 workflow FQTK_DEMULTIPLEX {
     take:
-        ch_input     // [[id:"", lane:""],samplesheet.csv, [[fastq_name, read_structure, fastq_dir]]]
+        ch_input     // [[id:"", lane:""],samplesheet.csv, fastq_dir, [[fastq_name, read_structure]]]
 
     main:
         // Convert csv to tsv
-        CSV2TSV( ch_input )
+        //ch_input.view()
+        CSV2TSV( ch_input.map{meta, csv, _dir, structure -> [meta, csv, structure]}.view() )
 
+        ch_input.join(CSV2TSV.out.ch_output,by:[0]).map{meta, _csv, dir, structure, tsv -> [meta, tsv, dir, structure]}
         // MODULE: fqtk
         FQTK( CSV2TSV.out.ch_output )
 
