@@ -14,6 +14,7 @@ include { BASES_DEMULTIPLEX                                             } from '
 include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ          } from '../modules/local/fastq_to_samplesheet/main'
@@ -53,7 +54,7 @@ workflow DEMULTIPLEX {
 
     main:
     // Value inputs
-    demultiplexer       = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq
+    demultiplexer       = params.demultiplexer                                   // string: bases2fastq, bcl2fastq, bclconvert, fqtk, sgdemux, mkfastq, mgikit
     trim_fastq          = params.trim_fastq                                      // boolean: true, false
     skip_tools          = params.skip_tools ? params.skip_tools.split(',') : []  // list: [falco, fastp, multiqc]
     sample_size         = params.sample_size                                     // int
@@ -91,7 +92,7 @@ workflow DEMULTIPLEX {
                 [ "${item[0].id}.csv", item[1] ]
             }
     }
-
+    
     // RUN samplesheet_validator samshee
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
@@ -106,6 +107,26 @@ workflow DEMULTIPLEX {
 
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
+
+    // For mgikit:
+    // Validate that samplesheet has a header, at least two columns, and that the first column is 'sample_id'
+    // Build channel for samplesheet batches
+    if (params.demultiplexer == 'mgikit') {
+        ch_samplesheet_validated = ch_samplesheet.map { file ->
+            def headerLine = file.text.readLines().first()
+            def columns = headerLine.tokenize(/\t|,/)
+            if (columns.size() < 2 || columns[0].trim() != 'sample_id') {
+                throw new IllegalArgumentException("Invalid samplesheet ${file.name}: must start with 'sample_id' and have at least 2 columns.")
+            }
+            return file
+        }
+
+        ch_samplesheet_batches = ch_samplesheet_validated
+            .splitText(by: params.mgikit_batch_size as int, file: true, keepHeader: true)
+
+    } else {
+        ch_samplesheet_batches = ch_samplesheet // passthrough: no change
+    }}
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -166,6 +187,10 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { meta, metrics -> return metrics} )
             ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
             break
+        case 'mgikit':
+            // MODULE: mgikit
+            // Runs when "demultiplexer" is set to "mgikit"
+            MGIKIT_DEMULTIPLEX(ch_demultiplex)
         case ['bcl2fastq', 'bclconvert']:
             // SUBWORKFLOW: illumina
             // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
