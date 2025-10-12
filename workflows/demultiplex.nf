@@ -109,24 +109,34 @@ workflow DEMULTIPLEX {
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // For mgikit:
-    // Validate that samplesheet has a header, at least two columns, and that the first column is 'sample_id'
-    // Build channel for samplesheet batches
     if (params.demultiplexer == 'mgikit') {
-        ch_samplesheet_validated = ch_samplesheet.map { file ->
-            def headerLine = file.text.readLines().first()
+        // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
+        ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell, optional ->
+            def headerLine = samplesheet_path.text.readLines().first()
             def columns = headerLine.tokenize(/\t|,/)
             if (columns.size() < 2 || columns[0].trim() != 'sample_id') {
-                throw new IllegalArgumentException("Invalid samplesheet ${file.name}: must start with 'sample_id' and have at least 2 columns.")
+                throw new IllegalArgumentException("Invalid samplesheet ${samplesheet_path.name}: must start with 'sample_id' and have at least 2 columns.")
             }
-            return file
+        // Return the full tuple again
+        return [meta, samplesheet_path, flowcell, optional]
         }
-
+    
+        // Build channel for samplesheet batches
         ch_samplesheet_batches = ch_samplesheet_validated
-            .splitText(by: params.mgikit_batch_size as int, file: true, keepHeader: true)
-
+            .flatMap { meta, samplesheet_path, flowcell, optional ->
+                // Split each samplesheet into batches (returns multiple files)
+                return Channel
+                    .fromPath(samplesheet_path)
+                    .splitText(by: params.mgikit_batch_size as int, file: true, keepHeader: true)
+                    .map { batch_file ->
+                        [meta, batch_file, flowcell, optional] // Preserve metadata per batch
+                    }
+            }
+    
     } else {
-        ch_samplesheet_batches = ch_samplesheet // passthrough: no change
-    }}
+        // Passthrough when not mgikit
+        ch_samplesheet = ch_samplesheet
+    }
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
