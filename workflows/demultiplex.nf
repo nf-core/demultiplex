@@ -92,7 +92,7 @@ workflow DEMULTIPLEX {
                 [ "${item[0].id}.csv", item[1] ]
             }
     }
-    
+
     // RUN samplesheet_validator samshee
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
