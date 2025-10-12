@@ -60,6 +60,7 @@ workflow DEMULTIPLEX {
     sample_size         = params.sample_size                                     // int
     kraken_db           = params.kraken_db                                       // path
     strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
+    mgikit_batch_size   = params.mgikit_batch_size ?: 384                        // int, defaults to 384
 
     // Channel inputs
     ch_versions              = Channel.empty()
@@ -108,7 +109,7 @@ workflow DEMULTIPLEX {
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
-    // For mgikit:
+    // Build channels for mgikit batching:
     if (params.demultiplexer == 'mgikit') {
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
         ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell, optional ->
@@ -200,7 +201,7 @@ workflow DEMULTIPLEX {
         case 'mgikit':
             // MODULE: mgikit
             // Runs when "demultiplexer" is set to "mgikit"
-            MGIKIT_DEMULTIPLEX(ch_demultiplex)
+            MGIKIT_DEMULTIPLEX(ch_samplesheet_batches)
         case ['bcl2fastq', 'bclconvert']:
             // SUBWORKFLOW: illumina
             // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
