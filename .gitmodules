@@ -1,0 +1,3 @@
+[submodule "bin/mgikit_v1.0.0"]
+	path = bin/mgikit_v1.0.0
+	url = https://github.com/sagc-bioinformatics/mgikit.git
