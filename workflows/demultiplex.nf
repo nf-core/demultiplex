@@ -16,6 +16,7 @@ include { BASES_DEMULTIPLEX                                             } from '
 include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_BATCHER                                                } from '../subworkflows/local/mgikit_batcher/main'
 include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ           } from '../modules/local/fastq_to_samplesheet/main'
@@ -128,17 +129,8 @@ workflow DEMULTIPLEX {
         return [meta, samplesheet_path, flowcell_path, optional]
         }
     
-        // Build channel for samplesheet batches
-        ch_samplesheet_batches = ch_samplesheet_validated
-            .flatMap { meta, samplesheet_path, flowcell_path, optional ->
-                // Split each samplesheet into batches (returns multiple files)
-                return Channel
-                    .fromPath(samplesheet_path)
-                    .splitText(by: params.mgikit_batch_size as int, file: true, keepHeader: true)
-                    .map { batch_file ->
-                        [meta, batch_file, flowcell_path, optional] // Preserve metadata per batch
-                    }
-            }
+        // Build channel for samplesheet batches using a batching process
+        ch_samplesheet_batches = MGIKIT_BATCHER(ch_samplesheet_validated)
     
     } else {
         // Passthrough when not mgikit
