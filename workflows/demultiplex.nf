@@ -111,8 +111,12 @@ workflow DEMULTIPLEX {
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
-    // Build channels for mgikit batching:
+    // Test, if the mgikit binary is downloaded and correctly linked
     if (params.demultiplexer == 'mgikit') {
+        assert params.mgikit_bin : "Set --mgikit_bin when --demultiplexer mgikit"
+        assert file(params.mgikit_bin).exists() : "--mgikit_bin '${params.mgikit_bin}' not found"
+        
+    // Build channels for mgikit batching:
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
         ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, optional ->
             def headerLine = samplesheet_path.text.readLines().first()
