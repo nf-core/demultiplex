@@ -62,7 +62,7 @@ workflow DEMULTIPLEX {
     sample_size         = params.sample_size                                     // int
     kraken_db           = params.kraken_db                                       // path
     strandedness        = params.strandedness                                    // string: auto, reverse, forward, unstranded
-    mgikit_batch_size   = params.mgikit_batch_size ?: 384                        // int, defaults to 384
+    mgikit_batch_size   = params.mgikit_batch_size                               // int
 
     // Channel inputs
     ch_versions              = Channel.empty()

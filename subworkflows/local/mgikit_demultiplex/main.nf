@@ -6,11 +6,11 @@ process MGIKIT_DEMULTIPLEX {
     "demx_tag:flowcell=${fc}:lane=${lane}:batch=${file}"
   }
   
-  cpus { (params.mgikit_cpus != null ? params.mgikit_cpus as int : 4) }
+  cpus { params.mgikit_cpus as int }
 
   memory {
-    def m = (params.mgikit_memory_cli != null ? params.mgikit_memory_cli as int : 64)
-    (m instanceof Number || m.toString().isInteger()) ? "${m}.GB" : m.toString()
+    def s = params.mgikit_memory_cli.toString()
+    s.isInteger() ? "${s}GB" : s
   }
   
   publishDir(
@@ -45,9 +45,9 @@ process MGIKIT_DEMULTIPLEX {
     --read1 "${flowcell_path}/**/*${meta.lane}_read_1.fq.gz" \
     --read2 "${flowcell_path}/**/*${meta.lane}_read_2.fq.gz" \
     --output demx_mgikit/ \
-    -m ${params.mgikit_mismatches != null ? params.mgikit_mismatches as int : 2} \
-    --memory ${params.mgikit_memory_cli != null ? params.mgikit_memory_cli as int : 64} \
-    --template "${params.mgikit_template != null ? params.mgikit_template.toString() : 'i710:i510'}" \
+    -m ${params.mgikit_mismatches} \
+    --memory ${params.mgikit_memory_cli} \
+    --template "${params.mgikit_template}" \
     -t ${task.cpus}
   """
 }
