@@ -112,25 +112,25 @@ workflow DEMULTIPLEX {
     // Build channels for mgikit batching:
     if (params.demultiplexer == 'mgikit') {
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
-        ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell, optional ->
+        ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, optional ->
             def headerLine = samplesheet_path.text.readLines().first()
             def columns = headerLine.tokenize(/\t|,/)
             if (columns.size() < 2 || columns[0].trim() != 'sample_id') {
                 throw new IllegalArgumentException("Invalid samplesheet ${samplesheet_path.name}: must start with 'sample_id' and have at least 2 columns.")
             }
         // Return the full tuple again
-        return [meta, samplesheet_path, flowcell, optional]
+        return [meta, samplesheet_path, flowcell_path, optional]
         }
     
         // Build channel for samplesheet batches
         ch_samplesheet_batches = ch_samplesheet_validated
-            .flatMap { meta, samplesheet_path, flowcell, optional ->
+            .flatMap { meta, samplesheet_path, flowcell_path, optional ->
                 // Split each samplesheet into batches (returns multiple files)
                 return Channel
                     .fromPath(samplesheet_path)
                     .splitText(by: params.mgikit_batch_size as int, file: true, keepHeader: true)
                     .map { batch_file ->
-                        [meta, batch_file, flowcell, optional] // Preserve metadata per batch
+                        [meta, batch_file, flowcell_path, optional] // Preserve metadata per batch
                     }
             }
     
