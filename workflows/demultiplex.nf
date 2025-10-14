@@ -4,6 +4,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+nextflow.enable.dsl=2
+
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
