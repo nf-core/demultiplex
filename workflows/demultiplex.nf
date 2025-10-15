@@ -4,8 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-nextflow.enable.dsl=2
-
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -130,7 +128,11 @@ workflow DEMULTIPLEX {
         }
     
         // Build channel for samplesheet batches using a batching process
-        ch_samplesheet_batches = MGIKIT_BATCHER(ch_samplesheet_validated)
+        ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { meta, batch_list, flowcell_path, optional ->
+          batch_list.collect { batch_file ->
+            [meta, batch_file, flowcell_path, optional]
+          }
+        }
     
     } else {
         // Passthrough when not mgikit

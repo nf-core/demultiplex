@@ -17,11 +17,9 @@ process MGIKIT_BATCHER {
   """
   set -euo pipefail
 
-  BATCH_SIZE=${params.mgikit_batch_size}
-
   header=\$(head -n 1 "${samplesheet_path}")
-  # split the body (excluding header) into chunks of BATCH_SIZE lines
-  tail -n +2 "${samplesheet_path}" | split -l "\${BATCH_SIZE}" - "body_"
+  # split the body (excluding header) into chunks of batch_size lines
+  tail -n +2 "${samplesheet_path}" | split -l ${params.mgikit_batch_size} - "body_"
 
   i=0
   for f in body_*; do
