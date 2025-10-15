@@ -126,7 +126,9 @@ workflow DEMULTIPLEX {
         // Return the full tuple again
         return [meta, samplesheet_path, flowcell_path, optional]
         }
-    
+        
+        ch_mgikit_batcher_out = MGIKIT_BATCHER(ch_samplesheet_validated)
+        
         // Build channel for samplesheet batches using a batching process
         ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { meta, batch_list, flowcell_path, optional ->
           batch_list.collect { batch_file ->
