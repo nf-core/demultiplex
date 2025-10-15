@@ -34,6 +34,6 @@ process MGIKIT_FIND_READ_PAIRS {
   done > pairs.tsv
 
   # materialize declared outputs (Nextflow captures files referenced on each line)
-  while IFS=\\$'\\t' read -r fc ln rf1 rf2; do :; done < pairs.tsv
+  while IFS=\$'\\t' read -r fc ln rf1 rf2; do :; done < pairs.tsv
   """
 }
