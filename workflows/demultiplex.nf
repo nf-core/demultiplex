@@ -129,7 +129,7 @@ workflow DEMULTIPLEX {
        ch_samplesheet_keyed = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, opt ->
          tuple( key(flowcell_path, meta.lane), [meta, samplesheet_path, flowcell_path, opt] )
        }
-       ch_reads_keyed = FIND_READ_PAIRS.out.map { flowcell_path, lane, r1, r2 ->
+       ch_reads_keyed = MGIKIT_FIND_READ_PAIRS.out.map { flowcell_path, lane, r1, r2 ->
          tuple( key(flowcell_path, lane), [r1, r2] )
        }
        ch_samplesheet_with_reads = ch_samplesheet_keyed
