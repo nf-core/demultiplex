@@ -14,9 +14,12 @@ process MGIKIT_FIND_READ_PAIRS {
   script:
   """
   set -euo pipefail
+  
+  # Build lane strings used in filenames
+  LANE_PAD=$(printf "L%02d" "${lane}") 
 
   # Adjust name patterns to your files. This matches ...<lane>_read_1.fq.gz and mates to _read_2.fq.gz
-  mapfile -d '' -t R1 < <(find "${flowcell_path}" -type f -name "*${lane}_read_1.fq.gz" -print0)
+  mapfile -d '' -t R1 < <(find "${flowcell_path}" -type f -name "*${LANE_PAD}_read_1.fq.gz" -print0)
 
   if [[ \${#R1[@]} -eq 0 ]]; then
     echo "No R1 for lane ${lane} under ${flowcell_path}" >&2
