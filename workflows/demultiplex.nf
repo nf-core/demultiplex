@@ -14,6 +14,7 @@ include { BASES_DEMULTIPLEX                                             } from '
 include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
+include { MGIKIT_FIND_READ_PAIRS                                        } from '../subworkflows/local/mgikit_find_read_pairs/main'
 include { MGIKIT_BATCHER                                                } from '../subworkflows/local/mgikit_batcher/main'
 include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
@@ -109,30 +110,54 @@ workflow DEMULTIPLEX {
 
     // Convenience
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
-
+    
+    // If mgikit is used, do:
     // Test, if the mgikit binary is downloaded and correctly linked
     if (params.demultiplexer == 'mgikit') {
         assert params.mgikit_bin : "Set --mgikit_bin when --demultiplexer mgikit"
         assert file(params.mgikit_bin).exists() : "--mgikit_bin '${params.mgikit_bin}' not found"
         
+    // Attach the readpairs per flowcell lane to the samplesheet using a finding readpairs process
+       // Build a unique channel
+       ch_flowcell_lane = ch_samplesheet
+         .map { meta, csv, flowcell_path, opt -> tuple(flowcell_path, meta.lane as int) }
+         .unique()
+       // Invoke the finding readpairs process
+       ch_finding_readpairs_out = FIND_READ_PAIRS(ch_flowcell_lane)
+       // Join the samplesheet with the readpairs using a key
+       def key = { flowcell_path, lane -> "${flowcell_path.toString()}|${lane as int}" }
+       ch_samplesheet_keyed = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, opt ->
+         tuple( key(flowcell_path, meta.lane), [meta, samplesheet_path, flowcell_path, opt] )
+       }
+       ch_reads_keyed = FIND_READ_PAIRS.out.map { flowcell_path, lane, r1, r2 ->
+         tuple( key(flowcell_path, lane), [r1, r2] )
+       }
+       ch_samplesheet_with_reads = ch_samplesheet_keyed
+         .join(ch_reads_keyed)
+         .map { k, left, right ->
+           def (meta, samplesheet_path, flowcell_path, opt) = left
+           def (r1, r2)                                     = right
+           [ meta, samplesheet_path, flowcell_path, r1, r2, opt ]
+       }
+        
     // Build channels for mgikit batching:
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
-        ch_samplesheet_validated = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, optional ->
+        ch_samplesheet_validated = ch_samplesheet_with_reads.map { meta, samplesheet_path, flowcell_path, r1, r2, optional ->
             def headerLine = samplesheet_path.text.readLines().first()
             def columns = headerLine.tokenize(/\t|,/)
             if (columns.size() < 2 || columns[0].trim() != 'sample_id') {
                 throw new IllegalArgumentException("Invalid samplesheet ${samplesheet_path.name}: must start with 'sample_id' and have at least 2 columns.")
             }
         // Return the full tuple again
-        return [meta, samplesheet_path, flowcell_path, optional]
+        return [meta, samplesheet_path, flowcell_path, r1, r2, optional]
         }
         
+        // Build channel for samplesheet batches using a batching process
         ch_mgikit_batcher_out = MGIKIT_BATCHER(ch_samplesheet_validated)
         
-        // Build channel for samplesheet batches using a batching process
-        ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { meta, batch_list, flowcell_path, optional ->
+        ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { meta, batch_list, flowcell_path, r1, r2, optional ->
           batch_list.collect { batch_file ->
-            [meta, batch_file, flowcell_path, optional]
+            [meta, batch_file, flowcell_path, r1, r2, optional]
           }
         }
     

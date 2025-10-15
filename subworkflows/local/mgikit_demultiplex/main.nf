@@ -27,8 +27,8 @@ process MGIKIT_DEMULTIPLEX {
     }
   )
   
-  input:                                                              // [ meta, batch_file, flowcell_path, optional ]  
-    tuple val(meta), path(batch_file), path(flowcell_path)            // meta = [id:'SERIAL_NUMBER_FC', lane:1] 
+  input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2, optional ]  
+    tuple val(meta), path(batch_file), path(flowcell_path), path(r1), path(r2)  // meta = [id:'SERIAL_NUMBER_FC', lane:1] 
 
   output:
     path("demx_mgikit/*"),  emit: demx_mgikit_all
@@ -41,8 +41,8 @@ process MGIKIT_DEMULTIPLEX {
   mkdir -p demx_mgikit
   "${params.mgikit_bin}" demultiplex \
     --sample-sheet "${batch_file}" \
-    --read1 "${flowcell_path}/**/*${meta.lane}_read_1.fq.gz" \
-    --read2 "${flowcell_path}/**/*${meta.lane}_read_2.fq.gz" \
+    --read1 "${r1}" \
+    --read2 "${r2}" \
     --output demx_mgikit/ \
     -m ${params.mgikit_mismatches} \
     --memory ${params.mgikit_memory_cli} \

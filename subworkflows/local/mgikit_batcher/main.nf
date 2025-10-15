@@ -7,10 +7,10 @@ process MGIKIT_BATCHER {
   }
 
   input:
-    tuple val(meta), path(samplesheet_path), path(flowcell_path), val(optional)
+    tuple val(meta), path(samplesheet_path), path(flowcell_path), path(r1), path(r2), val(optional)
 
   output:
-    tuple val(meta), path("batch_*.csv"), path(flowcell_path), val(optional)
+    tuple val(meta), path("batch_*.csv"), path(flowcell_path), path(r1), path(r2), val(optional)
 
   // params.mgikit_batch_size default if unset
   script:
