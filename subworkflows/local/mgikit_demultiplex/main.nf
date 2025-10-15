@@ -28,9 +28,7 @@ process MGIKIT_DEMULTIPLEX {
   )
   
   input:                                                              // [ meta, batch_file, flowcell_path, optional ]  
-    tuple val(meta), path(batch_file), path(flowcell_path)            // meta = [id:'SERIAL_NUMBER_FC', lane:1]
-               
-    
+    tuple val(meta), path(batch_file), path(flowcell_path)            // meta = [id:'SERIAL_NUMBER_FC', lane:1] 
 
   output:
     path("demx_mgikit/*"),  emit: demx_mgikit_all
@@ -39,6 +37,7 @@ process MGIKIT_DEMULTIPLEX {
 
   script:
   """
+  set -euo pipefail
   mkdir -p demx_mgikit
   "${params.mgikit_bin}" demultiplex \
     --sample-sheet "${batch_file}" \
