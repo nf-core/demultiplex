@@ -123,7 +123,7 @@ workflow DEMULTIPLEX {
          .map { meta, csv, flowcell_path, opt -> tuple(flowcell_path, meta.lane as int) }
          .unique()
        // Invoke the finding readpairs process
-       ch_finding_readpairs_out = FIND_READ_PAIRS(ch_flowcell_lane)
+       ch_finding_readpairs_out = MGIKIT_FIND_READ_PAIRS(ch_flowcell_lane)
        // Join the samplesheet with the readpairs using a key
        def key = { flowcell_path, lane -> "${flowcell_path.toString()}|${lane as int}" }
        ch_samplesheet_keyed = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, opt ->

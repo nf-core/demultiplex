@@ -1,4 +1,4 @@
-process FIND_READ_PAIRS {
+process MGIKIT_FIND_READ_PAIRS {
   tag { 
     def fc   = (flowcell_path instanceof Path) ? flowcell_path.name : (flowcell_path as String).tokenize('/').last()
     def lane = (meta?.lane != null ? meta.lane : 'not_detected')
