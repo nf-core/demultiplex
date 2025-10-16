@@ -120,12 +120,12 @@ workflow DEMULTIPLEX {
     // Attach the readpairs per flowcell lane to the samplesheet using a finding readpairs process
        // Build a unique channel
        ch_flowcell_lane = ch_samplesheet
-         .map { meta, csv, flowcell_path, opt -> 
+         .map { meta, csv, flowcell_path, opt ->
            def laneInt = (meta.lane instanceof Number) ? (meta.lane as int)
                           : (meta.lane?.toString()?.isInteger() ? meta.lane.toInteger()
                           : null)
            assert laneInt != null : "meta.lane is missing or not an integer for id=${meta.id}"
-           tuple(flowcell_path, laneInt)
+           tuple(flowcell_path.toString(), laneInt)
          }
          .unique()
        // Invoke the finding readpairs process
