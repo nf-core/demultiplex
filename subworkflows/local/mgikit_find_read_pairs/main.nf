@@ -16,7 +16,7 @@ process MGIKIT_FIND_READ_PAIRS {
   """
   set -euo pipefail
   
-  // define the padded lane variable
+  # define the padded lane variable
   LANE_PAD=\$(printf 'L%02d' "${laneInt}")
 
   # Adjust name patterns to your files. This matches ...<lane>_read_1.fq.gz and mates to _read_2.fq.gz
