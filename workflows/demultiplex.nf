@@ -128,6 +128,7 @@ workflow DEMULTIPLEX {
            tuple(flowcell_path.toString(), laneInt)
          }
          .unique()
+         .view()
        // Invoke the finding readpairs process
        ch_finding_readpairs_out = MGIKIT_FIND_READ_PAIRS(ch_flowcell_lane)
        // Join the samplesheet with the readpairs using a key
