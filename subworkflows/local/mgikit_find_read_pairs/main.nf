@@ -11,15 +11,15 @@ process MGIKIT_FIND_READ_PAIRS {
   output:
     tuple path(flowcell_path), val(lane), path(r1), path(r2)
 
+  // define the padded lane variable in groovy for the script
+  def lane_pad = String.format('L%02d', lane as int)
+  
   script:
   """
   set -euo pipefail
-  
-  # Build lane strings used in filenames
-  LANE_PAD=\$(printf "L%02d" "\${lane}") 
 
   # Adjust name patterns to your files. This matches ...<lane>_read_1.fq.gz and mates to _read_2.fq.gz
-  mapfile -d '' -t R1 < <(find "${flowcell_path}" -type f -name "*${LANE_PAD}_read_1.fq.gz" -print0)
+  mapfile -d '' -t R1 < <(find "${flowcell_path}" -type f -name "*${lane_pad}_read_1.fq.gz" -print0)
 
   if [[ \${#R1[@]} -eq 0 ]]; then
     echo "No R1 for lane ${lane} under ${flowcell_path}" >&2
