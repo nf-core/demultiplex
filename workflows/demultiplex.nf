@@ -120,17 +120,31 @@ workflow DEMULTIPLEX {
     // Attach the readpairs per flowcell lane to the samplesheet using a finding readpairs process
        // Build a unique channel
        ch_flowcell_lane = ch_samplesheet
-         .map { meta, csv, flowcell_path, opt -> tuple(flowcell_path, meta.lane as int) }
+         .map { meta, csv, flowcell_path, opt -> 
+           def laneInt = (meta.lane instanceof Number) ? (meta.lane as int)
+                          : (meta.lane?.toString()?.isInteger() ? meta.lane.toInteger()
+                          : null)
+           assert laneInt != null : "meta.lane is missing or not an integer for id=${meta.id}"
+           tuple(flowcell_path, laneInt)
+         }
          .unique()
        // Invoke the finding readpairs process
        ch_finding_readpairs_out = MGIKIT_FIND_READ_PAIRS(ch_flowcell_lane)
        // Join the samplesheet with the readpairs using a key
-       def key = { flowcell_path, lane -> "${flowcell_path.toString()}|${lane as int}" }
+       def key = { flowcell_path, laneVal -> "${flowcell_path.toString()}|${(laneVal as int)}" }
        ch_samplesheet_keyed = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, opt ->
-         tuple( key(flowcell_path, meta.lane), [meta, samplesheet_path, flowcell_path, opt] )
+         def laneInt = (meta.lane as int)
+         tuple( key(flowcell_path, laneInt), [meta, samplesheet_path, flowcell_path, opt] )
        }
-       ch_reads_keyed = MGIKIT_FIND_READ_PAIRS.out.map { flowcell_path, lane, r1, r2 ->
-         tuple( key(flowcell_path, lane), [r1, r2] )
+       ch_reads_keyed = ch_finding_readpairs_out.flatMap { fc, lane, tsv ->
+         def laneInt = (lane as int)
+         tsv.text.readLines()
+           .findAll { it.trim() }
+           .collect { line ->
+             def parts = line.split('\t', 2)
+             def r1 = file(parts[0]); def r2 = file(parts[1])
+             tuple( key(fc, laneInt), [r1, r2] )
+           }
        }
        ch_samplesheet_with_reads = ch_samplesheet_keyed
          .join(ch_reads_keyed)
