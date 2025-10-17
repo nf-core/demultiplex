@@ -9,35 +9,39 @@ process MGIKIT_FIND_READ_PAIRS {
 
   // One manifest per task
   output:
-    tuple path(flowcell_path), val(laneInt), path("pairs.tsv")
+    tuple path(flowcell_path), val(laneInt), path("read_pairs.tsv")
   
-  script:
+   script:
   """
   set -euo pipefail
 
-  # Adjust name patterns to your files. This matches ...<lane>_read_1.fq.gz and mates to _read_2.fq.gz
-  mapfile -d '' -t R1 < <(
-    find "!{flowcell_path}" -type f -name "*!{laneInt}_read_1.fq.gz" -print0)
+  python - <<'PY' "!{flowcell_path}" "!{laneInt}"
+import sys, os, re, pathlib
 
-  if [[ ${'$'}{#R1[@]} -eq 0 ]]; then
-    echo "No R1 for lane !{laneInt} under !{flowcell_path}" >&2
-    exit 2
-  fi
+flowcell = pathlib.Path(sys.argv[1])
+lane    = sys.argv[2]
 
-  : > pairs.tsv
-  for r1 in "${'$'}{R1[@]}"; do
-    r2="${'$'}{r1/_read_1.fq.gz/_read_2.fq.gz}"
-    if [[ -f "${'$'}r2" ]]; then
-      # write absolute paths; easier to consume upstream
-      printf "%s\\t%s\\n" "${'$'}r1" "${'$'}r2" >> pairs.tsv
-    else
-      echo "Missing mate for: ${'$'}r1" >&2
-    fi
-  done
+# If your filenames use L01/L02... build a padded lane token:
+lane_token = f"L{int(lane):02d}"
 
-  if [[ ! -s pairs.tsv ]]; then
-    echo "No complete R1/R2 pairs for lane !{laneInt} under !{flowcell_path}" >&2
-    exit 2
-  fi
+# Collect all candidate R1 files that contain the lane token and _read_1
+r1_files = []
+for p in flowcell.rglob("*.fq.gz"):
+    name = p.name
+    if lane_token in name and "_read_1" in name:
+        r1_files.append(p.resolve())
+
+# Pair each R1 with its R2 mate by replacing the token; keep only existing pairs
+pairs = []
+for r1 in sorted(r1_files):
+    r2 = pathlib.Path(str(r1).replace("_read_1.fq.gz", "_read_2.fq.gz"))
+    if r2.exists():
+        pairs.append((str(r1), str(r2)))
+
+with open("read_pairs.tsv", "w") as fh:
+    for r1, r2 in pairs:
+        fh.write(f"{r1}\\t{r2}\\n")
+PY
+            
   """
 }

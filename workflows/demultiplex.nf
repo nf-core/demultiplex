@@ -137,6 +137,7 @@ workflow DEMULTIPLEX {
          def laneInt = (meta.lane as int)
          tuple( key(flowcell_path, laneInt), [meta, samplesheet_path, flowcell_path, opt] )
        }
+       .view()
        ch_reads_keyed = ch_finding_readpairs_out.flatMap { fc, lane, tsv ->
          def laneInt = (lane as int)
          tsv.text.readLines()
