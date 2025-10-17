@@ -27,7 +27,7 @@ process MGIKIT_DEMULTIPLEX {
     }
   )
   
-  input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2, optional ]  
+  input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2 ]  
     tuple val(meta), path(batch_file), path(flowcell_path), path(r1), path(r2)  // meta = [id:'SERIAL_NUMBER_FC', lane:1] 
 
   output:

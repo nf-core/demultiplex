@@ -14,7 +14,6 @@ include { BASES_DEMULTIPLEX                                             } from '
 include { FQTK_DEMULTIPLEX                                              } from '../subworkflows/local/fqtk_demultiplex/main'
 include { MKFASTQ_DEMULTIPLEX                                           } from '../subworkflows/local/mkfastq_demultiplex/main'
 include { SINGULAR_DEMULTIPLEX                                          } from '../subworkflows/local/singular_demultiplex/main'
-include { MGIKIT_FIND_READ_PAIRS                                        } from '../subworkflows/local/mgikit_find_read_pairs/main'
 include { MGIKIT_BATCHER                                                } from '../subworkflows/local/mgikit_batcher/main'
 include { MGIKIT_DEMULTIPLEX                                            } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                                } from '../subworkflows/local/rundir_checkqc/main'
@@ -116,66 +115,50 @@ workflow DEMULTIPLEX {
     if (params.demultiplexer == 'mgikit') {
         assert params.mgikit_bin : "Set --mgikit_bin when --demultiplexer mgikit"
         assert file(params.mgikit_bin).exists() : "--mgikit_bin '${params.mgikit_bin}' not found"
-        
-    // Attach the readpairs per flowcell lane to the samplesheet using a finding readpairs process
-       // Build a unique channel
-       ch_flowcell_lane = ch_samplesheet
-         .map { meta, csv, flowcell_path, opt ->
-           def laneInt = (meta.lane instanceof Number) ? (meta.lane as int)
-                          : (meta.lane?.toString()?.isInteger() ? meta.lane.toInteger()
-                          : null)
-           assert laneInt != null : "meta.lane is missing or not an integer for id=${meta.id}"
-           tuple(flowcell_path.toString(), laneInt)
-         }
-         .unique()
-         .view()
-       // Invoke the finding readpairs process
-       ch_finding_readpairs_out = MGIKIT_FIND_READ_PAIRS(ch_flowcell_lane)
-       // Join the samplesheet with the readpairs using a key
-       def key = { flowcell_path, laneVal -> "${flowcell_path.toString()}|${(laneVal as int)}" }
-       ch_samplesheet_keyed = ch_samplesheet.map { meta, samplesheet_path, flowcell_path, opt ->
-         def laneInt = (meta.lane as int)
-         tuple( key(flowcell_path, laneInt), [meta, samplesheet_path, flowcell_path, opt] )
-       }
-       .view()
-       ch_reads_keyed = ch_finding_readpairs_out.flatMap { fc, lane, tsv ->
-         def laneInt = (lane as int)
-         tsv.text.readLines()
-           .findAll { it.trim() }
-           .collect { line ->
-             def parts = line.split('\t', 2)
-             def r1 = file(parts[0]); def r2 = file(parts[1])
-             tuple( key(fc, laneInt), [r1, r2] )
-           }
-       }
-       ch_samplesheet_with_reads = ch_samplesheet_keyed
-         .join(ch_reads_keyed)
-         .map { k, left, right ->
-           def (meta, samplesheet_path, flowcell_path, opt) = left
-           def (r1, r2)                                     = right
-           [ meta, samplesheet_path, flowcell_path, r1, r2, opt ]
-       }
+    
+    // Attach the readpairs per flowcell lane to the samplesheet
+        ch_samplesheet_with_reads = ch_samplesheet.map { item ->
+            def meta     = item[0]
+            def csv      = item[1]
+            def tar      = item[2]
+            def idStr   = meta.id?.toString()
+            def laneVal = meta.lane
+            def lanePad = (laneVal != null) ? String.format('L%02d', (laneVal as int)) : null
+
+            def r1_path = (lanePad != null) ? "${tar.toString()}/${lanePad}/${idStr}_${lanePad}_read_1.fq.gz"
+                                            : "${tar.toString()}/${idStr}_read_1.fq.gz"
+
+            def r2_path = (lanePad != null) ? "${tar.toString()}/${lanePad}/${idStr}_${lanePad}_read_2.fq.gz"
+                                            : "${tar.toString()}/${idStr}_read_2.fq.gz"
+            
+            [ meta, csv, tar, r1_path, r2_path ]
+        }
+        ch_samplesheet_with_reads.view()
         
     // Build channels for mgikit batching:
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
-        ch_samplesheet_validated = ch_samplesheet_with_reads.map { meta, samplesheet_path, flowcell_path, r1, r2, optional ->
+        ch_samplesheet_validated = ch_samplesheet_with_reads.map { meta, samplesheet_path, flowcell_path, r1_path, r2_path ->
             def headerLine = samplesheet_path.text.readLines().first()
             def columns = headerLine.tokenize(/\t|,/)
             if (columns.size() < 2 || columns[0].trim() != 'sample_id') {
                 throw new IllegalArgumentException("Invalid samplesheet ${samplesheet_path.name}: must start with 'sample_id' and have at least 2 columns.")
             }
         // Return the full tuple again
-        return [meta, samplesheet_path, flowcell_path, r1, r2, optional]
+        return [meta, samplesheet_path, flowcell_path, r1_path, r2_path]
         }
         
         // Build channel for samplesheet batches using a batching process
         ch_mgikit_batcher_out = MGIKIT_BATCHER(ch_samplesheet_validated)
         
-        ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { meta, batch_list, flowcell_path, r1, r2, optional ->
-          batch_list.collect { batch_file ->
-            [meta, batch_file, flowcell_path, r1, r2, optional]
-          }
+        ch_samplesheet_batches = MGIKIT_BATCHER.out.flatMap { item ->
+            def meta = item[0]
+            def csvs = item[1] as List
+            def tar  = item[2]
+            def r1   = item[3]
+            def r2   = item[4]
+            csvs.collect { c -> tuple(meta, c, tar, r1, r2) }
         }
+        ch_samplesheet_batches.view()
     
     } else {
         // Passthrough when not mgikit
