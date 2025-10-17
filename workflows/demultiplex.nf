@@ -158,7 +158,6 @@ workflow DEMULTIPLEX {
             def r2   = item[4]
             csvs.collect { c -> tuple(meta, c, tar, r1, r2) }
         }
-        ch_samplesheet_batches.view()
     
     } else {
         // Passthrough when not mgikit

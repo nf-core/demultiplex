@@ -13,41 +13,35 @@ process MGIKIT_DEMULTIPLEX {
     s.isInteger() ? "${s}GB" : s
   }
   
-  publishDir(
-    "${params.outdir}/demx_mgikit",
-    mode: 'copy',
-    saveAs: { name ->
-      // keep only *_R1_001.fastq.gz or *_R2_001.fastq.gz
-      if (!(name ==~ /.*_R[12]_001\.fastq\.gz$/)) return null
-      // drop ambiguous/undetermined
-      if (name.startsWith('Ambiguous_') || name.startsWith('Undetermined_')) return null
-      // drop mgikit side files like <id>.L01.mgikit.*
-      if (name ==~ /^[A-Za-z0-9.-]+\.L\d+\.mgikit\..*$/) return null
+  maxRetries 0
+  
+  publishDir "${params.outdir}/mgikit_demx_fastq", mode: 'copy',
+    pattern: '**/*.fastq.gz',
+    saveAs: { file ->
+      def name = file.name
+      if (name.startsWith('Ambiguous') || name.startsWith('Undetermined')) return null
       return name
     }
-  )
   
   input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2 ]  
     tuple val(meta), path(batch_file), path(flowcell_path), path(r1), path(r2)  // meta = [id:'SERIAL_NUMBER_FC', lane:1] 
 
   output:
-    path("demx_mgikit/*"),  emit: demx_mgikit_all
-    val(meta),              emit: demx_mgikit_meta
-    path(batch_file),       emit: demx_mgikit_batch_sheet
-
+    path("**/*.fastq.gz"),  emit: demx_fastq
+  
   script:
   """
   set -euo pipefail
-  mkdir -p demx_mgikit
-  "${params.mgikit_bin}" demultiplex \
-    --sample-sheet "${batch_file}" \
-    --read1 "${r1}" \
-    --read2 "${r2}" \
-    --output demx_mgikit/ \
+  ${params.mgikit_bin} demultiplex \
+    --sample-sheet ${batch_file} \
+    --read1 ${r1} \
+    --read2 ${r2} \
+    --output demx_${meta.id}_lane_${meta.lane}_${batch_file.baseName}_${task.hash}_attempt${task.attempt} \
     -m ${params.mgikit_mismatches} \
     --memory ${params.mgikit_memory_cli} \
-    --template "${params.mgikit_template}" \
-    -t ${task.cpus}
+    --template ${params.mgikit_template} \
+    -t ${task.cpus} \
+    --disable-illumina
   """
 }
 
