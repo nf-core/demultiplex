@@ -21,7 +21,7 @@ process MGIKIT_BATCHER {
   # split the body (excluding header) into chunks of batch_size lines
   tail -n +2 "${samplesheet_path}" | split -l ${params.mgikit_batch_size} - "body_"
 
-  i=0
+  i=1
   for f in body_*; do
     out="batch_\$(printf '%03d' "\$i").csv"
     # restore header for each batch

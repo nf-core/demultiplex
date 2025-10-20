@@ -9,18 +9,26 @@ process MGIKIT_DEMULTIPLEX {
   cpus { params.mgikit_cpus as int }
 
   memory {
-    def s = params.mgikit_memory_cli.toString()
-    s.isInteger() ? "${s}GB" : s
+    def base = (params.mgikit_memory_cli as int)
+    def factor = (task.attempt > 1) ? (2 ** (task.attempt - 1)) : 1
+    (base * factor).GB
   }
   
-  maxRetries 0
+  errorStrategy {
+    if (task.exitStatus in 137..140) {
+      sleep(Math.pow(2, task.attempt) * 200 as long);
+      return 'retry';
+    } else {
+      return 'terminate';
+    }
+  }
+  maxRetries 3
   
-  publishDir "${params.outdir}/mgikit_demx_fastq", mode: 'copy',
-    pattern: '**/*.fastq.gz',
+  publishDir "${params.outdir}/mgikit/${meta.id}/L${meta.lane.toString().padLeft(2,'0')}/${batch_file.baseName}", mode: 'move',
     saveAs: { file ->
       def name = file.name
-      if (name.startsWith('Ambiguous') || name.startsWith('Undetermined')) return null
-      return name
+      if (!(name.startsWith('Ambiguous') || name.startsWith('Undetermined')) && name.endsWith('fastq.gz')) return name
+      return null
     }
   
   input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2 ]  
@@ -32,13 +40,13 @@ process MGIKIT_DEMULTIPLEX {
   script:
   """
   set -euo pipefail
-  ${params.mgikit_bin} demultiplex \
-    --sample-sheet ${batch_file} \
-    --read1 ${r1} \
-    --read2 ${r2} \
-    --output demx_${meta.id}_lane_${meta.lane}_${batch_file.baseName}_${task.hash}_attempt${task.attempt} \
+  "${params.mgikit_bin}" demultiplex \
+    --sample-sheet "${batch_file}" \
+    --read1 "${r1}" \
+    --read2 "${r2}" \
+    --output "demx_${meta.id}_L${meta.lane.toString().padLeft(2,'0')}_${batch_file.baseName}_${task.hash}_attempt${task.attempt}" \
     -m ${params.mgikit_mismatches} \
-    --memory ${params.mgikit_memory_cli} \
+    --memory ${task.memory.giga} \
     --template ${params.mgikit_template} \
     -t ${task.cpus} \
     --disable-illumina
