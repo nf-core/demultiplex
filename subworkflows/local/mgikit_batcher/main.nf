@@ -5,6 +5,13 @@ process MGIKIT_BATCHER {
     def file = (samplesheet_path instanceof Path) ? samplesheet_path.name : (samplesheet_path as String).tokenize('/').last()
     "batch_tag:flowcell=${fc}:lane=${lane}:samplesheet=${file}"
   }
+  
+  publishDir "${params.outdir}/mgikit/samplesheet_batches/${meta.id}/L${meta.lane.toString().padLeft(2,'0')}", mode: 'copy',
+    saveAs: { fn ->
+    def name = (fn instanceof java.nio.file.Path) ? fn.fileName.toString()
+                                                  : fn.toString().split('/').last()
+    (name.startsWith('batch_') && name.endsWith('.csv')) ? name : null
+    }
 
   input:
     tuple val(meta), path(samplesheet_path), path(flowcell_path), path(r1_path), path(r2_path)

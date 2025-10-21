@@ -24,11 +24,11 @@ process MGIKIT_DEMULTIPLEX {
   }
   maxRetries 3
   
-  publishDir "${params.outdir}/mgikit/${meta.id}/L${meta.lane.toString().padLeft(2,'0')}/${batch_file.baseName}", mode: 'move',
-    saveAs: { file ->
-      def name = file.name
-      if (!(name.startsWith('Ambiguous') || name.startsWith('Undetermined')) && name.endsWith('fastq.gz')) return name
-      return null
+  publishDir "${params.outdir}/mgikit/demx_fastq/${meta.id}/L${meta.lane.toString().padLeft(2,'0')}", mode: 'move',
+    saveAs: { fn ->
+    def name = (fn instanceof java.nio.file.Path) ? fn.fileName.toString()
+                                                  : fn.toString().split('/').last()
+      (!(name.startsWith('Ambiguous') || name.startsWith('Undetermined')) && name.endsWith('fastq.gz')) ? name : null
     }
   
   input:                                                                        // [ meta, batch_file, flowcell_path, r1, r2 ]  
