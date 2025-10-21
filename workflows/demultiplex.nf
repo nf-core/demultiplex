@@ -133,7 +133,6 @@ workflow DEMULTIPLEX {
             
             [ meta, csv, tar, r1_path, r2_path ]
         }
-        ch_samplesheet_with_reads.view()
         
     // Build channels for mgikit batching:
         // Validate that each samplesheet has a header, at least two columns, and that the first column is 'sample_id'
@@ -158,8 +157,6 @@ workflow DEMULTIPLEX {
             def r2   = item[4]
             csvs.collect { c -> tuple(meta, c, tar, r1, r2) }
         }
-        
-        ch_samplesheet_batches.view()
     
     } else {
         // Passthrough when not mgikit
