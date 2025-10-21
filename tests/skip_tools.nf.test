@@ -23,23 +23,21 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
-                ).match() },
-                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/atacseq_samplesheet.csv")).match("atacseq_samplesheet") },
-                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/rnaseq_samplesheet.csv")).match("rnaseq_samplesheet") },
-                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/taxprofiler_samplesheet.csv")).match("taxprofiler_samplesheet") },
-                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/sarek_samplesheet.csv")).match("sarek_samplesheet") },
-                { assert snapshot(UTILS.validateFastqPaths("$outputDir/samplesheet/methylseq_samplesheet.csv")).match("methylseq_samplesheet") }
+                    stable_path,
+                    samplesheet.collect{ file -> [ file.getName(), UTILS.validateFastqPaths(file) ] }
+                ).match() }
             )
         }
     }
@@ -60,13 +58,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -92,13 +92,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -124,13 +126,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
@@ -156,13 +160,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml"),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents

@@ -1,5 +1,4 @@
 process FASTQ_TO_SAMPLESHEET {
-    tag "$meta.id"
 
     executor 'local'
     memory 100.MB

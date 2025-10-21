@@ -79,7 +79,8 @@ workflow PIPELINE_INITIALISATION {
                 if ( !file(per_flowcell_manifest).exists() ){
                     error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}"
                 }
-                [ meta, samplesheet, flowcell, per_flowcell_manifest ]
+                [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
+                // cf https://github.com/nextflow-io/nf-schema/issues/163
             }
 
         ch_flowcell_manifest = ch_samplesheet.map{ meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
@@ -91,8 +92,11 @@ workflow PIPELINE_INITIALISATION {
             }
 
     } else {
-        ch_samplesheet = Channel
-            .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+            .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+                [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
+                // cf https://github.com/nextflow-io/nf-schema/issues/163
+            }
     }
 
     emit:
@@ -249,4 +253,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-

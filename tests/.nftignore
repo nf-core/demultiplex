@@ -5,11 +5,14 @@
 **/Stats/ConversionStats.xml
 **/Stats/DemuxSummaryF1L1.txt
 **/Stats/Stats.json
+.DS_Store
 cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastp.fastq.gz
 fastq/*.samplesheet.csv
+multiqc/multiqc_data/BETA-multiqc.parquet
 multiqc/multiqc_data/bcl2fastq_undetermined.txt
 multiqc/multiqc_data/fastqc*status-check-heatmap.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
+multiqc/multiqc_data/llms-full.txt
 multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_bcl2fastq_bylane.txt
 multiqc/multiqc_data/multiqc_data.json
@@ -29,7 +32,7 @@ sim-data/*.fastp.fastq.gz.md5
 sim-data/*.fastp.fastq.gz_fastqc_data.txt
 sim-data/*.fastp.fastq.gz_fastqc_report.html
 sim-data/*.fastp.fastq.gz_summary.txt
-sim-data/{Undetermined,s}*L001*.fastq.gz
-sim-data/RunStats.json
 sim-data/DefaultSample_stats.json
+sim-data/RunStats.json
 sim-data/most_frequent_unmatched.tsv
+sim-data/{Undetermined,s}*L001*.fastq.gz

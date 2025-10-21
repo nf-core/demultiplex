@@ -1,9 +1,4 @@
-lint:
-  actions_ci: false
-  files_unchanged:
-    - .github/ISSUE_TEMPLATE/bug_report.yml
-    - .github/workflows/linting.yml
-nf_core_version: 3.2.0
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: Chelsea Sawyer, Edmund Miller, Matthias De Smet
@@ -15,5 +10,4 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 1.6.1dev
-update:
+  version: 1.6.2dev

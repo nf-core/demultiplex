@@ -4,21 +4,19 @@
             12,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.3.6"
+                    "bclconvert": "4.3.13"
                 },
                 "FASTP": {
-                    "fastp": "0.23.4"
+                    "fastp": "0.24.0"
                 },
                 "MD5SUM": {
-                    "md5sum": 8.3
-                },
-                "Workflow": {
-                    "nf-core/demultiplex": "v1.6.1"
+                    "md5sum": 9.5
                 }
             },
             [
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert-sample-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert_lane_counts.txt",
@@ -31,6 +29,7 @@
                 "multiqc/multiqc_data/fastp-seq-quality-plot_Read_1_After_filtering.txt",
                 "multiqc/multiqc_data/fastp-seq-quality-plot_Read_1_Before_filtering.txt",
                 "multiqc/multiqc_data/fastp_filtered_reads_plot.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bclconvert_bylane.txt",
                 "multiqc/multiqc_data/multiqc_bclconvert_bysample.txt",
@@ -58,7 +57,6 @@
                 "multiqc/multiqc_plots/pdf/fastp-seq-quality-plot_Read_1_Before_filtering.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/bclconvert-lane-stats-table.png",
                 "multiqc/multiqc_plots/png/bclconvert-sample-stats-table.png",
@@ -76,7 +74,6 @@
                 "multiqc/multiqc_plots/png/fastp-seq-quality-plot_Read_1_Before_filtering.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-pct.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/bclconvert-lane-stats-table.svg",
                 "multiqc/multiqc_plots/svg/bclconvert-sample-stats-table.svg",
@@ -94,7 +91,6 @@
                 "multiqc/multiqc_plots/svg/fastp-seq-quality-plot_Read_1_Before_filtering.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
@@ -167,19 +163,19 @@
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
-                "bclconvert-sample-stats-table.txt:md5,edc9ffebc71b12bee1f95fa864767b0d",
-                "bclconvert_lane_counts.txt:md5,1ab7c9a89648900cea7911b77a7d4742",
+                "bclconvert-sample-stats-table.txt:md5,d852583a8dc32985149f4ce79fcc48e9",
+                "bclconvert_lane_counts.txt:md5,72f3992e96934b3774c682dde9a087b0",
                 "bclconvert_sample_counts_Counts_per_lane.txt:md5,a7e57ab911ba2cf74ec7bd93b921036d",
-                "bclconvert_sample_counts_Index_mismatches.txt:md5,539deb320577d6ca99b51027d0b47ac3",
+                "bclconvert_sample_counts_Index_mismatches.txt:md5,42e7e13db1325f733025ce775cd8cf1b",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,8105d4ce1d752e1f8a26e4291e8d9c6c",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,0ac68e41c4de8ca35a1cd6ee7c6cb3f3",
                 "fastp-seq-content-n-plot_Read_1_After_filtering.txt:md5,1ec69a9fd0d46a39dfb59e377733e98b",
                 "fastp-seq-content-n-plot_Read_1_Before_filtering.txt:md5,1ec69a9fd0d46a39dfb59e377733e98b",
                 "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,1701b40c23dca068210f5410788e3be1",
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,35de9aebdc467b1bbc9fd1f40d3aece4",
-                "fastp_filtered_reads_plot.txt:md5,dddf7b282a4d7ed45242c821a49e2de1",
+                "fastp_filtered_reads_plot.txt:md5,02825e43da90036b7ae65efe82671c6e",
                 "multiqc_bclconvert_bylane.txt:md5,142062290c4e4d4322369b593f37c02b",
-                "multiqc_bclconvert_bysample.txt:md5,3d43fc889b42c4ff43c187f8787db0f3",
+                "multiqc_bclconvert_bysample.txt:md5,6f73a577eb31b33cca5fe5b111bc72ed",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "test_adapter.lane1_no_adapters.csv:md5,80921be4aa85eb59b672efa1b098bdf1",
                 "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
@@ -202,8 +198,8 @@
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
-                "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-                "Sample1_S1_L001.fastp.json:md5,d9d2d702f3c64412a04cd0768863b1ab",
+                "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
+                "Sample1_S1_L001.fastp.json:md5,f32924123fc99081ca2d98377e316ae5",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test_no_adapter.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -227,40 +223,39 @@
                 "Top_Unknown_Barcodes.csv:md5,2e2faba761137f228e56bd3428453ccc",
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
-                "Sample1_S1_L001.fastp.fastq.gz.md5:md5,c3cd96f3a22fb6afbaa1df324814d54c",
-                "Sample1_S1_L001.fastp.json:md5,d9d2d702f3c64412a04cd0768863b1ab",
+                "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
+                "Sample1_S1_L001.fastp.json:md5,f32924123fc99081ca2d98377e316ae5",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-04-22T19:40:59.007579225"
+        "timestamp": "2025-07-15T20:14:48.835661485"
     },
     "User wants to trim with the demultiplexer": {
         "content": [
             10,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.3.6"
+                    "bclconvert": "4.3.13"
                 },
                 "MD5SUM": {
-                    "md5sum": 8.3
-                },
-                "Workflow": {
-                    "nf-core/demultiplex": "v1.6.1"
+                    "md5sum": 9.5
                 }
             },
             [
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert-sample-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert_lane_counts.txt",
                 "multiqc/multiqc_data/bclconvert_sample_counts_Counts_per_lane.txt",
                 "multiqc/multiqc_data/bclconvert_sample_counts_Index_mismatches.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bclconvert_bylane.txt",
                 "multiqc/multiqc_data/multiqc_bclconvert_bysample.txt",
@@ -362,12 +357,12 @@
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
-                "bclconvert-sample-stats-table.txt:md5,edc9ffebc71b12bee1f95fa864767b0d",
-                "bclconvert_lane_counts.txt:md5,1ab7c9a89648900cea7911b77a7d4742",
+                "bclconvert-sample-stats-table.txt:md5,d852583a8dc32985149f4ce79fcc48e9",
+                "bclconvert_lane_counts.txt:md5,72f3992e96934b3774c682dde9a087b0",
                 "bclconvert_sample_counts_Counts_per_lane.txt:md5,a7e57ab911ba2cf74ec7bd93b921036d",
-                "bclconvert_sample_counts_Index_mismatches.txt:md5,539deb320577d6ca99b51027d0b47ac3",
+                "bclconvert_sample_counts_Index_mismatches.txt:md5,42e7e13db1325f733025ce775cd8cf1b",
                 "multiqc_bclconvert_bylane.txt:md5,142062290c4e4d4322369b593f37c02b",
-                "multiqc_bclconvert_bysample.txt:md5,3d43fc889b42c4ff43c187f8787db0f3",
+                "multiqc_bclconvert_bysample.txt:md5,6f73a577eb31b33cca5fe5b111bc72ed",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "test_adapter.csv:md5,f254a7d2613a73a53c59a97a20cc05c7",
                 "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
@@ -419,32 +414,31 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-04-22T19:41:53.749961378"
+        "timestamp": "2025-07-15T20:15:43.811709856"
     },
     "User wants to skip trimming all together": {
         "content": [
             10,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.3.6"
+                    "bclconvert": "4.3.13"
                 },
                 "MD5SUM": {
-                    "md5sum": 8.3
-                },
-                "Workflow": {
-                    "nf-core/demultiplex": "v1.6.1"
+                    "md5sum": 9.5
                 }
             },
             [
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert-sample-stats-table.txt",
                 "multiqc/multiqc_data/bclconvert_lane_counts.txt",
                 "multiqc/multiqc_data/bclconvert_sample_counts_Counts_per_lane.txt",
                 "multiqc/multiqc_data/bclconvert_sample_counts_Index_mismatches.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bclconvert_bylane.txt",
                 "multiqc/multiqc_data/multiqc_bclconvert_bysample.txt",
@@ -546,12 +540,12 @@
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
-                "bclconvert-sample-stats-table.txt:md5,edc9ffebc71b12bee1f95fa864767b0d",
-                "bclconvert_lane_counts.txt:md5,1ab7c9a89648900cea7911b77a7d4742",
+                "bclconvert-sample-stats-table.txt:md5,d852583a8dc32985149f4ce79fcc48e9",
+                "bclconvert_lane_counts.txt:md5,72f3992e96934b3774c682dde9a087b0",
                 "bclconvert_sample_counts_Counts_per_lane.txt:md5,a7e57ab911ba2cf74ec7bd93b921036d",
-                "bclconvert_sample_counts_Index_mismatches.txt:md5,539deb320577d6ca99b51027d0b47ac3",
+                "bclconvert_sample_counts_Index_mismatches.txt:md5,42e7e13db1325f733025ce775cd8cf1b",
                 "multiqc_bclconvert_bylane.txt:md5,142062290c4e4d4322369b593f37c02b",
-                "multiqc_bclconvert_bysample.txt:md5,3d43fc889b42c4ff43c187f8787db0f3",
+                "multiqc_bclconvert_bysample.txt:md5,6f73a577eb31b33cca5fe5b111bc72ed",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "test_adapter.lane1_no_adapters.csv:md5,80921be4aa85eb59b672efa1b098bdf1",
                 "ControlMetricsOut.bin:md5,6d77b38d0793a6e1ce1e85706e488953",
@@ -603,8 +597,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-04-22T19:42:55.163401484"
+        "timestamp": "2025-07-15T20:16:49.636636174"
     }
 }
