@@ -17,7 +17,6 @@ workflow BCL_DEMULTIPLEX {
         ch_fastq         = Channel.empty()
         ch_reports       = Channel.empty()
         ch_stats         = Channel.empty()
-        ch_interop       = Channel.empty()
 
         // Split flowcells into separate channels containing run as tar and run as path
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -42,12 +41,17 @@ workflow BCL_DEMULTIPLEX {
         // Merge the two channels back together
         ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
 
+        // Extract InterOp files directly from the input channel
+        ch_interop = ch_flowcells.map { meta, samplesheet, run_dir ->
+            def interop_files = files("${run_dir}/{,**/}InterOp/*.bin")
+            [meta, interop_files]
+        }
+
         // MODULE: bclconvert
         // Demultiplex the bcl files
         if (demultiplexer == "bclconvert") {
             BCLCONVERT( ch_flowcells )
             ch_fastq    = ch_fastq.mix(BCLCONVERT.out.fastq)
-            ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
             ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
             ch_versions = ch_versions.mix(BCLCONVERT.out.versions)
         }
@@ -57,7 +61,6 @@ workflow BCL_DEMULTIPLEX {
         if (demultiplexer == "bcl2fastq") {
             BCL2FASTQ( ch_flowcells )
             ch_fastq    = ch_fastq.mix(BCL2FASTQ.out.fastq)
-            ch_interop  = ch_interop.mix(BCL2FASTQ.out.interop)
             ch_reports  = ch_reports.mix(BCL2FASTQ.out.reports)
             ch_stats    = ch_stats.mix(BCL2FASTQ.out.stats)
             ch_versions = ch_versions.mix(BCL2FASTQ.out.versions)
