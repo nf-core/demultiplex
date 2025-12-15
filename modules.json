@@ -67,7 +67,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "82a79183037a403ad1b6714e5dbcff25500efaf6",
+                        "git_sha": "9656d955b700a8707c4a67821ab056f8c1095675",
                         "installed_by": ["modules"]
                     },
                     "samshee": {
