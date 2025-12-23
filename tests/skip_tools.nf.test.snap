@@ -180,9 +180,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-12-15T14:30:59.20727503"
+        "timestamp": "2025-12-22T16:23:21.139052825"
     },
     "Skip Trimming": {
         "content": [
@@ -402,7 +402,7 @@
                     "falco": "1.2.1"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -474,7 +474,7 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,f32924123fc99081ca2d98377e316ae5",
+                "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
@@ -482,10 +482,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-07-15T20:09:56.763754506"
+        "timestamp": "2025-12-22T16:49:44.554764914"
     },
     "Skip Fastqc": {
         "content": [
@@ -498,7 +498,7 @@
                     "falco": "1.2.1"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.0.1"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -684,7 +684,7 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,f32924123fc99081ca2d98377e316ae5",
+                "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
@@ -715,9 +715,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-12-15T14:32:04.301190157"
+        "timestamp": "2025-12-22T16:47:52.653978424"
     },
     "Skip Fastp & Fastqc": {
         "content": [
