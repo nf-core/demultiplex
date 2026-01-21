@@ -102,7 +102,7 @@ workflow DEMULTIPLEX {
         ch_versions = ch_versions.mix(SAMSHEE.out.versions)
         ch_samplesheet = ch_samplesheet
             .join(SAMSHEE.out.samplesheet)
-            .map{ meta, samplesheet, flowcell, lane, samplesheet_formatted -> [ meta, samplesheet_formatted, flowcell, lane ] }
+            .map{ meta, samplesheet, flowcell, lane, samplesheet_formatted -> [ meta, samplesheet, flowcell, lane ] }
     }
 
     // Convenience
