@@ -3,15 +3,31 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.7.1dev
+## dev
+
+### `Added`
 
 ### `Changed`
 
 - [#363](https://github.com/nf-core/demultiplex/pull/363) Use samshee only for validating samplesheet, not for formatting the samplesheet that's used by the demultiplexers. 
+- [#354](https://github.com/nf-core/demultiplex/pull/354) Bump version and note mgikit addition in 1.7.0 Changelog
+- [#355](https://github.com/nf-core/demultiplex/pull/355) Template update for nf-core/tools v3.5.1
+- [#357](https://github.com/nf-core/demultiplex/pull/357) Update MultiQC to 1.33
+- [#359](https://github.com/nf-core/demultiplex/pull/359) Update FASTP module
 
-## v1.7.0
+### `Fixed`
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.31        | 1.33        |
+
+## 1.7.0
 
 ### `Added`
+
+- [#299](https://github.com/nf-core/demultiplex/pull/299) Added mgikit
 
 ### `Changed`
 
@@ -37,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastp       | 0.23.4           | 0.24.0           |
 | fqtk        | 0.2.1            | 0.3.1            |
 | kraken2     | 2.1.3            | 2.1.5            |
+| mgikit      |                  | 2.1.0            |
 | multiqc     | 1.29             | 1.31             |
 | md5sum      | 8.3              | 9.5              |
 
