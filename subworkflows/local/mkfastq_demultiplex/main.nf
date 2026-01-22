@@ -69,7 +69,7 @@ def readgroup_from_fastq(path) {
     def line
 
     path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(input)
         Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
         BufferedReader buffered = new BufferedReader(decoder)
         line = buffered.readLine()
@@ -80,11 +80,9 @@ def readgroup_from_fastq(path) {
     def rg = [:]
 
     // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:UMI <read>:N:0:<index sequence>"
-    sequencer_serial = fields[0]
-    run_nubmer       = fields[1]
-    fcid             = fields[2]
-    lane             = fields[3]
-    index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+    def fcid  = fields[2]
+    def lane  = fields[3]
+    def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
 
     rg.ID = [fcid,lane].join(".")
     rg.PU = [fcid, lane, index].findAll().join(".")

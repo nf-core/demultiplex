@@ -40,6 +40,7 @@ include { paramsSummaryMap                                         } from 'plugi
 include { paramsSummaryMultiqc                                     } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                                   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText                                   } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
+include { removeAdapters                                           } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +84,7 @@ workflow DEMULTIPLEX {
             .collectFile(storeDir: "${params.outdir}") { item ->
                 def suffix = item[0].lane ? ".lane${item[0].lane}" : ""
                 //need to produce one file per item in the channel else join fails
-                ["${item[0].id}${suffix}_no_adapters.csv", AdapterRemover.removeAdaptersFromSampleSheet(item[1])]
+                ["${item[0].id}${suffix}_no_adapters.csv", removeAdapters(item[1])]
             }
             .map { file ->
                 //build meta again from file name

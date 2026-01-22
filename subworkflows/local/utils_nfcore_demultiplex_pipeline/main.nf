@@ -280,3 +280,20 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
+
+def removeAdapters(samplesheet) {
+    def lines_out = ''
+    def removal_checker = false
+    samplesheet.readLines().each { line ->
+        if ( line =~ /Adapter(Read[12])?,[ACGT]+,?/ ) {
+            removal_checker = true
+        } else {
+            // keep original line otherwise
+            lines_out = lines_out + line + '\n'
+        }
+    }
+    if (!removal_checker) {
+        log.info "Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet"
+    }
+    return lines_out
+}
