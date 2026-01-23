@@ -28,10 +28,10 @@ workflow PIPELINE_INITIALISATION {
     take:
     version // boolean: Display version and exit
     validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs // boolean: Do not use coloured log outputs
+    _monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir //  string: The output directory where the results will be saved
-    input //  string: Path to input samplesheet
+    _input //  string: Path to input samplesheet
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
@@ -111,14 +111,6 @@ workflow PIPELINE_INITIALISATION {
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
             }
 
-        ch_flowcell_manifest = ch_samplesheet
-            .map { meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
-            .splitCsv(header: true, strip: true)
-            .map { row ->
-                if (!row.containsKey("fastq") || !row.containsKey("read_structure")) {
-                    error("[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'")
-                }
-            }
     }
     else {
         ch_samplesheet = Channel

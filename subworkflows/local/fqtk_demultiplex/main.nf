@@ -76,7 +76,7 @@ def readgroup_from_fastq(path) {
     def line
 
     path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(input)
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
         Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
         BufferedReader buffered = new BufferedReader(decoder)
         line = buffered.readLine()
