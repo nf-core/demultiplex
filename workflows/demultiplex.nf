@@ -41,6 +41,7 @@ include { paramsSummaryMultiqc                                     } from '../su
 include { softwareVersionsToYAML                                   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText                                   } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 include { removeAdapters                                           } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
+include { prettyFormat                                             } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +119,7 @@ workflow DEMULTIPLEX {
     }
 
     // Convenience
-    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs') { FormattingService.prettyFormat(it) }
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs') { prettyFormat(it) }
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -259,7 +260,7 @@ workflow DEMULTIPLEX {
     else {
         error("Unknown demultiplexer: ${demultiplexer}")
     }
-    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq") { FormattingService.prettyFormat(it) }
+    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq") { prettyFormat(it) }
 
     //
     // RUN QC and TRIMMING
@@ -376,7 +377,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: MultiQC
     if (!("multiqc" in skip_tools)) {
-        ch_multiqc_files.collect().dump(tag: "multiqc_files") { FormattingService.prettyFormat(it) }
+        ch_multiqc_files.collect().dump(tag: "multiqc_files") { prettyFormat(it) }
 
         summary_params = paramsSummaryMap(
             workflow,

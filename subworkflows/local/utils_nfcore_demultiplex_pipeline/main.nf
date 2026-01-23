@@ -297,3 +297,29 @@ def removeAdapters(samplesheet) {
     }
     return lines_out
 }
+
+import static groovy.json.JsonOutput.prettyPrint
+import groovy.json.JsonGenerator
+import java.nio.file.Path
+import java.time.OffsetDateTime
+import nextflow.util.Duration
+
+//
+// JSON formatting utilities
+//
+
+// Module-level JSON generator (initialized once)
+@groovy.transform.Field
+static JsonGenerator jsonFormattingGenerator = new JsonGenerator.Options()
+    .dateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+    .addConverter(OffsetDateTime) { OffsetDateTime offset -> offset.toString() }
+    .addConverter(Duration) { Duration duration -> duration.toString() }
+    .addConverter(Path) { Path filename -> filename.toString() }
+    .build()
+
+//
+// Create a pretty string format of a given object using JSON
+//
+def prettyFormat(Object object) {
+    return prettyPrint(jsonFormattingGenerator.toJson(object))
+}
