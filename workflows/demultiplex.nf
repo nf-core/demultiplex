@@ -215,13 +215,9 @@ workflow DEMULTIPLEX {
             .splitCsv(header: true)
             .map { columns -> [columns.fastq, columns.read_structure] }
 
-        // Combine the directory containing the fastq with the fastq name and read structure
-        // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
-        fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect { _meta, dir -> dir }).toList()
-
         // Format ch_samplesheet like so:
-        // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
-        ch_samplesheet = ch_flowcells.merge(fastqs_with_paths) { a, b -> tuple(a[0], a[1], b) }
+        // [[meta:id], <path to sample names and barcodes in tsv: path>, <path to fastqs: path>, [<fastq name: string>, <read structure: string>]]
+        ch_samplesheet = ch_flowcells.merge(fastq_read_structure.toList()) { a, b -> tuple(a[0], a[1], a[3], b) }
 
         FQTK_DEMULTIPLEX(ch_samplesheet)
         ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
@@ -274,7 +270,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { _meta, json ->
             return json
         })
-        ch_versions = ch_versions.mix(FASTP.out.versions)
         ch_fastq_to_qc = FASTP.out.reads
     }
 
