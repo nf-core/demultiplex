@@ -119,7 +119,7 @@ workflow DEMULTIPLEX {
     }
 
     // Convenience
-    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs') { prettyFormat(samplesheet) }
+    ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs') { samplesheet -> prettyFormat(samplesheet) }
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -217,7 +217,7 @@ workflow DEMULTIPLEX {
 
         // Combine the directory containing the fastq with the fastq name and read structure
         // [example_R1.fastq.gz, 150T, ./work/98/30bc..78y/fastqs/]
-        fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect { meta, dir -> dir }).toList()
+        fastqs_with_paths = fastq_read_structure.combine(UNTAR_FLOWCELL.out.untar.collect { _meta, dir -> dir }).toList()
 
         // Format ch_samplesheet like so:
         // [[meta:id], <path to sample names and barcodes in tsv: path>, [<fastq name: string>, <read structure: string>, <path to fastqs: path>]]]
@@ -260,7 +260,7 @@ workflow DEMULTIPLEX {
     else {
         error("Unknown demultiplexer: ${demultiplexer}")
     }
-    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq") { prettyFormat(raw_fastq) }
+    ch_raw_fastq.dump(tag: "DEMULTIPLEX::Demultiplexed Fastq") { raw_fastq -> prettyFormat(raw_fastq) }
 
     //
     // RUN QC and TRIMMING
@@ -377,7 +377,7 @@ workflow DEMULTIPLEX {
 
     // MODULE: MultiQC
     if (!("multiqc" in skip_tools)) {
-        ch_multiqc_files.collect().dump(tag: "multiqc_files") { prettyFormat(multiqc_files) }
+        ch_multiqc_files.collect().dump(tag: "multiqc_files") { multiqc_files -> prettyFormat(multiqc_files) }
 
         summary_params = paramsSummaryMap(
             workflow,

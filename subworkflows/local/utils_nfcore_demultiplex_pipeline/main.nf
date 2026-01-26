@@ -102,7 +102,7 @@ workflow PIPELINE_INITIALISATION {
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = Channel
+        ch_samplesheet = channel
             .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 if (!file(per_flowcell_manifest).exists()) {
@@ -113,7 +113,7 @@ workflow PIPELINE_INITIALISATION {
 
     }
     else {
-        ch_samplesheet = Channel
+        ch_samplesheet = channel
             .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
@@ -290,28 +290,9 @@ def removeAdapters(samplesheet) {
     return lines_out
 }
 
-import static groovy.json.JsonOutput.prettyPrint
-import groovy.json.JsonGenerator
-import java.nio.file.Path
-import java.time.OffsetDateTime
-import nextflow.util.Duration
-
 //
-// JSON formatting utilities
-//
-
-// Module-level JSON generator (initialized once)
-@groovy.transform.Field
-static JsonGenerator jsonFormattingGenerator = new JsonGenerator.Options()
-    .dateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-    .addConverter(OffsetDateTime) { OffsetDateTime offset -> offset.toString() }
-    .addConverter(Duration) { Duration duration -> duration.toString() }
-    .addConverter(Path) { Path filename -> filename.toString() }
-    .build()
-
-//
-// Create a pretty string format of a given object using JSON
+// Wrapper function for JSON formatting
 //
 def prettyFormat(Object object) {
-    return prettyPrint(jsonFormattingGenerator.toJson(object))
+    return FormattingService.prettyFormat(object)
 }
