@@ -1,6 +1,6 @@
 process CHECKQC_DIR {
     label 'process_high'
-
+    tag {"$meta.id"}
     container "nf-core/bcl2fastq:2.20.0.422"
 
     input:
