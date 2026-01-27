@@ -290,9 +290,27 @@ def removeAdapters(samplesheet) {
     return lines_out
 }
 
-//
-// Wrapper function for JSON formatting
-//
 def prettyFormat(Object object) {
-    return FormattingService.prettyFormat(object)
+    // Convert problematic types to strings before JSON conversion
+    def sanitized = sanitizeObject(object)
+    def json = new groovy.json.JsonBuilder(sanitized)
+    return groovy.json.JsonOutput.prettyPrint(json.toString())
+}
+
+def sanitizeObject(Object obj) {
+    if (obj == null) {
+        return null
+    } else if (obj instanceof Map) {
+        return obj.collectEntries { k, v -> [k, sanitizeObject(v)] }
+    } else if (obj instanceof Collection) {
+        return obj.collect { it -> sanitizeObject(it) }
+    } else if (obj instanceof java.nio.file.Path) {
+        return obj.toString()
+    } else if (obj instanceof java.time.OffsetDateTime) {
+        return obj.toString()
+    } else if (obj.getClass().getName().contains('Duration')) {
+        return obj.toString()
+    } else {
+        return obj
+    }
 }
