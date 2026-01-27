@@ -285,7 +285,7 @@ def removeAdapters(samplesheet) {
         }
     }
     if (!removal_checker) {
-        log.info "Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet"
+        System.out.println("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m")
     }
     return lines_out
 }

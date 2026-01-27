@@ -303,7 +303,6 @@ workflow DEMULTIPLEX {
             [sample_size],
             kraken_db,
         )
-        ch_versions = ch_versions.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.versions)
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { _meta, log ->
             return log
         })
