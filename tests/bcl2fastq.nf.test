@@ -3,38 +3,15 @@ nextflow_pipeline {
     name "Test Workflow main.nf - BCL2FASTQ"
     script "../main.nf"
     profile "test_bcl2fastq"
-    tag "bcl2fastq"
-    tag "pipeline"
-
-    test("Bcl2Fastq") {
-
-        when {
-            params {
-                outdir        = "$outputDir"
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
-            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path,
-                    samplesheet.collect{ file -> [ file.getName(), UTILS.validateFastqPaths(file) ] }
-                ).match() }
-            )
-        }
+    
+        def test_scenarios = [
+        [
+            name: "Bcl2Fastq",
+            tag: "bcl2fastq"
+        ]
+    ]
+    
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

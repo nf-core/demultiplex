@@ -45,10 +45,100 @@ class UTILS{
 
                 // Check if fastq_2 path is valid if it exists
                 if (fastq2Path && !Files.exists(Paths.get(fastq2Path))) {
-                    throw new FileNotFoundException("Incorrect R2 fastq file path: '$fastq2Path' in downstream samplesheet file '$csvFile.name'") // Raise error for fastq_2
+                    throw new FileNotFoundException("Incorrect R2 fastq file path: '$fastq2Path' in downstream samplesheet file '$csvFile.name'")
                 }
             }
         }
-        return true // All paths are valid if we reach this point
+        return true
+    }
+
+// Helper functions for pipeline tests
+
+    public static def getAssertions = { Map args ->
+        def outdir = args.outdir
+        def workflow = args.workflow
+        def scenario = args.scenario ?: [:]
+
+        def stable_name = getAllFilesFromDir(
+            outdir,
+            relative: true,
+            includeDir: true,
+            ignore: ['pipeline_info/*.{html,json,txt}']
+        )
+        def stable_path = getAllFilesFromDir(outdir, ignoreFile: 'tests/.nftignore')
+        def samplesheet = getAllFilesFromDir(outdir, include: ['samplesheet/*_samplesheet.csv'])
+
+        def assertion = []
+
+        if (!scenario.failure) {
+            assertion.add(workflow.trace.succeeded().size())
+            assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"))
+        }
+
+        assertion.add(stable_name)
+
+        if (!scenario.stub) {
+            assertion.add(stable_path.isEmpty() ? 'No stable content' : stable_path)
+            if (!scenario.skip_samplesheet) {
+                assertion.add(samplesheet.collect { file -> [file.getName(), UTILS.validateFastqPaths(file)] })
+            }
+        }
+
+        if (scenario.snapshot) {
+            def workflow_std = []
+
+            scenario.snapshot.split(',').each { std ->
+                if (std in ['stderr', 'stdout']) { workflow_std.add(workflow."$std") }
+            }
+
+            if (scenario.snapshot_include) {
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore], include: [scenario.snapshot_include]))
+            } else {
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore]))
+            }
+        }
+
+        return assertion
+    }
+
+    public static def getTest = { scenario ->
+        return {
+            tag "pipeline"
+
+            if (scenario.tag) {
+                tag scenario.tag
+            }
+
+            if (scenario.options) {
+                options scenario.options
+            }
+
+            when {
+                params {
+                    outdir = "${outputDir}"
+                    scenario.params?.each { key, value ->
+                        delegate."$key" = value
+                    }
+                }
+            }
+
+            then {
+                if (scenario.failure) {
+                    assert workflow.failed
+                } else {
+                    assert workflow.success
+                }
+
+                assertAll(
+                    { assert snapshot(
+                        *UTILS.getAssertions(
+                            outdir: params.outdir,
+                            workflow: workflow,
+                            scenario: scenario
+                        )
+                    ).match() }
+                )
+            }
+        }
     }
 }
