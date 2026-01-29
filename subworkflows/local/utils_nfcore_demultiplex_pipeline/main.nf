@@ -28,10 +28,10 @@ workflow PIPELINE_INITIALISATION {
     take:
     version // boolean: Display version and exit
     validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs // boolean: Do not use coloured log outputs
+    _monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir //  string: The output directory where the results will be saved
-    input //  string: Path to input samplesheet
+    _input //  string: Path to input samplesheet
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
@@ -102,7 +102,7 @@ workflow PIPELINE_INITIALISATION {
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = Channel
+        ch_samplesheet = channel
             .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 if (!file(per_flowcell_manifest).exists()) {
@@ -111,17 +111,9 @@ workflow PIPELINE_INITIALISATION {
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
             }
 
-        ch_flowcell_manifest = ch_samplesheet
-            .map { meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
-            .splitCsv(header: true, strip: true)
-            .map { row ->
-                if (!row.containsKey("fastq") || !row.containsKey("read_structure")) {
-                    error("[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'")
-                }
-            }
     }
     else {
-        ch_samplesheet = Channel
+        ch_samplesheet = channel
             .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
@@ -279,4 +271,46 @@ def methodsDescriptionText(mqc_methods_yaml) {
     def description_html = engine.createTemplate(methods_text).make(meta)
 
     return description_html.toString()
+}
+
+def removeAdapters(samplesheet) {
+    def lines_out = ''
+    def removal_checker = false
+    samplesheet.readLines().each { line ->
+        if ( line =~ /Adapter(Read[12])?,[ACGT]+,?/ ) {
+            removal_checker = true
+        } else {
+            // keep original line otherwise
+            lines_out = lines_out + line + '\n'
+        }
+    }
+    if (!removal_checker) {
+        System.out.println("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m")
+    }
+    return lines_out
+}
+
+def prettyFormat(Object object) {
+    // Convert problematic types to strings before JSON conversion
+    def sanitized = sanitizeObject(object)
+    def json = new groovy.json.JsonBuilder(sanitized)
+    return groovy.json.JsonOutput.prettyPrint(json.toString())
+}
+
+def sanitizeObject(Object obj) {
+    if (obj == null) {
+        return null
+    } else if (obj instanceof Map) {
+        return obj.collectEntries { k, v -> [k, sanitizeObject(v)] }
+    } else if (obj instanceof Collection) {
+        return obj.collect { it -> sanitizeObject(it) }
+    } else if (obj instanceof java.nio.file.Path) {
+        return obj.toString()
+    } else if (obj instanceof java.time.OffsetDateTime) {
+        return obj.toString()
+    } else if (obj.getClass().getName().contains('Duration')) {
+        return obj.toString()
+    } else {
+        return obj
+    }
 }

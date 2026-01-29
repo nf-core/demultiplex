@@ -17,7 +17,7 @@ process FASTQ_TO_SAMPLESHEET {
     def samplesheetRows = []
 
     // Sort meta by item.id
-    def sortedMeta = meta.sort { it.id }
+    def sortedMeta = meta.sort { item -> item.id }
 
     // Collect all unique columns from all items and create rows
     def allColumns = new LinkedHashSet()
@@ -67,7 +67,7 @@ process FASTQ_TO_SAMPLESHEET {
     }
 
     // Create a sorted list of headers
-    samplesheetHeader = allColumns.collect { '"' + it + '"' }
+    samplesheetHeader = allColumns.collect { columns -> '"' + columns + '"' }
 
     // Create the complete samplesheet content
     def samplesheet = samplesheetHeader.join(",") + '\n' + samplesheetRows.join("\n")
