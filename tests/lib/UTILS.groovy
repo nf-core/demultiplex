@@ -45,11 +45,11 @@ class UTILS{
 
                 // Check if fastq_2 path is valid if it exists
                 if (fastq2Path && !Files.exists(Paths.get(fastq2Path))) {
-                    throw new FileNotFoundException("Incorrect R2 fastq file path: '$fastq2Path' in downstream samplesheet file '$csvFile.name'")
+                    throw new FileNotFoundException("Incorrect R2 fastq file path: '$fastq2Path' in downstream samplesheet file '$csvFile.name'") // Raise error for fastq_2
                 }
             }
         }
-        return true
+        return true // All paths are valid if we reach this point
     }
 
 // Helper functions for pipeline tests
