@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#363](https://github.com/nf-core/demultiplex/pull/363) Use samshee only for validating samplesheet, not for formatting the samplesheet that's used by the demultiplexers.
 - [#354](https://github.com/nf-core/demultiplex/pull/354) Bump version and note mgikit addition in 1.7.0 Changelog
 - [#355](https://github.com/nf-core/demultiplex/pull/355) Template update for nf-core/tools v3.5.1
 - [#357](https://github.com/nf-core/demultiplex/pull/357) Update MultiQC to 1.33
 - [#359](https://github.com/nf-core/demultiplex/pull/359) Update FASTP module
+- [#363](https://github.com/nf-core/demultiplex/pull/363) Use samshee only for validating samplesheet, not for formatting the samplesheet that's used by the demultiplexers.
+- [#368](https://github.com/nf-core/demultiplex/pull/368) Port nf-tests to `UTILS.groovy`
 
 ### `Fixed`
 
