@@ -4,43 +4,21 @@ nextflow_pipeline {
     script "../main.nf"
     config "../conf/test_kraken.config"
     profile "test"
-    tag "kraken"
-    tag "pipeline"
 
-    test("kraken2") {
+    def test_scenarios = [
+        [
+            name: "kraken2",
+            tag: "kraken",
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bcl2fastq',
+                skip_tools: "checkqc,samshee",
+                kraken_db: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/db/kraken2.tar.gz'
+            ]
+        ]
+    ]
 
-        when {
-            params {
-                input = 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv'
-                demultiplexer = 'bcl2fastq'
-                outdir        = "$outputDir"
-                skip_tools    = "checkqc,samshee"
-                kraken_db     = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/db/kraken2.tar.gz'
-
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
-            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path,
-                    samplesheet.collect{ file -> [ file.getName(), UTILS.validateFastqPaths(file) ] }
-                ).match() }
-            )
-        }
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }
