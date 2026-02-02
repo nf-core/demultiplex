@@ -64,6 +64,11 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.flowcell_id,
+        params.flowcell_samplesheet,
+        params.flowcell_lane,
+        params.flowcell_path,
+        params.flowcell_per_flowcell_manifest,
         params.help,
         params.help_full,
         params.show_hidden

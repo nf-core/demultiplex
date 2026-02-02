@@ -14,7 +14,7 @@
 
 ## Pipeline samplesheet input
 
-You will need to create a _pipeline_ samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input _pipeline_ samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`.
+You will need to create a _pipeline_ samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input _pipeline_ samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`. Alternatively, you can skip it and provide a single flowcell directly with the `--flowcell_*` parameters, see the Flowcell samplesheet section in this guide. 
 
 When using the demultiplexer fqtk, the _pipeline_ samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
@@ -71,6 +71,41 @@ Each demultiplexing software uses a distinct _flowcell_ samplesheet format. Belo
 | **fqtk**                     | [fqtk SampleSheet.csv](https://github.com/fulcrumgenomics/nf-core-test-datasets/raw/fqtk/testdata/sim-data/fqtk_samplesheet.csv)                       |
 | **bcl2fastq and bclconvert** | [bcl2fastq and bclconvert SampleSheet.csv](https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/b2fq-samplesheet.csv) |
 | **mgikit**                   | [mgikit samplesheet.csv](https://github.com/nf-core/test-datasets/blob/demultiplex/testdata/mgi/fc01_sample_sheet.csv)                                 |
+
+### Single flowcell input (no pipeline samplesheet)
+
+If you are demultiplexing a single flowcell, you can skip the pipeline samplesheet and provide the flowcell metadata directly. These parameters are mutually exclusive with `--input`.
+
+```bash
+nextflow run nf-core/demultiplex \
+    --flowcell_id DDMMYY_SERIAL_NUMBER_FC \
+    --flowcell_samplesheet /path/to/SampleSheet.csv \
+    --flowcell_lane 1 \
+    --flowcell_path /path/to/sequencer/output \
+    --outdir results
+```
+
+For `fqtk`, you must also provide the per-flowcell manifest:
+
+```bash
+nextflow run nf-core/demultiplex \
+    --flowcell_id DDMMYY_SERIAL_NUMBER_FC \
+    --flowcell_samplesheet /path/to/SampleSheet.csv \
+    --flowcell_lane 1 \
+    --flowcell_path /path/to/sequencer/output \
+    --flowcell_per_flowcell_manifest /path/to/flowcell/manifest.csv \
+    --demultiplexer fqtk \
+    --outdir results
+```
+
+| Parameter                       | Description                                                                                                     |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `flowcell_id`                  | Flowcell id                                                                                                     |
+| `flowcell_samplesheet`         | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes               |
+| `flowcell_lane`                | Optional lane number. When provided, only the given lane will be demultiplexed                                  |
+| `flowcell_path`                | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the run directory contents  |
+| `flowcell_per_flowcell_manifest` | Full path to the flowcell manifest (required for `fqtk`)                                                        |
+
 
 ## Running the pipeline
 
