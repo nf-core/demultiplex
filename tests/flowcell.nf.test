@@ -45,6 +45,26 @@ nextflow_pipeline {
                 demultiplexer: "bclconvert",
                 skip_tools: 'samshee'
             ]
+        ],
+        [
+            name: "Test single-flowcell input - FQTK",
+            tag: "pp",
+            params: [
+                flowcell_id: "test",
+                flowcell_samplesheet: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fqtk_samplesheet.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                flowcell_per_flowcell_manifest: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/per_flowcell_manifest.csv",
+                demultiplexer: "fqtk"
+            ]
+        ],
+        [
+            name: "Fails with both --input and --flowcell_samplesheet",
+            tag: "flowcell",
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+            ],
+            failure: true
         ]
     ]
 

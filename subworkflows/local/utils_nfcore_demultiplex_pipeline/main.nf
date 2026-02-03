@@ -125,7 +125,9 @@ workflow PIPELINE_INITIALISATION {
             [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
             file(params.flowcell_samplesheet),
             file(params.flowcell_path),
-            params.flowcell_per_flowcell_manifest ?: []
+            params.flowcell_per_flowcell_manifest ?
+            file(params.flowcell_per_flowcell_manifest) :
+            []
         ]) : 
         channel.empty()
 
