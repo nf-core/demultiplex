@@ -1139,7 +1139,7 @@
                     "fastp": "1.0.1"
                 },
                 "FQTK": {
-                    "fqtk": "0.2.1"
+                    "fqtk": "0.3.1"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -1150,6 +1150,11 @@
             },
             [
                 "csv2tsv",
+                "csv2tsv/input",
+                "csv2tsv/input/out_L001_I1_001.fastq.gz",
+                "csv2tsv/input/out_L001_I2_001.fastq.gz",
+                "csv2tsv/input/out_L001_R1_001.fastq.gz",
+                "csv2tsv/input/out_L001_R2_001.fastq.gz",
                 "csv2tsv/samplesheet.tsv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -1621,6 +1626,10 @@
                 "test/unmatched_R2.fastp.fastq.gz_summary.txt"
             ],
             [
+                "out_L001_I1_001.fastq.gz:md5,93104eacf6849ea85a3727df20193cd0",
+                "out_L001_I2_001.fastq.gz:md5,7e70f0b194127fa9a13835009dab3de5",
+                "out_L001_R1_001.fastq.gz:md5,0e6423e3caad3aba1e1532e287464c63",
+                "out_L001_R2_001.fastq.gz:md5,b8418c4200127ad974bcae9030d719a6",
                 "samplesheet.tsv:md5,f6595e6a60b7f135d8d6ad2a7d8b84c9",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,2e2ea8010dfa345adb054ab61d4097cb",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,2e2ea8010dfa345adb054ab61d4097cb",
@@ -1948,7 +1957,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T17:51:18.074949924"
+        "timestamp": "2026-02-03T19:08:42.063474495"
     },
     "Fails with both --input and --flowcell_samplesheet": {
         "content": [

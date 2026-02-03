@@ -48,7 +48,7 @@ nextflow_pipeline {
         ],
         [
             name: "Test single-flowcell input - FQTK",
-            tag: "pp",
+            tag: "flowcell",
             params: [
                 flowcell_id: "test",
                 flowcell_samplesheet: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fqtk_samplesheet.csv",
