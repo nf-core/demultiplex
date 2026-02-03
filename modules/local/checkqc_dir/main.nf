@@ -1,7 +1,6 @@
 process CHECKQC_DIR {
-    tag {"$meta.id"}
     label 'process_high'
-
+    tag {"$meta.id"}
     container "nf-core/bcl2fastq:2.20.0.422"
 
     input:
@@ -16,7 +15,6 @@ process CHECKQC_DIR {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    def args3 = task.ext.args3 ?: ''
     def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
     def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
     """
@@ -32,16 +30,16 @@ process CHECKQC_DIR {
             tar \\
                 -C $input_dir --strip-components 1 \\
                 -xavf \\
-                $args2 \\
+                $args \\
                 $run_dir \\
-                $args3
+                $args2
         else
             tar \\
                 -C $input_dir \\
                 -xavf \\
-                $args2 \\
+                $args \\
                 $run_dir \\
-                $args3
+                $args2
         fi
     fi
 

@@ -4,7 +4,7 @@
             25,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.3.13"
+                    "bclconvert": "4.4.6"
                 },
                 "FALCO": {
                     "falco": "1.2.1"
@@ -61,6 +61,7 @@
                 "miniseq_truseq_smrna/Reports",
                 "miniseq_truseq_smrna/Reports/Adapter_Cycle_Metrics.csv",
                 "miniseq_truseq_smrna/Reports/Adapter_Metrics.csv",
+                "miniseq_truseq_smrna/Reports/Demultiplex_Detailed_Stats.csv",
                 "miniseq_truseq_smrna/Reports/Demultiplex_Stats.csv",
                 "miniseq_truseq_smrna/Reports/Demultiplex_Tile_Stats.csv",
                 "miniseq_truseq_smrna/Reports/IndexMetricsOut.bin",
@@ -279,8 +280,9 @@
                 "TileMetricsOut.bin:md5,0d2aa2c7e39eb33e61d2ed248068ed9d",
                 "Adapter_Cycle_Metrics.csv:md5,757778bb0ee048463c423dff14133a51",
                 "Adapter_Metrics.csv:md5,5cbba841c650097f1e759c2b75c7a005",
+                "Demultiplex_Detailed_Stats.csv:md5,1bee37925d4ce76bf6b4d9ee1798d634",
                 "Demultiplex_Stats.csv:md5,40c3efd7ffb9d02fcc97028f6ee98c96",
-                "Demultiplex_Tile_Stats.csv:md5,916e3e488c4ed847249d7d46401a57ff",
+                "Demultiplex_Tile_Stats.csv:md5,fd5f70b92bf617c2175d857faa310643",
                 "IndexMetricsOut.bin:md5,9a6ad90fd45b3abd2360285feff76509",
                 "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
                 "Quality_Metrics.csv:md5,215e001631d9383f73360975d5726f14",
@@ -319,19 +321,19 @@
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,c50799d5b2e88aaf6d134a0c91799617",
                 "fastp-seq-content-n-plot_Read_1_After_filtering.txt:md5,25c388075a99e0519824961f01c56da6",
                 "fastp-seq-content-n-plot_Read_1_Before_filtering.txt:md5,ae11e4c047b4f2933fe09261c305c520",
-                "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,0900b435599d11252f8d011da23394d6",              
-                "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,f8b94a819f2b15b5a47c4b1003c32a18",             
-                "fastp_filtered_reads_plot.txt:md5,aa0692824fb974d513262149f761aef5",                                  
-                "fastqc_adapter_content_plot.txt:md5,274ea9b8e1e214d5fb4b7979cb80ad18",                                
-                "fastqc_overrepresented_sequences_plot.txt:md5,fb642669efbc2611cde2399829c4eb14",                      
-                "fastqc_per_base_n_content_plot.txt:md5,b6a3ce2c09bbe45442de452d103068f1",                             
-                "fastqc_per_base_sequence_quality_plot.txt:md5,0900b435599d11252f8d011da23394d6",                      
-                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,2b02d892e184eecbe813cdabc735a554",                 
-                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,c4e78280b81386821425d7f3c45424b8",            
-                "fastqc_per_sequence_quality_scores_plot.txt:md5,7fc6cca45ac7f0b6db7f7856fc7f0dd5",                    
-                "fastqc_sequence_counts_plot.txt:md5,9d01776937f64f6eb087aaadcaa2632b",                                
-                "fastqc_sequence_duplication_levels_plot.txt:md5,290f6acd56a477eb2b280ec0f64f900f",                    
-                "fastqc_sequence_length_distribution_plot.txt:md5,a030834f88bdc01b4feb10d53612a3db",                 
+                "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,0900b435599d11252f8d011da23394d6",
+                "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,f8b94a819f2b15b5a47c4b1003c32a18",
+                "fastp_filtered_reads_plot.txt:md5,aa0692824fb974d513262149f761aef5",
+                "fastqc_adapter_content_plot.txt:md5,274ea9b8e1e214d5fb4b7979cb80ad18",
+                "fastqc_overrepresented_sequences_plot.txt:md5,fb642669efbc2611cde2399829c4eb14",
+                "fastqc_per_base_n_content_plot.txt:md5,b6a3ce2c09bbe45442de452d103068f1",
+                "fastqc_per_base_sequence_quality_plot.txt:md5,0900b435599d11252f8d011da23394d6",
+                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,2b02d892e184eecbe813cdabc735a554",
+                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,c4e78280b81386821425d7f3c45424b8",
+                "fastqc_per_sequence_quality_scores_plot.txt:md5,7fc6cca45ac7f0b6db7f7856fc7f0dd5",
+                "fastqc_sequence_counts_plot.txt:md5,9d01776937f64f6eb087aaadcaa2632b",
+                "fastqc_sequence_duplication_levels_plot.txt:md5,290f6acd56a477eb2b280ec0f64f900f",
+                "fastqc_sequence_length_distribution_plot.txt:md5,a030834f88bdc01b4feb10d53612a3db",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,499108393635a1dceb27099af8ad748e",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
@@ -361,8 +363,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-15T14:14:08.536612437"
+        "timestamp": "2026-01-27T18:33:36.017257176"
     }
 }
