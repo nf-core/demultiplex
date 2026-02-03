@@ -120,7 +120,7 @@ workflow PIPELINE_INITIALISATION {
     }
 
     // Create flowcell input list as channel
-    def flowcell_input_list = has_flowcell_params ? 
+    def flowcell_input_list = has_flowcell_params ?
         channel.of([
             [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
             file(params.flowcell_samplesheet),
@@ -128,13 +128,13 @@ workflow PIPELINE_INITIALISATION {
             params.flowcell_per_flowcell_manifest ?
             file(params.flowcell_per_flowcell_manifest) :
             []
-        ]) : 
+        ]) :
         channel.empty()
 
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = (input ? 
-            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) : 
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
             flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 if (!file(per_flowcell_manifest).exists()) {
@@ -153,8 +153,8 @@ workflow PIPELINE_INITIALISATION {
             }
     }
     else {
-        ch_samplesheet = (input ? 
-            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) : 
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
             flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]

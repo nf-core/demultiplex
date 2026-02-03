@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
+
 ### `Changed`
 
 - [#354](https://github.com/nf-core/demultiplex/pull/354) Bump version and note mgikit addition in 1.7.0 Changelog

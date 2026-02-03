@@ -14,7 +14,7 @@
 
 ## Pipeline samplesheet input
 
-You will need to create a _pipeline_ samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input _pipeline_ samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`. Alternatively, you can skip it and provide a single flowcell directly with the `--flowcell_*` parameters, see the Flowcell samplesheet section in this guide. 
+You will need to create a _pipeline_ samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with at least 4 columns, and a header row as shown in the examples below. The input _pipeline_ samplesheet is a comma-separated file that contains four columns: `id`, `samplesheet`, `lane`, `flowcell`. Alternatively, you can skip it and provide a single flowcell directly with the `--flowcell_*` parameters, see the Flowcell samplesheet section in this guide.
 
 When using the demultiplexer fqtk, the _pipeline_ samplesheet must contain an additional column `per_flowcell_manifest`. The column `per_flowcell_manifest` must contain two headers `fastq` and `read_structure`. As shown in the [example](https://github.com/fulcrumgenomics/nf-core-test-datasets/blob/fqtk/testdata/sim-data/per_flowcell_manifest.csv) provided each row must contain one fastq file name and the correlating read structure.
 
@@ -98,14 +98,13 @@ nextflow run nf-core/demultiplex \
     --outdir results
 ```
 
-| Parameter                       | Description                                                                                                     |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `flowcell_id`                  | Flowcell id                                                                                                     |
-| `flowcell_samplesheet`         | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes               |
-| `flowcell_lane`                | Optional lane number. When provided, only the given lane will be demultiplexed                                  |
-| `flowcell_path`                | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the run directory contents  |
-| `flowcell_per_flowcell_manifest` | Full path to the flowcell manifest (required for `fqtk`)                                                        |
-
+| Parameter                        | Description                                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `flowcell_id`                    | Flowcell id                                                                                                   |
+| `flowcell_samplesheet`           | Full path to the _flowcell_ `SampleSheet.csv` file containing the sample information and indexes              |
+| `flowcell_lane`                  | Optional lane number. When provided, only the given lane will be demultiplexed                                |
+| `flowcell_path`                  | Full path to the Illumina sequencer output directory or a `tar.gz` file containing the run directory contents |
+| `flowcell_per_flowcell_manifest` | Full path to the flowcell manifest (required for `fqtk`)                                                      |
 
 ## Running the pipeline
 
