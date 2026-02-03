@@ -105,15 +105,35 @@ workflow PIPELINE_INITIALISATION {
     // For reference:
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
-    
-    def flowcell_params = [flowcell_id, flowcell_samplesheet, flowcell_lane, flowcell_path, flowcell_per_flowcell_manifest]
-    def has_flowcell_params = flowcell_params.any { it != null }
 
-    
+    def flowcell_params = [flowcell_id, flowcell_samplesheet, flowcell_lane, flowcell_path, flowcell_per_flowcell_manifest]
+    def has_flowcell_params = flowcell_params.any { v -> v != null }
+
+    // Validate single-flowcell parameters if provided
+    if (has_flowcell_params) {
+        if (params.demultiplexer == 'fqtk' && !flowcell_per_flowcell_manifest) {
+            error("[Parameter Error] --flowcell_per_flowcell_manifest is required when using fqtk demultiplexer in single-flowcell mode")
+        }
+        if (params.demultiplexer == 'fqtk' && !file(flowcell_per_flowcell_manifest).exists()) {
+            error("[Parameter Error] The per flowcell manifest file does not exist: ${flowcell_per_flowcell_manifest}")
+        }
+    }
+
+    // Create flowcell input list as channel
+    def flowcell_input_list = has_flowcell_params ? 
+        channel.of([
+            [id: params.flowcell_id.toString(), lane: params.flowcell_lane as Integer],
+            params.flowcell_samplesheet,
+            params.flowcell_path,
+            params.flowcell_per_flowcell_manifest ?: []
+        ]) : 
+        channel.empty()
+
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = Channel
-            .fromList(input ? samplesheetToList(params.input, "${projectDir}/assets/schema_input.json") : flowcell_input_list)
+        ch_samplesheet = (input ? 
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) : 
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 if (!file(per_flowcell_manifest).exists()) {
                     error("[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}")
@@ -131,12 +151,15 @@ workflow PIPELINE_INITIALISATION {
             }
     }
     else {
-        ch_samplesheet = Channel
-            .fromList(input ? samplesheetToList(params.input, "${projectDir}/assets/schema_input.json") : flowcell_input_list)
+        ch_samplesheet = (input ? 
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) : 
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
             }
     }
+
+    ch_samplesheet.dump(tag:"ch_samplesheet")
 
     emit:
     samplesheet = ch_samplesheet
