@@ -1,13 +1,27 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf - BCL2FASTQ"
+    name "Test single-flowcell input using --flowcell_samplesheet"
     script "../main.nf"
     profile "test_flowcell"
 
         def test_scenarios = [
         [
             name: "Test single-flowcell input - BCL2FASTQ",
-            tag: "flowcell"
+            tag: "flowcell",
+            params: [
+                skip_tools: 'checkqc,samshee'
+                ]
+        ],
+        [
+            name: "Test single-flowcell input - SGDEMUX",
+            tag: "flowcell",
+            params: [
+                flowcell_id: "sim-data",
+                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/out.sample_meta.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                demultiplexer: "sgdemux"
+            ]
         ]
     ]
 

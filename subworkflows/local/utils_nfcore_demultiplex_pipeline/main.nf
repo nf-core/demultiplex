@@ -122,7 +122,7 @@ workflow PIPELINE_INITIALISATION {
     // Create flowcell input list as channel
     def flowcell_input_list = has_flowcell_params ? 
         channel.of([
-            [id: params.flowcell_id.toString(), lane: params.flowcell_lane],
+            [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
             file(params.flowcell_samplesheet),
             file(params.flowcell_path),
             params.flowcell_per_flowcell_manifest ?: []
