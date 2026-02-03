@@ -534,7 +534,7 @@
             25,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.3.13"
+                    "bclconvert": "4.4.6"
                 },
                 "FALCO": {
                     "falco": "1.2.1"
@@ -591,6 +591,7 @@
                 "miniseq_truseq_smrna/Reports",
                 "miniseq_truseq_smrna/Reports/Adapter_Cycle_Metrics.csv",
                 "miniseq_truseq_smrna/Reports/Adapter_Metrics.csv",
+                "miniseq_truseq_smrna/Reports/Demultiplex_Detailed_Stats.csv",
                 "miniseq_truseq_smrna/Reports/Demultiplex_Stats.csv",
                 "miniseq_truseq_smrna/Reports/Demultiplex_Tile_Stats.csv",
                 "miniseq_truseq_smrna/Reports/IndexMetricsOut.bin",
@@ -809,8 +810,9 @@
                 "TileMetricsOut.bin:md5,0d2aa2c7e39eb33e61d2ed248068ed9d",
                 "Adapter_Cycle_Metrics.csv:md5,757778bb0ee048463c423dff14133a51",
                 "Adapter_Metrics.csv:md5,5cbba841c650097f1e759c2b75c7a005",
+                "Demultiplex_Detailed_Stats.csv:md5,1bee37925d4ce76bf6b4d9ee1798d634",
                 "Demultiplex_Stats.csv:md5,40c3efd7ffb9d02fcc97028f6ee98c96",
-                "Demultiplex_Tile_Stats.csv:md5,916e3e488c4ed847249d7d46401a57ff",
+                "Demultiplex_Tile_Stats.csv:md5,fd5f70b92bf617c2175d857faa310643",
                 "IndexMetricsOut.bin:md5,9a6ad90fd45b3abd2360285feff76509",
                 "Index_Hopping_Counts.csv:md5,1059369e375fd8f8423c0f6c934be978",
                 "Quality_Metrics.csv:md5,215e001631d9383f73360975d5726f14",
@@ -893,7 +895,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T17:21:54.943754138"
+        "timestamp": "2026-02-03T18:43:13.261743226"
     },
     "Test single-flowcell input - BASES2FASTQ": {
         "content": [
