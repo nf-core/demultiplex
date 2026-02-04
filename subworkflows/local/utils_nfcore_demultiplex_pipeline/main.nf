@@ -31,7 +31,12 @@ workflow PIPELINE_INITIALISATION {
     _monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir //  string: The output directory where the results will be saved
-    _input //  string: Path to input samplesheet
+    input //  string: Path to input samplesheet
+    flowcell_id // string: Flowcell id for single-flowcell runs
+    flowcell_samplesheet // string: Path to flowcell samplesheet for single-flowcell runs
+    flowcell_lane // integer: Lane number for single-flowcell runs
+    flowcell_path // string: Path to flowcell run directory for single-flowcell runs
+    flowcell_per_flowcell_manifest // string: Path to per-flowcell manifest for fqtk
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
@@ -92,7 +97,7 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through params.input or from single-flowcell params
     //
     // When using the demultiplexer fqtk, the samplesheet must contain an additional
     // column per_flowcell_manifest. The column per_flowcell_manifest must contain
@@ -100,10 +105,37 @@ workflow PIPELINE_INITIALISATION {
     // For reference:
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
+
+    def flowcell_params = [flowcell_id, flowcell_samplesheet, flowcell_lane, flowcell_path, flowcell_per_flowcell_manifest]
+    def has_flowcell_params = flowcell_params.any { v -> v != null }
+
+    // Validate single-flowcell parameters if provided
+    if (has_flowcell_params) {
+        if (params.demultiplexer == 'fqtk' && !flowcell_per_flowcell_manifest) {
+            error("[Parameter Error] --flowcell_per_flowcell_manifest is required when using fqtk demultiplexer in single-flowcell mode")
+        }
+        if (params.demultiplexer == 'fqtk' && !file(flowcell_per_flowcell_manifest).exists()) {
+            error("[Parameter Error] The per flowcell manifest file does not exist: ${flowcell_per_flowcell_manifest}")
+        }
+    }
+
+    // Create flowcell input list as channel
+    def flowcell_input_list = has_flowcell_params ?
+        channel.of([
+            [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
+            file(params.flowcell_samplesheet),
+            file(params.flowcell_path),
+            params.flowcell_per_flowcell_manifest ?
+            file(params.flowcell_per_flowcell_manifest) :
+            []
+        ]) :
+        channel.empty()
+
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = channel
-            .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 if (!file(per_flowcell_manifest).exists()) {
                     error("[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}")
@@ -113,12 +145,15 @@ workflow PIPELINE_INITIALISATION {
 
     }
     else {
-        ch_samplesheet = channel
-            .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
             }
     }
+
+    ch_samplesheet.dump(tag:"ch_samplesheet")
 
     emit:
     samplesheet = ch_samplesheet

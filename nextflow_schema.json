@@ -55,7 +55,15 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir"],
+            "oneOf": [
+                {
+                    "required": ["input"]
+                },
+                {
+                    "required": ["flowcell_id", "flowcell_samplesheet", "flowcell_path"]
+                }
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -66,6 +74,44 @@
                     "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a design file (e.g. `samplesheet.csv`) with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "flowcell_id": {
+                    "type": "string",
+                    "description": "Flowcell ID for single-flowcell runs.",
+                    "fa_icon": "fas fa-id-card"
+                },
+                "flowcell_samplesheet": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to the flowcell SampleSheet.csv for single-flowcell runs.",
+                    "help_text": "Use with --flowcell_id and --flowcell_path to avoid creating a pipeline samplesheet when processing a single flowcell.",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "flowcell_lane": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8,
+                    "description": "Lane number for single-flowcell runs.",
+                    "fa_icon": "fas fa-road"
+                },
+                "flowcell_path": {
+                    "type": "string",
+                    "format": "path",
+                    "description": "Run directory (or tar.gz) for single-flowcell runs.",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "flowcell_per_flowcell_manifest": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Per-flowcell manifest file for fqtk single-flowcell runs.",
+                    "help_text": "Required when using fqtk without a pipeline samplesheet.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
