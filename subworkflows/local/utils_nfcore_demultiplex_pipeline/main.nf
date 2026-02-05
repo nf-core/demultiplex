@@ -308,6 +308,56 @@ def methodsDescriptionText(mqc_methods_yaml) {
     return description_html.toString()
 }
 
+
+def generateFastqMeta(ch_reads, sampleNameRegex=/_R[0-9].*$/, platform='SINGULAR', useSanitizedId=false) {
+    ch_reads.transpose().map { fc_meta, fastq ->
+        def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
+        def meta = [
+            "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
+            "samplename": samplename,
+            "readgroup": [:],
+            "fcid": fc_meta.id,
+            "lane": fc_meta.lane,
+        ]
+        meta.readgroup = readgroupFromFastq(fastq, platform)
+        meta.readgroup.SM = meta.samplename
+
+        [meta, fastq]
+    }
+    .groupTuple(by: [0])
+    .map { meta, fastq ->
+        meta.single_end = fastq.size() == 1
+        [meta, fastq.flatten()]
+    }
+}
+
+// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+def readgroupFromFastq(path, platform='SINGULAR') {
+    def line
+
+    path.withInputStream { inputStream ->
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(inputStream)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    def rg = [:]
+
+    def fcid = fields[2]
+    def lane = fields[3]
+    def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
+    rg.ID = [fcid, lane].join('.')
+    rg.PU = [fcid, lane, index].findAll().join('.')
+    rg.PL = platform
+
+    rg
+}
+
+
 def removeAdapters(samplesheet) {
     def lines_out = ''
     def removal_checker = false

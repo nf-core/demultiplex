@@ -11,7 +11,6 @@
 include { BCL_DEMULTIPLEX                                          } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { FASTQ_CONTAM_SEQTK_KRAKEN                                } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
 include { FQTK_DEMULTIPLEX                                         } from '../subworkflows/local/fqtk_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX                                     } from '../subworkflows/local/singular_demultiplex/main'
 include { RUNDIR_CHECKQC                                           } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ      } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ     } from '../modules/local/fastq_to_samplesheet/main'
@@ -31,7 +30,8 @@ include { MD5SUM                                                   } from '../mo
 include { SAMSHEE                                                  } from '../modules/nf-core/samshee/main'
 include { BASES2FASTQ                                              } from '../modules/nf-core/bases2fastq/main'
 include { CELLRANGER_MKFASTQ                                       } from '../modules/nf-core/cellranger/mkfastq/main'
-include { MGIKIT_DEMULTIPLEX as MGIKIT                             } from '../modules/nf-core/mgikit/demultiplex/main'
+include { MGIKIT_DEMULTIPLEX                                       } from '../modules/nf-core/mgikit/demultiplex/main'
+include { SGDEMUX                                                  } from '../modules/nf-core/sgdemux/main'
 //
 // FUNCTION
 //
@@ -229,12 +229,12 @@ workflow DEMULTIPLEX {
     else if (demultiplexer == 'sgdemux') {
         // MODULE: sgdemux
         // Runs when "demultiplexer" is set to "sgdemux"
-        SINGULAR_DEMULTIPLEX(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
-        ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { _meta, metrics ->
+        SGDEMUX(ch_flowcells)
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(SGDEMUX.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
+        ch_multiqc_files = ch_multiqc_files.mix(SGDEMUX.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
+        ch_versions = ch_versions.mix(SGDEMUX.out.versions)
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq
