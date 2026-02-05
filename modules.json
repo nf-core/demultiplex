@@ -27,7 +27,7 @@
                     },
                     "checkqc": {
                         "branch": "master",
-                        "git_sha": "e6f6c211fed71038331afa8ed963e006f9acdbc9",
+                        "git_sha": "64937a58385b54b6314a79ff337da239cac76213",
                         "installed_by": ["modules"]
                     },
                     "falco": {
