@@ -1960,7 +1960,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T17:52:57.336155584"
+        "timestamp": "2026-02-05T15:20:43.795212318"
     },
     "Test single-flowcell input - BCL2FASTQ": {
         "content": [
