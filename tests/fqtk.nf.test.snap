@@ -1,11 +1,8 @@
 {
     "FQTK": {
         "content": [
-            109,
+            108,
             {
-                "CSV2TSV": {
-                    "sed": 4.8
-                },
                 "FALCO": {
                     "falco": "1.2.1"
                 },
@@ -23,13 +20,6 @@
                 }
             },
             [
-                "csv2tsv",
-                "csv2tsv/input",
-                "csv2tsv/input/out_L001_I1_001.fastq.gz",
-                "csv2tsv/input/out_L001_I2_001.fastq.gz",
-                "csv2tsv/input/out_L001_R1_001.fastq.gz",
-                "csv2tsv/input/out_L001_R2_001.fastq.gz",
-                "csv2tsv/samplesheet.tsv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
@@ -147,6 +137,7 @@
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "test",
                 "test.csv",
+                "test.tsv",
                 "test/demux-metrics.txt",
                 "test/s1.R1.fq.gz",
                 "test/s1.R2.fq.gz",
@@ -500,11 +491,6 @@
                 "test/unmatched_R2.fastp.fastq.gz_summary.txt"
             ],
             [
-                "out_L001_I1_001.fastq.gz:md5,93104eacf6849ea85a3727df20193cd0",
-                "out_L001_I2_001.fastq.gz:md5,7e70f0b194127fa9a13835009dab3de5",
-                "out_L001_R1_001.fastq.gz:md5,0e6423e3caad3aba1e1532e287464c63",
-                "out_L001_R2_001.fastq.gz:md5,b8418c4200127ad974bcae9030d719a6",
-                "samplesheet.tsv:md5,f6595e6a60b7f135d8d6ad2a7d8b84c9",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,2e2ea8010dfa345adb054ab61d4097cb",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,2e2ea8010dfa345adb054ab61d4097cb",
                 "fastp-seq-content-gc-plot_Read_2_After_filtering.txt:md5,77de96e7f6c12b078ca4123e935664fa",
@@ -527,6 +513,7 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,6afb52a1574fc2b954ce109e937b87f9",
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "test.csv:md5,c01a880241575a67e3eb5dc461a4972c",
+                "test.tsv:md5,f6595e6a60b7f135d8d6ad2a7d8b84c9",
                 "demux-metrics.txt:md5,1d587fa959f9129155314cf531103347",
                 "s1.R1.fq.gz:md5,1eadc3622432e260b2d1c43d669b621a",
                 "s1.R2.fq.gz:md5,fe11bc516e32e2ee6c3064dd7d157bc8",
@@ -831,6 +818,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:39:52.677148797"
+        "timestamp": "2026-02-06T20:15:08.585550307"
     }
 }

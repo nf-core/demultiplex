@@ -10,7 +10,6 @@
 
 include { BCL_DEMULTIPLEX                                          } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { FASTQ_CONTAM_SEQTK_KRAKEN                                } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
-include { FQTK_DEMULTIPLEX                                         } from '../subworkflows/local/fqtk_demultiplex/main'
 include { RUNDIR_CHECKQC                                           } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ      } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ     } from '../modules/local/fastq_to_samplesheet/main'
@@ -32,6 +31,8 @@ include { BASES2FASTQ                                              } from '../mo
 include { CELLRANGER_MKFASTQ                                       } from '../modules/nf-core/cellranger/mkfastq/main'
 include { MGIKIT_DEMULTIPLEX                                       } from '../modules/nf-core/mgikit/demultiplex/main'
 include { SGDEMUX                                                  } from '../modules/nf-core/sgdemux/main'
+include { FQTK                                                     } from '../modules/nf-core/fqtk/main'
+
 //
 // FUNCTION
 //
@@ -42,6 +43,7 @@ include { methodsDescriptionText                                   } from '../su
 include { removeAdapters                                           } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 include { prettyFormat                                             } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 include { generateFastqMeta                                        } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
+include { csvToTSV                                        } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,12 +221,12 @@ workflow DEMULTIPLEX {
         // [[meta:id], <path to sample names and barcodes in tsv: path>, <path to fastqs: path>, [<fastq name: string>, <read structure: string>]]
         ch_samplesheet = ch_flowcells.merge(fastq_read_structure.toList()) { a, b -> tuple(a[0], a[1], a[3], b) }
 
-        FQTK_DEMULTIPLEX(ch_samplesheet)
-        ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
-        ch_multiqc_files = ch_multiqc_files.mix(FQTK_DEMULTIPLEX.out.metrics.map { _meta, metrics ->
+        FQTK(csvToTSV(ch_samplesheet))
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(FQTK.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
+        ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(FQTK_DEMULTIPLEX.out.versions)
+        ch_versions = ch_versions.mix(FQTK.out.versions)
     }
     else if (demultiplexer == 'sgdemux') {
         // MODULE: sgdemux

@@ -357,6 +357,28 @@ def readgroupFromFastq(path, platform='SINGULAR') {
     rg
 }
 
+def csvToTSV(ch_samplesheet) {
+    def ch_samplesheet_tsv = ch_samplesheet
+        .collectFile(storeDir: "${params.outdir}") { item ->
+            def suffix = item[0].lane ? ".lane${item[0].lane}" : ""
+            def lines_out = ''
+            item[1].readLines().each { line ->
+                lines_out += line.replace(',', '\t') + '\n'
+            }
+            ["${item[0].id}${suffix}.tsv", lines_out]
+        }
+        .map { sample_sheet ->
+            def meta_id = (sample_sheet =~ /.*\/(.*?)(\.lane|\.tsv)/)[0][1]
+            def meta_lane = sample_sheet.getName().contains('.lane') ? (sample_sheet =~ /\.lane(\d+)/)[0][1].toInteger() : null
+            [[id: meta_id.toString(), lane: meta_lane], sample_sheet]
+        }
+
+    ch_samplesheet
+        .join(ch_samplesheet_tsv, failOnMismatch: true)
+        .map { meta, _sample_sheet_csv, flowcell, fastq_readstructure_pairs, sample_sheet_tsv ->
+            [meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs]
+        }
+}
 
 def removeAdapters(samplesheet) {
     def lines_out = ''
