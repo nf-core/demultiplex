@@ -3,9 +3,6 @@
         "content": [
             23,
             {
-                "DEMULTIPLEX": {
-                    "mgikit": "2.1.0"
-                },
                 "FALCO": {
                     "falco": "1.2.1"
                 },
@@ -14,27 +11,30 @@
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
+                },
+                "MGIKIT_DEMULTIPLEX": {
+                    "mgikit": "2.1.0"
                 }
             },
             [
-                "demultiplex",
-                "demultiplex/out-test-fc01-1",
-                "demultiplex/out-test-fc01-1/FC01.L01.mgikit.general",
-                "demultiplex/out-test-fc01-1/FC01.L01.mgikit.info",
-                "demultiplex/out-test-fc01-1/FC01.L01.mgikit.sample_stats",
-                "demultiplex/out-test-fc01-1/FC01.L01.mgikit.undetermined_barcode",
-                "demultiplex/out-test-fc01-1/FC01.L01.mgikit.undetermined_barcode.complete",
-                "demultiplex/out-test-fc01-1/Sample01_S1_L01_R1_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample01_S1_L01_R2_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample02_S2_L01_R1_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample02_S2_L01_R2_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample03_S3_L01_R1_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample03_S3_L01_R2_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample04_S4_L01_R1_001.fastq.gz",
-                "demultiplex/out-test-fc01-1/Sample04_S4_L01_R2_001.fastq.gz",
-                "demultiplex/out-test-fc01-1_undetermined",
-                "demultiplex/out-test-fc01-1_undetermined/Undetermined_L01_R1_001.fastq.gz",
-                "demultiplex/out-test-fc01-1_undetermined/Undetermined_L01_R2_001.fastq.gz",
+                "mgikit",
+                "mgikit/out-test-fc01-1",
+                "mgikit/out-test-fc01-1/FC01.L01.mgikit.general",
+                "mgikit/out-test-fc01-1/FC01.L01.mgikit.info",
+                "mgikit/out-test-fc01-1/FC01.L01.mgikit.sample_stats",
+                "mgikit/out-test-fc01-1/FC01.L01.mgikit.undetermined_barcode",
+                "mgikit/out-test-fc01-1/FC01.L01.mgikit.undetermined_barcode.complete",
+                "mgikit/out-test-fc01-1/Sample01_S1_L01_R1_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample01_S1_L01_R2_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample02_S2_L01_R1_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample02_S2_L01_R2_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample03_S3_L01_R1_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample03_S3_L01_R2_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample04_S4_L01_R1_001.fastq.gz",
+                "mgikit/out-test-fc01-1/Sample04_S4_L01_R2_001.fastq.gz",
+                "mgikit/out-test-fc01-1_undetermined",
+                "mgikit/out-test-fc01-1_undetermined/Undetermined_L01_R1_001.fastq.gz",
+                "mgikit/out-test-fc01-1_undetermined/Undetermined_L01_R2_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-insert-size-plot.txt",
@@ -294,8 +294,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-22T18:36:29.858370965"
+        "timestamp": "2026-02-05T19:30:03.595189066"
     }
 }

@@ -308,6 +308,78 @@ def methodsDescriptionText(mqc_methods_yaml) {
     return description_html.toString()
 }
 
+
+def generateFastqMeta(ch_reads, sampleNameRegex=/_R[0-9].*$/, platform='SINGULAR', useSanitizedId=false) {
+    ch_reads.transpose().map { fc_meta, fastq ->
+        def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
+        def meta = [
+            "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
+            "samplename": samplename,
+            "readgroup": [:],
+            "fcid": fc_meta.id,
+            "lane": fc_meta.lane,
+        ]
+        meta.readgroup = readgroupFromFastq(fastq, platform)
+        meta.readgroup.SM = meta.samplename
+
+        [meta, fastq]
+    }
+    .groupTuple(by: [0])
+    .map { meta, fastq ->
+        meta.single_end = fastq.size() == 1
+        [meta, fastq.flatten()]
+    }
+}
+
+// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+def readgroupFromFastq(path, platform='SINGULAR') {
+    def line
+
+    path.withInputStream { inputStream ->
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(inputStream)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    def rg = [:]
+
+    def fcid = fields[2]
+    def lane = fields[3]
+    def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
+    rg.ID = [fcid, lane].join('.')
+    rg.PU = [fcid, lane, index].findAll().join('.')
+    rg.PL = platform
+
+    rg
+}
+
+def csvToTSV(ch_samplesheet) {
+    def ch_samplesheet_tsv = ch_samplesheet
+        .collectFile(storeDir: "${params.outdir}") { item ->
+            def suffix = item[0].lane ? ".lane${item[0].lane}" : ""
+            def lines_out = ''
+            item[1].readLines().each { line ->
+                lines_out += line.replace(',', '\t') + '\n'
+            }
+            ["${item[0].id}${suffix}.tsv", lines_out]
+        }
+        .map { sample_sheet ->
+            def meta_id = (sample_sheet =~ /.*\/(.*?)(\.lane|\.tsv)/)[0][1]
+            def meta_lane = sample_sheet.getName().contains('.lane') ? (sample_sheet =~ /\.lane(\d+)/)[0][1].toInteger() : null
+            [[id: meta_id.toString(), lane: meta_lane], sample_sheet]
+        }
+
+    ch_samplesheet
+        .join(ch_samplesheet_tsv, failOnMismatch: true)
+        .map { meta, _sample_sheet_csv, flowcell, fastq_readstructure_pairs, sample_sheet_tsv ->
+            [meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs]
+        }
+}
+
 def removeAdapters(samplesheet) {
     def lines_out = ''
     def removal_checker = false

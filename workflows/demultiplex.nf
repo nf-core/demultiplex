@@ -10,11 +10,6 @@
 
 include { BCL_DEMULTIPLEX                                          } from '../subworkflows/nf-core/bcl_demultiplex/main'
 include { FASTQ_CONTAM_SEQTK_KRAKEN                                } from '../subworkflows/nf-core/fastq_contam_seqtk_kraken/main'
-include { BASES_DEMULTIPLEX                                        } from '../subworkflows/local/bases_demultiplex/main'
-include { FQTK_DEMULTIPLEX                                         } from '../subworkflows/local/fqtk_demultiplex/main'
-include { MKFASTQ_DEMULTIPLEX                                      } from '../subworkflows/local/mkfastq_demultiplex/main'
-include { SINGULAR_DEMULTIPLEX                                     } from '../subworkflows/local/singular_demultiplex/main'
-include { MGIKIT_DEMULTIPLEX                                       } from '../subworkflows/local/mgikit_demultiplex/main'
 include { RUNDIR_CHECKQC                                           } from '../subworkflows/local/rundir_checkqc/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_RNASEQ      } from '../modules/local/fastq_to_samplesheet/main'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ     } from '../modules/local/fastq_to_samplesheet/main'
@@ -32,6 +27,11 @@ include { UNTAR as UNTAR_FLOWCELL                                  } from '../mo
 include { UNTAR as UNTAR_KRAKEN_DB                                 } from '../modules/nf-core/untar/main'
 include { MD5SUM                                                   } from '../modules/nf-core/md5sum/main'
 include { SAMSHEE                                                  } from '../modules/nf-core/samshee/main'
+include { BASES2FASTQ                                              } from '../modules/nf-core/bases2fastq/main'
+include { CELLRANGER_MKFASTQ                                       } from '../modules/nf-core/cellranger/mkfastq/main'
+include { MGIKIT_DEMULTIPLEX                                       } from '../modules/nf-core/mgikit/demultiplex/main'
+include { SGDEMUX                                                  } from '../modules/nf-core/sgdemux/main'
+include { FQTK                                                     } from '../modules/nf-core/fqtk/main'
 
 //
 // FUNCTION
@@ -42,6 +42,8 @@ include { softwareVersionsToYAML                                   } from '../su
 include { methodsDescriptionText                                   } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 include { removeAdapters                                           } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 include { prettyFormat                                             } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
+include { generateFastqMeta                                        } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
+include { csvToTSV                                        } from '../subworkflows/local/utils_nfcore_demultiplex_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -176,13 +178,13 @@ workflow DEMULTIPLEX {
     if (demultiplexer == 'bases2fastq') {
         // MODULE: bases2fastq
         // Runs when "demultiplexer" is set to "bases2fastq"
-        BASES_DEMULTIPLEX(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(BASES_DEMULTIPLEX.out.fastq)
+        BASES2FASTQ(ch_flowcells)
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(BASES2FASTQ.out.sample_fastq, /_R[0-9].*$/, 'ELEMENT'))
         // TODO: verify that this is the correct output
-        ch_multiqc_files = ch_multiqc_files.mix(BASES_DEMULTIPLEX.out.metrics.map { _meta, metrics ->
+        ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(BASES_DEMULTIPLEX.out.versions)
+        ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
         // SUBWORKFLOW: illumina
@@ -219,35 +221,35 @@ workflow DEMULTIPLEX {
         // [[meta:id], <path to sample names and barcodes in tsv: path>, <path to fastqs: path>, [<fastq name: string>, <read structure: string>]]
         ch_samplesheet = ch_flowcells.merge(fastq_read_structure.toList()) { a, b -> tuple(a[0], a[1], a[3], b) }
 
-        FQTK_DEMULTIPLEX(ch_samplesheet)
-        ch_raw_fastq = ch_raw_fastq.mix(FQTK_DEMULTIPLEX.out.fastq)
-        ch_multiqc_files = ch_multiqc_files.mix(FQTK_DEMULTIPLEX.out.metrics.map { _meta, metrics ->
+        FQTK(csvToTSV(ch_samplesheet))
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(FQTK.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
+        ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(FQTK_DEMULTIPLEX.out.versions)
+        ch_versions = ch_versions.mix(FQTK.out.versions)
     }
     else if (demultiplexer == 'sgdemux') {
         // MODULE: sgdemux
         // Runs when "demultiplexer" is set to "sgdemux"
-        SINGULAR_DEMULTIPLEX(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(SINGULAR_DEMULTIPLEX.out.fastq)
-        ch_multiqc_files = ch_multiqc_files.mix(SINGULAR_DEMULTIPLEX.out.metrics.map { _meta, metrics ->
+        SGDEMUX(ch_flowcells)
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(SGDEMUX.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
+        ch_multiqc_files = ch_multiqc_files.mix(SGDEMUX.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(SINGULAR_DEMULTIPLEX.out.versions)
+        ch_versions = ch_versions.mix(SGDEMUX.out.versions)
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq
         // Runs when "demultiplexer" is set to "mkfastq"
-        MKFASTQ_DEMULTIPLEX(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(MKFASTQ_DEMULTIPLEX.out.fastq)
-        ch_versions = ch_versions.mix(MKFASTQ_DEMULTIPLEX.out.versions)
+        CELLRANGER_MKFASTQ(ch_flowcells)
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(CELLRANGER_MKFASTQ.out.fastq, /_R[0-9].*$/, 'SINGULAR'))
+        ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
     }
     else if (demultiplexer == 'mgikit') {
         // MODULE: mgikit
         // Runs when "demultiplexer" is set to "mgikit"
         MGIKIT_DEMULTIPLEX(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(MGIKIT_DEMULTIPLEX.out.fastq)
+        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(MGIKIT_DEMULTIPLEX.out.fastq, /_S\d+_L0\d+_R\d+.*$/, 'ELEMENT', true))
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
             return metrics
         })
