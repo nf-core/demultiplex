@@ -74,44 +74,7 @@ workflow BCL_DEMULTIPLEX {
             meta.samplename = fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/
             meta.fcid = fc_meta.id
             meta.lane = fc_meta.lane
-            // The buffered input stream allows reading directly from cloud storage
-            // It will not make a local copy of the file.
-            def line = ""
-            fastq.withInputStream { fq ->
-                def gzipStream = new java.util.zip.GZIPInputStream(fq)
-                def decoder = new InputStreamReader(gzipStream, 'ASCII')
-                def buffered = new BufferedReader(decoder)
-                line = buffered.readLine()
-                buffered.close()
-            }
-            if ( line != null && line.startsWith('@') ) {
-                line = line.substring(1)
-                // expected format is like:
-                // xx:yy:FLOWCELLID:LANE:... (seven fields)
-                def fields = line.split(':')
-                // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-                // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-                //def sequencer_serial = fields[0]
-                //def run_nubmer       = fields[1]
-                def fcid             = fields[2]
-                def lane             = fields[3]
-                def index            = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
-                def ID = [fcid, lane].join(".")
-                def PU = [fcid, lane, index].findAll().join(".")
-                def PL = "ILLUMINA"
-                def SM = fastq.getSimpleName().toString() - ~/_S[0-9]+.*$/
-                meta.readgroup = [
-                    "ID": ID,
-                    "SM": SM,
-                    "PL": PL,
-                    "PU": PU
-                ]
-                meta.empty = false
-            } else {
-                println "No reads were found in FASTQ file: ${fastq}"
-                meta.readgroup = [:]
-                meta.empty = true
-            }
+            meta.empty = false
             return [meta, fastq]
         }
         // Group by the meta id so that we can find mate pairs if they exist
