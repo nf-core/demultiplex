@@ -95,13 +95,18 @@ workflow {
     )
 
     publish:
-    pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets 
+    pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
+    multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report 
 
 }
 
 output {
     pipeline_samplesheets {
         path { "samplesheets/" }
+    }
+
+    multiqc_report {
+        path { "multiqc/" }
     }
 }
 
