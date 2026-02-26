@@ -201,7 +201,6 @@ workflow DEMULTIPLEX {
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
-            ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(RUNDIR_CHECKQC.out.report.map { _meta, json ->
                 return json
             })
@@ -444,6 +443,7 @@ workflow DEMULTIPLEX {
     }
 
     emit:
+    demultiplexed_fastq   = ch_fastq_to_qc 
     multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
     pipeline_samplesheets = ch_pipeline_samplesheets
