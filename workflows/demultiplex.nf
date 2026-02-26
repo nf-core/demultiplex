@@ -341,6 +341,14 @@ workflow DEMULTIPLEX {
 
     ch_meta_fastq_methylseq = ch_meta_fastq
     FASTQ_TO_SAMPLESHEET_METHYLSEQ(ch_meta_fastq_methylseq.collect(), "methylseq", strandedness)
+    
+    ch_pipeline_samplesheets = channel.empty()
+    .mix(FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'rnaseq', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'atacseq', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet.map { meta, samplesheet -> [meta, 'taxprofiler', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_SAREK.out.samplesheet.map { meta, samplesheet -> [meta, 'sarek', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_METHYLSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'methylseq', samplesheet] })
+
     //
     // Collate and save software versions
     //
@@ -438,4 +446,5 @@ workflow DEMULTIPLEX {
     emit:
     multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
     versions       = ch_versions // channel: [ path(versions.yml) ]
+    pipeline_samplesheets = ch_pipeline_samplesheets
 }

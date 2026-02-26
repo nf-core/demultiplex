@@ -44,6 +44,8 @@ workflow NFCORE_DEMULTIPLEX {
 
     emit:
     multiqc_report = DEMULTIPLEX.out.multiqc_report // channel: /path/to/multiqc_report.html
+    pipeline_samplesheets     = DEMULTIPLEX.out.pipeline_samplesheets 
+
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -91,6 +93,16 @@ workflow {
         params.hook_url,
         NFCORE_DEMULTIPLEX.out.multiqc_report
     )
+
+    publish:
+    pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets 
+
+}
+
+output {
+    pipeline_samplesheets {
+        path { "samplesheets/" }
+    }
 }
 
 /*
