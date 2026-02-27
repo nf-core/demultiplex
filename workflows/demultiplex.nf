@@ -71,7 +71,6 @@ workflow DEMULTIPLEX {
     // string: auto, reverse, forward, unstranded
 
     // Channel inputs
-    ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_multiqc_reports = channel.empty()
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
@@ -114,7 +113,6 @@ workflow DEMULTIPLEX {
             ch_samplesheet.map { meta, samplesheet, _flowcell, _lane -> [meta, samplesheet] },
             ch_file_schema_validator,
         )
-        ch_versions = ch_versions.mix(SAMSHEE.out.versions)
         ch_samplesheet = ch_samplesheet
             .join(SAMSHEE.out.samplesheet)
             .map{ meta, samplesheet, flowcell, lane, _samplesheet_formatted -> [ meta, samplesheet, flowcell, lane ] }
@@ -165,7 +163,6 @@ workflow DEMULTIPLEX {
     }
     else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(UNTAR_FLOWCELL(ch_flowcells_tar.run_dirs).untar, failOnMismatch: true, failOnDuplicate: true)
-        ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
     }
 
     // Merge the two channels back together
@@ -184,7 +181,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
         // SUBWORKFLOW: illumina
@@ -197,11 +193,9 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.stats.map { _meta, stats ->
             return stats
         })
-        ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
-            ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(RUNDIR_CHECKQC.out.report.map { _meta, json ->
                 return json
             })
@@ -226,7 +220,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(FQTK.out.versions)
     }
     else if (demultiplexer == 'sgdemux') {
         // MODULE: sgdemux
@@ -236,14 +229,12 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(SGDEMUX.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(SGDEMUX.out.versions)
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq
         // Runs when "demultiplexer" is set to "mkfastq"
         CELLRANGER_MKFASTQ(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(CELLRANGER_MKFASTQ.out.fastq, /_R[0-9].*$/, 'SINGULAR'))
-        ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
     }
     else if (demultiplexer == 'mgikit') {
         // MODULE: mgikit
@@ -253,7 +244,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
     }
     else {
         error("Unknown demultiplexer: ${demultiplexer}")
@@ -281,14 +271,12 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt.map { _meta, txt ->
             return txt
         })
-        ch_versions = ch_versions.mix(FALCO.out.versions)
     }
 
     // MODULE: md5sum
     // Split file list into separate channels entries and generate a checksum for each
     if (!("md5sum" in skip_tools)) {
         MD5SUM(ch_fastq_to_qc.transpose(), true)
-        ch_versions = ch_versions.mix(MD5SUM.out.versions)
     }
 
     // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
@@ -344,14 +332,7 @@ workflow DEMULTIPLEX {
     //
     // Collate and save software versions
     //
-    def topic_versions = channel.topic("versions")
-        .distinct()
-        .branch { entry ->
-            versions_file: entry instanceof Path
-            versions_tuple: true
-        }
-
-    def topic_versions_string = topic_versions.versions_tuple
+    def topic_versions_string = channel.topic("versions")
         .map { process, tool, version ->
             [process[process.lastIndexOf(':') + 1..-1], "  ${tool}: ${version}"]
         }
@@ -361,8 +342,7 @@ workflow DEMULTIPLEX {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
-        .mix(topic_versions_string)
+    topic_versions_string
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_' + 'demultiplex_software_' + 'mqc_' + 'versions.yml',
@@ -437,5 +417,4 @@ workflow DEMULTIPLEX {
 
     emit:
     multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
-    versions       = ch_versions // channel: [ path(versions.yml) ]
 }

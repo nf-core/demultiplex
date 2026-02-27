@@ -14,7 +14,7 @@ process CSV2TSV {
 
     output:
     tuple val(meta), path('samplesheet.tsv'), path(fastq_folder), val(fastq_readstructure_pairs), emit: ch_output
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('sed'), eval('sed --version | sed -n "s/sed (GNU sed) //p"'), topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,10 +22,5 @@ process CSV2TSV {
     script:
     """
     sed 's/,/\t/g' ${sample_sheet} > samplesheet.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sed: \$( sed --version | grep "sed (GNU sed) " | sed -e "s/sed (GNU sed) //g" )
-    END_VERSIONS
     """
 }

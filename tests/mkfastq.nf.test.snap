@@ -7,7 +7,7 @@
                     "cellranger": "9.0.1"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
                     "fastp": "1.0.1"
@@ -219,13 +219,13 @@
                 "test_sample_S1_L001_I1_001.fastq.gz:md5,018b0dbd8daf76fb9f6dfa4729ea0453",
                 "test_sample_S1_L001_R1.fastp.fastq.gz:md5,b348491a3b1afa096fde514dbdf55215",
                 "test_sample_S1_L001_R1.fastp.fastq.gz.md5:md5,bf141c0e66e60cf7c761ab17b6be6e3e",
-                "test_sample_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt:md5,5bbb71862c13bc60f391c7bd442b1555",
-                "test_sample_S1_L001_R1.fastp.fastq.gz_summary.txt:md5,cddba7481eb7b3eb9ef750ed0bc44565",
+                "test_sample_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt:md5,bf688e11e7903b13ca8eda0a09c5c644",
+                "test_sample_S1_L001_R1.fastp.fastq.gz_summary.txt:md5,8b2f14f1c8d16df2b45511fcca9e5964",
                 "test_sample_S1_L001_R1_001.fastq.gz:md5,df3ddf85d83bd722219c646c7815dbdc",
                 "test_sample_S1_L001_R2.fastp.fastq.gz:md5,1c60f1f3958b8b2b0255b9fae6df0b3d",
                 "test_sample_S1_L001_R2.fastp.fastq.gz.md5:md5,8f36394bb55f614a15338ed88ec1cf61",
-                "test_sample_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,8dd6f423e0237a5de5fdfa0382d754f9",
-                "test_sample_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,42c5418ae04fb809f9d5cdf81fe1baf4",
+                "test_sample_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,e56d946cac8fb782a0db83594e83f3e0",
+                "test_sample_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,5cc0af3c9000861a847adcc31f583163",
                 "test_sample_S1_L001_R2_001.fastq.gz:md5,c8a387b517ff5b7e56b85ccbf882efd2",
                 "Undetermined_S0_L001_I1_001.fastq.gz:md5,c93946d67bdb1d5b2ab955fd1dc9cb31",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,faa79ce215ae72fdc3375cda066c6757",
@@ -278,8 +278,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-22T18:37:41.361270077"
+        "timestamp": "2026-02-26T08:03:01.081610576"
     }
 }

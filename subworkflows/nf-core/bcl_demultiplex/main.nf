@@ -49,6 +49,12 @@ workflow BCL_DEMULTIPLEX {
         ch_interop = ch_interop.mix(BCLCONVERT.out.interop)
         ch_reports = ch_reports.mix(BCLCONVERT.out.reports)
         ch_logs = ch_logs.mix(BCLCONVERT.out.logs)
+<<<<<<< Updated upstream
+=======
+        ch_fastq_with_meta = ch_fastq_with_meta.mix(BCLCONVERT.out.fastq)
+        /*
+        
+>>>>>>> Stashed changes
         ch_fastq_with_meta = ch_fastq_with_meta.mix(
             generateReadgroupBCLCONVERT(
                 BCLCONVERT.out.reports.map { meta, reports ->
@@ -56,7 +62,11 @@ workflow BCL_DEMULTIPLEX {
                 },
                 BCLCONVERT.out.fastq,
             )
+<<<<<<< Updated upstream
         )
+=======
+        )*/
+>>>>>>> Stashed changes
     }
 
     // MODULE: bcl2fastq
