@@ -15,6 +15,7 @@ process BCLCONVERT {
     tuple val(meta), path("output/Reports")                           , emit: reports
     tuple val(meta), path("output/Logs")                              , emit: logs
     tuple val(meta), path("output/InterOp/*.bin")                     , emit: interop         , optional:true
+    tuple val(meta), path("output/Reports/RunInfo.xml"), emit: runinfo
     path("versions.yml")                                              , emit: versions
 
     when:

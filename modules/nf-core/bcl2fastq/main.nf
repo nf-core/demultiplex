@@ -15,6 +15,7 @@ process BCL2FASTQ {
     tuple val(meta), path("output/Reports")                             , emit: reports
     tuple val(meta), path("output/Stats")                               , emit: stats
     tuple val(meta), path("InterOp/*.bin")                       , emit: interop
+    tuple val(meta), path("**/*.xml", includeInputs: true), emit: xml
     path("versions.yml")                                         , emit: versions
 
     when:
