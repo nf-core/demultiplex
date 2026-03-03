@@ -74,6 +74,8 @@ workflow DEMULTIPLEX {
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_multiqc_reports = channel.empty()
+    ch_checkqc_reports = channel.empty()
+
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
     ch_file_schema_validator = params.file_schema_validator ? channel.fromPath(params.file_schema_validator, checkIfExists: true) : []
@@ -204,6 +206,7 @@ workflow DEMULTIPLEX {
             ch_multiqc_files = ch_multiqc_files.mix(RUNDIR_CHECKQC.out.report.map { _meta, json ->
                 return json
             })
+            ch_checkqc_reports = ch_checkqc_reports.mix(RUNDIR_CHECKQC.out.report)
         }
     }
     else if (demultiplexer == 'fqtk') {
@@ -443,8 +446,9 @@ workflow DEMULTIPLEX {
     }
 
     emit:
-    demultiplexed_fastq   = ch_fastq_to_qc 
-    multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
-    versions       = ch_versions // channel: [ path(versions.yml) ]
-    pipeline_samplesheets = ch_pipeline_samplesheets
+    demultiplexed_fastq         = ch_fastq_to_qc            // channel: [ meta, path(fastq) ]
+    multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
+    versions                    = ch_versions               // channel: [ path(versions.yml) ]
+    pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
+    checkqc_reports             = ch_checkqc_reports
 }

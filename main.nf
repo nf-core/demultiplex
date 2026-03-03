@@ -43,10 +43,10 @@ workflow NFCORE_DEMULTIPLEX {
     )
 
     emit:
-    demultiplexed_fastq   = DEMULTIPLEX.out.demultiplexed_fastq // channel: [ meta, path(fastq) ]
-    multiqc_report = DEMULTIPLEX.out.multiqc_report // channel: /path/to/multiqc_report.html
-    pipeline_samplesheets     = DEMULTIPLEX.out.pipeline_samplesheets 
-
+    demultiplexed_fastq         = DEMULTIPLEX.out.demultiplexed_fastq   // channel: [ meta, path(fastq) ]
+    multiqc_report              = DEMULTIPLEX.out.multiqc_report        // channel: /path/to/multiqc_report.html
+    pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets // channel: [ meta, samplesheet ]
+    checkqc_reports        = DEMULTIPLEX.out.checkqc_reports
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,9 +96,10 @@ workflow {
     )
 
     publish:
-    demultiplexed_fastq   = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq
+    demultiplexed_fastq       = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
     multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report 
+        checkqc_reports        = NFCORE_DEMULTIPLEX.out.checkqc_reports
 
 }
 
@@ -114,6 +115,10 @@ output {
 
     multiqc_report {
         path { "multiqc/" }
+    }
+
+    checkqc_reports {
+        path { "qc/checkqc/" }
     }
 }
 
