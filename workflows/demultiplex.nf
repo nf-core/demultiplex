@@ -473,6 +473,7 @@ workflow DEMULTIPLEX {
     demultiplex_stats           = ch_demultiplex_stats
     demultiplex_logs            = ch_demultiplex_logs
     multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
+    multiqc_data                = MULTIQC.out.data
     versions                    = ch_versions               // channel: [ path(versions.yml) ]
     pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
     checkqc_reports             = ch_checkqc_reports        // channel: [ meta, path(checkqc_report) ]
