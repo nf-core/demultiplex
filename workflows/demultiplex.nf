@@ -160,7 +160,7 @@ workflow DEMULTIPLEX {
     if (demultiplexer == 'mgikit') {
         ch_flowcells_tar_merged = channel.empty()
     }
-    else {(demultiplexer in ['bclconvert', 'bcl2fastq']) {
+    else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(UNTAR_FLOWCELL(ch_flowcells_tar.run_dirs).untar, failOnMismatch: true, failOnDuplicate: true)
         ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
     }
