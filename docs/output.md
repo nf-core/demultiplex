@@ -6,6 +6,23 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
+## Workflow output layout
+
+The pipeline now publishes key outputs via workflow outputs. The main directory layout is:
+
+- `demultiplexing/<id>/[L00<lane>/]/`
+  - `fastq/`: Demultiplexed FASTQ files used for downstream processing.
+  - `reports/`: Demultiplexer reports and metrics files.
+  - `interop/`: InterOp binaries (where available).
+  - `stats/`: Stats tables/files (where available).
+  - `logs/`: Demultiplexer log files (where available).
+- `qc/<fcid-or-id>/[L00<lane>/]<tool>/`
+  - `fastp/`, `falco/`, `md5sum/`, `checkqc/` QC results (conditional by pipeline options / demultiplexer).
+- `samplesheets/`
+  - Generated downstream pipeline samplesheets (`*.csv`).
+- `multiqc/`
+  - MultiQC report and supporting data.
+
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:

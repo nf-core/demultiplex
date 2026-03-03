@@ -44,6 +44,10 @@ workflow NFCORE_DEMULTIPLEX {
 
     emit:
     demultiplexed_fastq         = DEMULTIPLEX.out.demultiplexed_fastq   
+    demultiplex_reports         = DEMULTIPLEX.out.demultiplex_reports
+    demultiplex_interop         = DEMULTIPLEX.out.demultiplex_interop
+    demultiplex_stats           = DEMULTIPLEX.out.demultiplex_stats
+    demultiplex_logs            = DEMULTIPLEX.out.demultiplex_logs
     multiqc_report              = DEMULTIPLEX.out.multiqc_report        
     pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets 
     checkqc_reports             = DEMULTIPLEX.out.checkqc_reports
@@ -100,6 +104,10 @@ workflow {
 
     publish:
     demultiplexed_fastq       = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq
+    demultiplex_reports       = NFCORE_DEMULTIPLEX.out.demultiplex_reports
+    demultiplex_interop       = NFCORE_DEMULTIPLEX.out.demultiplex_interop
+    demultiplex_stats         = NFCORE_DEMULTIPLEX.out.demultiplex_stats
+    demultiplex_logs          = NFCORE_DEMULTIPLEX.out.demultiplex_logs
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
     multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report 
     checkqc_reports           = NFCORE_DEMULTIPLEX.out.checkqc_reports
@@ -112,7 +120,38 @@ workflow {
 output {
     
     demultiplexed_fastq {
-        path { "demultiplexed_fastq/" }
+        path { meta, _fastq ->
+            def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
+            "demultiplexing/${lane_dir}/fastq/"
+        }
+    }
+
+    demultiplex_reports {
+        path { meta, _report ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
+            "demultiplexing/${lane_dir}/reports/"
+        }
+    }
+
+    demultiplex_interop {
+        path { meta, _interop ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
+            "demultiplexing/${lane_dir}/interop/"
+        }
+    }
+
+    demultiplex_stats {
+        path { meta, _stat ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
+            "demultiplexing/${lane_dir}/stats/"
+        }
+    }
+
+    demultiplex_logs {
+        path { meta, _log ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
+            "demultiplexing/${lane_dir}/logs/"
+        }
     }
 
     pipeline_samplesheets {
