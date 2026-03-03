@@ -48,7 +48,8 @@ workflow NFCORE_DEMULTIPLEX {
     demultiplex_interop         = DEMULTIPLEX.out.demultiplex_interop
     demultiplex_stats           = DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs            = DEMULTIPLEX.out.demultiplex_logs
-    multiqc_report              = DEMULTIPLEX.out.multiqc_report        
+    multiqc_report              = DEMULTIPLEX.out.multiqc_report   
+    multiqc_data                = DEMULTIPLEX.out.multiqc_data     
     pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets 
     checkqc_reports             = DEMULTIPLEX.out.checkqc_reports
     fastp_reports               = DEMULTIPLEX.out.fastp_reports
@@ -109,7 +110,8 @@ workflow {
     demultiplex_stats         = NFCORE_DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs          = NFCORE_DEMULTIPLEX.out.demultiplex_logs
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
-    multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report 
+    multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report        
+    multiqc_data              = NFCORE_DEMULTIPLEX.out.multiqc_data
     checkqc_reports           = NFCORE_DEMULTIPLEX.out.checkqc_reports
     fastp_reports             = NFCORE_DEMULTIPLEX.out.fastp_reports
     falco_reports             = NFCORE_DEMULTIPLEX.out.falco_reports
@@ -122,7 +124,7 @@ output {
     demultiplexed_fastq {
         path { meta, _fastq ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
-            "demultiplexing/${lane_dir}/fastq/"
+            "${lane_dir}/fastq/"
         }
     }
 
@@ -159,6 +161,10 @@ output {
     }
 
     multiqc_report {
+        path { "multiqc/" }
+    }
+
+    multiqc_data {
         path { "multiqc/" }
     }
 
