@@ -7,6 +7,7 @@ keywords:
   - bcl2fastq
   - demultiplex
   - fastq
+  - multiqcsav
 components:
   - bcl2fastq
   - bclconvert
