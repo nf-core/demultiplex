@@ -75,6 +75,9 @@ workflow DEMULTIPLEX {
     ch_multiqc_files = channel.empty()
     ch_multiqc_reports = channel.empty()
     ch_checkqc_reports = channel.empty()
+    ch_fastp_reports = channel.empty()
+    ch_falco_reports = channel.empty()
+    ch_md5_checksums = channel.empty()
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
@@ -274,6 +277,7 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { _meta, json ->
             return json
         })
+        ch_fastp_reports = ch_fastp_reports.mix(FASTP.out.json).mix(FASTP.out.html)
         ch_fastq_to_qc = FASTP.out.reads
     }
 
@@ -284,6 +288,7 @@ workflow DEMULTIPLEX {
             return txt
         })
         ch_versions = ch_versions.mix(FALCO.out.versions)
+        ch_falco_reports = ch_falco_reports.mix(FALCO.out.html).mix(FALCO.out.txt)
     }
 
     // MODULE: md5sum
@@ -291,6 +296,7 @@ workflow DEMULTIPLEX {
     if (!("md5sum" in skip_tools)) {
         MD5SUM(ch_fastq_to_qc.transpose(), true)
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
+        ch_md5_checksums = ch_md5_checksums.mix(MD5SUM.out.checksum)
     }
 
     // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
@@ -450,5 +456,8 @@ workflow DEMULTIPLEX {
     multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
     versions                    = ch_versions               // channel: [ path(versions.yml) ]
     pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
-    checkqc_reports             = ch_checkqc_reports
+    checkqc_reports             = ch_checkqc_reports        // channel: [ meta, path(checkqc_report) ]
+    fastp_reports               = ch_fastp_reports          // channel: [ meta, path(fastp_report) ]
+    falco_reports               = ch_falco_reports          // channel: [ meta, path(falco_report) ]
+    md5_checksums               = ch_md5_checksums          // channel: [ meta, path(md5_checksum) ]
 }

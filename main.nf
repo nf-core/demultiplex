@@ -43,10 +43,13 @@ workflow NFCORE_DEMULTIPLEX {
     )
 
     emit:
-    demultiplexed_fastq         = DEMULTIPLEX.out.demultiplexed_fastq   // channel: [ meta, path(fastq) ]
-    multiqc_report              = DEMULTIPLEX.out.multiqc_report        // channel: /path/to/multiqc_report.html
-    pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets // channel: [ meta, samplesheet ]
-    checkqc_reports        = DEMULTIPLEX.out.checkqc_reports
+    demultiplexed_fastq         = DEMULTIPLEX.out.demultiplexed_fastq   
+    multiqc_report              = DEMULTIPLEX.out.multiqc_report        
+    pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets 
+    checkqc_reports             = DEMULTIPLEX.out.checkqc_reports
+    fastp_reports               = DEMULTIPLEX.out.fastp_reports
+    falco_reports               = DEMULTIPLEX.out.falco_reports
+    md5_checksums               = DEMULTIPLEX.out.md5_checksums
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,7 +102,10 @@ workflow {
     demultiplexed_fastq       = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
     multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report 
-        checkqc_reports        = NFCORE_DEMULTIPLEX.out.checkqc_reports
+    checkqc_reports           = NFCORE_DEMULTIPLEX.out.checkqc_reports
+    fastp_reports             = NFCORE_DEMULTIPLEX.out.fastp_reports
+    falco_reports             = NFCORE_DEMULTIPLEX.out.falco_reports
+    md5_checksums             = NFCORE_DEMULTIPLEX.out.md5_checksums
 
 }
 
@@ -119,6 +125,18 @@ output {
 
     checkqc_reports {
         path { "qc/checkqc/" }
+    }
+
+    fastp_reports {
+        path { "qc/fastp/" }
+    }
+
+    falco_reports {
+        path { "qc/falco/" }
+    }
+
+    md5_checksums {
+        path { "qc/md5sums/" }
     }
 }
 
