@@ -466,14 +466,17 @@ workflow DEMULTIPLEX {
         ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
     }
 
+    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
+
     emit:
-    demultiplexed_fastq         = ch_fastq_to_qc            // channel: [ meta, path(fastq) ]
+    demultiplexed_fastq         = ch_demultiplexed_fastq              // channel: [ meta, path(fastq) ]
     demultiplex_reports         = ch_demultiplex_reports    // channel: [ meta, path(demultiplex_report) ]
     demultiplex_interop         = ch_demultiplex_interop        
     demultiplex_stats           = ch_demultiplex_stats
     demultiplex_logs            = ch_demultiplex_logs
     multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
     multiqc_data                = MULTIQC.out.data
+    multiqc_plots               = MULTIQC.out.plots
     versions                    = ch_versions               // channel: [ path(versions.yml) ]
     pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
     checkqc_reports             = ch_checkqc_reports        // channel: [ meta, path(checkqc_report) ]

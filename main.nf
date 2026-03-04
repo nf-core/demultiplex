@@ -49,6 +49,7 @@ workflow NFCORE_DEMULTIPLEX {
     demultiplex_stats           = DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs            = DEMULTIPLEX.out.demultiplex_logs
     multiqc_report              = DEMULTIPLEX.out.multiqc_report   
+    multiqc_plots               = DEMULTIPLEX.out.multiqc_plots
     multiqc_data                = DEMULTIPLEX.out.multiqc_data     
     pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets 
     checkqc_reports             = DEMULTIPLEX.out.checkqc_reports
@@ -112,6 +113,7 @@ workflow {
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
     multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report        
     multiqc_data              = NFCORE_DEMULTIPLEX.out.multiqc_data
+    multiqc_plots             = NFCORE_DEMULTIPLEX.out.multiqc_plots
     checkqc_reports           = NFCORE_DEMULTIPLEX.out.checkqc_reports
     fastp_reports             = NFCORE_DEMULTIPLEX.out.fastp_reports
     falco_reports             = NFCORE_DEMULTIPLEX.out.falco_reports
@@ -124,40 +126,39 @@ output {
     demultiplexed_fastq {
         path { meta, _fastq ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
-            "${lane_dir}/fastq/"
+            "${lane_dir}/"
         }
     }
 
     demultiplex_reports {
-        path { meta, _report ->
+        path { meta, report ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "demultiplexing/${lane_dir}/reports/"
-        }
+            "${lane_dir}/"        
+            }
     }
 
     demultiplex_interop {
-        path { meta, _interop ->
-            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "demultiplexing/${lane_dir}/interop/"
-        }
+        path { meta, interop ->
+            "${meta.id}/"        
+            }
     }
 
     demultiplex_stats {
-        path { meta, _stat ->
+        path { meta, stat ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "demultiplexing/${lane_dir}/stats/"
-        }
+            "${lane_dir}/"        
+            }
     }
 
     demultiplex_logs {
-        path { meta, _log ->
+        path { meta, log ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "demultiplexing/${lane_dir}/logs/"
+            "${lane_dir}/"
         }
     }
 
     pipeline_samplesheets {
-        path { "samplesheets/" }
+        path { "samplesheet/" }
     }
 
     multiqc_report {
@@ -168,20 +169,37 @@ output {
         path { "multiqc/" }
     }
 
+    multiqc_plots {
+        path { "multiqc/" }
+    }
+
+
     checkqc_reports {
-        path { "qc/checkqc/" }
+        path { meta, _report ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
+            "${lane_dir}/"
+        }
     }
 
     fastp_reports {
-        path { "qc/fastp/" }
+        path { meta, _report ->
+            def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
+            "${lane_dir}/"
+        }
     }
 
     falco_reports {
-        path { "qc/falco/" }
+        path { meta, _report ->
+            def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
+            "${lane_dir}/"
+        }
     }
 
     md5_checksums {
-        path { "qc/md5sums/" }
+        path { meta, _checksum ->
+            def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
+            "${lane_dir}/"
+        }
     }
 }
 
