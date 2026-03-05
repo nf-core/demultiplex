@@ -200,7 +200,6 @@ workflow DEMULTIPLEX {
                         [meta + [samplename: sn], fastq]
                     }
                 )
-            ch_raw_fastq.view()
         }
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.reports.map { _meta, report ->
             return report
