@@ -187,7 +187,21 @@ workflow DEMULTIPLEX {
         // SUBWORKFLOW: illumina
         // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
         BCL_DEMULTIPLEX(ch_flowcells, demultiplexer)
-        ch_raw_fastq = ch_raw_fastq.mix(BCL_DEMULTIPLEX.out.fastq)
+        if (demultiplexer == 'bcl2fastq') {
+            ch_raw_fastq = ch_raw_fastq.mix(BCL_DEMULTIPLEX.out.fastq)
+        } else {
+            // Add missing sample name to metadata
+            ch_raw_fastq = ch_raw_fastq
+                .mix(
+                    BCL_DEMULTIPLEX.out.fastq.map {
+                        meta, fastq ->
+                        def first_file = fastq instanceof List ? fastq[0] : fastq
+                        def sn = first_file.getSimpleName().toString() - ~/_S[0-9]+.*$/
+                        [meta + [samplename: sn], fastq]
+                    }
+                )
+            ch_raw_fastq.view()
+        }
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.reports.map { _meta, report ->
             return report
         })

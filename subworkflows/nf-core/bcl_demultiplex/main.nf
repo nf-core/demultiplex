@@ -32,7 +32,7 @@ workflow BCL_DEMULTIPLEX {
         ch_fastq_with_meta = ch_fastq_with_meta.mix(
             generateReadgroupBCLCONVERT(
                 BCLCONVERT.out.reports.map { meta, reports ->
-                    return [meta, reports.find { report -> report.name == "fastq_list.csv" }]
+                    return [meta, file(reports).resolve("fastq_list.csv")]
                 },
                 BCLCONVERT.out.fastq,
             )
@@ -117,14 +117,8 @@ def generateReadgroupBCLCONVERT(ch_fastq_list_csv, ch_fastq) {
                     def fastq1 = fastq_list.find { fq -> file(fq).name == file(row.Read1File).name }
                     def fastq2 = row.Read2File ? fastq_list.find { fq -> file(fq).name == file(row.Read2File).name } : null
 
-                    def sn = fastq1.getSimpleName().toString() - ~/_S[0-9]+.*$/
                     // set fastq metadata
-                    def new_meta = meta + [
-                        id: fastq1.getSimpleName().toString() - ~/_R[0-9]_001.*$/,
-                        samplename: sn,
-                        readgroup: rg,
-                        single_end: !fastq2
-                    ]
+                    def new_meta = meta + [id: fastq1.getSimpleName().toString() - ~/_R[0-9]_001.*$/, readgroup: rg, single_end: !fastq2]
 
                     meta_fastq << [new_meta, fastq2 ? [fastq1, fastq2] : [fastq1]]
                 }
