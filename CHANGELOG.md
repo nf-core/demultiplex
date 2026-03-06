@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#372](https://github.com/nf-core/demultiplex/pull/379) Enable workflow outputs.
 - [#372](https://github.com/nf-core/demultiplex/pull/372) Remove local subworkflows with less than 2 modules.
 - [#371](https://github.com/nf-core/demultiplex/pull/371) Bump checkqc
 - [#354](https://github.com/nf-core/demultiplex/pull/354) Bump version and note mgikit addition in 1.7.0 Changelog
