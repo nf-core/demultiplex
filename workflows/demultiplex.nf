@@ -194,7 +194,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
         // SUBWORKFLOW: illumina

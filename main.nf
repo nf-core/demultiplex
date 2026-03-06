@@ -124,36 +124,42 @@ workflow {
 output {
     
     demultiplexed_fastq {
-        path { meta, _fastq ->
+        path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
-            "${lane_dir}/"
+            def files = fastq instanceof List ? fastq : [fastq]
+            files.each { f ->
+                f >> "${lane_dir}/${f.name}"
+            }
         }
     }
 
     demultiplex_reports {
         path { meta, report ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "${lane_dir}/"        
+            report >> "${lane_dir}/${report.name}"
             }
     }
 
     demultiplex_interop {
         path { meta, interop ->
-            "${meta.id}/"        
+            def files = interop instanceof List ? interop : [interop]
+            files.each { f ->
+                f >> "${meta.id}/InterOp/${f.name}"
             }
+        }
     }
 
     demultiplex_stats {
         path { meta, stat ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "${lane_dir}/"        
+            stat >> "${lane_dir}/${stat.name}"       
             }
     }
 
     demultiplex_logs {
         path { meta, log ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            "${lane_dir}/"
+            log >> "${lane_dir}/${log.name}" 
         }
     }
 
