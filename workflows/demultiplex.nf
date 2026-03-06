@@ -371,7 +371,7 @@ workflow DEMULTIPLEX {
 
     ch_meta_fastq_methylseq = ch_meta_fastq
     FASTQ_TO_SAMPLESHEET_METHYLSEQ(ch_meta_fastq_methylseq.collect(), "methylseq", strandedness)
-    
+
     ch_pipeline_samplesheets = channel.empty()
     .mix(FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'rnaseq', samplesheet] })
     .mix(FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'atacseq', samplesheet] })
@@ -478,7 +478,7 @@ workflow DEMULTIPLEX {
     emit:
     demultiplexed_fastq         = ch_demultiplexed_fastq    // channel: [ meta, path(fastq) ]
     demultiplex_reports         = ch_demultiplex_reports    // channel: [ meta, path(demultiplex_report) ]
-    demultiplex_interop         = ch_demultiplex_interop        
+    demultiplex_interop         = ch_demultiplex_interop
     demultiplex_stats           = ch_demultiplex_stats
     demultiplex_logs            = ch_demultiplex_logs
     multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
