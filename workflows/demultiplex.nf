@@ -194,7 +194,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report).mix(BASES2FASTQ.out.sample_json)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
         // SUBWORKFLOW: illumina
@@ -211,7 +211,7 @@ workflow DEMULTIPLEX {
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
         ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
-        ch_demultiplex_logs = ch_demultiplex_logs.mix(BCL_DEMULTIPLEX.out.logs)
+        //ch_demultiplex_logs = ch_demultiplex_logs.mix(BCL_DEMULTIPLEX.out.logs)
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
