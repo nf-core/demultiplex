@@ -48,14 +48,15 @@ workflow NFCORE_DEMULTIPLEX {
     demultiplex_interop         = DEMULTIPLEX.out.demultiplex_interop
     demultiplex_stats           = DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs            = DEMULTIPLEX.out.demultiplex_logs
-    multiqc_report              = DEMULTIPLEX.out.multiqc_report   
-    multiqc_plots               = DEMULTIPLEX.out.multiqc_plots
-    multiqc_data                = DEMULTIPLEX.out.multiqc_data     
+    multiqc_report              = DEMULTIPLEX.out.multiqc_report       
     pipeline_samplesheets       = DEMULTIPLEX.out.pipeline_samplesheets 
     checkqc_reports             = DEMULTIPLEX.out.checkqc_reports
     fastp_reports               = DEMULTIPLEX.out.fastp_reports
     falco_reports               = DEMULTIPLEX.out.falco_reports
     md5_checksums               = DEMULTIPLEX.out.md5_checksums
+    fastq_idx                   = DEMULTIPLEX.out.fastq_idx
+    undetermined                = DEMULTIPLEX.out.undetermined
+    undetermined_idx            = DEMULTIPLEX.out.undetermined_idx
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,12 +113,13 @@ workflow {
     demultiplex_logs          = NFCORE_DEMULTIPLEX.out.demultiplex_logs
     pipeline_samplesheets     = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
     multiqc_report            = NFCORE_DEMULTIPLEX.out.multiqc_report        
-    multiqc_data              = NFCORE_DEMULTIPLEX.out.multiqc_data
-    multiqc_plots             = NFCORE_DEMULTIPLEX.out.multiqc_plots
     checkqc_reports           = NFCORE_DEMULTIPLEX.out.checkqc_reports
     fastp_reports             = NFCORE_DEMULTIPLEX.out.fastp_reports
     falco_reports             = NFCORE_DEMULTIPLEX.out.falco_reports
     md5_checksums             = NFCORE_DEMULTIPLEX.out.md5_checksums
+    fastq_idx                 = NFCORE_DEMULTIPLEX.out.fastq_idx
+    undetermined              = NFCORE_DEMULTIPLEX.out.undetermined
+    undetermined_idx          = NFCORE_DEMULTIPLEX.out.undetermined_idx
 
 }
 
@@ -136,8 +138,11 @@ output {
     demultiplex_reports {
         path { meta, report ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            report >> "${lane_dir}/${report.name}"
+            def files = report instanceof List ? report : [report]
+            files.each { f ->
+                f >> "${lane_dir}/${f.name}"
             }
+        }
     }
 
     demultiplex_interop {
@@ -171,14 +176,6 @@ output {
         path { "multiqc/" }
     }
 
-    multiqc_data {
-        path { "multiqc/" }
-    }
-
-    multiqc_plots {
-        path { "multiqc/" }
-    }
-
 
     checkqc_reports {
         path { meta, _report ->
@@ -205,6 +202,37 @@ output {
         path { meta, _checksum ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
+        }
+    }
+
+    fastq_idx {
+        path { meta, fastq ->
+            def id = meta.fcid ?: meta.id
+            def lane_dir = meta.lane ? "${id}/L00${meta.lane}" : "${id}"
+            def files = fastq instanceof List ? fastq : [fastq]
+            files.each { f ->
+                f >> "${lane_dir}/${f.name}"
+            }
+        }
+    }
+
+    undetermined {
+        path { meta, fastq ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
+            def files = fastq instanceof List ? fastq : [fastq]
+            files.each { f ->
+                f >> "${lane_dir}/${f.name}"
+            }
+        }
+    }
+
+    undetermined_idx {
+        path { meta, fastq ->
+            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
+            def files = fastq instanceof List ? fastq : [fastq]
+            files.each { f ->
+                f >> "${lane_dir}/${f.name}"
+            }
         }
     }
 }

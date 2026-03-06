@@ -82,6 +82,9 @@ workflow DEMULTIPLEX {
     ch_demultiplex_interop = channel.empty()
     ch_demultiplex_stats = channel.empty()
     ch_demultiplex_logs = channel.empty()
+    ch_fastq_idx = channel.empty()
+    ch_undetermined = channel.empty()
+    ch_undetermined_idx = channel.empty()
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
@@ -263,6 +266,9 @@ workflow DEMULTIPLEX {
         ch_demultiplex_interop = ch_demultiplex_interop.mix(CELLRANGER_MKFASTQ.out.interop)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(CELLRANGER_MKFASTQ.out.reports)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(CELLRANGER_MKFASTQ.out.stats)
+        ch_fastq_idx = ch_fastq_idx.mix(CELLRANGER_MKFASTQ.out.fastq_idx)
+        ch_undetermined = ch_undetermined.mix(CELLRANGER_MKFASTQ.out.undetermined_fastq)
+
     }
     else if (demultiplexer == 'mgikit') {
         // MODULE: mgikit
@@ -331,6 +337,7 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { _meta, log ->
             return log
         })
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports)
     }
 
     // Prepare metamap with fastq info
@@ -463,24 +470,25 @@ workflow DEMULTIPLEX {
             [],
             [],
         )
-        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
+        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report).mix(MULTIQC.out.data).mix(MULTIQC.out.plots)
     }
 
     ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
 
     emit:
-    demultiplexed_fastq         = ch_demultiplexed_fastq              // channel: [ meta, path(fastq) ]
+    demultiplexed_fastq         = ch_demultiplexed_fastq    // channel: [ meta, path(fastq) ]
     demultiplex_reports         = ch_demultiplex_reports    // channel: [ meta, path(demultiplex_report) ]
     demultiplex_interop         = ch_demultiplex_interop        
     demultiplex_stats           = ch_demultiplex_stats
     demultiplex_logs            = ch_demultiplex_logs
     multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
-    multiqc_data                = MULTIQC.out.data
-    multiqc_plots               = MULTIQC.out.plots
     versions                    = ch_versions               // channel: [ path(versions.yml) ]
     pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
     checkqc_reports             = ch_checkqc_reports        // channel: [ meta, path(checkqc_report) ]
     fastp_reports               = ch_fastp_reports          // channel: [ meta, path(fastp_report) ]
     falco_reports               = ch_falco_reports          // channel: [ meta, path(falco_report) ]
     md5_checksums               = ch_md5_checksums          // channel: [ meta, path(md5_checksum) ]
+    fastq_idx                   = ch_fastq_idx
+    undetermined                = ch_undetermined
+    undetermined_idx            = ch_undetermined_idx
 }
