@@ -17,7 +17,6 @@ workflow RUNDIR_CHECKQC {
         demultiplexer
 
     main:
-        ch_versions      = channel.empty()
         ch_report        = channel.empty()
         ch_checkqc_dir   = channel.empty()
 
@@ -55,11 +54,9 @@ workflow RUNDIR_CHECKQC {
                 // Run checkqc
                 CHECKQC(ch_checkqc_dir, ch_checkqc_config)
                 ch_report = CHECKQC.out.report
-                ch_versions = ch_versions.mix(CHECKQC.out.versions)
         }
 
     emit:
         checkqc_dir = ch_checkqc_dir
         report      = ch_report
-        versions    = ch_versions
 }

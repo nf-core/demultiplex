@@ -249,16 +249,10 @@
                 "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
                 "bcl2fastq_lane_counts.txt:md5,289a1a8c66a582ea39f786f851c0107a",
                 "bcl2fastq_sample_counts.txt:md5,a1ffb5a63338b98df6df82399ba2eea8",
-                "bcl2fastq_undetermined.txt:md5,980cf7e7e430b596392297bc5fc126c7",
-                "llms-full.txt:md5,994179079ed7378176c9969ec5f1785b",
-                "multiqc.log:md5,279b7b2b4b1eb84a44c987796eed89f4",
-                "multiqc.parquet:md5,78ba6a729fbbe0801e390a69a2c12a60",
-                "multiqc_bcl2fastq_bylane.txt:md5,bde78aa8394c4b7bc4f3cd017e3d29a4",
+                "bcl2fastq_undetermined.txt:md5,ea8e5fd28e89828697611a6cad2b7ef6",
+                "llms-full.txt:md5,b35033ea4de96eb39cd958c434ad46c9",
                 "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "multiqc_data.json:md5,b98b789d73cb69bfbb0d7a6cf75cb561",
-                "multiqc_general_stats.txt:md5,dbb4c8b485cbcc05929fcf36c7345f67",
-                "multiqc_sources.txt:md5,3f19eb89f586761663395dc32765cc84"
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
                 [
@@ -287,6 +281,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-03T19:06:10.67382845"
+        "timestamp": "2026-03-09T18:29:34.424908639"
     }
 }

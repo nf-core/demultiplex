@@ -25,7 +25,7 @@ nextflow_pipeline {
         ],
         [
             name: "Test single-flowcell input - BASES2FASTQ",
-           tag: "flowcell",
+            tag: "flowcell",
             params: [
                 flowcell_id: "sim-data",
                 flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/RunManifest.csv",

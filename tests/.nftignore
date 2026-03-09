@@ -36,3 +36,10 @@ sim-data/DefaultSample_stats.json
 sim-data/RunStats.json
 sim-data/most_frequent_unmatched.tsv
 sim-data/{Undetermined,s}*L001*.fastq.gz
+multiqcsav/multiqc_data/multiqc.log
+multiqcsav/multiqc_data/multiqc.parquet
+multiqcsav/multiqc_data/multiqc_bcl2fastq_bylane.txt
+multiqcsav/multiqc_data/multiqc_data.json
+multiqcsav/multiqc_data/multiqc_general_stats.txt
+multiqcsav/multiqc_data/multiqc_software_versions.txt
+multiqcsav/multiqc_data/multiqc_sources.txt

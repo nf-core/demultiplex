@@ -531,7 +531,7 @@
     },
     "Test single-flowcell input - BCLCONVERT": {
         "content": [
-            25,
+            27,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.4.6"
@@ -544,6 +544,9 @@
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
+                },
+                "UNTAR_FLOWCELL": {
+                    "untar": 1.34
                 }
             },
             [
@@ -765,6 +768,33 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_top_overrepresented_sequences_table.svg",
                 "multiqc/multiqc_report.html",
+                "multiqcsav",
+                "multiqcsav/multiqc_data",
+                "multiqcsav/multiqc_data/bclconvert-lane-stats-table.txt",
+                "multiqcsav/multiqc_data/bclconvert-sample-stats-table.txt",
+                "multiqcsav/multiqc_data/bclconvert_lane_counts.txt",
+                "multiqcsav/multiqc_data/bclconvert_sample_counts_Counts_per_lane.txt",
+                "multiqcsav/multiqc_data/bclconvert_sample_counts_Index_mismatches.txt",
+                "multiqcsav/multiqc_data/bclconvert_undetermined.txt",
+                "multiqcsav/multiqc_data/llms-full.txt",
+                "multiqcsav/multiqc_data/multiqc.log",
+                "multiqcsav/multiqc_data/multiqc.parquet",
+                "multiqcsav/multiqc_data/multiqc_bclconvert_bylane.txt",
+                "multiqcsav/multiqc_data/multiqc_bclconvert_bysample.txt",
+                "multiqcsav/multiqc_data/multiqc_citations.txt",
+                "multiqcsav/multiqc_data/multiqc_data.json",
+                "multiqcsav/multiqc_data/multiqc_general_stats.txt",
+                "multiqcsav/multiqc_data/multiqc_sav.txt",
+                "multiqcsav/multiqc_data/multiqc_sources.txt",
+                "multiqcsav/multiqc_data/sav-intensity-vs-cycle-plot.txt",
+                "multiqcsav/multiqc_data/sav-lane-metrics-summary-table.txt",
+                "multiqcsav/multiqc_data/sav-pf-vs-occ-plot.txt",
+                "multiqcsav/multiqc_data/sav-qscore-heatmap-plot.txt",
+                "multiqcsav/multiqc_data/sav-qscore-histogram-plot.txt",
+                "multiqcsav/multiqc_data/sav-read-metrics-summary-table.txt",
+                "multiqcsav/multiqc_data/sav-summary-clusters-reads-lane-plot_Clusters.txt",
+                "multiqcsav/multiqc_data/sav-summary-clusters-reads-lane-plot_Reads.txt",
+                "multiqcsav/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
@@ -866,7 +896,26 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,a030834f88bdc01b4feb10d53612a3db",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,499108393635a1dceb27099af8ad748e",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "bclconvert-lane-stats-table.txt:md5,9295e908a296865f1ea271ae4181ab04",
+                "bclconvert-sample-stats-table.txt:md5,ca0177eadc0ff34de537c543f3461d19",
+                "bclconvert_lane_counts.txt:md5,32e8acea6fd6ef76943100329be22fee",
+                "bclconvert_sample_counts_Counts_per_lane.txt:md5,2eb58439a3eb1eee508bdce0ee340649",
+                "bclconvert_sample_counts_Index_mismatches.txt:md5,94023737055873c151ea9f7e3f563f73",
+                "bclconvert_undetermined.txt:md5,2cac05222da27b5e9550f5fc31267943",
+                "llms-full.txt:md5,dfa7cea4aa1942ed1c5e5428f69ebe73",
+                "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
+                "multiqc_bclconvert_bysample.txt:md5,499108393635a1dceb27099af8ad748e",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "multiqc_sav.txt:md5,2321a2718b973af81011cacde52bf5b9",
+                "sav-intensity-vs-cycle-plot.txt:md5,df245ce4a5a72f787b445dd4900ad5f3",
+                "sav-lane-metrics-summary-table.txt:md5,bc5af0b9d12de7a08d5735a492940f88",
+                "sav-pf-vs-occ-plot.txt:md5,815cfa1d324e7beb94f1ee698e83f954",
+                "sav-qscore-heatmap-plot.txt:md5,0849b097506268c58bfd30e16be8a2ed",
+                "sav-qscore-histogram-plot.txt:md5,cb8e17ec4af43e46efe854de16032af8",
+                "sav-read-metrics-summary-table.txt:md5,b5d938399a841c62269b0f17415c91e6",
+                "sav-summary-clusters-reads-lane-plot_Clusters.txt:md5,426573d650186f40e279f5a2dfe91527",
+                "sav-summary-clusters-reads-lane-plot_Reads.txt:md5,160c58957962d61050c1364bafa745ce"
             ],
             [
                 [
@@ -895,7 +944,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T18:43:13.261743226"
+        "timestamp": "2026-03-09T19:22:19.948258811"
     },
     "Test single-flowcell input - BASES2FASTQ": {
         "content": [
@@ -1964,7 +2013,7 @@
     },
     "Test single-flowcell input - BCL2FASTQ": {
         "content": [
-            10,
+            12,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
@@ -1977,6 +2026,9 @@
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
+                },
+                "UNTAR_FLOWCELL": {
+                    "untar": 1.34
                 }
             },
             [
@@ -2141,6 +2193,22 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_report.html",
+                "multiqcsav",
+                "multiqcsav/multiqc_data",
+                "multiqcsav/multiqc_data/bcl2fastq-lane-stats-table.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_lane_counts.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_sample_counts.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_undetermined.txt",
+                "multiqcsav/multiqc_data/llms-full.txt",
+                "multiqcsav/multiqc_data/multiqc.log",
+                "multiqcsav/multiqc_data/multiqc.parquet",
+                "multiqcsav/multiqc_data/multiqc_bcl2fastq_bylane.txt",
+                "multiqcsav/multiqc_data/multiqc_bcl2fastq_bysample.txt",
+                "multiqcsav/multiqc_data/multiqc_citations.txt",
+                "multiqcsav/multiqc_data/multiqc_data.json",
+                "multiqcsav/multiqc_data/multiqc_general_stats.txt",
+                "multiqcsav/multiqc_data/multiqc_sources.txt",
+                "multiqcsav/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
@@ -2189,7 +2257,14 @@
                 "fastqc_sequence_counts_plot.txt:md5,662c69090978601ca7d39504b1ac736b",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
+                "bcl2fastq_lane_counts.txt:md5,289a1a8c66a582ea39f786f851c0107a",
+                "bcl2fastq_sample_counts.txt:md5,a1ffb5a63338b98df6df82399ba2eea8",
+                "bcl2fastq_undetermined.txt:md5,980cf7e7e430b596392297bc5fc126c7",
+                "llms-full.txt:md5,994179079ed7378176c9969ec5f1785b",
+                "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
                 [
@@ -2218,6 +2293,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-03T17:10:18.205396639"
+        "timestamp": "2026-03-09T18:44:30.213364054"
     }
 }
