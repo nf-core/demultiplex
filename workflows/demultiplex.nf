@@ -255,7 +255,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(SGDEMUX.out.versions)
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(SGDEMUX.out.metrics)
+        
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq

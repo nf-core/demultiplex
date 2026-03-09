@@ -151,7 +151,6 @@
                 "sim-data/Undetermined_S25_L001_R2.fastp.fastq.gz_fastqc_report.html",
                 "sim-data/Undetermined_S25_L001_R2.fastp.fastq.gz_summary.txt",
                 "sim-data/Undetermined_S25_L001_R2_001.fastq.gz",
-                "sim-data/metrics.tsv",
                 "sim-data/out_L001.fastp.html",
                 "sim-data/out_L001.fastp.json",
                 "sim-data/out_L001_R1.fastp.fastq.gz",
@@ -527,7 +526,6 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "sim-data.csv:md5,a5ea0ad63c5df73b5fc2436dd8d9dbfe",
                 "Undetermined_S25_L001.fastp.json:md5,f5aa7f07f6e223e30e22ff30f01e54f3",
-                "metrics.tsv:md5,7627e4bd2a56ea551fd74b4a2b5cb4b2",
                 "out_L001.fastp.json:md5,3532c2b8304e40ae93f099ee4864c8c7",
                 "out_L001_R1_001.fastq.gz:md5,0e6423e3caad3aba1e1532e287464c63",
                 "out_L001_R2_001.fastq.gz:md5,b8418c4200127ad974bcae9030d719a6",
@@ -583,6 +581,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T18:23:28.328052835"
+        "timestamp": "2026-03-09T16:26:03.479895538"
     }
 }
