@@ -279,7 +279,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports)
     }
     else {
         error("Unknown demultiplexer: ${demultiplexer}")

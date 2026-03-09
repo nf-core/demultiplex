@@ -149,6 +149,7 @@
                 "test-fc01/L001",
                 "test-fc01/L001/FC01.L01.mgikit.general",
                 "test-fc01/L001/FC01.L01.mgikit.info",
+                "test-fc01/L001/FC01.L01.mgikit.sample_stats",
                 "test-fc01/L001/FC01.L01.mgikit.undetermined_barcode",
                 "test-fc01/L001/Sample01.fastp.html",
                 "test-fc01/L001/Sample01.fastp.json",
@@ -234,6 +235,7 @@
                 "test-fc01.csv:md5,74dfac5602f25fe428510a500d3b4700",
                 "FC01.L01.mgikit.general:md5,624b0d43c3995fde2c122c447e780191",
                 "FC01.L01.mgikit.info:md5,69a72a1c43d47032828d8b97c6cf8807",
+                "FC01.L01.mgikit.sample_stats:md5,20d5b9f4a430fd34579e0f70b42f73f0",
                 "FC01.L01.mgikit.undetermined_barcode:md5,c1960b64d4cc5c141d742aa1b6f57a31",
                 "Sample01.fastp.json:md5,47e865c3b3094226e1b7a2238b5a2128",
                 "Sample01_R1.fastp.fastq.gz:md5,19752026de713f514637fab29e4ffac4",
@@ -285,6 +287,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T20:36:24.072918654"
+        "timestamp": "2026-03-09T16:02:38.981691896"
     }
 }
