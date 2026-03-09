@@ -45,6 +45,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -163,6 +165,7 @@
                 "Sample1_S1_L001_fastqc_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
                 "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
                 "bclconvert_lane_counts.txt:md5,6586dc34bad08f04ddf113b7b7262f45",
@@ -184,7 +187,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:50:15.465230721"
+        "timestamp": "2026-03-09T18:43:57.037911233"
     },
     "Skip Trimming": {
         "content": [
@@ -232,6 +235,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -350,6 +355,7 @@
                 "Sample1_S1_L001_fastqc_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
                 "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
                 "bclconvert_lane_counts.txt:md5,6586dc34bad08f04ddf113b7b7262f45",
@@ -393,7 +399,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:49:16.481496164"
+        "timestamp": "2026-03-09T18:43:23.260378439"
     },
     "Skip MultiQC": {
         "content": [
@@ -447,6 +453,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
@@ -484,6 +492,7 @@
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
@@ -491,7 +500,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:54:42.017000706"
+        "timestamp": "2026-03-09T18:47:44.352664261"
     },
     "Skip Fastqc": {
         "content": [
@@ -545,6 +554,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -697,6 +708,7 @@
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
                 "bclconvert_lane_counts.txt:md5,6586dc34bad08f04ddf113b7b7262f45",
@@ -725,7 +737,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:52:14.815200458"
+        "timestamp": "2026-03-09T18:45:37.324198165"
     },
     "Skip Fastp & Fastqc": {
         "content": [
@@ -773,6 +785,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -891,6 +905,7 @@
                 "Sample1_S1_L001_fastqc_data.txt:md5,dc27b3ffca4e60d28ab31bba42bdb551",
                 "Sample1_S1_L001_summary.txt:md5,37bccdcaa1e1fe1022adebf2abad9121",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
                 "bclconvert_lane_counts.txt:md5,6586dc34bad08f04ddf113b7b7262f45",
@@ -912,6 +927,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:53:11.553579757"
+        "timestamp": "2026-03-09T18:46:21.018259726"
     }
 }
