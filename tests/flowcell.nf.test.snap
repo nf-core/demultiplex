@@ -151,7 +151,6 @@
                 "sim-data/Undetermined_S25_L001_R2.fastp.fastq.gz_fastqc_report.html",
                 "sim-data/Undetermined_S25_L001_R2.fastp.fastq.gz_summary.txt",
                 "sim-data/Undetermined_S25_L001_R2_001.fastq.gz",
-                "sim-data/metrics.tsv",
                 "sim-data/out_L001.fastp.html",
                 "sim-data/out_L001.fastp.json",
                 "sim-data/out_L001_R1.fastp.fastq.gz",
@@ -527,7 +526,6 @@
                 "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
                 "sim-data.csv:md5,a5ea0ad63c5df73b5fc2436dd8d9dbfe",
                 "Undetermined_S25_L001.fastp.json:md5,f5aa7f07f6e223e30e22ff30f01e54f3",
-                "metrics.tsv:md5,7627e4bd2a56ea551fd74b4a2b5cb4b2",
                 "out_L001.fastp.json:md5,3532c2b8304e40ae93f099ee4864c8c7",
                 "out_L001_R1_001.fastq.gz:md5,0e6423e3caad3aba1e1532e287464c63",
                 "out_L001_R2_001.fastq.gz:md5,b8418c4200127ad974bcae9030d719a6",
@@ -583,7 +581,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T18:08:45.509738749"
+        "timestamp": "2026-03-09T20:05:17.473181143"
     },
     "Test single-flowcell input - BCLCONVERT": {
         "content": [
@@ -682,6 +680,8 @@
                 "miniseq_truseq_smrna/UHRR3_S6_L001_fastqc_data.txt",
                 "miniseq_truseq_smrna/UHRR3_S6_L001_report.html",
                 "miniseq_truseq_smrna/UHRR3_S6_L001_summary.txt",
+                "miniseq_truseq_smrna/undetermined",
+                "miniseq_truseq_smrna/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "miniseq_truseq_smrna_no_adapters.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -894,6 +894,7 @@
                 "UHRR3_S6_L001_R1_001.fastq.gz:md5,bdb407e3ded3691479ec25f5f1df3b07",
                 "UHRR3_S6_L001_fastqc_data.txt:md5,51707b2944a79ce5a1b2dfca46ba2724",
                 "UHRR3_S6_L001_summary.txt:md5,f9dff0c485069a740b96b6a9b1d14f1f",
+                "Undetermined_S0_L001_R1_001.fastq.gz:md5,b0b4daae001636cf033ff760a5ab479d",
                 "miniseq_truseq_smrna_no_adapters.csv:md5,c32433167a5c56d5c15952c2e7948898",
                 "bclconvert-lane-stats-table.txt:md5,9295e908a296865f1ea271ae4181ab04",
                 "bclconvert-sample-stats-table.txt:md5,ca0177eadc0ff34de537c543f3461d19",
@@ -949,7 +950,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T18:13:49.879065641"
+        "timestamp": "2026-03-09T19:56:36.656795862"
     },
     "Test single-flowcell input - BASES2FASTQ": {
         "content": [
