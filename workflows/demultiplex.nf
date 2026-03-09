@@ -214,7 +214,7 @@ workflow DEMULTIPLEX {
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
         ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
-        //ch_demultiplex_logs = ch_demultiplex_logs.mix(BCL_DEMULTIPLEX.out.logs)
+        ch_undetermined = ch_undetermined.mix(BCL_DEMULTIPLEX.out.undetermined)
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)

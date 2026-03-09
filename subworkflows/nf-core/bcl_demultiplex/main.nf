@@ -19,6 +19,7 @@ workflow BCL_DEMULTIPLEX {
         ch_stats         = channel.empty()
         ch_interop       = channel.empty()
         ch_logs          = channel.empty()
+        ch_undetermined  = channel.empty()
 
         // Split flowcells into separate channels containing run as tar and run as path
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
@@ -51,6 +52,7 @@ workflow BCL_DEMULTIPLEX {
             ch_interop  = ch_interop.mix(BCLCONVERT.out.interop)
             ch_reports  = ch_reports.mix(BCLCONVERT.out.reports)
             ch_logs     = ch_logs.mix(BCLCONVERT.out.logs)
+            ch_undetermined = ch_undetermined.mix(BCLCONVERT.out.undetermined)
             ch_versions = ch_versions.mix(BCLCONVERT.out.versions.first())
         }
 
@@ -129,11 +131,12 @@ workflow BCL_DEMULTIPLEX {
         .set{ch_fastq_with_meta}
 
     emit:
-        fastq       = ch_fastq_with_meta.fastq
-        empty_fastq = ch_fastq_with_meta.empty_fastq
-        reports     = ch_reports
-        stats       = ch_stats
-        interop     = ch_interop
-        logs        = ch_logs
-        versions    = ch_versions
+        fastq           = ch_fastq_with_meta.fastq
+        empty_fastq     = ch_fastq_with_meta.empty_fastq
+        reports         = ch_reports
+        stats           = ch_stats
+        interop         = ch_interop
+        logs            = ch_logs
+        undetermined    = ch_undetermined
+        versions        = ch_versions
 }
