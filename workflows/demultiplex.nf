@@ -275,11 +275,12 @@ workflow DEMULTIPLEX {
         // Runs when "demultiplexer" is set to "mgikit"
         MGIKIT_DEMULTIPLEX(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(MGIKIT_DEMULTIPLEX.out.fastq, /_S\d+_L0\d+_R\d+.*$/, 'ELEMENT', true))
+        ch_undetermined = ch_undetermined.mix(MGIKIT_DEMULTIPLEX.out.undetermined)
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
             return metrics
         })
         ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
     }
     else {
         error("Unknown demultiplexer: ${demultiplexer}")

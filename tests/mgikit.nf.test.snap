@@ -151,6 +151,7 @@
                 "test-fc01/L001/FC01.L01.mgikit.info",
                 "test-fc01/L001/FC01.L01.mgikit.sample_stats",
                 "test-fc01/L001/FC01.L01.mgikit.undetermined_barcode",
+                "test-fc01/L001/FC01.L01.mgikit.undetermined_barcode.complete",
                 "test-fc01/L001/Sample01.fastp.html",
                 "test-fc01/L001/Sample01.fastp.json",
                 "test-fc01/L001/Sample01_R1.fastp.fastq.gz",
@@ -206,7 +207,10 @@
                 "test-fc01/L001/Sample04_R2.fastp.fastq.gz_fastqc_report.html",
                 "test-fc01/L001/Sample04_R2.fastp.fastq.gz_summary.txt",
                 "test-fc01/L001/Sample04_S4_L01_R1_001.fastq.gz",
-                "test-fc01/L001/Sample04_S4_L01_R2_001.fastq.gz"
+                "test-fc01/L001/Sample04_S4_L01_R2_001.fastq.gz",
+                "test-fc01/L001/undetermined",
+                "test-fc01/L001/undetermined/Undetermined_L01_R1_001.fastq.gz",
+                "test-fc01/L001/undetermined/Undetermined_L01_R2_001.fastq.gz"
             ],
             [
                 "fastp-insert-size-plot.txt:md5,c3c048605296e5adfd1761bc1871de3b",
@@ -237,6 +241,7 @@
                 "FC01.L01.mgikit.info:md5,69a72a1c43d47032828d8b97c6cf8807",
                 "FC01.L01.mgikit.sample_stats:md5,20d5b9f4a430fd34579e0f70b42f73f0",
                 "FC01.L01.mgikit.undetermined_barcode:md5,c1960b64d4cc5c141d742aa1b6f57a31",
+                "FC01.L01.mgikit.undetermined_barcode.complete:md5,c1960b64d4cc5c141d742aa1b6f57a31",
                 "Sample01.fastp.json:md5,47e865c3b3094226e1b7a2238b5a2128",
                 "Sample01_R1.fastp.fastq.gz:md5,19752026de713f514637fab29e4ffac4",
                 "Sample01_R1.fastp.fastq.gz.md5:md5,b6ff9581e39892552e62112ed03ae1a7",
@@ -280,13 +285,15 @@
                 "Sample04_R2.fastp.fastq.gz_fastqc_data.txt:md5,37c0caa8d391723b27fef66f492dda78",
                 "Sample04_R2.fastp.fastq.gz_summary.txt:md5,b561712128b8dfd4fd27e2054d25fbe8",
                 "Sample04_S4_L01_R1_001.fastq.gz:md5,dcf0ad68be6ff6c21ebceedaa4eaa4c4",
-                "Sample04_S4_L01_R2_001.fastq.gz:md5,cd88081007614f5bed7975b04e25b7e3"
+                "Sample04_S4_L01_R2_001.fastq.gz:md5,cd88081007614f5bed7975b04e25b7e3",
+                "Undetermined_L01_R1_001.fastq.gz:md5,63ce3d442f4f8c42e0d9addea9273315",
+                "Undetermined_L01_R2_001.fastq.gz:md5,0af27de6fc08cce579e160c31fbe61b9"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-09T16:02:38.981691896"
+        "timestamp": "2026-03-10T19:31:55.085439455"
     }
 }
