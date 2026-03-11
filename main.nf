@@ -217,6 +217,7 @@ output {
     }
 
     undetermined {
+        enabled params.optional_outputs
         path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
             def files = fastq instanceof List ? fastq : [fastq]
@@ -227,6 +228,7 @@ output {
     }
 
     undetermined_idx {
+        enabled params.optional_outputs
         path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
             def files = fastq instanceof List ? fastq : [fastq]
