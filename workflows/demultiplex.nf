@@ -339,6 +339,7 @@ workflow DEMULTIPLEX {
             return log
         })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports)
+        ch_kraken_reads = FASTQ_CONTAM_SEQTK_KRAKEN.out.reads
     }
 
     // Prepare metamap with fastq info
@@ -474,7 +475,7 @@ workflow DEMULTIPLEX {
         ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report).mix(MULTIQC.out.data).mix(MULTIQC.out.plots)
     }
 
-    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
+    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc).mix(ch_kraken_reads)
 
     emit:
     demultiplexed_fastq         = ch_demultiplexed_fastq    // channel: [ meta, path(fastq) ]

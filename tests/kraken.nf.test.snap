@@ -65,6 +65,7 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.json",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
@@ -221,6 +222,7 @@
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
                 "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
+                "Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz:md5,53bf34dad1f8269eeed36e661ef036fb",
                 "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
                 "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
                 "AdapterTrimming.txt:md5,48ed2b914b1246c0b5d8667525550946",
@@ -276,6 +278,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T19:57:25.584436521"
+        "timestamp": "2026-03-11T21:23:53.619468018"
     }
 }
