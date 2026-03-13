@@ -903,7 +903,6 @@
                 "bclconvert_sample_counts_Counts_per_lane.txt:md5,2eb58439a3eb1eee508bdce0ee340649",
                 "bclconvert_sample_counts_Index_mismatches.txt:md5,94023737055873c151ea9f7e3f563f73",
                 "bclconvert_undetermined.txt:md5,2cac05222da27b5e9550f5fc31267943",
-                "llms-full.txt:md5,dfa7cea4aa1942ed1c5e5428f69ebe73",
                 "multiqc_bclconvert_bylane.txt:md5,5067dc968fcca1f47db0663f4d407807",
                 "multiqc_bclconvert_bysample.txt:md5,499108393635a1dceb27099af8ad748e",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
@@ -944,7 +943,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-09T19:22:19.948258811"
+        "timestamp": "2026-03-13T19:54:17.883416501"
     },
     "Test single-flowcell input - BASES2FASTQ": {
         "content": [
@@ -2261,8 +2260,6 @@
                 "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
                 "bcl2fastq_lane_counts.txt:md5,289a1a8c66a582ea39f786f851c0107a",
                 "bcl2fastq_sample_counts.txt:md5,a1ffb5a63338b98df6df82399ba2eea8",
-                "bcl2fastq_undetermined.txt:md5,980cf7e7e430b596392297bc5fc126c7",
-                "llms-full.txt:md5,994179079ed7378176c9969ec5f1785b",
                 "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
@@ -2293,6 +2290,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-09T18:44:30.213364054"
+        "timestamp": "2026-03-13T21:03:57.516212479"
     }
 }

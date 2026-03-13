@@ -43,3 +43,5 @@ multiqcsav/multiqc_data/multiqc_data.json
 multiqcsav/multiqc_data/multiqc_general_stats.txt
 multiqcsav/multiqc_data/multiqc_software_versions.txt
 multiqcsav/multiqc_data/multiqc_sources.txt
+multiqcsav/multiqc_data/llms-full.txt
+multiqcsav/multiqc_data/bcl2fastq_undetermined.txt
