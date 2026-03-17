@@ -367,5 +367,10 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "optional_outputs": {
+            "type": "boolean"
+        }
+    }
 }
