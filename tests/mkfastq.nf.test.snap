@@ -81,10 +81,6 @@
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_R2.fastp.fastq.gz_fastqc_report.html",
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_R2.fastp.fastq.gz_summary.txt",
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_R2_001.fastq.gz",
-                "cellranger-tiny-bcl-simple/L001/undetermined",
-                "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_I1_001.fastq.gz",
-                "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
-                "cellranger-tiny-bcl-simple/L001/undetermined/Undetermined_S0_L001_R2_001.fastq.gz",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
@@ -227,9 +223,6 @@
                 "test_sample_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,8dd6f423e0237a5de5fdfa0382d754f9",
                 "test_sample_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,42c5418ae04fb809f9d5cdf81fe1baf4",
                 "test_sample_S1_L001_R2_001.fastq.gz:md5,c8a387b517ff5b7e56b85ccbf882efd2",
-                "Undetermined_S0_L001_I1_001.fastq.gz:md5,c93946d67bdb1d5b2ab955fd1dc9cb31",
-                "Undetermined_S0_L001_R1_001.fastq.gz:md5,faa79ce215ae72fdc3375cda066c6757",
-                "Undetermined_S0_L001_R2_001.fastq.gz:md5,d8955db4dfbf7aee89b6bdc3b7629f8f",
                 "fastp-seq-content-gc-plot_Read_1_After_filtering.txt:md5,f5dc52391b1156ffa1caad846f02e88a",
                 "fastp-seq-content-gc-plot_Read_1_Before_filtering.txt:md5,d2a3202d9dbea433091c7fdbaeae1780",
                 "fastp-seq-content-gc-plot_Read_2_After_filtering.txt:md5,cf19027c8924711a92ffc712e11994a4",
@@ -280,6 +273,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-06T20:37:29.127141012"
+        "timestamp": "2026-03-17T14:28:05.750265846"
     }
 }
