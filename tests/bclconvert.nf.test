@@ -7,7 +7,10 @@ nextflow_pipeline {
         def test_scenarios = [
         [
             name: "BCL-CONVERT",
-            tag: "bclconvert"
+            tag: "bclconvert",
+            params: [
+                optional_outputs: false
+                ]
         ]
     ]
 

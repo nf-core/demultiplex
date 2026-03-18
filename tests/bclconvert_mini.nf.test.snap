@@ -96,7 +96,8 @@
                 "miniseq_truseq_smrna/UHRR3_S6_L001_fastqc_data.txt",
                 "miniseq_truseq_smrna/UHRR3_S6_L001_report.html",
                 "miniseq_truseq_smrna/UHRR3_S6_L001_summary.txt",
-                "miniseq_truseq_smrna/Undetermined_S0_L001_R1_001.fastq.gz",
+                "miniseq_truseq_smrna/undetermined",
+                "miniseq_truseq_smrna/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "miniseq_truseq_smrna_no_adapters.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -365,6 +366,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:33:36.017257176"
+        "timestamp": "2026-03-11T22:11:32.32933921"
     }
 }

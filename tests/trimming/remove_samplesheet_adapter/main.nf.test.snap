@@ -237,7 +237,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:58:06.028488257"
+        "timestamp": "2026-03-13T19:42:15.802605967"
     },
     "User wants to trim with the demultiplexer": {
         "content": [
@@ -424,7 +424,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T18:59:55.530132192"
+        "timestamp": "2026-03-13T19:43:00.78096823"
     },
     "User wants to skip trimming all together": {
         "content": [
@@ -611,6 +611,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-01-27T19:01:06.199474389"
+        "timestamp": "2026-03-13T19:54:17.155096042"
     }
 }

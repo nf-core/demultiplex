@@ -74,6 +74,18 @@ workflow DEMULTIPLEX {
     ch_versions = channel.empty()
     ch_multiqc_files = channel.empty()
     ch_multiqc_reports = channel.empty()
+    ch_checkqc_reports = channel.empty()
+    ch_fastp_reports = channel.empty()
+    ch_falco_reports = channel.empty()
+    ch_md5_checksums = channel.empty()
+    ch_demultiplex_reports = channel.empty()
+    ch_demultiplex_interop = channel.empty()
+    ch_demultiplex_stats = channel.empty()
+    ch_demultiplex_logs = channel.empty()
+    ch_fastq_idx = channel.empty()
+    ch_undetermined = channel.empty()
+    ch_undetermined_idx = channel.empty()
+
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
     ch_file_schema_validator = params.file_schema_validator ? channel.fromPath(params.file_schema_validator, checkIfExists: true) : []
@@ -185,6 +197,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report).mix(BASES2FASTQ.out.sample_json)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
         // SUBWORKFLOW: illumina
@@ -198,13 +211,17 @@ workflow DEMULTIPLEX {
             return stats
         })
         ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
+        ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
+        ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
+        ch_undetermined = ch_undetermined.mix(BCL_DEMULTIPLEX.out.undetermined)
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
-            ch_versions = ch_versions.mix(RUNDIR_CHECKQC.out.versions)
             ch_multiqc_files = ch_multiqc_files.mix(RUNDIR_CHECKQC.out.report.map { _meta, json ->
                 return json
             })
+            ch_checkqc_reports = ch_checkqc_reports.mix(RUNDIR_CHECKQC.out.report)
         }
     }
     else if (demultiplexer == 'fqtk') {
@@ -227,6 +244,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(FQTK.out.versions)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(FQTK.out.metrics)
     }
     else if (demultiplexer == 'sgdemux') {
         // MODULE: sgdemux
@@ -237,6 +255,7 @@ workflow DEMULTIPLEX {
             return metrics
         })
         ch_versions = ch_versions.mix(SGDEMUX.out.versions)
+
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq
@@ -244,16 +263,24 @@ workflow DEMULTIPLEX {
         CELLRANGER_MKFASTQ(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(CELLRANGER_MKFASTQ.out.fastq, /_R[0-9].*$/, 'SINGULAR'))
         ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
+        ch_demultiplex_interop = ch_demultiplex_interop.mix(CELLRANGER_MKFASTQ.out.interop)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(CELLRANGER_MKFASTQ.out.reports)
+        ch_demultiplex_stats = ch_demultiplex_stats.mix(CELLRANGER_MKFASTQ.out.stats)
+        ch_fastq_idx = ch_fastq_idx.mix(CELLRANGER_MKFASTQ.out.fastq_idx)
+        ch_undetermined = ch_undetermined.mix(CELLRANGER_MKFASTQ.out.undetermined_fastq)
+
     }
     else if (demultiplexer == 'mgikit') {
         // MODULE: mgikit
         // Runs when "demultiplexer" is set to "mgikit"
         MGIKIT_DEMULTIPLEX(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(MGIKIT_DEMULTIPLEX.out.fastq, /_S\d+_L0\d+_R\d+.*$/, 'ELEMENT', true))
+        ch_undetermined = ch_undetermined.mix(MGIKIT_DEMULTIPLEX.out.undetermined)
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
             return metrics
         })
         ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
     }
     else {
         error("Unknown demultiplexer: ${demultiplexer}")
@@ -272,6 +299,7 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { _meta, json ->
             return json
         })
+        ch_fastp_reports = ch_fastp_reports.mix(FASTP.out.json).mix(FASTP.out.html)
         ch_fastq_to_qc = FASTP.out.reads
     }
 
@@ -282,6 +310,7 @@ workflow DEMULTIPLEX {
             return txt
         })
         ch_versions = ch_versions.mix(FALCO.out.versions)
+        ch_falco_reports = ch_falco_reports.mix(FALCO.out.html).mix(FALCO.out.txt)
     }
 
     // MODULE: md5sum
@@ -289,6 +318,7 @@ workflow DEMULTIPLEX {
     if (!("md5sum" in skip_tools)) {
         MD5SUM(ch_fastq_to_qc.transpose(), true)
         ch_versions = ch_versions.mix(MD5SUM.out.versions)
+        ch_md5_checksums = ch_md5_checksums.mix(MD5SUM.out.checksum)
     }
 
     // SUBWORKFLOW: FASTQ_CONTAM_SEQTK_KRAKEN
@@ -308,6 +338,8 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { _meta, log ->
             return log
         })
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports)
+        ch_fastq_to_qc = ch_fastq_to_qc.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reads)
     }
 
     // Prepare metamap with fastq info
@@ -341,6 +373,14 @@ workflow DEMULTIPLEX {
 
     ch_meta_fastq_methylseq = ch_meta_fastq
     FASTQ_TO_SAMPLESHEET_METHYLSEQ(ch_meta_fastq_methylseq.collect(), "methylseq", strandedness)
+
+    ch_pipeline_samplesheets = channel.empty()
+    .mix(FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'rnaseq', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'atacseq', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet.map { meta, samplesheet -> [meta, 'taxprofiler', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_SAREK.out.samplesheet.map { meta, samplesheet -> [meta, 'sarek', samplesheet] })
+    .mix(FASTQ_TO_SAMPLESHEET_METHYLSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'methylseq', samplesheet] })
+
     //
     // Collate and save software versions
     //
@@ -432,10 +472,25 @@ workflow DEMULTIPLEX {
             [],
             [],
         )
-        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report)
+        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report).mix(MULTIQC.out.data).mix(MULTIQC.out.plots)
     }
 
+    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
+
     emit:
-    multiqc_report = ch_multiqc_reports // channel: /path/to/multiqc_report.html
-    versions       = ch_versions // channel: [ path(versions.yml) ]
+    demultiplexed_fastq         = ch_demultiplexed_fastq    // channel: [ meta, path(fastq) ]
+    demultiplex_reports         = ch_demultiplex_reports    // channel: [ meta, path(demultiplex_report) ]
+    demultiplex_interop         = ch_demultiplex_interop
+    demultiplex_stats           = ch_demultiplex_stats
+    demultiplex_logs            = ch_demultiplex_logs
+    multiqc_report              = ch_multiqc_reports        // channel: /path/to/multiqc_report.html
+    versions                    = ch_versions               // channel: [ path(versions.yml) ]
+    pipeline_samplesheets       = ch_pipeline_samplesheets  // channel: [ meta, samplesheet ]
+    checkqc_reports             = ch_checkqc_reports        // channel: [ meta, path(checkqc_report) ]
+    fastp_reports               = ch_fastp_reports          // channel: [ meta, path(fastp_report) ]
+    falco_reports               = ch_falco_reports          // channel: [ meta, path(falco_report) ]
+    md5_checksums               = ch_md5_checksums          // channel: [ meta, path(md5_checksum) ]
+    fastq_idx                   = ch_fastq_idx
+    undetermined                = ch_undetermined
+    undetermined_idx            = ch_undetermined_idx
 }
