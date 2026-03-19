@@ -106,7 +106,7 @@
                     },
                     "fastq_contam_seqtk_kraken": {
                         "branch": "master",
-                        "git_sha": "71a39f3598935d64ffd65f0960e4d2d4a42ab778",
+                        "git_sha": "e15c9999319b6bd0c0ec04ed2d4afd987c46e110",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
