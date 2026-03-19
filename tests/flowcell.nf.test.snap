@@ -995,7 +995,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-13T19:54:17.883416501"
+        "timestamp": "2026-03-19T17:47:44.070811738"
     },
     "Test single-flowcell input - BASES2FASTQ": {
         "content": [
@@ -2342,6 +2342,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-13T21:03:57.516212479"
+        "timestamp": "2026-03-19T17:42:01.414180892"
     }
 }

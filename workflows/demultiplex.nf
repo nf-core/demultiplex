@@ -85,6 +85,7 @@ workflow DEMULTIPLEX {
     ch_fastq_idx = channel.empty()
     ch_undetermined = channel.empty()
     ch_undetermined_idx = channel.empty()
+    ch_multiqcsav_report = channel.empty()
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
@@ -215,12 +216,23 @@ workflow DEMULTIPLEX {
                     }
                 )
         }
+        ch_multiqcsav_report = ch_multiqcsav_report.mix(BCL_DEMULTIPLEX.out.sav_report.map { _meta, report ->
+            return report
+        }).mix(BCL_DEMULTIPLEX.out.sav_data.map { _meta, data ->
+            return data
+        }).mix(BCL_DEMULTIPLEX.out.sav_plots.map { _meta, plots ->
+            return plots
+        })
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.reports.map { _meta, report ->
             return report
         })
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.stats.map { _meta, stats ->
             return stats
         })
+        ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
+        ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
+        ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
+        ch_undetermined = ch_undetermined.mix(BCL_DEMULTIPLEX.out.undetermined)
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
@@ -499,4 +511,5 @@ workflow DEMULTIPLEX {
     fastq_idx                   = ch_fastq_idx
     undetermined                = ch_undetermined
     undetermined_idx            = ch_undetermined_idx
+    multiqcsav_report           = ch_multiqcsav_report
 }
