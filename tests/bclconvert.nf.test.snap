@@ -1,7 +1,7 @@
 {
     "BCL-CONVERT": {
         "content": [
-            10,
+            12,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.4.6"
@@ -14,6 +14,9 @@
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
+                },
+                "UNTAR_FLOWCELL": {
+                    "untar": 1.34
                 }
             },
             [
@@ -165,6 +168,22 @@
                 "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
                 "multiqc/multiqc_report.html",
+                "multiqcsav",
+                "multiqcsav/multiqc_data",
+                "multiqcsav/multiqc_data/bclconvert-lane-stats-table.txt",
+                "multiqcsav/multiqc_data/bclconvert-sample-stats-table.txt",
+                "multiqcsav/multiqc_data/bclconvert_lane_counts.txt",
+                "multiqcsav/multiqc_data/bclconvert_sample_counts_Counts_per_lane.txt",
+                "multiqcsav/multiqc_data/bclconvert_sample_counts_Index_mismatches.txt",
+                "multiqcsav/multiqc_data/llms-full.txt",
+                "multiqcsav/multiqc_data/multiqc.log",
+                "multiqcsav/multiqc_data/multiqc.parquet",
+                "multiqcsav/multiqc_data/multiqc_bclconvert_bylane.txt",
+                "multiqcsav/multiqc_data/multiqc_bclconvert_bysample.txt",
+                "multiqcsav/multiqc_data/multiqc_citations.txt",
+                "multiqcsav/multiqc_data/multiqc_data.json",
+                "multiqcsav/multiqc_data/multiqc_sources.txt",
+                "multiqcsav/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
@@ -224,7 +243,15 @@
                 "fastqc_sequence_duplication_levels_plot.txt:md5,cc02a5151984c0a9fdf8316bfb05088b",
                 "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
                 "multiqc_bclconvert_bysample.txt:md5,050bcb67b7babb0ad21c459a7de268cb",
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2"
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
+                "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
+                "bclconvert_lane_counts.txt:md5,6586dc34bad08f04ddf113b7b7262f45",
+                "bclconvert_sample_counts_Counts_per_lane.txt:md5,a7e57ab911ba2cf74ec7bd93b921036d",
+                "bclconvert_sample_counts_Index_mismatches.txt:md5,abf39f3db0d1117c46e3a6099779244f",
+                "multiqc_bclconvert_bylane.txt:md5,2f779a97f3a5429454f62059a19856e6",
+                "multiqc_bclconvert_bysample.txt:md5,050bcb67b7babb0ad21c459a7de268cb",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
                 [
@@ -253,6 +280,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-11T21:54:59.111170533"
+        "timestamp": "2026-03-19T17:35:18.343074908"
     }
 }

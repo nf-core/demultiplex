@@ -85,6 +85,7 @@ workflow DEMULTIPLEX {
     ch_fastq_idx = channel.empty()
     ch_undetermined = channel.empty()
     ch_undetermined_idx = channel.empty()
+    ch_multiqcsav_report = channel.empty()
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
@@ -169,10 +170,7 @@ workflow DEMULTIPLEX {
     // Except for bclconvert and bcl2fastq for wich we untar in the process
     // Re-join the metadata and the untarred run directory with the samplesheet
 
-    if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
-        ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(ch_flowcells_tar.run_dirs, failOnMismatch: true, failOnDuplicate: true)
-    }
-    else if (demultiplexer == 'mgikit') {
+    if (demultiplexer == 'mgikit') {
         ch_flowcells_tar_merged = channel.empty()
     }
     else {
@@ -203,14 +201,34 @@ workflow DEMULTIPLEX {
         // SUBWORKFLOW: illumina
         // Runs when "demultiplexer" is set to "bclconvert" or "bcl2fastq"
         BCL_DEMULTIPLEX(ch_flowcells, demultiplexer)
-        ch_raw_fastq = ch_raw_fastq.mix(BCL_DEMULTIPLEX.out.fastq)
+        if (demultiplexer == 'bcl2fastq') {
+            ch_raw_fastq = ch_raw_fastq.mix(BCL_DEMULTIPLEX.out.fastq)
+        } else {
+            // Add missing sample name to metadata
+            ch_raw_fastq = ch_raw_fastq
+                .mix(
+                    BCL_DEMULTIPLEX.out.fastq.map {
+                        meta, fastq ->
+                        def first_file = fastq instanceof List ? fastq[0] : fastq
+                        def sn = first_file.getSimpleName().toString() - ~/_S[0-9]+.*$/
+                        def fc_id = meta.readgroup.PU.tokenize('.')[0]
+                        [meta + [samplename: sn, fcid: fc_id], fastq]
+                    }
+                )
+        }
+        ch_multiqcsav_report = ch_multiqcsav_report.mix(BCL_DEMULTIPLEX.out.sav_report.map { _meta, report ->
+            return report
+        }).mix(BCL_DEMULTIPLEX.out.sav_data.map { _meta, data ->
+            return data
+        }).mix(BCL_DEMULTIPLEX.out.sav_plots.map { _meta, plots ->
+            return plots
+        })
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.reports.map { _meta, report ->
             return report
         })
         ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.stats.map { _meta, stats ->
             return stats
         })
-        ch_versions = ch_versions.mix(BCL_DEMULTIPLEX.out.versions)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
         ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
@@ -493,4 +511,5 @@ workflow DEMULTIPLEX {
     fastq_idx                   = ch_fastq_idx
     undetermined                = ch_undetermined
     undetermined_idx            = ch_undetermined_idx
+    multiqcsav_report           = ch_multiqcsav_report
 }

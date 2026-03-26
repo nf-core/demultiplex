@@ -57,6 +57,7 @@ workflow NFCORE_DEMULTIPLEX {
     fastq_idx                   = DEMULTIPLEX.out.fastq_idx
     undetermined                = DEMULTIPLEX.out.undetermined
     undetermined_idx            = DEMULTIPLEX.out.undetermined_idx
+    multiqcsav_report           = DEMULTIPLEX.out.multiqcsav_report
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,6 +121,7 @@ workflow {
     fastq_idx                 = NFCORE_DEMULTIPLEX.out.fastq_idx
     undetermined              = NFCORE_DEMULTIPLEX.out.undetermined
     undetermined_idx          = NFCORE_DEMULTIPLEX.out.undetermined_idx
+    multiqcsav_report         = NFCORE_DEMULTIPLEX.out.multiqcsav_report
 
 }
 
@@ -175,7 +177,6 @@ output {
     multiqc_report {
         path { "multiqc/" }
     }
-
 
     checkqc_reports {
         path { meta, _report ->
@@ -236,6 +237,10 @@ output {
                 f >> "${lane_dir}/${f.name}"
             }
         }
+    }
+
+    multiqcsav_report {
+        path { "multiqcsav/" }
     }
 }
 
