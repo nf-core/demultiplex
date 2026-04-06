@@ -457,10 +457,10 @@
                     "bclconvert": "4.4.6"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
-                    "fastp": "1.0.1"
+                    "fastp": "1.1.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -553,10 +553,10 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
+                "Sample1_S1_L001.fastp.json:md5,c22d06d6d871be994995ff91417a3f1d",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
-                "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
-                "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
+                "Sample1_S1_L001_fastqc_data.txt:md5,6001946d5f0d64d53911dbcf8eb1902d",
+                "Sample1_S1_L001_summary.txt:md5,06df1eab621bc8965a038431c3a01dd3",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "bclconvert-lane-stats-table.txt:md5,8bff7b728d3ad67405d4742d0aa2088e",
                 "bclconvert-sample-stats-table.txt:md5,8138518a7a073a57bed8f0048d95e88c",
@@ -572,7 +572,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-19T18:00:45.661044654"
+        "timestamp": "2026-04-06T19:24:27.609041922"
     },
     "Skip Fastqc": {
         "content": [

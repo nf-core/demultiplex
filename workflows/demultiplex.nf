@@ -127,7 +127,6 @@ workflow DEMULTIPLEX {
             ch_samplesheet.map { meta, samplesheet, _flowcell, _lane -> [meta, samplesheet] },
             ch_file_schema_validator,
         )
-        ch_versions = ch_versions.mix(SAMSHEE.out.versions)
         ch_samplesheet = ch_samplesheet
             .join(SAMSHEE.out.samplesheet)
             .map{ meta, samplesheet, flowcell, lane, _samplesheet_formatted -> [ meta, samplesheet, flowcell, lane ] }
@@ -175,7 +174,6 @@ workflow DEMULTIPLEX {
     }
     else {
         ch_flowcells_tar_merged = ch_flowcells_tar.samplesheets.join(UNTAR_FLOWCELL(ch_flowcells_tar.run_dirs).untar, failOnMismatch: true, failOnDuplicate: true)
-        ch_versions = ch_versions.mix(UNTAR_FLOWCELL.out.versions)
     }
 
     // Merge the two channels back together
@@ -194,7 +192,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(BASES2FASTQ.out.versions)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report).mix(BASES2FASTQ.out.sample_json)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
@@ -261,7 +258,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(FQTK.out.versions)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(FQTK.out.metrics)
     }
     else if (demultiplexer == 'sgdemux') {
@@ -272,7 +268,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(SGDEMUX.out.metrics.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(SGDEMUX.out.versions)
 
     }
     else if (demultiplexer == 'mkfastq') {
@@ -280,7 +275,6 @@ workflow DEMULTIPLEX {
         // Runs when "demultiplexer" is set to "mkfastq"
         CELLRANGER_MKFASTQ(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(CELLRANGER_MKFASTQ.out.fastq, /_R[0-9].*$/, 'SINGULAR'))
-        ch_versions = ch_versions.mix(CELLRANGER_MKFASTQ.out.versions)
         ch_demultiplex_interop = ch_demultiplex_interop.mix(CELLRANGER_MKFASTQ.out.interop)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(CELLRANGER_MKFASTQ.out.reports)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(CELLRANGER_MKFASTQ.out.stats)
@@ -297,7 +291,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
             return metrics
         })
-        ch_versions = ch_versions.mix(MGIKIT_DEMULTIPLEX.out.versions)
         ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
     }
     else {
@@ -327,7 +320,6 @@ workflow DEMULTIPLEX {
         ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt.map { _meta, txt ->
             return txt
         })
-        ch_versions = ch_versions.mix(FALCO.out.versions)
         ch_falco_reports = ch_falco_reports.mix(FALCO.out.html).mix(FALCO.out.txt)
     }
 
@@ -335,7 +327,6 @@ workflow DEMULTIPLEX {
     // Split file list into separate channels entries and generate a checksum for each
     if (!("md5sum" in skip_tools)) {
         MD5SUM(ch_fastq_to_qc.transpose(), true)
-        ch_versions = ch_versions.mix(MD5SUM.out.versions)
         ch_md5_checksums = ch_md5_checksums.mix(MD5SUM.out.checksum)
     }
 
