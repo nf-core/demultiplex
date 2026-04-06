@@ -1,0 +1,16 @@
+{
+    "Should parse indexed readgroups and preserve the requested platform": {
+        "content": [
+            {
+                "ID": "HK3MMAFX2.2",
+                "PU": "HK3MMAFX2.2",
+                "PL": "ILLUMINA"
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-04-06T17:24:46.142800056"
+    }
+}
