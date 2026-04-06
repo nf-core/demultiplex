@@ -1,0 +1,36 @@
+nextflow_workflow {
+    name "Test csvToTSV"
+    script "./main.nf"
+    workflow "TEST_CSVTOTSV"
+
+    test("Should convert CSV samplesheets to TSV and preserve metadata") {
+        when {
+            workflow {
+                '''
+                params.outdir = "${projectDir}/tests/functions/.nf-test-output/csvToTSV"
+                input[0] = Channel.of(
+                    [
+                        [id: 'lane_sheet', lane: 3],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/two_lane_samplesheet.csv', checkIfExists: true),
+                        'flowcell-a',
+                        [['R1', '101']],
+                    ],
+                    [
+                        [id: 'nolane_sheet', lane: null],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv', checkIfExists: true),
+                        'flowcell-b',
+                        [['R1', '151']],
+                    ],
+                )
+                '''
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.captured).match() }
+            )
+        }
+    }
+}
