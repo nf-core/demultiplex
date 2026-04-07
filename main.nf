@@ -159,14 +159,14 @@ output {
     demultiplex_stats {
         path { meta, stat ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            stat >> "${lane_dir}/${stat.name}"
-            }
+            "${lane_dir}/${stat.name}"
+        }
     }
 
     demultiplex_logs {
         path { meta, log ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            log >> "${lane_dir}/${log.name}"
+            "${lane_dir}/${log.name}"
         }
     }
 
