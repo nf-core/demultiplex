@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
-- [#380](https://github.com/nf-core/demultiplex/pull/380) Add nf-tests to functions
+- [#384](https://github.com/nf-core/demultiplex/pull/384) Add nf-tests to functions
 
 ### `Changed`
 
