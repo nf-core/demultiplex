@@ -439,16 +439,17 @@ workflow DEMULTIPLEX {
             methodsDescriptionText(ch_multiqc_custom_methods_description)
         )
 
-        ch_multiqc_config = channel.fromPath(
+        ch_multiqc_config = file(
             "${projectDir}/assets/multiqc_config.yml",
             checkIfExists: true
         )
         ch_multiqc_custom_config = params.multiqc_config
-            ? channel.fromPath(params.multiqc_config, checkIfExists: true)
-            : channel.empty()
+            ? file(params.multiqc_config, checkIfExists: true)
+            : []
+        def multiqc_config = ch_multiqc_custom_config ? [ch_multiqc_config, ch_multiqc_custom_config] : [ch_multiqc_config]
         ch_multiqc_logo = params.multiqc_logo
-            ? channel.fromPath(params.multiqc_logo, checkIfExists: true)
-            : channel.empty()
+            ? file(params.multiqc_logo, checkIfExists: true)
+            : []
         summary_params = paramsSummaryMap(
             workflow,
             parameters_schema: "nextflow_schema.json"
@@ -473,15 +474,27 @@ workflow DEMULTIPLEX {
             )
         )
 
+        ch_multiqc_input = ch_multiqc_files
+                        .map { multiqc_files -> multiqc_files }
+                        .collect()
+                        .map { files ->
+                            [
+                                [id: 'multiqc_report'],
+                                files,
+                                multiqc_config,
+                                ch_multiqc_logo,
+                                [],
+                                [],
+                            ]
+                        }
+
         MULTIQC(
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_input
         )
-        ch_multiqc_reports = ch_multiqc_reports.mix(MULTIQC.out.report).mix(MULTIQC.out.data).mix(MULTIQC.out.plots)
+        ch_multiqc_reports = ch_multiqc_reports
+            .mix(MULTIQC.out.report.map { _meta, report -> report })
+            .mix(MULTIQC.out.data.map   { _meta, data   -> data   })
+            .mix(MULTIQC.out.plots.map  { _meta, plots  -> plots  })
     }
 
     ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
