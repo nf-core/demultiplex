@@ -12,7 +12,7 @@ workflow TEST_GENERATEFASTQMETA {
         .map { meta, fastqs ->
             [
                 meta,
-                fastqs.collect { it.getFileName().toString() }
+                fastqs.collect { fastq -> fastq.getFileName().toString() }
             ]
         }
 
