@@ -4,13 +4,13 @@
             12,
             {
                 "BASES2FASTQ": {
-                    "bases2fastq": "2.3.0.2116803307, use subject to license available at elementbiosciences.com"
+                    "bases2fastq": "2.3.0.2116803307"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
-                    "fastp": "1.0.1"
+                    "fastp": "1.1.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -181,17 +181,17 @@
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,62a344d18de885a880e8a9fe48c7816f",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,5ef421e1df317a359c8b27ff65f2b758",
                 "fastp_filtered_reads_plot.txt:md5,1a7662a9cf368bc7d84eb20588808bb5",
-                "fastqc_per_base_n_content_plot.txt:md5,0b03fe136c9c549d458ccd139b3e8d9d",                             
-                "fastqc_per_base_sequence_quality_plot.txt:md5,709045ee97ecc9250b957a083270b8bf",                      
-                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,37851d68690d9d69b0cc2bc01abecbb7",                 
-                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,e1cd02c2cffd9cac7101bc72476eaa8a",            
-                "fastqc_per_sequence_quality_scores_plot.txt:md5,bf3309971ba694969d8d659a0110485a",                    
-                "fastqc_sequence_counts_plot.txt:md5,9076bc7a7b504556ab054374b1bc92f6",                                
-                "fastqc_sequence_duplication_levels_plot.txt:md5,4c0b04d56d744aa75ebe62d9ade79ab0",                    
-                "fastqc_sequence_length_distribution_plot.txt:md5,6ee494ee2ec9bb64b9c98bf417b33bcb",                   
-                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",   
-                "sim-data.csv:md5,1d1dab697bd88c411fff89c102024295",            
-                "DefaultSample.fastp.json:md5,6e5461f0a57be86517e5da1c17e17d4d",
+                "fastqc_per_base_n_content_plot.txt:md5,0b03fe136c9c549d458ccd139b3e8d9d",
+                "fastqc_per_base_sequence_quality_plot.txt:md5,709045ee97ecc9250b957a083270b8bf",
+                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,37851d68690d9d69b0cc2bc01abecbb7",
+                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,e1cd02c2cffd9cac7101bc72476eaa8a",
+                "fastqc_per_sequence_quality_scores_plot.txt:md5,bf3309971ba694969d8d659a0110485a",
+                "fastqc_sequence_counts_plot.txt:md5,9076bc7a7b504556ab054374b1bc92f6",
+                "fastqc_sequence_duplication_levels_plot.txt:md5,4c0b04d56d744aa75ebe62d9ade79ab0",
+                "fastqc_sequence_length_distribution_plot.txt:md5,6ee494ee2ec9bb64b9c98bf417b33bcb",
+                "multiqc_citations.txt:md5,d35df50e9903a96a2b3bce3c1fbc8ad2",
+                "sim-data.csv:md5,1d1dab697bd88c411fff89c102024295",
+                "DefaultSample.fastp.json:md5,ae5de547b70709edb66c2b2f3a887a3f",
                 "DefaultSample_R1.fastq.gz:md5,6c73b924e4eb53b716614aa6fd8b791a",
                 "DefaultSample_R2.fastq.gz:md5,54e2c0894844e42605b7cd567b1c7dbe",
                 "Metrics.csv:md5,ad7af77573845924062e2554cc641b16",
@@ -223,8 +223,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-15T14:18:56.725309744"
+        "timestamp": "2026-04-07T17:10:54.028139222"
     }
 }

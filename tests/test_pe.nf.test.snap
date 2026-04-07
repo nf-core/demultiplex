@@ -7,10 +7,10 @@
                     "bcl2fastq": "2.20.0.422"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
-                    "fastp": "1.0.1"
+                    "fastp": "1.1.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -244,16 +244,16 @@
                 "Report.css:md5,eb7d3eb68fc1539f411404987246b59b",
                 "index.html:md5,5747c407854ae2c358d0ec201ce622d8",
                 "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34",
-                "Sample1_S1_L001.fastp.json:md5,450f36c54757a6357cd5aaa33a0daf39",
+                "Sample1_S1_L001.fastp.json:md5,24ff6a4f889d87b68ec5169bc221dae9",
                 "Sample1_S1_L001_R1.fastp.fastq.gz:md5,f5e9a2c51a3816a31502a0f0fecffa77",
                 "Sample1_S1_L001_R1.fastp.fastq.gz.md5:md5,094f6a4463a9dbffceb9de3bae549c8b",
-                "Sample1_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt:md5,8e24222a3f5d6a6ffeabd43f4e5b87f8",
-                "Sample1_S1_L001_R1.fastp.fastq.gz_summary.txt:md5,c6d35042bbedd63ef521ee4ac3c97406",
+                "Sample1_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt:md5,6f7b7d2250562f237aab49334e4de113",
+                "Sample1_S1_L001_R1.fastp.fastq.gz_summary.txt:md5,5c218eaaca189df3d6fe66621b3a5289",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_R2.fastp.fastq.gz:md5,6dc50bd42c97fc560f69a181430f1b30",
                 "Sample1_S1_L001_R2.fastp.fastq.gz.md5:md5,99538156e9679518f225e633383cf8cd",
-                "Sample1_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,780e3eab4b91248841dc342d291ceade",
-                "Sample1_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,eca997e0dcdc6341930e2af395838036",
+                "Sample1_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,9f3de5645808a08a8a4979b36e56a15b",
+                "Sample1_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,24a93f3d2390d6829011ec0ad91e2eeb",
                 "Sample1_S1_L001_R2_001.fastq.gz:md5,146eefcab1eaaef17ffb72672c021368",
                 "AdapterTrimming.txt:md5,8009886a4c060bfec6d8e9346feb0988",
                 "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
@@ -318,6 +318,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-19T18:02:40.564665989"
+        "timestamp": "2026-04-07T17:30:52.161555"
     }
 }

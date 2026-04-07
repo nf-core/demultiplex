@@ -7,7 +7,7 @@
                     "bclconvert": "4.4.6"
                 },
                 "FASTP": {
-                    "fastp": "1.0.1"
+                    "fastp": "1.1.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -229,7 +229,7 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
+                "Sample1_S1_L001.fastp.json:md5,c22d06d6d871be994995ff91417a3f1d",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test_no_adapter.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -255,7 +255,7 @@
                 "fastq_list.csv:md5,ae1470cd741e33b87a4ad26f849a50f9",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,1e97ee28164be6a0ee7f59ce20a4b337",
+                "Sample1_S1_L001.fastp.json:md5,c22d06d6d871be994995ff91417a3f1d",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
@@ -264,7 +264,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-20T16:30:55.91858134"
+        "timestamp": "2026-04-07T17:32:27.150122684"
     },
     "User wants to trim with the demultiplexer": {
         "content": [
