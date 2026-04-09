@@ -65,12 +65,13 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Stats",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/AdapterTrimming.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/ConversionStats.xml",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/DemultiplexingStats.xml",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/DemuxSummaryF1L1.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/FastqSummaryF1L1.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Stats/Stats.json",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/AdapterTrimming.txt",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/ConversionStats.xml",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/DemultiplexingStats.xml",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/DemuxSummaryF1L1.txt",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/FastqSummaryF1L1.txt",
+                "220422_M11111_0222_000000000-K9H97/L001/Stats/output/Stats/Stats.json",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcl2fastq-lane-stats-table.txt",
@@ -277,8 +278,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-19T17:33:51.837120934"
+        "timestamp": "2026-04-09T15:27:07.59694269"
     }
 }

@@ -65,12 +65,13 @@
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz_summary.txt",
                 "PE_Sample/L001/Sample1_S1_L001_R2_001.fastq.gz",
                 "PE_Sample/L001/Stats",
-                "PE_Sample/L001/Stats/AdapterTrimming.txt",
-                "PE_Sample/L001/Stats/ConversionStats.xml",
-                "PE_Sample/L001/Stats/DemultiplexingStats.xml",
-                "PE_Sample/L001/Stats/DemuxSummaryF1L1.txt",
-                "PE_Sample/L001/Stats/FastqSummaryF1L1.txt",
-                "PE_Sample/L001/Stats/Stats.json",
+                "PE_Sample/L001/Stats/output/Stats",
+                "PE_Sample/L001/Stats/output/Stats/AdapterTrimming.txt",
+                "PE_Sample/L001/Stats/output/Stats/ConversionStats.xml",
+                "PE_Sample/L001/Stats/output/Stats/DemultiplexingStats.xml",
+                "PE_Sample/L001/Stats/output/Stats/DemuxSummaryF1L1.txt",
+                "PE_Sample/L001/Stats/output/Stats/FastqSummaryF1L1.txt",
+                "PE_Sample/L001/Stats/output/Stats/Stats.json",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcl2fastq-lane-stats-table.txt",
@@ -316,8 +317,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-03-19T18:02:40.564665989"
+        "timestamp": "2026-04-09T15:40:25.977075355"
     }
 }
