@@ -7,10 +7,10 @@
                     "bclconvert": "4.4.6"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
-                    "fastp": "1.0.1"
+                    "fastp": "1.1.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -278,22 +278,22 @@
             [
                 "HBRR1_S1_L001.fastp.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
                 "HBRR1_S1_L001.fastp.fastq.gz.md5:md5,49d49f6d3542beed445b31bdf4282eee",
-                "HBRR1_S1_L001.fastp.json:md5,387f8b19534bfb441ef2609bb6964833",
+                "HBRR1_S1_L001.fastp.json:md5,9e8125df149fb8a5b26c99328178fc92",
                 "HBRR1_S1_L001_R1_001.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
-                "HBRR1_S1_L001_fastqc_data.txt:md5,e3ef09af2b44d86b7b32494f1ce5fc4c",
-                "HBRR1_S1_L001_summary.txt:md5,53a5e6bac1e853f23d27d6966e52df81",
+                "HBRR1_S1_L001_fastqc_data.txt:md5,486c5f0836932a42dafc2a9ffaf7e357",
+                "HBRR1_S1_L001_summary.txt:md5,dd8c0ba9f0986bf943c64f71664d058a",
                 "HBRR2_S2_L001.fastp.fastq.gz:md5,3b9e4fc70ebc608b48d1f0027265e9b8",
                 "HBRR2_S2_L001.fastp.fastq.gz.md5:md5,fd0eaf48858f44a728af5fbddaa32c0c",
-                "HBRR2_S2_L001.fastp.json:md5,442d3c83b16a7210a4b409e95c8b425e",
+                "HBRR2_S2_L001.fastp.json:md5,e94bca2cdbfd1a9f827a499f5953ed3a",
                 "HBRR2_S2_L001_R1_001.fastq.gz:md5,3b9e4fc70ebc608b48d1f0027265e9b8",
-                "HBRR2_S2_L001_fastqc_data.txt:md5,1c5127f5835c98503af2c7fa98da2982",
-                "HBRR2_S2_L001_summary.txt:md5,f3e0bc27d30d0f6e10ad76be47017881",
+                "HBRR2_S2_L001_fastqc_data.txt:md5,60f1f5528f3afdea69cad112567f9fe5",
+                "HBRR2_S2_L001_summary.txt:md5,03ed3c4f8430eb56b07aae5095624d5f",
                 "HBRR3_S3_L001.fastp.fastq.gz:md5,a110eefaee1da4d99398500e55919f0c",
                 "HBRR3_S3_L001.fastp.fastq.gz.md5:md5,5b340cb55f65fa2eaf6948bf6fda0651",
-                "HBRR3_S3_L001.fastp.json:md5,c85a3c73af2d94d28b6c24d35353e990",
+                "HBRR3_S3_L001.fastp.json:md5,b4e52dc162fc014ee850abb8183625d3",
                 "HBRR3_S3_L001_R1_001.fastq.gz:md5,a110eefaee1da4d99398500e55919f0c",
-                "HBRR3_S3_L001_fastqc_data.txt:md5,33a618ec1d0f8d16987adf55115a89ae",
-                "HBRR3_S3_L001_summary.txt:md5,fbe9c4281a768a826429e328f5eb2a34",
+                "HBRR3_S3_L001_fastqc_data.txt:md5,cea0c97be471c2cac439b3a1a217e3b8",
+                "HBRR3_S3_L001_summary.txt:md5,73b98bad9f0ac50fb6311482bb72ec34",
                 "CorrectedIntMetricsOut.bin:md5,4d82e208f18bfd51a5f9275e05d073ba",
                 "EmpiricalPhasingMetricsOut.bin:md5,0e9d6b71c90661d800b1129a0097c301",
                 "ErrorMetricsOut.bin:md5,dbc41ced845d7645451c6995e5774c0b",
@@ -324,22 +324,22 @@
                 "fastq_list.csv:md5,07cbe4173e18cbdef16ee8feb4adaf7d",
                 "UHRR1_S4_L001.fastp.fastq.gz:md5,2252d79788c9cedd8da929c02c9493ea",
                 "UHRR1_S4_L001.fastp.fastq.gz.md5:md5,cfb2049d19389779c1a0c2e79f20840b",
-                "UHRR1_S4_L001.fastp.json:md5,1cc75b5b295af967d8a00e7d5ddfc51c",
+                "UHRR1_S4_L001.fastp.json:md5,83a8a572c31a2f1df07d36d84b81021e",
                 "UHRR1_S4_L001_R1_001.fastq.gz:md5,b470c82d2002c563c42786060ae364b9",
-                "UHRR1_S4_L001_fastqc_data.txt:md5,69f1c3b2fdeb586e5e168ee6147829bc",
-                "UHRR1_S4_L001_summary.txt:md5,50f5f794e4a62652e9e8a61822986f19",
+                "UHRR1_S4_L001_fastqc_data.txt:md5,a9911f01a6b929411f18dcbf7e1846d7",
+                "UHRR1_S4_L001_summary.txt:md5,432572cb73d9a509e777e68c919243c0",
                 "UHRR2_S5_L001.fastp.fastq.gz:md5,860479758df02e8784d7138ed2ae6c58",
                 "UHRR2_S5_L001.fastp.fastq.gz.md5:md5,508087e29fa44a9d4e512081214625c3",
-                "UHRR2_S5_L001.fastp.json:md5,0f01dacb1298ba6bf8dd675a76df5fc0",
+                "UHRR2_S5_L001.fastp.json:md5,685c571d3a5a54e99e44f870879f1ac0",
                 "UHRR2_S5_L001_R1_001.fastq.gz:md5,47c36adf557bf4d37b0a84d055125290",
-                "UHRR2_S5_L001_fastqc_data.txt:md5,186f127faec63658ca8fc03a23069ff9",
-                "UHRR2_S5_L001_summary.txt:md5,17222ba431e558f9cab609bbe76b7a1b",
+                "UHRR2_S5_L001_fastqc_data.txt:md5,27c6f26b426de45efef2d78481ecaf9a",
+                "UHRR2_S5_L001_summary.txt:md5,121a0aeaf860fae497a27e8eceff3283",
                 "UHRR3_S6_L001.fastp.fastq.gz:md5,5da479270fef0c82e6b95c6594bad0f5",
                 "UHRR3_S6_L001.fastp.fastq.gz.md5:md5,39d7c6ec3fda1b1e54fab0c85bd4bf4f",
-                "UHRR3_S6_L001.fastp.json:md5,f84d28b9877182731eb6b61c45768416",
+                "UHRR3_S6_L001.fastp.json:md5,2e4f64bb5cb55cd70b84a92c1960919d",
                 "UHRR3_S6_L001_R1_001.fastq.gz:md5,bdb407e3ded3691479ec25f5f1df3b07",
-                "UHRR3_S6_L001_fastqc_data.txt:md5,51707b2944a79ce5a1b2dfca46ba2724",
-                "UHRR3_S6_L001_summary.txt:md5,f9dff0c485069a740b96b6a9b1d14f1f",
+                "UHRR3_S6_L001_fastqc_data.txt:md5,62c63c3db2c1692d555b701a3bd00919",
+                "UHRR3_S6_L001_summary.txt:md5,cd6716f6cedd3daccbd708d6d49d7419",
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,b0b4daae001636cf033ff760a5ab479d",
                 "miniseq_truseq_smrna_no_adapters.csv:md5,c32433167a5c56d5c15952c2e7948898",
                 "bclconvert-lane-stats-table.txt:md5,9295e908a296865f1ea271ae4181ab04",
@@ -354,8 +354,8 @@
                 "fastp-seq-content-n-plot_Read_1_Before_filtering.txt:md5,ae11e4c047b4f2933fe09261c305c520",
                 "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,0900b435599d11252f8d011da23394d6",
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,f8b94a819f2b15b5a47c4b1003c32a18",
-                "fastp_filtered_reads_plot.txt:md5,aa0692824fb974d513262149f761aef5",
-                "fastqc_adapter_content_plot.txt:md5,274ea9b8e1e214d5fb4b7979cb80ad18",
+                "fastp_filtered_reads_plot.txt:md5,bf12552e2acc3e9377cb468a87c77d1d",
+                "fastqc_adapter_content_plot.txt:md5,7078cd75e99fcae01b2b604cff257c8d",
                 "fastqc_overrepresented_sequences_plot.txt:md5,fb642669efbc2611cde2399829c4eb14",
                 "fastqc_per_base_n_content_plot.txt:md5,b6a3ce2c09bbe45442de452d103068f1",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,0900b435599d11252f8d011da23394d6",
@@ -414,6 +414,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-03-19T17:37:54.629696538"
+        "timestamp": "2026-04-07T17:07:53.16521155"
     }
 }
