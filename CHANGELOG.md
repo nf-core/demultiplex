@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#385](https://github.com/nf-core/demultiplex/pull/385) Fix publish statements cannot be mixed with other statements in a dynamic publish path.
+
 ### `Dependencies`
 
 | Dependency | Old version | New version |

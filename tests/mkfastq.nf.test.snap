@@ -60,12 +60,16 @@
                 "cellranger-tiny-bcl-simple/L001/Reports/html/H35KCBCXY/p1/test_sample_S4/all",
                 "cellranger-tiny-bcl-simple/L001/Reports/html/H35KCBCXY/p1/test_sample_S4/unknown",
                 "cellranger-tiny-bcl-simple/L001/Stats",
-                "cellranger-tiny-bcl-simple/L001/Stats/AdapterTrimming.txt",
-                "cellranger-tiny-bcl-simple/L001/Stats/ConversionStats.xml",
-                "cellranger-tiny-bcl-simple/L001/Stats/DemultiplexingStats.xml",
-                "cellranger-tiny-bcl-simple/L001/Stats/DemuxSummaryF1L1.txt",
-                "cellranger-tiny-bcl-simple/L001/Stats/FastqSummaryF1L1.txt",
-                "cellranger-tiny-bcl-simple/L001/Stats/Stats.json",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/AdapterTrimming.txt",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/ConversionStats.xml",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/DemultiplexingStats.xml",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/DemuxSummaryF1L1.txt",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/FastqSummaryF1L1.txt",
+                "cellranger-tiny-bcl-simple/L001/Stats/cellranger-tiny-bcl-simple_outs/outs/fastq_path/Stats/Stats.json",
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001.fastp.html",
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001.fastp.json",
                 "cellranger-tiny-bcl-simple/L001/test_sample_S1_L001_I1_001.fastq.gz",
@@ -273,6 +277,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
         },
-        "timestamp": "2026-04-07T17:24:15.090132682"
+        "timestamp": "2026-04-09T18:15:09.856876574"
     }
 }
