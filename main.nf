@@ -130,7 +130,7 @@ output {
     demultiplexed_fastq {
         path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
-            def files = fastq instanceof List ? fastq : [fastq]
+            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
@@ -140,7 +140,7 @@ output {
     demultiplex_reports {
         path { meta, report ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            def files = report instanceof List ? report : [report]
+            def files = report instanceof List ? new ArrayList(report) : [report]
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
@@ -149,7 +149,7 @@ output {
 
     demultiplex_interop {
         path { meta, interop ->
-            def files = interop instanceof List ? interop : [interop]
+            def files = interop instanceof List ? new ArrayList(interop) : [interop]
             files.each { f ->
                 f >> "${meta.id}/InterOp/${f.name}"
             }
@@ -210,7 +210,7 @@ output {
         path { meta, fastq ->
             def id = meta.fcid ?: meta.id
             def lane_dir = meta.lane ? "${id}/L00${meta.lane}" : "${id}"
-            def files = fastq instanceof List ? fastq : [fastq]
+            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
@@ -221,7 +221,7 @@ output {
         enabled params.optional_outputs
         path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
-            def files = fastq instanceof List ? fastq : [fastq]
+            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
@@ -232,7 +232,7 @@ output {
         enabled params.optional_outputs
         path { meta, fastq ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
-            def files = fastq instanceof List ? fastq : [fastq]
+            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
