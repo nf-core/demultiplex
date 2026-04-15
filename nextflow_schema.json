@@ -120,6 +120,11 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
+                "optional_outputs": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-copy",
+                    "description": "Whether to publish optional outputs such as undertermined files."
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -367,10 +372,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "properties": {
-        "optional_outputs": {
-            "type": "boolean"
-        }
-    }
+    ]
 }
