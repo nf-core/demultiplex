@@ -1,12 +1,32 @@
-nextflow_workflow {
+nextflow_function {
     name "Test csvToTSV"
-    script "./main.nf"
-    workflow "TEST_CSVTOTSV"
+    script "subworkflows/local/utils_nfcore_demultiplex_pipeline/."
+    function "csvToTSV"
 
     test("Should convert CSV samplesheets to TSV and preserve metadata") {
         when {
-            workflow {
+            function {
                 '''
+                jsonOutput = [
+                    toJson: { obj ->
+                        obj
+                            .map { meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs ->
+                                [
+                                    meta                     : meta,
+                                    sample_sheet_tsv_name    : sample_sheet_tsv.getFileName().toString(),
+                                    sample_sheet_tsv_content : sample_sheet_tsv.text,
+                                    flowcell                 : flowcell,
+                                    fastq_readstructure_pairs: fastq_readstructure_pairs,
+                                ]
+                            }
+                            .toList()
+                            .subscribe { converted ->
+                                new File("${params.nf_test_output}/function.json").text =
+                                    groovy.json.JsonOutput.toJson(converted)
+                            }
+                        groovy.json.JsonOutput.toJson([:])
+                    }
+                ]
                 params.outdir = "${projectDir}/tests/functions/.nf-test-output/csvToTSV"
                 input[0] = Channel.of(
                     [
@@ -27,10 +47,25 @@ nextflow_workflow {
         }
 
         then {
-            assertAll(
-                { assert workflow.success },
-                { assert snapshot(workflow.out.captured).match() }
-            )
+            assert function.success
+            assert function.result != null
+            assert function.result.size() == 2
+
+            assert function.result[0].meta.id == "lane_sheet"
+            assert function.result[0].meta.lane == 3
+            assert function.result[0].sample_sheet_tsv_name == "lane_sheet.lane3.tsv"
+            assert function.result[0].sample_sheet_tsv_content.contains("id\tsamplesheet\tlane\tflowcell")
+            assert function.result[0].sample_sheet_tsv_content.contains("SingleCell-RNA_P3")
+            assert function.result[0].flowcell == "flowcell-a"
+            assert function.result[0].fastq_readstructure_pairs == [["R1", "101"]]
+
+            assert function.result[1].meta.id == "nolane_sheet"
+            assert function.result[1].meta.lane == null
+            assert function.result[1].sample_sheet_tsv_name == "nolane_sheet.tsv"
+            assert function.result[1].sample_sheet_tsv_content.contains("id\tsamplesheet\tlane\tflowcell\tper_flowcell_manifest")
+            assert function.result[1].sample_sheet_tsv_content.contains("test")
+            assert function.result[1].flowcell == "flowcell-b"
+            assert function.result[1].fastq_readstructure_pairs == [["R1", "151"]]
         }
     }
 }
