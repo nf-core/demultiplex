@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#389](https://github.com/nf-core/demultiplex/pull/389) Bump to version 1.7.1.
 - [#387](https://github.com/nf-core/demultiplex/pull/387) Use nf-schema 2.7.0.
 - [#379](https://github.com/nf-core/demultiplex/pull/379) Enable workflow outputs.
 - [#372](https://github.com/nf-core/demultiplex/pull/372) Remove local subworkflows with less than 2 modules.
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#385](https://github.com/nf-core/demultiplex/pull/385) Fix publish statements cannot be mixed with other statements in a dynamic publish path.
+- [#389](https://github.com/nf-core/demultiplex/pull/389) Fix `ConcurrentModificationException` error in CI.
 
 ### `Dependencies`
 
