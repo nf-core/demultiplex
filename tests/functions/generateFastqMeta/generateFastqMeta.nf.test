@@ -1,12 +1,29 @@
-nextflow_workflow {
+nextflow_function {
     name "Test generateFastqMeta"
-    script "./main.nf"
-    workflow "TEST_GENERATEFASTQMETA"
+    script "subworkflows/local/utils_nfcore_demultiplex_pipeline/."
+    function "generateFastqMeta"
 
     test("Should generate grouped FASTQ metadata for paired-end and single-end inputs") {
         when {
-            workflow {
+            function {
                 '''
+                jsonOutput = [
+                    toJson: { obj ->
+                        obj
+                            .map { meta, fastqs ->
+                                [
+                                    meta : meta,
+                                    files: fastqs.collect { fastq -> fastq.getFileName().toString() },
+                                ]
+                            }
+                            .toList()
+                            .subscribe { converted ->
+                                new File("${params.nf_test_output}/function.json").text =
+                                    groovy.json.JsonOutput.toJson(converted)
+                            }
+                        groovy.json.JsonOutput.toJson([:])
+                    }
+                ]
                 input[0] = Channel.of(
                     [
                         [id: 'FLOW_A', lane: 1],
@@ -30,10 +47,27 @@ nextflow_workflow {
         }
 
         then {
-            assertAll(
-                { assert workflow.success },
-                { assert snapshot(workflow.out.captured).match() }
-            )
+            assert function.success
+            assert function.result != null
+            assert function.result.size() == 2
+
+            assert function.result[0].meta.id == "test"
+            assert function.result[0].meta.samplename == "test"
+            assert function.result[0].meta.fcid == "FLOW_A"
+            assert function.result[0].meta.lane == 1
+            assert function.result[0].meta.single_end == false
+            assert function.result[0].meta.readgroup.PL == "ELEMENT"
+            assert function.result[0].meta.readgroup.SM == "test"
+            assert function.result[0].files == ["test_1.fastq.gz", "test_2.fastq.gz"]
+
+            assert function.result[1].meta.id == "test2"
+            assert function.result[1].meta.samplename == "test2"
+            assert function.result[1].meta.fcid == "FLOW_B"
+            assert function.result[1].meta.lane == 2
+            assert function.result[1].meta.single_end == true
+            assert function.result[1].meta.readgroup.PL == "ELEMENT"
+            assert function.result[1].meta.readgroup.SM == "test2"
+            assert function.result[1].files == ["test2_1.fastq.gz"]
         }
     }
 }
