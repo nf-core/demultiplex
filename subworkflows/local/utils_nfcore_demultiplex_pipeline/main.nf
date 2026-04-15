@@ -312,22 +312,20 @@ def methodsDescriptionText(mqc_methods_yaml) {
 def generateFastqMeta(ch_reads, sampleNameRegex=/_R[0-9].*$/, platform='SINGULAR', useSanitizedId=false) {
     ch_reads.transpose().map { fc_meta, fastq ->
         def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
+        def readgroup = readgroupFromFastq(fastq, platform) + [SM: samplename]
         def meta = [
             "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
             "samplename": samplename,
-            "readgroup": [:],
+            "readgroup": readgroup,
             "fcid": fc_meta.id,
             "lane": fc_meta.lane,
         ]
-        meta.readgroup = readgroupFromFastq(fastq, platform)
-        meta.readgroup.SM = meta.samplename
 
         [meta, fastq]
     }
     .groupTuple(by: [0])
     .map { meta, fastq ->
-        meta.single_end = fastq.size() == 1
-        [meta, fastq.flatten()]
+        [meta + [single_end: fastq.size() == 1], fastq.flatten()]
     }
 }
 

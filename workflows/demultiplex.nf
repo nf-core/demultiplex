@@ -357,14 +357,17 @@ workflow DEMULTIPLEX {
         def files_list = fastq_files instanceof List ? fastq_files : [fastq_files]
 
         // Determine the publish directory based on the lane information
-        meta.publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}"
+        def publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}"
 
         // Add full path for fastq files to the metadata
-        meta.fastq_1 = "${meta.publish_dir}/${files_list[0].getName()}"
+        def meta_out = meta + [
+            publish_dir: publish_dir,
+            fastq_1: "${publish_dir}/${files_list[0].getName()}",
+        ]
         if (!meta.single_end && files_list.size() > 1) {
-            meta.fastq_2 = "${meta.publish_dir}/${files_list[1].getName()}"
+            meta_out.fastq_2 = "${publish_dir}/${files_list[1].getName()}"
         }
-        return meta
+        return meta_out
     }
 
     // Module: FASTQ to samplesheet
