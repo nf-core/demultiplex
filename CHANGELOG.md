@@ -34,7 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| falco      | 1.2.1       | 1.2.5       |
+| fastp      | 1.0.1       | 1.1.0       |
 | multiqc    | 1.31        | 1.33        |
+| multiqcsav |             | 1.9.0       |
+| samshee    | 0.2.10      | 0.2.13      |
 
 ## 1.7.0
 
