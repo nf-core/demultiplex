@@ -3,9 +3,48 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.7.0
+## 1.7.1 - 2026-04-20
 
 ### `Added`
+
+- [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
+- [#384](https://github.com/nf-core/demultiplex/pull/384) Add nf-tests to functions
+
+### `Changed`
+
+- [#389](https://github.com/nf-core/demultiplex/pull/389) Bump to version 1.7.1.
+- [#388](https://github.com/nf-core/demultiplex/pull/388) Improve functions nf-test.
+- [#387](https://github.com/nf-core/demultiplex/pull/387) Use nf-schema 2.7.0.
+- [#379](https://github.com/nf-core/demultiplex/pull/379) Enable workflow outputs.
+- [#372](https://github.com/nf-core/demultiplex/pull/372) Remove local subworkflows with less than 2 modules.
+- [#371](https://github.com/nf-core/demultiplex/pull/371) Bump checkqc
+- [#354](https://github.com/nf-core/demultiplex/pull/354) Bump version and note mgikit addition in 1.7.0 Changelog
+- [#355](https://github.com/nf-core/demultiplex/pull/355) Template update for nf-core/tools v3.5.1
+- [#357](https://github.com/nf-core/demultiplex/pull/357) Update MultiQC to 1.33
+- [#359](https://github.com/nf-core/demultiplex/pull/359) Update FASTP module
+- [#363](https://github.com/nf-core/demultiplex/pull/363) Use samshee only for validating samplesheet, not for formatting the samplesheet that's used by the demultiplexers.
+- [#368](https://github.com/nf-core/demultiplex/pull/368) Port nf-tests to `UTILS.groovy`
+
+### `Fixed`
+
+- [#385](https://github.com/nf-core/demultiplex/pull/385) Fix publish statements cannot be mixed with other statements in a dynamic publish path.
+- [#389](https://github.com/nf-core/demultiplex/pull/389) Fix `ConcurrentModificationException` error in CI.
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| falco      | 1.2.1       | 1.2.5       |
+| fastp      | 1.0.1       | 1.1.0       |
+| multiqc    | 1.31        | 1.33        |
+| multiqcsav |             | 1.9.0       |
+| samshee    | 0.2.10      | 0.2.13      |
+
+## 1.7.0
+
+### `Added`
+
+- [#299](https://github.com/nf-core/demultiplex/pull/299) Added mgikit
 
 ### `Changed`
 
@@ -31,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastp       | 0.23.4           | 0.24.0           |
 | fqtk        | 0.2.1            | 0.3.1            |
 | kraken2     | 2.1.3            | 2.1.5            |
+| mgikit      |                  | 2.1.0            |
 | multiqc     | 1.29             | 1.31             |
 | md5sum      | 8.3              | 9.5              |
 

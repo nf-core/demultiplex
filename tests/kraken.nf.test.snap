@@ -1,19 +1,19 @@
 {
     "kraken2": {
         "content": [
-            13,
+            15,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
                 },
                 "FALCO": {
-                    "falco": "1.2.1"
+                    "falco": "1.2.5"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.1.0"
                 },
                 "KRAKEN2": {
-                    "kraken2": "2.1.5",
+                    "kraken2": "2.1.6",
                     "pigz": 2.8
                 },
                 "MD5SUM": {
@@ -21,6 +21,12 @@
                 },
                 "SEQTK_SAMPLE": {
                     "seqtk": "1.4-r122"
+                },
+                "UNTAR_FLOWCELL": {
+                    "untar": 1.34
+                },
+                "UNTAR_KRAKEN_DB": {
+                    "untar": 1.34
                 }
             },
             [
@@ -64,7 +70,6 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz.md5",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.json",
-                "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.kraken2.report.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
@@ -77,6 +82,9 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Stats/DemuxSummaryF1L1.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Stats/FastqSummaryF1L1.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Stats/Stats.json",
+                "Sample1_S1_L001",
+                "Sample1_S1_L001/L001",
+                "Sample1_S1_L001/L001/Sample1_S1_L001.kraken2.report.txt",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcl2fastq-lane-stats-table.txt",
@@ -91,6 +99,7 @@
                 "multiqc/multiqc_data/fastp-seq-quality-plot_Read_1_Before_filtering.txt",
                 "multiqc/multiqc_data/fastp_filtered_reads_plot.txt",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
+                "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.txt",
@@ -130,6 +139,7 @@
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/fastp_filtered_reads_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
@@ -157,6 +167,7 @@
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-cnt.png",
                 "multiqc/multiqc_plots/png/fastp_filtered_reads_plot-pct.png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
@@ -184,6 +195,7 @@
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/fastp_filtered_reads_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
@@ -195,6 +207,22 @@
                 "multiqc/multiqc_plots/svg/kraken-top-n-plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/kraken-top-n-plot-pct.svg",
                 "multiqc/multiqc_report.html",
+                "multiqcsav",
+                "multiqcsav/multiqc_data",
+                "multiqcsav/multiqc_data/bcl2fastq-lane-stats-table.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_lane_counts.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_sample_counts.txt",
+                "multiqcsav/multiqc_data/bcl2fastq_undetermined.txt",
+                "multiqcsav/multiqc_data/llms-full.txt",
+                "multiqcsav/multiqc_data/multiqc.log",
+                "multiqcsav/multiqc_data/multiqc.parquet",
+                "multiqcsav/multiqc_data/multiqc_bcl2fastq_bylane.txt",
+                "multiqcsav/multiqc_data/multiqc_bcl2fastq_bysample.txt",
+                "multiqcsav/multiqc_data/multiqc_citations.txt",
+                "multiqcsav/multiqc_data/multiqc_data.json",
+                "multiqcsav/multiqc_data/multiqc_general_stats.txt",
+                "multiqcsav/multiqc_data/multiqc_sources.txt",
+                "multiqcsav/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_demultiplex_software_mqc_versions.yml",
                 "samplesheet",
@@ -218,15 +246,15 @@
                 "tree.html:md5,a1b9bf592973ca829ec69ddf888b7e34",
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
-                "Sample1_S1_L001.fastp.json:md5,f32924123fc99081ca2d98377e316ae5",
-                "Sample1_S1_L001.kraken2.report.txt:md5,726f60beda853ebb9134f6a712c4196b",
+                "Sample1_S1_L001.fastp.json:md5,c22d06d6d871be994995ff91417a3f1d",
                 "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz:md5,53bf34dad1f8269eeed36e661ef036fb",
-                "Sample1_S1_L001_fastqc_data.txt:md5,0adf4e2617f55fabba0663583c1f65b7",
-                "Sample1_S1_L001_summary.txt:md5,510c6b8a26ff8d530950c05b3ca5a1c6",
+                "Sample1_S1_L001_fastqc_data.txt:md5,6001946d5f0d64d53911dbcf8eb1902d",
+                "Sample1_S1_L001_summary.txt:md5,06df1eab621bc8965a038431c3a01dd3",
                 "AdapterTrimming.txt:md5,48ed2b914b1246c0b5d8667525550946",
                 "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
                 "FastqSummaryF1L1.txt:md5,0c6f2d87ee183b84d1051cde9a5643d1",
+                "Sample1_S1_L001.kraken2.report.txt:md5,726f60beda853ebb9134f6a712c4196b",
                 "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
                 "bcl2fastq_lane_counts.txt:md5,289a1a8c66a582ea39f786f851c0107a",
                 "bcl2fastq_sample_counts.txt:md5,a1ffb5a63338b98df6df82399ba2eea8",
@@ -237,6 +265,7 @@
                 "fastp-seq-quality-plot_Read_1_After_filtering.txt:md5,1701b40c23dca068210f5410788e3be1",
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,35de9aebdc467b1bbc9fd1f40d3aece4",
                 "fastp_filtered_reads_plot.txt:md5,02825e43da90036b7ae65efe82671c6e",
+                "fastqc_adapter_content_plot.txt:md5,56e44f14dd59c5b33fdbe3fe0d83f34e",
                 "fastqc_per_base_n_content_plot.txt:md5,d7db99124db8f53d82c51c779ce77463",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,31c51bbd7d4dbb32107efa95c8a58ee5",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,842eaa1c62a8e6676b4b07226bda998b",
@@ -247,7 +276,12 @@
                 "kraken-top-n-plot.txt:md5,add0b89a8b3d1729dac311870959b1e7",
                 "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
                 "multiqc_citations.txt:md5,97f1dcb4348072ce2865c29c5c306a3d",
-                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654"
+                "multiqc_kraken.txt:md5,a90fd69786a0df1e43b948e423545654",
+                "bcl2fastq-lane-stats-table.txt:md5,d0e821a9c0ccf7da808c5dd05e99ddc2",
+                "bcl2fastq_lane_counts.txt:md5,289a1a8c66a582ea39f786f851c0107a",
+                "bcl2fastq_sample_counts.txt:md5,a1ffb5a63338b98df6df82399ba2eea8",
+                "multiqc_bcl2fastq_bysample.txt:md5,1865f27f430d153085b26c86320718fe",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
                 [
@@ -273,9 +307,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-07-15T20:00:43.142260533"
+        "timestamp": "2026-04-07T17:22:32.13869964"
     }
 }

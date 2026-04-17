@@ -8,15 +8,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap          } from 'plugin/nf-schema'
-include { samplesheetToList         } from 'plugin/nf-schema'
-include { paramsHelp                } from 'plugin/nf-schema'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap        } from 'plugin/nf-schema'
+include { samplesheetToList       } from 'plugin/nf-schema'
+include { paramsHelp              } from 'plugin/nf-schema'
+include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
+include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,30 +25,34 @@ include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipelin
 */
 
 workflow PIPELINE_INITIALISATION {
-
     take:
-    version           // boolean: Display version and exit
-    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    version // boolean: Display version and exit
+    validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
+    _monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
-    help              // boolean: Display help message and exit
-    help_full         // boolean: Show the full help message
-    show_hidden       // boolean: Show hidden parameters in the help message
+    outdir //  string: The output directory where the results will be saved
+    input //  string: Path to input samplesheet
+    flowcell_id // string: Flowcell id for single-flowcell runs
+    flowcell_samplesheet // string: Path to flowcell samplesheet for single-flowcell runs
+    flowcell_lane // integer: Lane number for single-flowcell runs
+    flowcell_path // string: Path to flowcell run directory for single-flowcell runs
+    flowcell_per_flowcell_manifest // string: Path to per-flowcell manifest for fqtk
+    help // boolean: Display help message and exit
+    help_full // boolean: Show the full help message
+    show_hidden // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
     //
-    UTILS_NEXTFLOW_PIPELINE (
+    UTILS_NEXTFLOW_PIPELINE(
         version,
         true,
         outdir,
-        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
+        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1,
     )
 
     //
@@ -64,7 +68,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/demultiplex ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -73,7 +77,7 @@ workflow PIPELINE_INITIALISATION {
 """
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
-    UTILS_NFSCHEMA_PLUGIN (
+    UTILS_NFSCHEMA_PLUGIN(
         workflow,
         validate_params,
         null,
@@ -82,18 +86,18 @@ workflow PIPELINE_INITIALISATION {
         show_hidden,
         before_text,
         after_text,
-        command
+        command,
     )
 
     //
     // Check config provided to the pipeline
     //
-    UTILS_NFCORE_PIPELINE (
+    UTILS_NFCORE_PIPELINE(
         nextflow_cli_args
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through params.input or from single-flowcell params
     //
     // When using the demultiplexer fqtk, the samplesheet must contain an additional
     // column per_flowcell_manifest. The column per_flowcell_manifest must contain
@@ -101,32 +105,55 @@ workflow PIPELINE_INITIALISATION {
     // For reference:
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv VS
     //      https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/sgdemux-samplesheet.csv
-    if( params.demultiplexer == 'fqtk' ) {
 
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+    def flowcell_params = [flowcell_id, flowcell_samplesheet, flowcell_lane, flowcell_path, flowcell_per_flowcell_manifest]
+    def has_flowcell_params = flowcell_params.any { v -> v != null }
+
+    // Validate single-flowcell parameters if provided
+    if (has_flowcell_params) {
+        if (params.demultiplexer == 'fqtk' && !flowcell_per_flowcell_manifest) {
+            error("[Parameter Error] --flowcell_per_flowcell_manifest is required when using fqtk demultiplexer in single-flowcell mode")
+        }
+        if (params.demultiplexer == 'fqtk' && !file(flowcell_per_flowcell_manifest).exists()) {
+            error("[Parameter Error] The per flowcell manifest file does not exist: ${flowcell_per_flowcell_manifest}")
+        }
+    }
+
+    // Create flowcell input list as channel
+    def flowcell_input_list = has_flowcell_params ?
+        channel.of([
+            [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
+            file(params.flowcell_samplesheet),
+            file(params.flowcell_path),
+            params.flowcell_per_flowcell_manifest ?
+            file(params.flowcell_per_flowcell_manifest) :
+            []
+        ]) :
+        channel.empty()
+
+    if (params.demultiplexer == 'fqtk') {
+
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
-                if ( !file(per_flowcell_manifest).exists() ){
-                    error "[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}"
+                if (!file(per_flowcell_manifest).exists()) {
+                    error("[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}")
                 }
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
-                // cf https://github.com/nextflow-io/nf-schema/issues/163
             }
 
-        ch_flowcell_manifest = ch_samplesheet.map{ meta, samplesheet, flowcell, per_flowcell_manifest -> per_flowcell_manifest }
-            .splitCsv(header:true, strip:true)
-            .map{ row ->
-                if( !row.containsKey("fastq") || !row.containsKey("read_structure") ) {
-                    error "[Samplesheet Error] The per flowcell manifest file must contain the headers 'fastq' and 'read_structure'"
-                }
-            }
-
-    } else {
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+    }
+    else {
+        ch_samplesheet = (input ?
+            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
+            flowcell_input_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
-                // cf https://github.com/nextflow-io/nf-schema/issues/163
             }
     }
+
+    ch_samplesheet.dump(tag:"ch_samplesheet")
 
     emit:
     samplesheet = ch_samplesheet
@@ -140,15 +167,14 @@ workflow PIPELINE_INITIALISATION {
 */
 
 workflow PIPELINE_COMPLETION {
-
     take:
-    email           //  string: email address
-    email_on_fail   //  string: email address sent on pipeline failure
+    email //  string: email address
+    email_on_fail //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir          //    path: Path to output directory where results will be published
+    outdir //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
+    hook_url //  string: hook URL for notifications
+    multiqc_report //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -171,7 +197,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal()
+                multiqc_reports.getVal(),
             )
         }
 
@@ -182,7 +208,7 @@ workflow PIPELINE_COMPLETION {
     }
 
     workflow.onError {
-        log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
+        log.error("Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
     }
 }
 
@@ -197,8 +223,8 @@ workflow PIPELINE_COMPLETION {
 //
 def getGenomeAttribute(attribute) {
     if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
+        if (params.genomes[params.genome].containsKey(attribute)) {
+            return params.genomes[params.genome][attribute]
         }
     }
     return null
@@ -209,11 +235,7 @@ def getGenomeAttribute(attribute) {
 //
 def genomeExistsError() {
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-            "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-            "  Currently, the available genome keys are:\n" +
-            "  ${params.genomes.keySet().join(", ")}\n" +
-            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
@@ -225,11 +247,11 @@ def toolCitationText() {
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
-            "Tools used in the workflow included:",
-            "FastQC (Andrews 2010),",
-            "MultiQC (Ewels et al. 2016)",
-            "."
-        ].join(' ').trim()
+        "Tools used in the workflow included:",
+        "FastQC (Andrews 2010),",
+        "MultiQC (Ewels et al. 2016)",
+        ".",
+    ].join(' ').trim()
 
     return citation_text
 }
@@ -239,9 +261,9 @@ def toolBibliographyText() {
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
-        ].join(' ').trim()
+        "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+        "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>",
+    ].join(' ').trim()
 
     return reference_text
 }
@@ -263,7 +285,10 @@ def methodsDescriptionText(mqc_methods_yaml) {
             temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref.replace("https://doi.org/", "").replace(" ", "")}\'>${doi_ref.replace("https://doi.org/", "").replace(" ", "")}</a>), "
         }
         meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length() - 2)
-    } else meta["doi_text"] = ""
+    }
+    else {
+        meta["doi_text"] = ""
+    }
     meta["nodoi_text"] = meta.manifest_map.doi ? "" : "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
     // Tool references
@@ -277,8 +302,120 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     def methods_text = mqc_methods_yaml.text
 
-    def engine =  new groovy.text.SimpleTemplateEngine()
+    def engine = new groovy.text.SimpleTemplateEngine()
     def description_html = engine.createTemplate(methods_text).make(meta)
 
     return description_html.toString()
+}
+
+
+def generateFastqMeta(ch_reads, sampleNameRegex=/_R[0-9].*$/, platform='SINGULAR', useSanitizedId=false) {
+    ch_reads.transpose().map { fc_meta, fastq ->
+        def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
+        def readgroup = readgroupFromFastq(fastq, platform) + [SM: samplename]
+        def meta = [
+            "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
+            "samplename": samplename,
+            "readgroup": readgroup,
+            "fcid": fc_meta.id,
+            "lane": fc_meta.lane,
+        ]
+
+        [meta, fastq]
+    }
+    .groupTuple(by: [0])
+    .map { meta, fastq ->
+        [meta + [single_end: fastq.size() == 1], fastq.flatten()]
+    }
+}
+
+// https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
+def readgroupFromFastq(path, platform='SINGULAR') {
+    def line
+
+    path.withInputStream { inputStream ->
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(inputStream)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    def rg = [:]
+
+    def fcid = fields[2]
+    def lane = fields[3]
+    def index = fields[-1] =~ /[GATC+-]/ ? fields[-1] : ""
+
+    rg.ID = [fcid, lane].join('.')
+    rg.PU = [fcid, lane, index].findAll().join('.')
+    rg.PL = platform
+
+    rg
+}
+
+def csvToTSV(ch_samplesheet) {
+    def ch_samplesheet_tsv = ch_samplesheet
+        .collectFile(storeDir: "${params.outdir}") { item ->
+            def suffix = item[0].lane ? ".lane${item[0].lane}" : ""
+            def lines_out = ''
+            item[1].readLines().each { line ->
+                lines_out += line.replace(',', '\t') + '\n'
+            }
+            ["${item[0].id}${suffix}.tsv", lines_out]
+        }
+        .map { sample_sheet ->
+            def meta_id = (sample_sheet =~ /.*\/(.*?)(\.lane|\.tsv)/)[0][1]
+            def meta_lane = sample_sheet.getName().contains('.lane') ? (sample_sheet =~ /\.lane(\d+)/)[0][1].toInteger() : null
+            [[id: meta_id.toString(), lane: meta_lane], sample_sheet]
+        }
+
+    ch_samplesheet
+        .join(ch_samplesheet_tsv, failOnMismatch: true)
+        .map { meta, _sample_sheet_csv, flowcell, fastq_readstructure_pairs, sample_sheet_tsv ->
+            [meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs]
+        }
+}
+
+def removeAdapters(samplesheet) {
+    def lines_out = ''
+    def removal_checker = false
+    samplesheet.readLines().each { line ->
+        if ( line =~ /Adapter(Read[12])?,[ACGT]+,?/ ) {
+            removal_checker = true
+        } else {
+            // keep original line otherwise
+            lines_out = lines_out + line + '\n'
+        }
+    }
+    if (!removal_checker) {
+        System.out.println("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m")
+    }
+    return lines_out
+}
+
+def prettyFormat(Object object) {
+    // Convert problematic types to strings before JSON conversion
+    def sanitized = sanitizeObject(object)
+    def json = new groovy.json.JsonBuilder(sanitized)
+    return groovy.json.JsonOutput.prettyPrint(json.toString())
+}
+
+def sanitizeObject(Object obj) {
+    if (obj == null) {
+        return null
+    } else if (obj instanceof Map) {
+        return obj.collectEntries { k, v -> [k, sanitizeObject(v)] }
+    } else if (obj instanceof Collection) {
+        return obj.collect { it -> sanitizeObject(it) }
+    } else if (obj instanceof java.nio.file.Path) {
+        return obj.toString()
+    } else if (obj instanceof java.time.OffsetDateTime) {
+        return obj.toString()
+    } else if (obj.getClass().getName().contains('Duration')) {
+        return obj.toString()
+    } else {
+        return obj
+    }
 }

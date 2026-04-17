@@ -17,14 +17,13 @@ workflow RUNDIR_CHECKQC {
         demultiplexer
 
     main:
-        ch_versions      = Channel.empty()
-        ch_report        = Channel.empty()
-        ch_checkqc_dir   = Channel.empty()
+        ch_report        = channel.empty()
+        ch_checkqc_dir   = channel.empty()
 
         // Split flowcells into separate channels containing run as tar and run as path
         // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
         ch_flowcell
-            .branch { meta, samplesheet, run ->
+            .branch { _meta, _samplesheet, run ->
                 tar: run.toString().endsWith(".tar.gz")
                 dir: true
             }.set { ch_flowcells }
@@ -55,11 +54,9 @@ workflow RUNDIR_CHECKQC {
                 // Run checkqc
                 CHECKQC(ch_checkqc_dir, ch_checkqc_config)
                 ch_report = CHECKQC.out.report
-                ch_versions = ch_versions.mix(CHECKQC.out.versions)
         }
 
     emit:
         checkqc_dir = ch_checkqc_dir
         report      = ch_report
-        versions    = ch_versions
 }
