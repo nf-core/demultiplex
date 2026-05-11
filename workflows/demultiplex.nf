@@ -69,22 +69,33 @@ workflow DEMULTIPLEX {
     ch_file_schema_validator = params.file_schema_validator ? Channel.fromPath(params.file_schema_validator, checkIfExists: true) : [] // file schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
+    log.info "[DEBUG DEMUX] Starting DEMULTIPLEX workflow channel setup"
     ch_samplesheet = ch_samplesheet
-        .map{ meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] } // Make meta.id be always a string
+        .map{ meta, csv, tar, optional ->
+            log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Channel item received: id=${meta.id}, lane=${meta.lane}, flowcell=${tar?.toString()?.take(80)}"
+            [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional]
+        } // Make meta.id be always a string
     if (params.remove_samplesheet_adapter && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+        log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Starting adapter removal with collectFile (using local tempDir instead of S3 storeDir)..."
         ch_samplesheet_no_adapter = ch_samplesheet
-            .collectFile(storeDir: "${params.outdir}") { item ->
+            .collectFile() { item ->
+                log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] collectFile processing: id=${item[0].id}, lane=${item[0].lane}"
                 def suffix = item[0].lane ? ".lane${item[0].lane}" : "" //need to produce one file per item in the channel else join fails
                 [ "${item[0].id}${suffix}_no_adapters.csv", AdapterRemover.removeAdaptersFromSampleSheet(item[1]) ]
             }
             .map { file -> //build meta again from file name
+                log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] collectFile emitted: ${file.name}"
                 def meta_id = (file =~ /.*\/(.*?)(\.lane|_no_adapters)/)[0][1] //extracts everything from the last "/" until ".lane" or "_no_adapters"
                 def meta_lane = (file.getName().contains('.lane')) ? (file =~ /\.lane(\d+)/)[0][1].toInteger() : null //extracts number after ".lane" until next "_", must be int to match lane value from meta
                 [ [id: meta_id.toString(), lane: meta_lane], file ] // Make meta.id be always a string
             }
+        log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] collectFile operator set up, waiting for channel items..."
         ch_samplesheet_new = ch_samplesheet
             .join( ch_samplesheet_no_adapter, failOnMismatch: true )
-            .map{ meta, samplesheet, flowcell, lane, new_samplesheet -> [meta, new_samplesheet, flowcell, lane] }
+            .map{ meta, samplesheet, flowcell, lane, new_samplesheet ->
+                log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Join completed for: id=${meta.id}, lane=${meta.lane}"
+                [meta, new_samplesheet, flowcell, lane]
+            }
         ch_samplesheet = ch_samplesheet_new
     } else {
         ch_samplesheet
@@ -93,6 +104,7 @@ workflow DEMULTIPLEX {
             }
     }
 
+    log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Adapter removal complete, proceeding to samshee validation..."
     // RUN samplesheet_validator samshee
     if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])){
         SAMSHEE (
@@ -106,10 +118,12 @@ workflow DEMULTIPLEX {
     }
 
     // Convenience
+    log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Samshee complete, proceeding to flowcell branch..."
     ch_samplesheet.dump(tag: 'DEMULTIPLEX::inputs', {FormattingService.prettyFormat(it)})
 
     // Split flowcells into separate channels containg run as tar and run as path
     // https://nextflow.slack.com/archives/C02T98A23U7/p1650963988498929
+    log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Starting flowcell branching (tar vs dir)..." 
     if (demultiplexer == 'fqtk'){
 
         ch_flowcells = ch_samplesheet
@@ -152,7 +166,9 @@ workflow DEMULTIPLEX {
     }
 
     // Merge the two channels back together
+    log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Flowcell channels set up, merging tar/dir branches..."
     ch_flowcells = ch_flowcells.dir.mix(ch_flowcells_tar_merged)
+    log.info "[DEBUG DEMUX ${new Date().format('HH:mm:ss.SSS')}] Channel setup complete, proceeding to demultiplexing..." 
 
     // RUN demultiplexing
     //

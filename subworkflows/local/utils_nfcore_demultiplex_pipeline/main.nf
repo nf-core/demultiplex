@@ -121,8 +121,16 @@ workflow PIPELINE_INITIALISATION {
             }
 
     } else {
-        ch_samplesheet = Channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+        log.info "[DEBUG ${new Date().format('HH:mm:ss.SSS')}] Starting samplesheetToList..."
+        def samplesheet_list = samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
+        log.info "[DEBUG ${new Date().format('HH:mm:ss.SSS')}] samplesheetToList returned ${samplesheet_list.size()} items"
+        samplesheet_list.each { item ->
+            log.info "[DEBUG ${new Date().format('HH:mm:ss.SSS')}]   Item: meta=${item[0]}, samplesheet=${item[1]}, flowcell=${item[2]?.toString()?.take(80)}"
+        }
+        log.info "[DEBUG ${new Date().format('HH:mm:ss.SSS')}] Creating channel from samplesheet list..."
+        ch_samplesheet = Channel.fromList(samplesheet_list)
             .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+                log.info "[DEBUG ${new Date().format('HH:mm:ss.SSS')}] Processing samplesheet row: id=${meta.id}, lane=${meta.lane}, flowcell=${flowcell}"
                 [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
                 // cf https://github.com/nextflow-io/nf-schema/issues/163
             }
