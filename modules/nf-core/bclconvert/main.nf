@@ -5,7 +5,7 @@ process BCLCONVERT {
     container "nf-core/bclconvert:4.3.13"
 
     input:
-    tuple val(meta), path(samplesheet), path(run_dir)
+    tuple val(meta), path(samplesheet), val(run_dir)
 
     output:
     tuple val(meta), path("output/**_S[1-9]*_R?_00?.fastq.gz")        , emit: fastq
@@ -28,8 +28,10 @@ process BCLCONVERT {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
-    def input_tar = run_dir.toString().endsWith(".tar.gz") ? true : false
-    def input_dir = input_tar ? run_dir.toString() - '.tar.gz' : run_dir
+    // Resolve string to a Path so Fusion translates S3 URIs to mount paths
+    def run_path = file(run_dir)
+    def input_tar = run_path.toString().endsWith(".tar.gz") ? true : false
+    def input_dir = input_tar ? run_path.toString() - '.tar.gz' : run_path
     """
     if [ ! -d ${input_dir} ]; then
         mkdir -p ${input_dir}
@@ -39,19 +41,19 @@ process BCLCONVERT {
         ## Ensures --strip-components only applied when top level of tar contents is a directory
         ## If just files or multiple directories, place all in $input_dir
 
-        if [[ \$(tar -taf ${run_dir} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+        if [[ \$(tar -taf ${run_path} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
             tar \\
                 -C $input_dir --strip-components 1 \\
                 -xavf \\
                 $args2 \\
-                $run_dir \\
+                $run_path \\
                 $args3
         else
             tar \\
                 -C $input_dir \\
                 -xavf \\
                 $args2 \\
-                $run_dir \\
+                $run_path \\
                 $args3
         fi
     fi
