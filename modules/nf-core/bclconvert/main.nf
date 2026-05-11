@@ -28,10 +28,13 @@ process BCLCONVERT {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def args3 = task.ext.args3 ?: ''
-    // Resolve string to a Path so Fusion translates S3 URIs to mount paths
-    def run_path = file(run_dir)
-    def input_tar = run_path.toString().endsWith(".tar.gz") ? true : false
-    def input_dir = input_tar ? run_path.toString() - '.tar.gz' : run_path
+    // Resolve the run directory path for Fusion compatibility.
+    // val() inputs bypass Nextflow's path staging (avoiding expensive S3 directory
+    // listings), but we must manually translate s3:// URIs to Fusion mount paths.
+    def run_dir_str = run_dir.toString()
+    def run_dir_resolved = run_dir_str.replaceFirst('^s3://', '/fusion/s3/')
+    def input_tar = run_dir_resolved.endsWith(".tar.gz")
+    def input_dir = input_tar ? run_dir_resolved - '.tar.gz' : run_dir_resolved
     """
     if [ ! -d ${input_dir} ]; then
         mkdir -p ${input_dir}
@@ -41,19 +44,19 @@ process BCLCONVERT {
         ## Ensures --strip-components only applied when top level of tar contents is a directory
         ## If just files or multiple directories, place all in $input_dir
 
-        if [[ \$(tar -taf ${run_path} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
+        if [[ \$(tar -taf ${run_dir_resolved} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
             tar \\
                 -C $input_dir --strip-components 1 \\
                 -xavf \\
                 $args2 \\
-                $run_path \\
+                $run_dir_resolved \\
                 $args3
         else
             tar \\
                 -C $input_dir \\
                 -xavf \\
                 $args2 \\
-                $run_path \\
+                $run_dir_resolved \\
                 $args3
         fi
     fi
