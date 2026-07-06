@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#399](https://github.com/nf-core/demultiplex/pull/399) Back to dev
 - [#401](https://github.com/nf-core/demultiplex/pull/401) Add volume=40gb to nf-test runners to fix disk space issues
+- [#401](https://github.com/nf-core/demultiplex/pull/401) Update contributor ORCID identifiers and affiliations
 
 ### `Fixed`
 
