@@ -402,6 +402,10 @@ workflow DEMULTIPLEX {
     //
     // MODULE: MultiQC
     //
+    // If a multiqc_config file is provided, we create a list and add it to the pipeline multiqc_config file.
+    // That way both files are used in the pipeline
+    // And the default multiqc_config file is always included
+    // keeps modules ordering and path filters
     if (!("multiqc" in skip_tools)) {
         ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
         def ch_summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -418,8 +422,8 @@ workflow DEMULTIPLEX {
                     [id: 'demultiplex'],
                     files,
                     multiqc_config
-                        ? file(multiqc_config, checkIfExists: true)
-                        : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+                        ? [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true), file(multiqc_config, checkIfExists: true)]
+                        : [file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)],
                     multiqc_logo ? file(multiqc_logo, checkIfExists: true) : [],
                     [],
                     [],

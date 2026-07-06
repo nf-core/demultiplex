@@ -182,4 +182,11 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
+### MultiQC config handling
+
+This pipeline diverges from the nf-core template in how it handles MultiQC configs.
+When passing MultiQC config files, one MUST always use a list that includes the pipeline default config (`assets/multiqc_config.yml`) as the first element.
+If a user provides a custom config via `--multiqc_config`, add it to the list after the default config.
+This ensures branding, module ordering (`report_section_order`, `top_modules`), and path filters are preserved even when users provide their own custom config.
+MultiQC joins the list with `--config`, so both configs are applied.
+One MUST NOT revert this to the template's either/or approach during future template merges.
