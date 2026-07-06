@@ -22,6 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ---------- | ----------- | ----------- |
 | multiqc    | 1.33        | 1.35        |
 
+### `Plugins`
+
+| Plugin     | Old version | New version |
+| ---------- | ----------- | ----------- |
+| nf-schema  | 2.7.0       | 2.7.2       |
+
 ### `Fixed`
 
 ## 1.7.1 - 2026-04-20
