@@ -331,7 +331,7 @@ workflow DEMULTIPLEX {
     // Prepare metamap with fastq info
     ch_meta_fastq = ch_fastq_to_qc.map { meta, fastq_files ->
         // Normalize input to always be a list
-        def first_file = fastq instanceof List ? fastq_files : [fastq_files]
+        def files_list = fastq_files instanceof List ? fastq_files : [fastq_files]
 
         // Determine the publish directory based on the lane information
         def publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}"
