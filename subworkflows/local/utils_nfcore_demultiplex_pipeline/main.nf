@@ -332,9 +332,9 @@ def readgroupFromFastq(path, platform = 'SINGULAR') {
     def line
 
     path.withInputStream { inputStream ->
-        def gzipStream: InputStream = new java.util.zip.GZIPInputStream(inputStream)
-        def decoder: Reader = new InputStreamReader(gzipStream, 'ASCII')
-        def buffered: BufferedReader = new BufferedReader(decoder)
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(inputStream)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
         line = buffered.readLine()
     }
     assert line.startsWith('@')
