@@ -3,13 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.7.2 - dev
+
+### `Added`
+
+- [#398](https://github.com/nf-core/demultiplex/pull/398) Add `AGENTS.md` file with nf-core agent instructions
+
+### `Changed`
+
+- [#399](https://github.com/nf-core/demultiplex/pull/399) Back to dev
+
+### `Fixed`
+
 ## 1.7.1 - 2026-04-20
 
 ### `Added`
 
 - [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
 - [#384](https://github.com/nf-core/demultiplex/pull/384) Add nf-tests to functions
-- [#398](https://github.com/nf-core/demultiplex/pull/398) Add `AGENTS.md` file with nf-core agent instructions
 
 ### `Changed`
 
