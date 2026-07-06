@@ -193,11 +193,7 @@ workflow DEMULTIPLEX {
         BASES2FASTQ(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(BASES2FASTQ.out.sample_fastq, /_R[0-9].*$/, 'ELEMENT'))
         // TODO: verify that this is the correct output
-        ch_multiqc_files = ch_multiqc_files.mix(
-            BASES2FASTQ.out.metrics.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics.map { _meta, metrics -> metrics })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report).mix(BASES2FASTQ.out.sample_json)
     }
     else if (demultiplexer in ['bclconvert', 'bcl2fastq']) {
@@ -218,32 +214,11 @@ workflow DEMULTIPLEX {
                 }
             )
         }
-        ch_multiqcsav_report = ch_multiqcsav_report
-            .mix(
-                BCL_DEMULTIPLEX.out.sav_report.map { _meta, report ->
-                    return report
-                }
-            )
-            .mix(
-                BCL_DEMULTIPLEX.out.sav_data.map { _meta, data ->
-                    return data
-                }
-            )
-            .mix(
-                BCL_DEMULTIPLEX.out.sav_plots.map { _meta, plots ->
-                    return plots
-                }
-            )
-        ch_multiqc_files = ch_multiqc_files.mix(
-            BCL_DEMULTIPLEX.out.reports.map { _meta, report ->
-                return report
-            }
-        )
-        ch_multiqc_files = ch_multiqc_files.mix(
-            BCL_DEMULTIPLEX.out.stats.map { _meta, stats ->
-                return stats
-            }
-        )
+        ch_multiqcsav_report = ch_multiqcsav_report.mix(BCL_DEMULTIPLEX.out.sav_report.map { _meta, report -> report })
+        ch_multiqcsav_report = ch_multiqcsav_report.mix(BCL_DEMULTIPLEX.out.sav_data.map { _meta, data -> data })
+        ch_multiqcsav_report = ch_multiqcsav_report.mix(BCL_DEMULTIPLEX.out.sav_plots.map { _meta, plots -> plots })
+        ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.reports.map { _meta, report -> report })
+        ch_multiqc_files = ch_multiqc_files.mix(BCL_DEMULTIPLEX.out.stats.map { _meta, stats -> stats })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BCL_DEMULTIPLEX.out.reports)
         ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
@@ -251,11 +226,7 @@ workflow DEMULTIPLEX {
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)
-            ch_multiqc_files = ch_multiqc_files.mix(
-                RUNDIR_CHECKQC.out.report.map { _meta, json ->
-                    return json
-                }
-            )
+            ch_multiqc_files = ch_multiqc_files.mix(RUNDIR_CHECKQC.out.report.map { _meta, json -> json })
             ch_checkqc_reports = ch_checkqc_reports.mix(RUNDIR_CHECKQC.out.report)
         }
     }
@@ -275,11 +246,7 @@ workflow DEMULTIPLEX {
 
         FQTK(csvToTSV(ch_samplesheet))
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(FQTK.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
-        ch_multiqc_files = ch_multiqc_files.mix(
-            FQTK.out.metrics.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics -> metrics })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(FQTK.out.metrics)
     }
     else if (demultiplexer == 'sgdemux') {
@@ -287,11 +254,7 @@ workflow DEMULTIPLEX {
         // Runs when "demultiplexer" is set to "sgdemux"
         SGDEMUX(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(SGDEMUX.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
-        ch_multiqc_files = ch_multiqc_files.mix(
-            SGDEMUX.out.metrics.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(SGDEMUX.out.metrics.map { _meta, metrics -> metrics })
     }
     else if (demultiplexer == 'mkfastq') {
         // MODULE: mkfastq
@@ -310,11 +273,7 @@ workflow DEMULTIPLEX {
         MGIKIT_DEMULTIPLEX(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(MGIKIT_DEMULTIPLEX.out.fastq, /_S\d+_L0\d+_R\d+.*$/, 'ELEMENT', true))
         ch_undetermined = ch_undetermined.mix(MGIKIT_DEMULTIPLEX.out.undetermined)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics ->
-                return metrics
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics -> metrics })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
     }
     else {
@@ -331,11 +290,7 @@ workflow DEMULTIPLEX {
     // MODULE: fastp
     if (!("fastp" in skip_tools) && trim_fastq) {
         FASTP(ch_raw_fastq.map { meta, reads -> [meta, reads, []] }, [], [], [])
-        ch_multiqc_files = ch_multiqc_files.mix(
-            FASTP.out.json.map { _meta, json ->
-                return json
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(FASTP.out.json.map { _meta, json -> json })
         ch_fastp_reports = ch_fastp_reports.mix(FASTP.out.json).mix(FASTP.out.html)
         ch_fastq_to_qc = FASTP.out.reads
     }
@@ -343,11 +298,7 @@ workflow DEMULTIPLEX {
     // MODULE: falco, drop in replacement for fastqc
     if (!("falco" in skip_tools)) {
         FALCO(ch_fastq_to_qc)
-        ch_multiqc_files = ch_multiqc_files.mix(
-            FALCO.out.txt.map { _meta, txt ->
-                return txt
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(FALCO.out.txt.map { _meta, txt -> txt })
         ch_falco_reports = ch_falco_reports.mix(FALCO.out.html).mix(FALCO.out.txt)
     }
 
@@ -372,11 +323,7 @@ workflow DEMULTIPLEX {
             [sample_size],
             kraken_db,
         )
-        ch_multiqc_files = ch_multiqc_files.mix(
-            FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { _meta, log ->
-                return log
-            }
-        )
+        ch_multiqc_files = ch_multiqc_files.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports.map { _meta, log -> log })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reports)
         ch_fastq_to_qc = ch_fastq_to_qc.mix(FASTQ_CONTAM_SEQTK_KRAKEN.out.reads)
     }
@@ -384,7 +331,7 @@ workflow DEMULTIPLEX {
     // Prepare metamap with fastq info
     ch_meta_fastq = ch_fastq_to_qc.map { meta, fastq_files ->
         // Normalize input to always be a list
-        def files_list = fastq_files instanceof List ? fastq_files : [fastq_files]
+        def first_file = fastq instanceof List ? fastq_files : [fastq_files]
 
         // Determine the publish directory based on the lane information
         def publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}"

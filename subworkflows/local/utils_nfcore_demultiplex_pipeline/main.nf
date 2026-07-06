@@ -398,33 +398,33 @@ def removeAdapters(samplesheet) {
     return lines_out
 }
 
-def prettyFormat(object: Object) {
+def prettyFormat(Object object) {
     // Convert problematic types to strings before JSON conversion
     def sanitized = sanitizeObject(object)
     def json = new groovy.json.JsonBuilder(sanitized)
     return groovy.json.JsonOutput.prettyPrint(json.toString())
 }
 
-def sanitizeObject(obj: Object) {
-    if (obj == null) {
+def sanitizeObject(Object object) {
+    if (object == null) {
         return null
     }
-    else if (obj instanceof Map) {
-        return obj.collectEntries { k, v -> [k, sanitizeObject(v)] }
+    else if (object instanceof Map) {
+        return object.collectEntries { k, v -> [k, sanitizeObject(v)] }
     }
-    else if (obj instanceof Collection) {
-        return obj.collect { it -> sanitizeObject(it) }
+    else if (object instanceof Collection) {
+        return object.collect { it -> sanitizeObject(it) }
     }
-    else if (obj instanceof java.nio.file.Path) {
-        return obj.toString()
+    else if (object instanceof java.nio.file.Path) {
+        return object.toString()
     }
-    else if (obj instanceof java.time.OffsetDateTime) {
-        return obj.toString()
+    else if (object instanceof java.time.OffsetDateTime) {
+        return object.toString()
     }
-    else if (obj.getClass().getName().contains('Duration')) {
-        return obj.toString()
+    else if (object.getClass().getName().contains('Duration')) {
+        return object.toString()
     }
     else {
-        return obj
+        return object
     }
 }
