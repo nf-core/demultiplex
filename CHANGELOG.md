@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#398](https://github.com/nf-core/demultiplex/pull/398) Add `AGENTS.md` file with nf-core agent instructions
+
 ### `Changed`
 
 - [#399](https://github.com/nf-core/demultiplex/pull/399) Back to dev
@@ -19,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
 - [#384](https://github.com/nf-core/demultiplex/pull/384) Add nf-tests to functions
-- [#398](https://github.com/nf-core/demultiplex/pull/398) Add `AGENTS.md` file with nf-core agent instructions
 
 ### `Changed`
 
