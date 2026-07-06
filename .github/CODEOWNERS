@@ -1,0 +1,18 @@
+# Maintainers
+* @nf-core/demultiplex
+*.nf.test* @nf-core/nf-test
+.github/workflows/ @nf-core/a-team
+
+# Element
+modules/nf-core/bases2fastq/ @blajoie
+subworkflows/local/bases_demultiplex/main.nf @blajoie
+tests/pipeline/default/bases2fastq.nf.test* @blajoie
+conf/test_bases2fastq.config @blajoie
+assets/inputs/b2fq-samplesheet.csv @blajoie
+
+# Singular
+modules/nf-core/sgdemux/ @nh13 @sam-white04
+subworkflows/local/singular_demultiplex/ @nh13 @sam-white04
+tests/pipeline/default/sgdemux.nf.test* @nh13 @sam-white04
+conf/test_sgdemux.config @nh13 @sam-white04
+assets/inputs/sgdemux-samplesheet.csv @nh13 @sam-white04

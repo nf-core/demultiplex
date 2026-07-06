@@ -12,4 +12,4 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 1.7.1
+  version: 1.7.2dev
