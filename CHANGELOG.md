@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#369](https://github.com/nf-core/demultiplex/pull/369) Option to trigger single flowcell without a samplesheet
 - [#384](https://github.com/nf-core/demultiplex/pull/384) Add nf-tests to functions
+- [#392](https://github.com/nf-core/demultiplex/pull/392) Add `AGENTS.md` file with nf-core agent instructions
 
 ### `Changed`
 
