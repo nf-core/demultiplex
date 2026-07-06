@@ -22,8 +22,8 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "InProgress",
-            "datePublished": "2026-07-06T09:10:25+00:00",
-            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-demultiplex_logo_dark.png\">\n    <img alt=\"nf-core/demultiplex\" src=\"docs/images/nf-core-demultiplex_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/demultiplex)\n[![GitHub Actions CI Status](https://github.com/nf-core/demultiplex/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.7153103-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.7153103)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.2-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.1)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/demultiplex)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23demultiplex-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/demultiplex)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/demultiplex** is a bioinformatics pipeline used to demultiplex the raw data produced by next generation sequencing machines. The following platforms are supported:\n\n1. Illumina (via `bcl2fastq` or `bclconvert`)\n2. Element Biosciences (via `bases2fastq`)\n3. Singular Genomics (via [`sgdemux`](https://github.com/Singular-Genomics/singular-demux))\n4. FASTQ files with user supplied read structures (via [`fqtk`](https://github.com/fulcrumgenomics/fqtk))\n5. 10x Genomics (via [`mkfastq`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq))\n\nThe pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!\n\nOn release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/demultiplex/results).\n\n## Pipeline summary\n\n1. [samshee](#samshee) - Validates illumina v2 samplesheets.\n2. Demultiplexing\n\n- [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)\n- [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)\n- [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)\n- [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)\n- [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)\n- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)\n- [mgikit](#mgikit) - Demultiplex fastq files generated by MGI sequencers using [mgikit](https://github.com/sagc-bioinformatics/mgikit) (CONDITIONAL).\n\n3. [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)\n4. [fastp](#fastp) - Adapter and quality trimming\n5. [Falco](#falco) - Raw read QC\n6. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.\n7. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline\n\n![subway map](docs/demultiplex.png)\n\n## Usage\n\n```console\nnextflow run nf-core/demultiplex --input samplesheet.csv --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>\n```\n\n```bash\nnextflow run nf-core/demultiplex \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/demultiplex/usage) and the [parameter documentation](https://nf-co.re/demultiplex/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/demultiplex/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/demultiplex/output).\n\n## Credits\n\nThe nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.\n\nThe pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent, Ghent University](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@edmundmiller](https://github.com/edmundmiller)) from [Element Biosciences](https://www.elementbiosciences.com/)\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [`@ChristopherBarrington`](https://github.com/ChristopherBarrington)\n- [`@drpatelh`](https://github.com/drpatelh)\n- [`@danielecook`](https://github.com/danielecook)\n- [`@escudem`](https://github.com/escudem)\n- [`@crickbabs`](https://github.com/crickbabs)\n- [`@nh13`](https://github.com/nh13)\n- [`@sam-white04`](https://github.com/sam-white04)\n- [`@maxulysse`](https://github.com/maxulysse)\n- [`@atrigila`](https://github.com/atrigila)\n- [`@nschcolnicov`](https://github.com/nschcolnicov)\n- [`@aratz`](https://github.com/aratz)\n- [`@grst`](https://github.com/grst)\n- [`@apeltzer`](https://github.com/apeltzer)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#demultiplex` channel](https://nfcore.slack.com/channels/demultiplex) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.7153103](https://doi.org/10.5281/zenodo.7153103)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "datePublished": "2026-07-06T11:08:38+00:00",
+            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-demultiplex_logo_dark.png\">\n    <img alt=\"nf-core/demultiplex\" src=\"docs/images/nf-core-demultiplex_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/demultiplex)\n[![GitHub Actions CI Status](https://github.com/nf-core/demultiplex/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/demultiplex/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/demultiplex/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.7153103-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.7153103)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.2)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/demultiplex)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23demultiplex-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/demultiplex)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/demultiplex** is a bioinformatics pipeline used to demultiplex the raw data produced by next generation sequencing machines. The following platforms are supported:\n\n1. Illumina (via `bcl2fastq` or `bclconvert`)\n2. Element Biosciences (via `bases2fastq`)\n3. Singular Genomics (via [`sgdemux`](https://github.com/Singular-Genomics/singular-demux))\n4. FASTQ files with user supplied read structures (via [`fqtk`](https://github.com/fulcrumgenomics/fqtk))\n5. 10x Genomics (via [`mkfastq`](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq))\n\nThe pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!\n\nOn release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources.The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/demultiplex/results).\n\n## Pipeline summary\n\n1. [samshee](#samshee) - Validates illumina v2 samplesheets.\n2. Demultiplexing\n\n- [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)\n- [bases2fastq](#bases2fastq) - converting bases files to fastq, and demultiplexing (CONDITIONAL)\n- [bcl2fastq](#bcl2fastq) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)\n- [sgdemux](#sgdemux) - demultiplexing bgzipped fastq files produced by Singular Genomics (CONDITIONAL)\n- [fqtk](#fqtk) - a toolkit for working with FASTQ files, written in Rust (CONDITIONAL)\n- [mkfastq](#mkfastq) - converting bcl files to fastq, and demultiplexing for single-cell sequencing data (CONDITIONAL)\n- [mgikit](#mgikit) - Demultiplex fastq files generated by MGI sequencers using [mgikit](https://github.com/sagc-bioinformatics/mgikit) (CONDITIONAL).\n\n3. [checkqc](#checkqc) - (optional) Check quality criteria after demultiplexing (bcl2fastq only)\n4. [fastp](#fastp) - Adapter and quality trimming\n5. [Falco](#falco) - Raw read QC\n6. [md5sum](#md5sum) - Creates an MD5 (128-bit) checksum of every fastq.\n7. [MultiQC](#multiqc) - aggregate report, describing results of the whole pipeline\n\n![subway map](docs/demultiplex.png)\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\n```console\nnextflow run nf-core/demultiplex \\\n  --input samplesheet.csv \\\n  --outdir <OUTDIR> \\\n  -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/demultiplex/usage) and the [parameter documentation](https://nf-co.re/demultiplex/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/demultiplex/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/demultiplex/output).\n\n## Credits\n\nThe nf-core/demultiplex pipeline was written by Chelsea Sawyer from The Bioinformatics & Biostatistics Group for use at The Francis Crick Institute, London.\n\nThe pipeline was re-written in Nextflow DSL2 and is primarily maintained by Matthias De Smet([@matthdsm](https://github.com/matthdsm)) from [Center For Medical Genetics Ghent, Ghent University](https://github.com/CenterForMedicalGeneticsGhent) and Edmund Miller([@edmundmiller](https://github.com/edmundmiller)) from [Element Biosciences](https://www.elementbiosciences.com/)\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [`@ChristopherBarrington`](https://github.com/ChristopherBarrington)\n- [`@drpatelh`](https://github.com/drpatelh)\n- [`@danielecook`](https://github.com/danielecook)\n- [`@escudem`](https://github.com/escudem)\n- [`@crickbabs`](https://github.com/crickbabs)\n- [`@nh13`](https://github.com/nh13)\n- [`@sam-white04`](https://github.com/sam-white04)\n- [`@maxulysse`](https://github.com/maxulysse)\n- [`@atrigila`](https://github.com/atrigila)\n- [`@nschcolnicov`](https://github.com/nschcolnicov)\n- [`@aratz`](https://github.com/aratz)\n- [`@grst`](https://github.com/grst)\n- [`@apeltzer`](https://github.com/apeltzer)\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#demultiplex` channel](https://nfcore.slack.com/channels/demultiplex) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use nf-core/demultiplex for your analysis, please cite it using the following doi: [10.5281/zenodo.7153103](https://doi.org/10.5281/zenodo.7153103)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
@@ -108,7 +108,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#e63dc180-82ee-4dd8-a5ba-63eb32445c25"
+                    "@id": "#121d2ed8-f885-4b5d-b3e4-f3c1c720b598"
                 }
             ],
             "name": "nf-core/demultiplex"
@@ -137,10 +137,10 @@
             ],
             "author": [
                 {
-                    "@id": "#41c4ba9d-2672-49f9-9df2-6a22bbbe398d"
+                    "@id": "#8262e916-04ce-4de2-a204-1eb5479ffdec"
                 },
                 {
-                    "@id": "#8fc354f5-62f7-4165-b913-84995987f173"
+                    "@id": "#bd02459c-76a6-4029-8d47-5c6643f045c3"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-2555-3114"
@@ -148,22 +148,22 @@
             ],
             "contributor": [
                 {
-                    "@id": "#76a1aa44-ac57-4154-be26-8077ca712b91"
+                    "@id": "#84244860-2fb8-4a30-a606-f1dddb686ef7"
                 },
                 {
-                    "@id": "#215a1b96-85ce-4c46-9b1a-2e12773b0ba9"
+                    "@id": "#5cd055d3-b146-4646-a9a9-9435eb8698fe"
                 },
                 {
-                    "@id": "#5d9d6c2f-1810-4001-8722-d491d32aff3c"
+                    "@id": "#9ea9ee2d-fc9d-4ee6-bf3a-b546dc36e180"
                 },
                 {
-                    "@id": "#76b7ca29-4e23-4f72-816f-da00d5ce3acc"
+                    "@id": "#5a83fbc9-bae8-4a11-bee9-f064e765d18f"
                 },
                 {
                     "@id": "https://orcid.org/0009-0007-7860-1155"
                 },
                 {
-                    "@id": "#07b0e1c9-0112-47f0-a8a3-9b2ccb9623f5"
+                    "@id": "#9d80a918-b7d0-4301-8829-8495f49e0ea5"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-2827-9261"
@@ -172,7 +172,7 @@
                     "@id": "https://orcid.org/0000-0001-6755-9763"
                 },
                 {
-                    "@id": "#37ecf14d-a5b8-4cb3-9498-c15910591d98"
+                    "@id": "#80aa2647-7ee2-463c-99de-ac7576b8308a"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-2702-1103"
@@ -194,7 +194,7 @@
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2026-07-06T11:10:26Z",
+            "dateModified": "2026-07-06T13:08:38Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -210,7 +210,7 @@
             ],
             "maintainer": [
                 {
-                    "@id": "#8fc354f5-62f7-4165-b913-84995987f173"
+                    "@id": "#bd02459c-76a6-4029-8d47-5c6643f045c3"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-2555-3114"
@@ -264,14 +264,14 @@
             "url": {
                 "@id": "https://www.nextflow.io/"
             },
-            "version": "!>=25.10.2"
+            "version": "!>=25.10.4"
         },
         {
-            "@id": "#e63dc180-82ee-4dd8-a5ba-63eb32445c25",
+            "@id": "#121d2ed8-f885-4b5d-b3e4-f3c1c720b598",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#aeb013f3-55e1-498d-9dfb-2e92f288689a"
+                    "@id": "#0cce742a-62c8-47cc-8fbb-9aec35691a85"
                 }
             ],
             "mainEntity": {
@@ -280,7 +280,7 @@
             "name": "Test suite for nf-core/demultiplex"
         },
         {
-            "@id": "#aeb013f3-55e1-498d-9dfb-2e92f288689a",
+            "@id": "#0cce742a-62c8-47cc-8fbb-9aec35691a85",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/demultiplex",
             "resource": "repos/nf-core/demultiplex/actions/workflows/nf-test.yml",
@@ -424,17 +424,15 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#41c4ba9d-2672-49f9-9df2-6a22bbbe398d",
+            "@id": "#8262e916-04ce-4de2-a204-1eb5479ffdec",
             "@type": "Person",
-            "email": "chelseakarasawyer@gmail.com",
             "name": "Chelsea Sawyer",
             "url": "https://github.com/csawye01"
         },
         {
-            "@id": "#8fc354f5-62f7-4165-b913-84995987f173",
+            "@id": "#bd02459c-76a6-4029-8d47-5c6643f045c3",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "20095261+edmundmiller@users.noreply.github.com",
             "name": "Edmund Miller",
             "url": "https://github.com/EdmundMiller"
         },
@@ -442,18 +440,17 @@
             "@id": "https://orcid.org/0000-0003-2555-3114",
             "@type": "Person",
             "affiliation": "Center For Medical Genetics Ghent",
-            "email": "11850640+matthdsm@users.noreply.github.com",
             "name": "Matthias De Smet",
             "url": "https://github.com/matthdsm"
         },
         {
-            "@id": "#76a1aa44-ac57-4154-be26-8077ca712b91",
+            "@id": "#84244860-2fb8-4a30-a606-f1dddb686ef7",
             "@type": "Person",
             "name": "Christopher Barrington",
             "url": "https://github.com/ChristopherBarrington"
         },
         {
-            "@id": "#215a1b96-85ce-4c46-9b1a-2e12773b0ba9",
+            "@id": "#5cd055d3-b146-4646-a9a9-9435eb8698fe",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "drpatelh@users.noreply.github.com",
@@ -461,14 +458,14 @@
             "url": "https://github.com/drpatelh"
         },
         {
-            "@id": "#5d9d6c2f-1810-4001-8722-d491d32aff3c",
+            "@id": "#9ea9ee2d-fc9d-4ee6-bf3a-b546dc36e180",
             "@type": "Person",
             "affiliation": "Google",
             "name": "Daniel E. Cook",
             "url": "https://github.com/danielecook"
         },
         {
-            "@id": "#76b7ca29-4e23-4f72-816f-da00d5ce3acc",
+            "@id": "#5a83fbc9-bae8-4a11-bee9-f064e765d18f",
             "@type": "Person",
             "affiliation": "The Francis Crick Institute",
             "name": "Bioinformatics & Biostatistics (BABS) @ The Francis Crick Institute",
@@ -478,12 +475,11 @@
             "@id": "https://orcid.org/0009-0007-7860-1155",
             "@type": "Person",
             "affiliation": "Fulcrum Genomics",
-            "email": "nh13@users.noreply.github.com",
             "name": "Nils Homer",
             "url": "https://github.com/nh13"
         },
         {
-            "@id": "#07b0e1c9-0112-47f0-a8a3-9b2ccb9623f5",
+            "@id": "#9d80a918-b7d0-4301-8829-8495f49e0ea5",
             "@type": "Person",
             "name": "Sam White",
             "url": "https://github.com/sam-white04"
@@ -492,7 +488,6 @@
             "@id": "https://orcid.org/0000-0003-2827-9261",
             "@type": "Person",
             "affiliation": "Seqera",
-            "email": "max.u.garcia@gmail.com",
             "name": "Maxime U Garcia",
             "url": "https://github.com/maxulysse"
         },
@@ -500,12 +495,11 @@
             "@id": "https://orcid.org/0000-0001-6755-9763",
             "@type": "Person",
             "affiliation": "ZS",
-            "email": "18577080+atrigila@users.noreply.github.com",
             "name": "Anabella Trigila",
             "url": "https://github.com/atrigila"
         },
         {
-            "@id": "#37ecf14d-a5b8-4cb3-9498-c15910591d98",
+            "@id": "#80aa2647-7ee2-463c-99de-ac7576b8308a",
             "@type": "Person",
             "affiliation": "ZS",
             "name": "Nicolas Scholnicov",
@@ -515,7 +509,6 @@
             "@id": "https://orcid.org/0000-0003-2702-1103",
             "@type": "Person",
             "affiliation": "Uppsala University, Department of Medical Sciences, Molecular Precision Medicine",
-            "email": "adrien.coulier@medsci.uu.se",
             "name": "Adrien Coulier",
             "url": "https://github.com/aratz"
         },
@@ -523,7 +516,6 @@
             "@id": "https://orcid.org/0000-0001-9584-7842",
             "@type": "Person",
             "affiliation": "Boehringer Ingelheim",
-            "email": "mail@gregor-sturm.de",
             "name": "Gregor Sturm",
             "url": "https://github.com/grst"
         },
@@ -531,7 +523,6 @@
             "@id": "https://orcid.org/0000-0002-6503-2180",
             "@type": "Person",
             "affiliation": "Boehringer Ingelheim",
-            "email": "apeltzer@users.noreply.github.com",
             "name": "Alexander Peltzer",
             "url": "https://github.com/apeltzer"
         },

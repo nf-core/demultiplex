@@ -1,5 +1,5 @@
 # Maintainers
-* @nf-core/demultiplex
+* @nf-core/demultiplex @maxulysse @apeltzer
 *.nf.test* @nf-core/nf-test
 .github/workflows/ @nf-core/a-team
 
