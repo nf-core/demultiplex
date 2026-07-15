@@ -16,6 +16,8 @@ include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_ATACSEQ     } from '../mo
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_TAXPROFILER } from '../modules/local/fastq_to_samplesheet'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_SAREK       } from '../modules/local/fastq_to_samplesheet'
 include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_METHYLSEQ   } from '../modules/local/fastq_to_samplesheet'
+include { FASTQ_TO_SAMPLESHEET as FASTQ_TO_SAMPLESHEET_SEQINSPECTOR   } from '../modules/local/fastq_to_samplesheet'
+
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -363,12 +365,16 @@ workflow DEMULTIPLEX {
     ch_meta_fastq_methylseq = ch_meta_fastq
     FASTQ_TO_SAMPLESHEET_METHYLSEQ(ch_meta_fastq_methylseq.collect(), "methylseq", strandedness)
 
+    ch_meta_fastq_seqinspector = ch_meta_fastq
+    FASTQ_TO_SAMPLESHEET_SEQINSPECTOR(ch_meta_fastq_seqinspector.collect(), "seqinspector", strandedness)
+
     ch_pipeline_samplesheets = channel.empty()
         .mix(FASTQ_TO_SAMPLESHEET_RNASEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'rnaseq', samplesheet] })
         .mix(FASTQ_TO_SAMPLESHEET_ATACSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'atacseq', samplesheet] })
         .mix(FASTQ_TO_SAMPLESHEET_TAXPROFILER.out.samplesheet.map { meta, samplesheet -> [meta, 'taxprofiler', samplesheet] })
         .mix(FASTQ_TO_SAMPLESHEET_SAREK.out.samplesheet.map { meta, samplesheet -> [meta, 'sarek', samplesheet] })
         .mix(FASTQ_TO_SAMPLESHEET_METHYLSEQ.out.samplesheet.map { meta, samplesheet -> [meta, 'methylseq', samplesheet] })
+        .mix(FASTQ_TO_SAMPLESHEET_SEQINSPECTOR.out.samplesheet.map { meta, samplesheet -> [meta, 'seqinspector', samplesheet] })
 
     //
     // Collate and save software versions

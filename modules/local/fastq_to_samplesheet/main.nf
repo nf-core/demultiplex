@@ -54,7 +54,11 @@ process FASTQ_TO_SAMPLESHEET {
             pipeline_map.lane = "${item.lane}"
         } else if (pipeline == 'methylseq') {
             pipeline_map.genome = ''
+        } else if (pipeline == 'seqinspector') {
+            pipeline_map.rundir = item.rundir ?: ''
+            pipeline_map.tags   = item.tags   ?: ''
         }
+
 
         // Add all keys to the set of unique columns
         allColumns.addAll(pipeline_map.keySet())
