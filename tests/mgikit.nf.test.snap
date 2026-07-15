@@ -1,7 +1,7 @@
 {
     "mgikit": {
         "content": [
-            23,
+            24,
             {
                 "FALCO": {
                     "falco": "1.2.5"
@@ -143,6 +143,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "test-fc01",
                 "test-fc01.csv",

@@ -1,7 +1,7 @@
 {
     "User wants to skip trimming with the demultiplexer, and trim with fastp": {
         "content": [
-            16,
+            17,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.4.6"
@@ -118,6 +118,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "test_adapter",
                 "test_adapter.lane1_no_adapters.csv",
@@ -268,7 +269,7 @@
     },
     "User wants to trim with the demultiplexer": {
         "content": [
-            14,
+            15,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.4.6"
@@ -349,6 +350,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "test_adapter",
                 "test_adapter.csv",
@@ -482,7 +484,7 @@
     },
     "User wants to skip trimming all together": {
         "content": [
-            14,
+            15,
             {
                 "BCLCONVERT": {
                     "bclconvert": "4.4.6"
@@ -563,6 +565,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv",
                 "test_adapter",
                 "test_adapter.lane1_no_adapters.csv",

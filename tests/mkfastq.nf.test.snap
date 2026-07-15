@@ -1,7 +1,7 @@
 {
     "MKFASTQ": {
         "content": [
-            12,
+            13,
             {
                 "CELLRANGER_MKFASTQ": {
                     "cellranger": "9.0.1"
@@ -207,6 +207,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -267,6 +268,10 @@
                 ],
                 [
                     "sarek_samplesheet.csv",
+                    true
+                ],
+                [
+                    "seqinspector_samplesheet.csv",
                     true
                 ],
                 [
