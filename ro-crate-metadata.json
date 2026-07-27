@@ -32,6 +32,9 @@
                     "@id": "assets/"
                 },
                 {
+                    "@id": "bin/"
+                },
+                {
                     "@id": "conf/"
                 },
                 {
@@ -41,7 +44,13 @@
                     "@id": "docs/images/"
                 },
                 {
+                    "@id": "lib/"
+                },
+                {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -121,8 +130,12 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
-            "contributor": [
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
+            "author": [
                 {
                     "@id": "#be65eb64-2941-463a-863c-05d6782ecf48"
                 },
@@ -131,6 +144,53 @@
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-2555-3114"
+                }
+            ],
+            "contributor": [
+                {
+                    "@id": "#84244860-2fb8-4a30-a606-f1dddb686ef7"
+                },
+                {
+                    "@id": "#5cd055d3-b146-4646-a9a9-9435eb8698fe"
+                },
+                {
+                    "@id": "#9ea9ee2d-fc9d-4ee6-bf3a-b546dc36e180"
+                },
+                {
+                    "@id": "#5a83fbc9-bae8-4a11-bee9-f064e765d18f"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0007-7860-1155"
+                },
+                {
+                    "@id": "#9d80a918-b7d0-4301-8829-8495f49e0ea5"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2827-9261"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-6755-9763"
+                },
+                {
+                    "@id": "#80aa2647-7ee2-463c-99de-ac7576b8308a"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2702-1103"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9584-7842"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-4602-1937"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-2974-6717"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0490-5969"
                 }
             ],
             "dateCreated": "",
@@ -145,8 +205,41 @@
                 "elementbiosciences",
                 "illumina"
             ],
-            "license": ["MIT"],
-            "name": ["nf-core/demultiplex"],
+            "license": [
+                "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "#bd02459c-76a6-4029-8d47-5c6643f045c3"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2555-3114"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2827-9261"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2702-1103"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9584-7842"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-4602-1937"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-2974-6717"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0490-5969"
+                }
+            ],
+            "name": [
+                "nf-core/demultiplex"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
@@ -205,6 +298,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -220,9 +318,19 @@
             "description": "Images for the documentation files"
         },
         {
+            "@id": "lib/",
+            "@type": "Dataset",
+            "description": "Groovy utility functions"
+        },
+        {
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -313,17 +421,123 @@
         {
             "@id": "#be65eb64-2941-463a-863c-05d6782ecf48",
             "@type": "Person",
-            "name": "Chelsea Sawyer"
+            "name": "Chelsea Sawyer",
+            "url": "https://github.com/csawye01"
         },
         {
             "@id": "#2c216ce2-2413-42f5-bd5a-899d91c51b13",
             "@type": "Person",
-            "name": "Edmund Miller"
+            "affiliation": "Seqera",
+            "name": "Edmund Miller",
+            "url": "https://github.com/EdmundMiller"
         },
         {
             "@id": "https://orcid.org/0000-0003-2555-3114",
             "@type": "Person",
-            "name": "Matthias De Smet"
+            "affiliation": "Center For Medical Genetics Ghent",
+            "name": "Matthias De Smet",
+            "url": "https://github.com/matthdsm"
+        },
+        {
+            "@id": "#84244860-2fb8-4a30-a606-f1dddb686ef7",
+            "@type": "Person",
+            "name": "Christopher Barrington",
+            "url": "https://github.com/ChristopherBarrington"
+        },
+        {
+            "@id": "#5cd055d3-b146-4646-a9a9-9435eb8698fe",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "drpatelh@users.noreply.github.com",
+            "name": "Harshil Patel",
+            "url": "https://github.com/drpatelh"
+        },
+        {
+            "@id": "#9ea9ee2d-fc9d-4ee6-bf3a-b546dc36e180",
+            "@type": "Person",
+            "affiliation": "Google",
+            "name": "Daniel E. Cook",
+            "url": "https://github.com/danielecook"
+        },
+        {
+            "@id": "#5a83fbc9-bae8-4a11-bee9-f064e765d18f",
+            "@type": "Person",
+            "affiliation": "The Francis Crick Institute",
+            "name": "Bioinformatics & Biostatistics (BABS) @ The Francis Crick Institute",
+            "url": "https://github.com/crickbabs"
+        },
+        {
+            "@id": "https://orcid.org/0009-0007-7860-1155",
+            "@type": "Person",
+            "affiliation": "Fulcrum Genomics",
+            "name": "Nils Homer",
+            "url": "https://github.com/nh13"
+        },
+        {
+            "@id": "#9d80a918-b7d0-4301-8829-8495f49e0ea5",
+            "@type": "Person",
+            "name": "Sam White",
+            "url": "https://github.com/sam-white04"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-2827-9261",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "name": "Maxime U Garcia",
+            "url": "https://github.com/maxulysse"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-6755-9763",
+            "@type": "Person",
+            "affiliation": "ZS",
+            "name": "Anabella Trigila",
+            "url": "https://github.com/atrigila"
+        },
+        {
+            "@id": "#80aa2647-7ee2-463c-99de-ac7576b8308a",
+            "@type": "Person",
+            "affiliation": "ZS",
+            "name": "Nicolas Scholnicov",
+            "url": "https://github.com/nschcolnicov"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-2702-1103",
+            "@type": "Person",
+            "affiliation": "Uppsala University, Department of Medical Sciences, Molecular Precision Medicine",
+            "name": "Adrien Coulier",
+            "url": "https://github.com/aratz"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-9584-7842",
+            "@type": "Person",
+            "affiliation": "Boehringer Ingelheim",
+            "name": "Gregor Sturm",
+            "url": "https://github.com/grst"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-6503-2180",
+            "@type": "Person",
+            "affiliation": "Boehringer Ingelheim",
+            "name": "Alexander Peltzer",
+            "url": "https://github.com/apeltzer"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-4602-1937",
+            "@type": "Person",
+            "name": "Thanh Lee",
+            "url": "https://github.com/thanhleviet"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-2974-6717",
+            "@type": "Person",
+            "name": "Gabriel Lichtenstein",
+            "url": "https://github.com/glichtenstein"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0490-5969",
+            "@type": "Person",
+            "name": "Kobe Lavaerts",
+            "url": "https://github.com/kobelavaerts"
         }
     ]
 }

@@ -1,0 +1,17 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - FQTK"
+    script "../main.nf"
+    profile "test_fqtk"
+
+        def test_scenarios = [
+        [
+            name: "FQTK",
+            tag: "fqtk"
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

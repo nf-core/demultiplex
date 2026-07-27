@@ -1,0 +1,15 @@
+[Header]
+FileFormatVersion,2
+Investigator Name,Researcher
+Date,01-01-2023
+Assay,TruSeq HT
+Chemistry,Amplicon
+
+[BCLConvert_Settings]
+AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+[BCLConvert_Data]
+Sample_ID,index,index2
+Sample01,CTGATCGT,GCGCATAT
+Sample02,ACTCTCGA,CTGTACCA

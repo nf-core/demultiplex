@@ -6,28 +6,39 @@
     "type": "array",
     "items": {
         "type": "object",
+        "required": ["id", "samplesheet", "flowcell"],
         "properties": {
-            "sample": {
+            "id": {
                 "type": "string",
+                "description": "Flowcell ID",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "samplesheet": {
                 "type": "string",
                 "format": "file-path",
-                "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "description": "Sample sheet CSV file",
+                "pattern": "^\\S+\\.csv$"
             },
-            "fastq_2": {
+            "lane": {
+                "type": "integer",
+                "description": "Lane number",
+                "minimum": 1,
+                "default": null,
+                "maximum": 8,
+                "meta": ["lane"]
+            },
+            "flowcell": {
+                "type": "string",
+                "format": "path",
+                "description": "Run directory"
+            },
+            "per_flowcell_manifest": {
                 "type": "string",
                 "format": "file-path",
-                "exists": true,
-                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "description": "Per flowcell manifest file"
             }
-        },
-        "required": ["sample", "fastq_1"]
+        }
     }
 }

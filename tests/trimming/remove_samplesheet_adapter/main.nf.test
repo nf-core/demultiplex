@@ -1,0 +1,133 @@
+nextflow_pipeline {
+
+    name "Trimming - Remove Adapter"
+    script "../../../main.nf"
+    profile "test"
+    tag "remove_samplesheet_adapter"
+    tag "pipeline"
+
+    test("User wants to skip trimming with the demultiplexer, and trim with fastp") {
+        when {
+            params {
+                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                outdir        = "$outputDir"
+                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                // NOTE: This is the default behavior, so we don't need to set these params but leaving them here for clarity
+                // remove_samplesheet_adapter = true
+                // trim_fastq    = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() },
+                // TODO: Check that generated samplesheet has no adapter lines
+                // Check that fastp IS executed
+                { assert removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
+                // NOTE: This should be printed once because one of the samplesheets has no adapters
+                { assert workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
+            )
+        }
+    }
+    test("User wants to trim with the demultiplexer") {
+        when {
+            params {
+                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                outdir        = "$outputDir"
+                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                remove_samplesheet_adapter = false
+                trim_fastq = false
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() },
+                // Check that fastp was NOT executed
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
+                { assert !workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
+            )
+        }
+    }
+
+    test("User wants to skip trimming all together") {
+        when {
+            params {
+                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                outdir        = "$outputDir"
+                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                remove_samplesheet_adapter = true
+                trim_fastq = false
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // samplesheet: All samplesheets in ${params.outdir}/samplesheet/
+            def samplesheet = getAllFilesFromDir(params.outdir, include: ['samplesheet/*_samplesheet.csv'])
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
+                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml", "Workflow"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() },
+                // TODO: Check that generated samplesheet has no adapter lines
+                // Check that fastp was NOT executed
+                { assert !removeNextflowVersion("$outputDir/pipeline_info/nf_core_demultiplex_software_mqc_versions.yml").containsKey("FASTP") },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.json").exists() },
+                { assert !path("$outputDir/test_adapter/L001/Sample1_S1_L001.fastp.html").exists() },
+                // NOTE: This should be printed once because one of the samplesheets has no adapters
+                { assert workflow.stdout.contains("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m") },
+            )
+        }
+    }
+
+    // TODO: When would someone want to run this? Should this fail?
+    // test("User wants to trim with the demultiplexer, and trim with fastp") {
+    // }
+}
