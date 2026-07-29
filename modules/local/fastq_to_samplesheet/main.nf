@@ -4,7 +4,8 @@ process FASTQ_TO_SAMPLESHEET {
     memory 100.MB
 
     input:
-    val meta // Expecting a list of items
+    // Expecting a list of items
+    val meta
     val pipeline
     val strandedness
 
@@ -25,13 +26,14 @@ process FASTQ_TO_SAMPLESHEET {
     sortedMeta.each { item ->
         // Check for required keys in each item
         if (!item.samplename) {
-            error "Item with id ${item.id} is missing the 'samplename' key."
+            error("Item with id ${item.id} is missing the 'samplename' key.")
         }
         if (!item.fastq_1) {
-            error "Item with id ${item.id} is missing the 'fastq_1' key."
+            error("Item with id ${item.id} is missing the 'fastq_1' key.")
         }
 
-        def pipeline_map = [:] // Initialize as an empty map
+        // Initialize as an empty map
+        def pipeline_map = [:]
 
         // Prepare sample information
         pipeline_map.sample = item.samplename
@@ -45,16 +47,25 @@ process FASTQ_TO_SAMPLESHEET {
         // Add pipeline-specific entries
         if (pipeline == 'rnaseq') {
             pipeline_map.strandedness = strandedness ?: ''
-        } else if (pipeline == 'atacseq') {
+        }
+        else if (pipeline == 'atacseq') {
             pipeline_map.replicate = 1
-        } else if (pipeline == 'taxprofiler') {
+        }
+        else if (pipeline == 'taxprofiler') {
             pipeline_map.fasta = ''
-        } else if (pipeline == 'sarek') {
+        }
+        else if (pipeline == 'sarek') {
             pipeline_map.patient = ''
             pipeline_map.lane = "${item.lane}"
-        } else if (pipeline == 'methylseq') {
+        }
+        else if (pipeline == 'methylseq') {
             pipeline_map.genome = ''
         }
+        else if (pipeline == 'seqinspector') {
+            pipeline_map.rundir = ''
+            pipeline_map.tags = ''
+        }
+
 
         // Add all keys to the set of unique columns
         allColumns.addAll(pipeline_map.keySet())
@@ -78,6 +89,6 @@ process FASTQ_TO_SAMPLESHEET {
 
     // Clone the first item in meta for output
     meta_clone = meta.first().clone()
-    meta_clone.remove('publish_dir') // Removing the publish_dir just in case, although output channel is not used by other process
-
+    // Removing the publish_dir just in case, although output channel is not used by other process
+    meta_clone.remove('publish_dir')
 }

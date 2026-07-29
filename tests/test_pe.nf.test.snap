@@ -1,7 +1,7 @@
 {
     "Bcl2Fastq_pe": {
         "content": [
-            13,
+            14,
             {
                 "BCL2FASTQ": {
                     "bcl2fastq": "2.20.0.422"
@@ -237,6 +237,7 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
+                "samplesheet/seqinspector_samplesheet.csv",
                 "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
@@ -308,6 +309,10 @@
                 ],
                 [
                     "sarek_samplesheet.csv",
+                    true
+                ],
+                [
+                    "seqinspector_samplesheet.csv",
                     true
                 ],
                 [
