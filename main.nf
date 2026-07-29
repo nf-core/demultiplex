@@ -135,6 +135,10 @@ output {
                 f >> "${lane_dir}/${f.name}"
             }
         }
+        index {
+            path 'demultiplexed_fastq.csv'
+        }
+        
     }
     demultiplex_reports {
         path { meta, report ->
@@ -144,6 +148,9 @@ output {
                 f >> "${lane_dir}/${f.name}"
             }
         }
+        index {
+            path 'demultiplex_reports.csv'
+        }
     }
     demultiplex_interop {
         path { meta, interop ->
@@ -152,17 +159,26 @@ output {
                 f >> "${meta.id}/InterOp/${f.name}"
             }
         }
+        index {
+            path 'demultiplex_interop.csv'
+        }
     }
     demultiplex_stats {
         path { meta, stat ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/${stat.name}"
         }
+        index {
+            path 'demultiplex_stats.csv'
+        }
     }
     demultiplex_logs {
         path { meta, log ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/${log.name}"
+        }
+        index {
+            path 'demultiplex_logs.csv'
         }
     }
     pipeline_samplesheets {
@@ -176,11 +192,17 @@ output {
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/"
         }
+        index {
+            path 'checkqc_reports.csv'
+        }
     }
     fastp_reports {
         path { meta, _report ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
+        }
+        index {
+            path 'fastp_reports.csv'
         }
     }
     falco_reports {
@@ -188,11 +210,17 @@ output {
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
         }
+        index {
+            path 'falco_reports.csv'
+        }
     }
     md5_checksums {
         path { meta, _checksum ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
+        }
+        index {
+            path 'md5_checksums.csv'
         }
     }
     fastq_idx {
@@ -204,6 +232,10 @@ output {
                 f >> "${lane_dir}/${f.name}"
             }
         }
+        index {
+            path 'fastq_idx.csv'
+        }
+        
     }
     undetermined {
         enabled params.optional_outputs
@@ -214,6 +246,9 @@ output {
                 f >> "${lane_dir}/${f.name}"
             }
         }
+        index {
+            path 'undetermined.csv'
+        }
     }
     undetermined_idx {
         enabled params.optional_outputs
@@ -223,6 +258,9 @@ output {
             files.each { f ->
                 f >> "${lane_dir}/${f.name}"
             }
+        }
+        index {
+            path 'undetermined_idx.csv'
         }
     }
     multiqcsav_report {
