@@ -274,7 +274,12 @@ workflow DEMULTIPLEX {
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(MGIKIT_DEMULTIPLEX.out.fastq, /_S\d+_L0\d+_R\d+.*$/, 'ELEMENT', true))
         ch_undetermined = ch_undetermined.mix(MGIKIT_DEMULTIPLEX.out.undetermined)
         ch_multiqc_files = ch_multiqc_files.mix(MGIKIT_DEMULTIPLEX.out.qc_reports.map { _meta, metrics -> metrics })
-        ch_demultiplex_reports = ch_demultiplex_reports.mix(MGIKIT_DEMULTIPLEX.out.qc_reports).mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports).mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
+        ch_demultiplex_reports = ch_demultiplex_reports
+            .mix(MGIKIT_DEMULTIPLEX.out.general_info_reports)
+            .mix(MGIKIT_DEMULTIPLEX.out.index_reports)
+            .mix(MGIKIT_DEMULTIPLEX.out.sample_stat_reports)
+            .mix(MGIKIT_DEMULTIPLEX.out.undetermined_reports)
+            .mix(MGIKIT_DEMULTIPLEX.out.ambiguous_reports)
     }
     else {
         error("Unknown demultiplexer: ${demultiplexer}")
@@ -334,7 +339,7 @@ workflow DEMULTIPLEX {
         def files_list = fastq_files instanceof List ? fastq_files : [fastq_files]
 
         // Determine the publish directory based on the lane information
-        def publish_dir = meta.lane ? "${params.outdir}/${meta.fcid}/L00${meta.lane}" : "${params.outdir}/${meta.fcid}"
+        def publish_dir = meta.lane ? "${outdir}/${meta.fcid}/L00${meta.lane}" : "${outdir}/${meta.fcid}"
 
         // Add full path for fastq files to the metadata
         def meta_out = meta + [

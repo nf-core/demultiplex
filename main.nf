@@ -110,7 +110,7 @@ workflow {
 
     publish:
     demultiplexed_fastq   = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq.transpose()
-    demultiplex_reports   = NFCORE_DEMULTIPLEX.out.demultiplex_reports
+    demultiplex_reports   = NFCORE_DEMULTIPLEX.out.demultiplex_reports.transpose()
     demultiplex_interop   = NFCORE_DEMULTIPLEX.out.demultiplex_interop.transpose()
     demultiplex_stats     = NFCORE_DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs      = NFCORE_DEMULTIPLEX.out.demultiplex_logs
