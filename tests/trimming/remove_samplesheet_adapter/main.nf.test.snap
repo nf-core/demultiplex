@@ -17,6 +17,16 @@
                 }
             },
             [
+                "checkqc_reports.csv",
+                "demultiplex_interop.csv",
+                "demultiplex_logs.csv",
+                "demultiplex_reports.csv",
+                "demultiplex_stats.csv",
+                "demultiplexed_fastq.csv",
+                "falco_reports.csv",
+                "fastp_reports.csv",
+                "fastq_idx.csv",
+                "md5_checksums.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -260,11 +270,11 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-07-30T16:17:29.819222648",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-04-07T17:32:27.150122684"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "User wants to trim with the demultiplexer": {
         "content": [
@@ -281,6 +291,16 @@
                 }
             },
             [
+                "checkqc_reports.csv",
+                "demultiplex_interop.csv",
+                "demultiplex_logs.csv",
+                "demultiplex_reports.csv",
+                "demultiplex_stats.csv",
+                "demultiplexed_fastq.csv",
+                "falco_reports.csv",
+                "fastp_reports.csv",
+                "fastq_idx.csv",
+                "md5_checksums.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -474,11 +494,11 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-07-30T16:18:39.028875475",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-03-19T18:04:28.174784875"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "User wants to skip trimming all together": {
         "content": [
@@ -495,6 +515,16 @@
                 }
             },
             [
+                "checkqc_reports.csv",
+                "demultiplex_interop.csv",
+                "demultiplex_logs.csv",
+                "demultiplex_reports.csv",
+                "demultiplex_stats.csv",
+                "demultiplexed_fastq.csv",
+                "falco_reports.csv",
+                "fastp_reports.csv",
+                "fastq_idx.csv",
+                "md5_checksums.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bclconvert-lane-stats-table.txt",
@@ -688,10 +718,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-07-30T16:19:52.287860921",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-03-19T18:05:05.455201812"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     }
 }
