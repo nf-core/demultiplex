@@ -85,6 +85,16 @@
                 "Sample1_S1_L001",
                 "Sample1_S1_L001/L001",
                 "Sample1_S1_L001/L001/Sample1_S1_L001.kraken2.report.txt",
+                "checkqc_reports.csv",
+                "demultiplex_interop.csv",
+                "demultiplex_logs.csv",
+                "demultiplex_reports.csv",
+                "demultiplex_stats.csv",
+                "demultiplexed_fastq.csv",
+                "falco_reports.csv",
+                "fastp_reports.csv",
+                "fastq_idx.csv",
+                "md5_checksums.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcl2fastq-lane-stats-table.txt",
@@ -307,10 +317,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-07-06T15:44:34.581793862",
+        "timestamp": "2026-07-30T14:00:04.15827515",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }

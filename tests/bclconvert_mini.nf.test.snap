@@ -20,6 +20,16 @@
                 }
             },
             [
+                "checkqc_reports.csv",
+                "demultiplex_interop.csv",
+                "demultiplex_logs.csv",
+                "demultiplex_reports.csv",
+                "demultiplex_stats.csv",
+                "demultiplexed_fastq.csv",
+                "falco_reports.csv",
+                "fastp_reports.csv",
+                "fastq_idx.csv",
+                "md5_checksums.csv",
                 "miniseq_truseq_smrna",
                 "miniseq_truseq_smrna/HBRR1_S1_L001.fastp.fastq.gz",
                 "miniseq_truseq_smrna/HBRR1_S1_L001.fastp.fastq.gz.md5",
@@ -273,7 +283,9 @@
                 "samplesheet/methylseq_samplesheet.csv",
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "HBRR1_S1_L001.fastp.fastq.gz:md5,451657490d4816dd5ff904e34ecc7fdf",
@@ -412,10 +424,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-07-06T15:14:17.278303718",
+        "timestamp": "2026-07-30T13:35:52.869654973",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }
