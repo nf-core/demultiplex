@@ -76,7 +76,7 @@ workflow BCL_DEMULTIPLEX {
         .dump(tag: "MULTIQC SAV input", pretty: true)
 
     // MULTIQCSAV([meta, xml, interop, reports, multiqc_config, multiqc_logo, [], []])
-    MULTIQCSAV(ch_mqcsav_input)
+    //MULTIQCSAV(ch_mqcsav_input)
 
     // extract empty fastq files from channel
     ch_fastq = ch_fastq_with_meta.branch { meta, fastq ->
@@ -94,9 +94,9 @@ workflow BCL_DEMULTIPLEX {
     interop         = ch_interop
     logs            = ch_logs
     undetermined    = ch_undetermined
-    sav_report      = MULTIQCSAV.out.report
-    sav_data        = MULTIQCSAV.out.data
-    sav_plots       = MULTIQCSAV.out.plots
+    sav_report      = channel.empty() // MULTIQCSAV.out.report
+    sav_data        = channel.empty() // MULTIQCSAV.out.data
+    sav_plots       = channel.empty() // MULTIQCSAV.out.plots
 }
 
 def generateReadgroupBCLCONVERT(ch_fastq_list_csv, ch_fastq) {
