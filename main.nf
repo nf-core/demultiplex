@@ -109,9 +109,9 @@ workflow {
     )
 
     publish:
-    demultiplexed_fastq   = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq
-    demultiplex_reports   = NFCORE_DEMULTIPLEX.out.demultiplex_reports
-    demultiplex_interop   = NFCORE_DEMULTIPLEX.out.demultiplex_interop
+    demultiplexed_fastq   = NFCORE_DEMULTIPLEX.out.demultiplexed_fastq.transpose()
+    demultiplex_reports   = NFCORE_DEMULTIPLEX.out.demultiplex_reports.transpose()
+    demultiplex_interop   = NFCORE_DEMULTIPLEX.out.demultiplex_interop.transpose()
     demultiplex_stats     = NFCORE_DEMULTIPLEX.out.demultiplex_stats
     demultiplex_logs      = NFCORE_DEMULTIPLEX.out.demultiplex_logs
     pipeline_samplesheets = NFCORE_DEMULTIPLEX.out.pipeline_samplesheets
@@ -120,37 +120,36 @@ workflow {
     fastp_reports         = NFCORE_DEMULTIPLEX.out.fastp_reports
     falco_reports         = NFCORE_DEMULTIPLEX.out.falco_reports
     md5_checksums         = NFCORE_DEMULTIPLEX.out.md5_checksums
-    fastq_idx             = NFCORE_DEMULTIPLEX.out.fastq_idx
-    undetermined          = NFCORE_DEMULTIPLEX.out.undetermined
-    undetermined_idx      = NFCORE_DEMULTIPLEX.out.undetermined_idx
+    fastq_idx             = NFCORE_DEMULTIPLEX.out.fastq_idx.transpose()
+    undetermined          = NFCORE_DEMULTIPLEX.out.undetermined.transpose()
+    undetermined_idx      = NFCORE_DEMULTIPLEX.out.undetermined_idx.transpose()
     multiqcsav_report     = NFCORE_DEMULTIPLEX.out.multiqcsav_report
 }
 
 output {
     demultiplexed_fastq {
         path { meta, fastq ->
-            def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
-            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
-            files.each { f ->
-                f >> "${lane_dir}/${f.name}"
-            }
+            fastq >> (meta.lane ? "${meta.fcid}/L00${meta.lane}/${fastq.name}" : "${meta.fcid}/${fastq.name}")
         }
+        index {
+            path 'demultiplexed_fastq.csv'
+        }
+
     }
     demultiplex_reports {
         path { meta, report ->
-            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
-            def files = report instanceof List ? new ArrayList(report) : [report]
-            files.each { f ->
-                f >> "${lane_dir}/${f.name}"
-            }
+            report >> (meta.lane ? "${meta.id}/L00${meta.lane}/${report.name}" : "${meta.id}/${report.name}")
+        }
+        index {
+            path 'demultiplex_reports.csv'
         }
     }
     demultiplex_interop {
         path { meta, interop ->
-            def files = interop instanceof List ? new ArrayList(interop) : [interop]
-            files.each { f ->
-                f >> "${meta.id}/InterOp/${f.name}"
-            }
+            interop >> "${meta.id}/InterOp/${interop.name}"
+        }
+        index {
+            path 'demultiplex_interop.csv'
         }
     }
     demultiplex_stats {
@@ -158,11 +157,17 @@ output {
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/${stat.name}"
         }
+        index {
+            path 'demultiplex_stats.csv'
+        }
     }
     demultiplex_logs {
         path { meta, log ->
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/${log.name}"
+        }
+        index {
+            path 'demultiplex_logs.csv'
         }
     }
     pipeline_samplesheets {
@@ -176,11 +181,17 @@ output {
             def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}" : "${meta.id}"
             "${lane_dir}/"
         }
+        index {
+            path 'checkqc_reports.csv'
+        }
     }
     fastp_reports {
         path { meta, _report ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
+        }
+        index {
+            path 'fastp_reports.csv'
         }
     }
     falco_reports {
@@ -188,41 +199,44 @@ output {
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
         }
+        index {
+            path 'falco_reports.csv'
+        }
     }
     md5_checksums {
         path { meta, _checksum ->
             def lane_dir = meta.lane ? "${meta.fcid}/L00${meta.lane}" : "${meta.fcid}"
             "${lane_dir}/"
         }
+        index {
+            path 'md5_checksums.csv'
+        }
     }
     fastq_idx {
         path { meta, fastq ->
-            def id = meta.fcid ?: meta.id
-            def lane_dir = meta.lane ? "${id}/L00${meta.lane}" : "${id}"
-            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
-            files.each { f ->
-                f >> "${lane_dir}/${f.name}"
-            }
+            fastq >> (meta.lane ? "${meta.fcid ?: meta.id}/L00${meta.lane}/${fastq.name}" : "${meta.fcid ?: meta.id}/${fastq.name}")
         }
+        index {
+            path 'fastq_idx.csv'
+        }
+
     }
     undetermined {
         enabled params.optional_outputs
         path { meta, fastq ->
-            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
-            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
-            files.each { f ->
-                f >> "${lane_dir}/${f.name}"
-            }
+            fastq >> (meta.lane ? "${meta.id}/L00${meta.lane}/undetermined/${fastq.name}" : "${meta.id}/undetermined/${fastq.name}")
+        }
+        index {
+            path 'undetermined.csv'
         }
     }
     undetermined_idx {
         enabled params.optional_outputs
         path { meta, fastq ->
-            def lane_dir = meta.lane ? "${meta.id}/L00${meta.lane}/undetermined" : "${meta.id}/undetermined"
-            def files = fastq instanceof List ? new ArrayList(fastq) : [fastq]
-            files.each { f ->
-                f >> "${lane_dir}/${f.name}"
-            }
+            fastq >> (meta.lane ? "${meta.id}/L00${meta.lane}/undetermined/${fastq.name}" : "${meta.id}/undetermined/${fastq.name}")
+        }
+        index {
+            path 'undetermined_idx.csv'
         }
     }
     multiqcsav_report {

@@ -45,3 +45,15 @@ multiqcsav/multiqc_data/multiqc_software_versions.txt
 multiqcsav/multiqc_data/multiqc_sources.txt
 multiqcsav/multiqc_data/llms-full.txt
 multiqcsav/multiqc_data/bcl2fastq_undetermined.txt
+checkqc_reports.csv
+demultiplex_interop.csv
+demultiplex_logs.csv
+demultiplex_reports.csv
+demultiplex_stats.csv
+demultiplexed_fastq.csv
+falco_reports.csv
+fastp_reports.csv
+fastq_idx.csv
+md5_checksums.csv
+undetermined.csv
+undetermined_idx.csv
