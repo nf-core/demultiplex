@@ -64,6 +64,7 @@ process FASTQ_TO_SAMPLESHEET {
         else if (pipeline == 'seqinspector') {
             pipeline_map.rundir = ''
             pipeline_map.tags = ''
+            pipeline_map.flowcell = item.fcid ?: ''
         }
 
 
