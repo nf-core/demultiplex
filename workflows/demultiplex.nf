@@ -187,7 +187,15 @@ workflow DEMULTIPLEX {
         // MODULE: bases2fastq
         // Runs when "demultiplexer" is set to "bases2fastq"
         BASES2FASTQ(ch_flowcells)
-        ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(BASES2FASTQ.out.sample_fastq, /_R[0-9].*$/, 'ELEMENT'))
+        ch_raw_fastq = ch_raw_fastq.mix(
+            generateFastqMeta(
+                BASES2FASTQ.out.sample_fastq.map { meta, files ->
+                    [meta, files.findAll { it.size() > 100 }]  // skip empty fastq files i.e. Undetermined_*.fastq.gz in case no indexes were used for sequencing
+                },
+                /_R[0-9].*$/,
+                'ELEMENT'
+            )
+        )
         // TODO: verify that this is the correct output
         ch_multiqc_files = ch_multiqc_files.mix(BASES2FASTQ.out.metrics.map { _meta, metrics -> metrics })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(BASES2FASTQ.out.metrics).mix(BASES2FASTQ.out.run_stats).mix(BASES2FASTQ.out.generated_run_manifest).mix(BASES2FASTQ.out.unassigned).mix(BASES2FASTQ.out.qc_report).mix(BASES2FASTQ.out.sample_json)

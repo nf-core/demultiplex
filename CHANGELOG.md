@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#396](https://github.com/nf-core/demultiplex/pull/396) Fix handling of Element Bio (AVITI) sequencing runs w/o multiplexing (no index sequences) - [#395](https://github.com/nf-core/demultiplex/issues/395)
 - [#412](https://github.com/nf-core/demultiplex/pull/412) Fix extra `output/` prefix in `demultiplex_stats` and `demultiplex_logs` published paths
 
 ### `Dependencies`
