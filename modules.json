@@ -97,7 +97,8 @@
                     "bcl_demultiplex": {
                         "branch": "master",
                         "git_sha": "8b798ea24b2d639ef4d204add9ddb35dc0d8279f",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": ["subworkflows"],
+                        "patch": "subworkflows/nf-core/bcl_demultiplex/bcl_demultiplex.diff"
                     },
                     "fastq_contam_seqtk_kraken": {
                         "branch": "master",
