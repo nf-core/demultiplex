@@ -1,0 +1,20 @@
+nextflow_pipeline {
+
+    name "BCLCONVERT miniseq"
+    script "../main.nf"
+    profile "test_bclconvert"
+
+        def test_scenarios = [
+        [
+            name: "BCL-CONVERT-mini",
+            tag: "bclconvert",
+            params: [
+                optional_outputs: true
+                ]
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

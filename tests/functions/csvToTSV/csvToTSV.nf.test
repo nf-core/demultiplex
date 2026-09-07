@@ -1,0 +1,71 @@
+nextflow_function {
+    name "Test csvToTSV"
+    script "subworkflows/local/utils_nfcore_demultiplex_pipeline/."
+    function "csvToTSV"
+
+    test("Should convert CSV samplesheets to TSV and preserve metadata") {
+        when {
+            function {
+                '''
+                jsonOutput = [
+                    toJson: { obj ->
+                        obj
+                            .map { meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs ->
+                                [
+                                    meta                     : meta,
+                                    sample_sheet_tsv_name    : sample_sheet_tsv.getFileName().toString(),
+                                    sample_sheet_tsv_content : sample_sheet_tsv.text,
+                                    flowcell                 : flowcell,
+                                    fastq_readstructure_pairs: fastq_readstructure_pairs,
+                                ]
+                            }
+                            .toList()
+                            .subscribe { converted ->
+                                new File("${params.nf_test_output}/function.json").text =
+                                    groovy.json.JsonOutput.toJson(converted)
+                            }
+                        groovy.json.JsonOutput.toJson([:])
+                    }
+                ]
+                params.outdir = "${projectDir}/tests/functions/.nf-test-output/csvToTSV"
+                input[0] = Channel.of(
+                    [
+                        [id: 'lane_sheet', lane: 3],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/two_lane_samplesheet.csv', checkIfExists: true),
+                        'flowcell-a',
+                        [['R1', '101']],
+                    ],
+                    [
+                        [id: 'nolane_sheet', lane: null],
+                        file('https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/fqtk-samplesheet.csv', checkIfExists: true),
+                        'flowcell-b',
+                        [['R1', '151']],
+                    ],
+                )
+                '''
+            }
+        }
+
+        then {
+            assert function.success
+            assert function.result != null
+            assert function.result.size() == 2
+
+            assert function.result[0].meta.id == "lane_sheet"
+            assert function.result[0].meta.lane == 3
+            assert function.result[0].sample_sheet_tsv_name == "lane_sheet.lane3.tsv"
+            assert function.result[0].sample_sheet_tsv_content.contains("id\tsamplesheet\tlane\tflowcell")
+            assert function.result[0].sample_sheet_tsv_content.contains("SingleCell-RNA_P3")
+            assert function.result[0].flowcell == "flowcell-a"
+            assert function.result[0].fastq_readstructure_pairs == [["R1", "101"]]
+
+            assert function.result[1].meta.id == "nolane_sheet"
+            assert function.result[1].meta.lane == null
+            assert function.result[1].sample_sheet_tsv_name == "nolane_sheet.tsv"
+            assert function.result[1].sample_sheet_tsv_content.contains("id\tsamplesheet\tlane\tflowcell\tper_flowcell_manifest")
+            assert function.result[1].sample_sheet_tsv_content.contains("test")
+            assert function.result[1].flowcell == "flowcell-b"
+            assert function.result[1].fastq_readstructure_pairs == [["R1", "151"]]
+        }
+    }
+}

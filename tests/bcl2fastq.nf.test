@@ -1,0 +1,17 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - BCL2FASTQ"
+    script "../main.nf"
+    profile "test_bcl2fastq"
+
+        def test_scenarios = [
+        [
+            name: "Bcl2Fastq",
+            tag: "bcl2fastq"
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

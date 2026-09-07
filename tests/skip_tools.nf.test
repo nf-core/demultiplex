@@ -1,0 +1,66 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - Skip Tools"
+    script "../main.nf"
+    profile "test"
+    def test_scenarios = [
+        [
+            name: "Skip Trimming",
+            tag: "skip_trimming",
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bclconvert',
+                trim_fastq: false,
+                optional_outputs: false
+            ]
+        ],
+        [
+            name: "Skip Fastp",
+            tag: "skip_trimming",
+            skip_samplesheet: true,
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bclconvert',
+                skip_tools: "fastp,samshee",
+                optional_outputs: false
+            ]
+        ],
+        [
+            name: "Skip Fastqc",
+            tag: "skip_trimming",
+            skip_samplesheet: true,
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bclconvert',
+                skip_tools: "fastqc,samshee",
+                optional_outputs: false
+            ]
+        ],
+        [
+            name: "Skip Fastp & Fastqc",
+            tag: "skip_trimming",
+            skip_samplesheet: true,
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bclconvert',
+                skip_tools: "fastp,fastqc,samshee",
+                optional_outputs: false
+            ]
+        ],
+        [
+            name: "Skip MultiQC",
+            tag: "skip_trimming",
+            skip_samplesheet: true,
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+                demultiplexer: 'bclconvert',
+                skip_tools: "multiqc,samshee",
+                optional_outputs: false
+            ]
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
