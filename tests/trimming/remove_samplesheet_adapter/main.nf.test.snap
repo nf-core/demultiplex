@@ -160,7 +160,8 @@
                 "test_adapter/L001/Sample1_S1_L001.fastp.html",
                 "test_adapter/L001/Sample1_S1_L001.fastp.json",
                 "test_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
-                "test_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "test_adapter/L001/undetermined",
+                "test_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "test_no_adapter",
                 "test_no_adapter.lane1_no_adapters.csv",
                 "test_no_adapter/InterOp",
@@ -191,7 +192,10 @@
                 "test_no_adapter/L001/Sample1_S1_L001.fastp.html",
                 "test_no_adapter/L001/Sample1_S1_L001.fastp.json",
                 "test_no_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
-                "test_no_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz"
+                "test_no_adapter/L001/undetermined",
+                "test_no_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
@@ -271,10 +275,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-08-20T17:19:38.989745062",
+        "timestamp": "2026-09-14T15:37:50.462729667",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "User wants to trim with the demultiplexer": {
@@ -399,7 +403,8 @@
                 "test_adapter/L001/Reports/fastq_list.csv",
                 "test_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "test_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz.md5",
-                "test_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "test_adapter/L001/undetermined",
+                "test_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "test_no_adapter",
                 "test_no_adapter.csv",
                 "test_no_adapter/InterOp",
@@ -427,7 +432,10 @@
                 "test_no_adapter/L001/Reports/fastq_list.csv",
                 "test_no_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "test_no_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz.md5",
-                "test_no_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz"
+                "test_no_adapter/L001/undetermined",
+                "test_no_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
@@ -496,10 +504,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-08-20T17:20:45.228186199",
+        "timestamp": "2026-09-14T15:38:38.662053552",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "User wants to skip trimming all together": {
@@ -624,7 +632,8 @@
                 "test_adapter/L001/Reports/fastq_list.csv",
                 "test_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "test_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz.md5",
-                "test_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "test_adapter/L001/undetermined",
+                "test_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "test_no_adapter",
                 "test_no_adapter.lane1_no_adapters.csv",
                 "test_no_adapter/InterOp",
@@ -652,7 +661,10 @@
                 "test_no_adapter/L001/Reports/fastq_list.csv",
                 "test_no_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "test_no_adapter/L001/Sample1_S1_L001_R1_001.fastq.gz.md5",
-                "test_no_adapter/L001/Undetermined_S0_L001_R1_001.fastq.gz"
+                "test_no_adapter/L001/undetermined",
+                "test_no_adapter/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "bclconvert-lane-stats-table.txt:md5,540061dc1e04afedc3a5b4122a40e963",
@@ -721,10 +733,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-08-17T12:22:52.977523416",
+        "timestamp": "2026-09-14T15:39:34.594118901",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     }
 }
