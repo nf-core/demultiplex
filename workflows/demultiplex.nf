@@ -436,7 +436,7 @@ workflow DEMULTIPLEX {
             .mix(MULTIQC.out.data.map { _meta, data -> data })
             .mix(MULTIQC.out.plots.map { _meta, plots -> plots })
     }
-    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
+    ch_demultiplexed_fastq = params.publish_raw_fastq ? ch_raw_fastq.mix(ch_fastq_to_qc) : ch_fastq_to_qc
 
     emit:
     demultiplexed_fastq   = ch_demultiplexed_fastq // channel: [ meta, path(fastq) ]

@@ -16,6 +16,11 @@
                     "default": true,
                     "description": "Whether or not to skip trimming"
                 },
+                "publish_raw_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether or not to publish raw (untrimmed) FASTQ files alongside trimmed FASTQs. When false, only trimmed FASTQs are published."
+                },
                 "skip_tools": {
                     "type": "string",
                     "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samshee)?,?)*(?<!,)$",
