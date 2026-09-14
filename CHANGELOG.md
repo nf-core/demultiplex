@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#409](https://github.com/nf-core/demultiplex/pull/409) Update bclconvert and multiqcsav
 - [#410](https://github.com/nf-core/demultiplex/pull/410) Template update for nf-core/tools v4.1.0
 - [#411](https://github.com/nf-core/demultiplex/pull/411) Replace FASTQ_TO_SAMPLESHEET process with CHANNEL_FASTQ_CREATE_CSV subworkflow using channel operators
+- [#417](https://github.com/nf-core/demultiplex/pull/417) Update bcl_demultiplex subworkflow and multiqcsav module
 
 ### `Fixed`
 

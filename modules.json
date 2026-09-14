@@ -67,7 +67,7 @@
                     },
                     "multiqcsav": {
                         "branch": "master",
-                        "git_sha": "98403d15b0e50edae1f3fec5eae5e24982f1fade",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "samshee": {
@@ -96,7 +96,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "8b798ea24b2d639ef4d204add9ddb35dc0d8279f",
+                        "git_sha": "c5d82c0d48f39025e56264b572575255f77847bc",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_contam_seqtk_kraken": {
