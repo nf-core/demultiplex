@@ -43,6 +43,7 @@ workflow NFCORE_DEMULTIPLEX {
         params.multiqc_logo,
         params.multiqc_methods_description,
         params.outdir,
+        params.publish_raw_fastq,
     )
 
     emit:
