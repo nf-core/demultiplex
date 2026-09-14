@@ -9,8 +9,8 @@ nextflow_pipeline {
             name: "BCL-CONVERT",
             tag: "bclconvert",
             params: [
-                optional_outputs: false
-                ]
+                optional_outputs: true,
+            ]
         ]
     ]
 

@@ -47,7 +47,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "checkqc_reports.csv",
                 "demultiplex_interop.csv",
                 "demultiplex_logs.csv",
@@ -168,7 +169,9 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -224,10 +227,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-08-20T17:08:17.756074319",
+        "timestamp": "2026-09-14T13:56:50.273710318",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "Skip Trimming": {
@@ -278,7 +281,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "checkqc_reports.csv",
                 "demultiplex_interop.csv",
                 "demultiplex_logs.csv",
@@ -399,7 +403,9 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -481,10 +487,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-08-20T17:07:21.286036269",
+        "timestamp": "2026-09-14T13:56:05.804038647",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "Skip MultiQC": {
@@ -541,7 +547,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "checkqc_reports.csv",
                 "demultiplex_interop.csv",
                 "demultiplex_logs.csv",
@@ -576,7 +583,9 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -617,10 +626,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-08-20T17:13:44.398190077",
+        "timestamp": "2026-09-14T14:01:32.238881425",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "Skip Fastqc": {
@@ -677,7 +686,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "checkqc_reports.csv",
                 "demultiplex_interop.csv",
                 "demultiplex_logs.csv",
@@ -830,7 +840,9 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -895,10 +907,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-08-20T17:10:32.502150378",
+        "timestamp": "2026-09-14T13:58:47.803592979",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     },
     "Skip Fastp & Fastqc": {
@@ -949,7 +961,8 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_summary.txt",
-                "220422_M11111_0222_000000000-K9H97/L001/Undetermined_S0_L001_R1_001.fastq.gz",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined",
+                "220422_M11111_0222_000000000-K9H97/L001/undetermined/Undetermined_S0_L001_R1_001.fastq.gz",
                 "checkqc_reports.csv",
                 "demultiplex_interop.csv",
                 "demultiplex_logs.csv",
@@ -1070,7 +1083,9 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv"
+                "samplesheet/taxprofiler_samplesheet.csv",
+                "undetermined.csv",
+                "undetermined_idx.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -1126,10 +1141,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-08-20T17:11:39.917734041",
+        "timestamp": "2026-09-14T13:59:42.780089318",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     }
 }
