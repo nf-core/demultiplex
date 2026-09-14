@@ -2347,9 +2347,7 @@
                 "samplesheet/rnaseq_samplesheet.csv",
                 "samplesheet/sarek_samplesheet.csv",
                 "samplesheet/seqinspector_samplesheet.csv",
-                "samplesheet/taxprofiler_samplesheet.csv",
-                "undetermined.csv",
-                "undetermined_idx.csv"
+                "samplesheet/taxprofiler_samplesheet.csv"
             ],
             [
                 "220422_M11111_0222_000000000-K9H97.lane1_no_adapters.csv:md5,ee5db2e12754e069998b0a96e535238c",
@@ -2426,10 +2424,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-09-14T14:41:19.101774406",
+        "timestamp": "2026-08-20T16:43:39.230393465",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.04.6"
         }
     }
 }
