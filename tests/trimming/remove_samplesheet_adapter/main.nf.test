@@ -9,9 +9,10 @@ nextflow_pipeline {
     test("User wants to skip trimming with the demultiplexer, and trim with fastp") {
         when {
             params {
-                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
-                outdir        = "$outputDir"
-                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                input            = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                optional_outputs = true
+                outdir           = "$outputDir"
+                skip_tools       = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
                 // NOTE: This is the default behavior, so we don't need to set these params but leaving them here for clarity
                 // remove_samplesheet_adapter = true
                 // trim_fastq    = true
@@ -50,11 +51,12 @@ nextflow_pipeline {
     test("User wants to trim with the demultiplexer") {
         when {
             params {
-                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
-                outdir        = "$outputDir"
-                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                input                      = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                optional_outputs           = true
+                outdir                     = "$outputDir"
                 remove_samplesheet_adapter = false
-                trim_fastq = false
+                skip_tools                 = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                trim_fastq                 = false
             }
         }
 
@@ -89,11 +91,12 @@ nextflow_pipeline {
     test("User wants to skip trimming all together") {
         when {
             params {
-                input         = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
-                outdir        = "$outputDir"
-                skip_tools = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                input                      = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
+                optional_outputs           = true
+                outdir                     = "$outputDir"
                 remove_samplesheet_adapter = true
-                trim_fastq = false
+                skip_tools                 = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                trim_fastq                 = false
             }
         }
 

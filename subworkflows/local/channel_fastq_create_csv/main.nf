@@ -5,24 +5,21 @@ workflow CHANNEL_FASTQ_CREATE_CSV {
     strandedness // val: strandedness
 
     main:
-    ch_samplesheet = ch_meta_fastq.collect()
-        .flatMap { meta_list ->
-            pipelines.collect { pipeline -> [pipeline, meta_list] }
-        }
+    ch_samplesheet = ch_meta_fastq
+        .collect()
+        .flatMap { meta_list -> pipelines.collect { pipeline -> [pipeline, meta_list] } }
         .map { pipeline, meta_list ->
             def items = meta_list.collect { meta -> buildSamplesheetMeta(meta, pipeline, strandedness) }
 
             // Compute union of all keys across all rows
             def allKeys = [] as LinkedHashSet
-            items.each { allKeys.addAll(it.keySet()) }
+            items.each { item -> allKeys.addAll(item.keySet()) }
 
             // Build header and rows with all columns
             def header = allKeys.collect { key -> '"' + key + '"' }.join(",")
             def rows = items.collect { meta ->
                 allKeys
-                    .collect { key ->
-                        meta.containsKey(key) ? '"' + meta[key] + '"' : '""'
-                    }
+                    .collect { key -> meta.containsKey(key) ? '"' + meta[key] + '"' : '""' }
                     .join(",")
             }
 

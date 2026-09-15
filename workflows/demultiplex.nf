@@ -54,6 +54,7 @@ workflow DEMULTIPLEX {
     multiqc_logo
     multiqc_methods_description
     outdir
+    publish_raw_fastq
 
     main:
     // Value inputs
@@ -186,14 +187,15 @@ workflow DEMULTIPLEX {
     if (demultiplexer == 'bases2fastq') {
         // MODULE: bases2fastq
         // Runs when "demultiplexer" is set to "bases2fastq"
+        // skip empty fastq files i.e. Undetermined_*.fastq.gz in case no indexes were used for sequencing
         BASES2FASTQ(ch_flowcells)
         ch_raw_fastq = ch_raw_fastq.mix(
             generateFastqMeta(
                 BASES2FASTQ.out.sample_fastq.map { meta, files ->
-                    [meta, files.findAll { it.size() > 100 }]  // skip empty fastq files i.e. Undetermined_*.fastq.gz in case no indexes were used for sequencing
+                    [meta, files.findAll { files_ -> files_.size() > 100 }]
                 },
                 /_R[0-9].*$/,
-                'ELEMENT'
+                'ELEMENT',
             )
         )
         // TODO: verify that this is the correct output
@@ -435,7 +437,10 @@ workflow DEMULTIPLEX {
             .mix(MULTIQC.out.data.map { _meta, data -> data })
             .mix(MULTIQC.out.plots.map { _meta, plots -> plots })
     }
-    ch_demultiplexed_fastq = ch_raw_fastq.mix(ch_fastq_to_qc)
+
+    publish_condition = publish_raw_fastq
+
+    ch_demultiplexed_fastq = ch_fastq_to_qc.mix(ch_raw_fastq.filter { publish_condition })
 
     emit:
     demultiplexed_fastq   = ch_demultiplexed_fastq // channel: [ meta, path(fastq) ]

@@ -57,13 +57,11 @@
                 "PE_Sample/L001/Sample1_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt",
                 "PE_Sample/L001/Sample1_S1_L001_R1.fastp.fastq.gz_fastqc_report.html",
                 "PE_Sample/L001/Sample1_S1_L001_R1.fastp.fastq.gz_summary.txt",
-                "PE_Sample/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz",
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz.md5",
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt",
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz_fastqc_report.html",
                 "PE_Sample/L001/Sample1_S1_L001_R2.fastp.fastq.gz_summary.txt",
-                "PE_Sample/L001/Sample1_S1_L001_R2_001.fastq.gz",
                 "PE_Sample/L001/Stats",
                 "PE_Sample/L001/Stats/AdapterTrimming.txt",
                 "PE_Sample/L001/Stats/ConversionStats.xml",
@@ -260,12 +258,10 @@
                 "Sample1_S1_L001_R1.fastp.fastq.gz.md5:md5,094f6a4463a9dbffceb9de3bae549c8b",
                 "Sample1_S1_L001_R1.fastp.fastq.gz_fastqc_data.txt:md5,6f7b7d2250562f237aab49334e4de113",
                 "Sample1_S1_L001_R1.fastp.fastq.gz_summary.txt:md5,5c218eaaca189df3d6fe66621b3a5289",
-                "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_R2.fastp.fastq.gz:md5,6dc50bd42c97fc560f69a181430f1b30",
                 "Sample1_S1_L001_R2.fastp.fastq.gz.md5:md5,99538156e9679518f225e633383cf8cd",
                 "Sample1_S1_L001_R2.fastp.fastq.gz_fastqc_data.txt:md5,9f3de5645808a08a8a4979b36e56a15b",
                 "Sample1_S1_L001_R2.fastp.fastq.gz_summary.txt:md5,24a93f3d2390d6829011ec0ad91e2eeb",
-                "Sample1_S1_L001_R2_001.fastq.gz:md5,146eefcab1eaaef17ffb72672c021368",
                 "AdapterTrimming.txt:md5,8009886a4c060bfec6d8e9346feb0988",
                 "DemultiplexingStats.xml:md5,2047ff18f5b9107c084de06e9ff943ad",
                 "FastqSummaryF1L1.txt:md5,0274549f9541b1ba7828ae6e9c5bcbbd",
@@ -330,10 +326,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-08-20T17:16:58.780244141",
+        "timestamp": "2026-09-15T10:33:40.312106625",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     }
 }

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#398](https://github.com/nf-core/demultiplex/pull/398) Add `AGENTS.md` file with nf-core agent instructions
 - [#412](https://github.com/nf-core/demultiplex/pull/412) Expand `bcl2fastq` and `bcl-convert` output documentation
+- [#420](https://github.com/nf-core/demultiplex/pull/420) Add `manifest.diagram` to `nextflow.config`
+- [#422](https://github.com/nf-core/demultiplex/pull/422) Add `publish_raw_fastq` parameter to control publication of raw FASTQ files
 
 ### `Changed`
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#396](https://github.com/nf-core/demultiplex/pull/396) Fix handling of Element Bio (AVITI) sequencing runs w/o multiplexing (no index sequences) - [#395](https://github.com/nf-core/demultiplex/issues/395)
 - [#412](https://github.com/nf-core/demultiplex/pull/412) Fix extra `output/` prefix in `demultiplex_stats` and `demultiplex_logs` published paths
+- [#421](https://github.com/nf-core/demultiplex/pull/421) No more publishDir
 
 ### `Dependencies`
 
