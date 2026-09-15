@@ -14,7 +14,6 @@ include { samplesheetToList       } from 'plugin/nf-schema'
 include { paramsHelp              } from 'plugin/nf-schema'
 include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
-include { imNotification          } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
@@ -28,7 +27,7 @@ workflow PIPELINE_INITIALISATION {
     take:
     version // boolean: Display version and exit
     validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    _monochrome_logs // boolean: Do not use coloured log outputs
+    monochrome_logs // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir //  string: The output directory where the results will be saved
     input //  string: Path to input samplesheet
@@ -58,6 +57,9 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+
+    def before_text = ""
+    def after_text = ""
     before_text = """
 -\033[2m----------------------------------------------------\033[0m-
                                         \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
@@ -75,6 +77,10 @@ workflow PIPELINE_INITIALISATION {
 * Software dependencies
     https://github.com/nf-core/demultiplex/blob/master/CITATIONS.md
 """
+    if (monochrome_logs) {
+        before_text = before_text.replaceAll(/\033\[[0-9;]*m/, '')
+    }
+
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
 
     UTILS_NFSCHEMA_PLUGIN(
@@ -87,6 +93,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
+        false,
     )
 
     //
@@ -120,40 +127,34 @@ workflow PIPELINE_INITIALISATION {
     }
 
     // Create flowcell input list as channel
-    def flowcell_input_list = has_flowcell_params ?
-        channel.of([
-            [id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []],
-            file(params.flowcell_samplesheet),
-            file(params.flowcell_path),
-            params.flowcell_per_flowcell_manifest ?
-            file(params.flowcell_per_flowcell_manifest) :
-            []
-        ]) :
-        channel.empty()
+    def flowcell_input_list = has_flowcell_params
+        ? channel.of(
+            [[id: params.flowcell_id.toString(), lane: params.flowcell_lane ?: []], file(params.flowcell_samplesheet), file(params.flowcell_path), params.flowcell_per_flowcell_manifest
+                ? file(params.flowcell_per_flowcell_manifest)
+                : []]
+        )
+        : channel.empty()
 
     if (params.demultiplexer == 'fqtk') {
 
-        ch_samplesheet = (input ?
-            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
-            flowcell_input_list)
-            .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
-                if (!file(per_flowcell_manifest).exists()) {
-                    error("[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}")
-                }
-                [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
+        ch_samplesheet = (input
+            ? channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+            : flowcell_input_list).map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+            if (!file(per_flowcell_manifest).exists()) {
+                error("[Samplesheet Error] The per flowcell manifest file does not exist: ${per_flowcell_manifest}")
             }
-
+            [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
+        }
     }
     else {
-        ch_samplesheet = (input ?
-            channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")) :
-            flowcell_input_list)
-            .map { meta, samplesheet, flowcell, per_flowcell_manifest ->
-                [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
-            }
+        ch_samplesheet = (input
+            ? channel.fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+            : flowcell_input_list).map { meta, samplesheet, flowcell, per_flowcell_manifest ->
+            [meta + [lane: meta.lane == [] ? null : meta.lane], samplesheet, flowcell, per_flowcell_manifest]
+        }
     }
 
-    ch_samplesheet.dump(tag:"ch_samplesheet")
+    ch_samplesheet.dump(tag: "ch_samplesheet")
 
     emit:
     samplesheet = ch_samplesheet
@@ -173,7 +174,6 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    hook_url //  string: hook URL for notifications
     multiqc_report //  string: Path to MultiQC report
 
     main:
@@ -202,13 +202,10 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
-        if (hook_url) {
-            imNotification(summary_params, hook_url)
-        }
     }
 
     workflow.onError {
-        log.error("Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
+        log.error("Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting")
     }
 }
 
@@ -309,28 +306,30 @@ def methodsDescriptionText(mqc_methods_yaml) {
 }
 
 
-def generateFastqMeta(ch_reads, sampleNameRegex=/_R[0-9].*$/, platform='SINGULAR', useSanitizedId=false) {
-    ch_reads.transpose().map { fc_meta, fastq ->
-        def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
-        def readgroup = readgroupFromFastq(fastq, platform) + [SM: samplename]
-        def meta = [
-            "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
-            "samplename": samplename,
-            "readgroup": readgroup,
-            "fcid": fc_meta.id,
-            "lane": fc_meta.lane,
-        ]
+def generateFastqMeta(ch_reads, sampleNameRegex = /_R[0-9].*$/, platform = 'SINGULAR', useSanitizedId = false) {
+    ch_reads
+        .transpose()
+        .map { fc_meta, fastq ->
+            def samplename = fastq.getSimpleName().toString() - ~sampleNameRegex
+            def readgroup = readgroupFromFastq(fastq, platform) + [SM: samplename]
+            def meta = [
+                "id": useSanitizedId ? samplename.replaceAll(/[^A-Za-z0-9_.-]/, '_') : samplename,
+                "samplename": samplename,
+                "readgroup": readgroup,
+                "fcid": fc_meta.id,
+                "lane": fc_meta.lane,
+            ]
 
-        [meta, fastq]
-    }
-    .groupTuple(by: [0])
-    .map { meta, fastq ->
-        [meta + [single_end: fastq.size() == 1], fastq.flatten()]
-    }
+            [meta, fastq]
+        }
+        .groupTuple(by: [0])
+        .map { meta, fastq ->
+            [meta + [single_end: fastq.size() == 1], fastq.flatten()]
+        }
 }
 
 // https://github.com/nf-core/sarek/blob/7ba61bde8e4f3b1932118993c766ed33b5da465e/workflows/sarek.nf#L1014-L1040
-def readgroupFromFastq(path, platform='SINGULAR') {
+def readgroupFromFastq(path, platform = 'SINGULAR') {
     def line
 
     path.withInputStream { inputStream ->
@@ -360,9 +359,11 @@ def csvToTSV(ch_samplesheet) {
         .collectFile(storeDir: "${params.outdir}") { item ->
             def suffix = item[0].lane ? ".lane${item[0].lane}" : ""
             def lines_out = ''
-            item[1].readLines().each { line ->
-                lines_out += line.replace(',', '\t') + '\n'
-            }
+            item[1]
+                .readLines()
+                .each { line ->
+                    lines_out += line.replace(',', '\t') + '\n'
+                }
             ["${item[0].id}${suffix}.tsv", lines_out]
         }
         .map { sample_sheet ->
@@ -381,14 +382,17 @@ def csvToTSV(ch_samplesheet) {
 def removeAdapters(samplesheet) {
     def lines_out = ''
     def removal_checker = false
-    samplesheet.readLines().each { line ->
-        if ( line =~ /Adapter(Read[12])?,[ACGT]+,?/ ) {
-            removal_checker = true
-        } else {
-            // keep original line otherwise
-            lines_out = lines_out + line + '\n'
+    samplesheet
+        .readLines()
+        .each { line ->
+            if (line =~ /Adapter(Read[12])?,[ACGT]+,?/) {
+                removal_checker = true
+            }
+            else {
+                // keep original line otherwise
+                lines_out = lines_out + line + '\n'
+            }
         }
-    }
     if (!removal_checker) {
         System.out.println("\u001B[94m[INFO] Parameter `remove_samplesheet_adapter` was set to true but no adapters were found in samplesheet\u001B[0m")
     }
@@ -402,20 +406,26 @@ def prettyFormat(Object object) {
     return groovy.json.JsonOutput.prettyPrint(json.toString())
 }
 
-def sanitizeObject(Object obj) {
-    if (obj == null) {
+def sanitizeObject(Object object) {
+    if (object == null) {
         return null
-    } else if (obj instanceof Map) {
-        return obj.collectEntries { k, v -> [k, sanitizeObject(v)] }
-    } else if (obj instanceof Collection) {
-        return obj.collect { it -> sanitizeObject(it) }
-    } else if (obj instanceof java.nio.file.Path) {
-        return obj.toString()
-    } else if (obj instanceof java.time.OffsetDateTime) {
-        return obj.toString()
-    } else if (obj.getClass().getName().contains('Duration')) {
-        return obj.toString()
-    } else {
-        return obj
+    }
+    else if (object instanceof Map) {
+        return object.collectEntries { k, v -> [k, sanitizeObject(v)] }
+    }
+    else if (object instanceof Collection) {
+        return object.collect { it -> sanitizeObject(it) }
+    }
+    else if (object instanceof java.nio.file.Path) {
+        return object.toString()
+    }
+    else if (object instanceof java.time.OffsetDateTime) {
+        return object.toString()
+    }
+    else if (object.getClass().getName().contains('Duration')) {
+        return object.toString()
+    }
+    else {
+        return object
     }
 }

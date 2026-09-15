@@ -13,7 +13,7 @@ class UTILS{
         }
 
         // Define allowed column names
-        def allowedColumns = ["sample", "fastq_1", "fastq_2", "strandedness", "replicate", "fasta", "genome", "patient", "lane"]
+        def allowedColumns = ["fasta", "fastq_1", "fastq_2", "genome", "lane", "patient", "replicate", "rundir", "sample", "strandedness", "flowcell", "tags"]
 
         csvFile.withReader { reader ->
             // Read the header and trim quotes

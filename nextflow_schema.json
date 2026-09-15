@@ -16,6 +16,11 @@
                     "default": true,
                     "description": "Whether or not to skip trimming"
                 },
+                "publish_raw_fastq": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether or not to publish raw (untrimmed) FASTQ files alongside trimmed FASTQs. When false, only trimmed FASTQs are published."
+                },
                 "skip_tools": {
                     "type": "string",
                     "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samshee)?,?)*(?<!,)$",
@@ -281,13 +286,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {

@@ -1,0 +1,163 @@
+nextflow_workflow {
+
+    name "Test Workflow CHANNEL_FASTQ_CREATE_CSV"
+    script "../main.nf"
+    workflow "CHANNEL_FASTQ_CREATE_CSV"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "channel_fastq_create_csv"
+
+    test("Should run without failures - rnaseq") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:true, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz']])
+                input[1] = ['rnaseq']
+                input[2] = 'auto'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - sarek") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1_sarek', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:false, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz', fastq_2:'Sample1_S1_L001_R2_001.fastq.gz']])
+                input[1] = ['sarek']
+                input[2] = ''
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - atacseq") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1_atacseq', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:false, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz', fastq_2:'Sample1_S1_L001_R2_001.fastq.gz']])
+                input[1] = ['atacseq']
+                input[2] = ''
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - seqinspector") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1_seqinspector', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:true, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz']])
+                input[1] = ['seqinspector']
+                input[2] = ''
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - taxprofiler") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1_taxprofiler', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:true, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz']])
+                input[1] = ['taxprofiler']
+                input[2] = ''
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should run without failures - methylseq") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of([[id:'Sample1_S1_L001', samplename:'Sample1_methylseq', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:true, fastq_1:'Sample1_S1_L001_R1_001.fastq.gz']])
+                input[1] = ['methylseq']
+                input[2] = ''
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                { assert snapshot(sanitizeOutput(workflow.out)).match() }
+            )
+        }
+    }
+
+    test("Should produce valid CSV with mixed single-end and paired-end samples") {
+
+        when {
+            workflow {
+                """
+                input[0] = channel.of(
+                    [id:'SampleA_S1_L001', samplename:'SampleA', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:true, fastq_1:'SampleA_S1_L001_R1_001.fastq.gz'],
+                    [id:'SampleB_S1_L001', samplename:'SampleB', fcid:'220422_M11111_0222_000000000-K9H97', lane:'1', empty:false, single_end:false, fastq_1:'SampleB_S1_L001_R1_001.fastq.gz', fastq_2:'SampleB_S1_L001_R2_001.fastq.gz']
+                )
+                input[1] = ['rnaseq']
+                input[2] = 'auto'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assertAll(
+                {
+                    def samplesheet = path(workflow.out.samplesheet.get(0))
+                    with(samplesheet.csv) {
+                        assert snapshot(
+                            samplesheet,
+                            "headers:" + columnNames,
+                            "rowCount:" + rowCount,
+                            "columnCount:" + columnCount
+                        ).match()
+                    }
+                }
+            )
+        }
+    }
+}
