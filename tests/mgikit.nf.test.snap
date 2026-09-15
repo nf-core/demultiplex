@@ -175,8 +175,6 @@
                 "test-fc01/L001/Sample01_R2.fastp.fastq.gz_fastqc_data.txt",
                 "test-fc01/L001/Sample01_R2.fastp.fastq.gz_fastqc_report.html",
                 "test-fc01/L001/Sample01_R2.fastp.fastq.gz_summary.txt",
-                "test-fc01/L001/Sample01_S1_L01_R1_001.fastq.gz",
-                "test-fc01/L001/Sample01_S1_L01_R2_001.fastq.gz",
                 "test-fc01/L001/Sample02.fastp.html",
                 "test-fc01/L001/Sample02.fastp.json",
                 "test-fc01/L001/Sample02_R1.fastp.fastq.gz",
@@ -189,8 +187,6 @@
                 "test-fc01/L001/Sample02_R2.fastp.fastq.gz_fastqc_data.txt",
                 "test-fc01/L001/Sample02_R2.fastp.fastq.gz_fastqc_report.html",
                 "test-fc01/L001/Sample02_R2.fastp.fastq.gz_summary.txt",
-                "test-fc01/L001/Sample02_S2_L01_R1_001.fastq.gz",
-                "test-fc01/L001/Sample02_S2_L01_R2_001.fastq.gz",
                 "test-fc01/L001/Sample03.fastp.html",
                 "test-fc01/L001/Sample03.fastp.json",
                 "test-fc01/L001/Sample03_R1.fastp.fastq.gz",
@@ -203,8 +199,6 @@
                 "test-fc01/L001/Sample03_R2.fastp.fastq.gz_fastqc_data.txt",
                 "test-fc01/L001/Sample03_R2.fastp.fastq.gz_fastqc_report.html",
                 "test-fc01/L001/Sample03_R2.fastp.fastq.gz_summary.txt",
-                "test-fc01/L001/Sample03_S3_L01_R1_001.fastq.gz",
-                "test-fc01/L001/Sample03_S3_L01_R2_001.fastq.gz",
                 "test-fc01/L001/Sample04.fastp.html",
                 "test-fc01/L001/Sample04.fastp.json",
                 "test-fc01/L001/Sample04_R1.fastp.fastq.gz",
@@ -216,9 +210,7 @@
                 "test-fc01/L001/Sample04_R2.fastp.fastq.gz.md5",
                 "test-fc01/L001/Sample04_R2.fastp.fastq.gz_fastqc_data.txt",
                 "test-fc01/L001/Sample04_R2.fastp.fastq.gz_fastqc_report.html",
-                "test-fc01/L001/Sample04_R2.fastp.fastq.gz_summary.txt",
-                "test-fc01/L001/Sample04_S4_L01_R1_001.fastq.gz",
-                "test-fc01/L001/Sample04_S4_L01_R2_001.fastq.gz"
+                "test-fc01/L001/Sample04_R2.fastp.fastq.gz_summary.txt"
             ],
             [
                 "falco-status-check-heatmap.txt:md5,0e2be5fa2affeda4b2def18b4309fa1e",
@@ -261,8 +253,6 @@
                 "Sample01_R2.fastp.fastq.gz.md5:md5,a27911c6dfe459d4984457350074e2d3",
                 "Sample01_R2.fastp.fastq.gz_fastqc_data.txt:md5,7657b8f22e8343a785912055ee3af1a2",
                 "Sample01_R2.fastp.fastq.gz_summary.txt:md5,c1def2e7a0ee3d5986de111bc0d9d246",
-                "Sample01_S1_L01_R1_001.fastq.gz:md5,19752026de713f514637fab29e4ffac4",
-                "Sample01_S1_L01_R2_001.fastq.gz:md5,f9015fa4a73977dd093b8b2e4a67a316",
                 "Sample02.fastp.json:md5,c0cffb057ceffe08473a4caa766c956e",
                 "Sample02_R1.fastp.fastq.gz:md5,7f942bf3ef88ef04431ed0d40baae144",
                 "Sample02_R1.fastp.fastq.gz.md5:md5,042d95e0f098005774495f5b02a95109",
@@ -272,8 +262,6 @@
                 "Sample02_R2.fastp.fastq.gz.md5:md5,265c6176108bbf75522f8588e8d19586",
                 "Sample02_R2.fastp.fastq.gz_fastqc_data.txt:md5,48c168c74e39ca68c9ca9f06d026d9f6",
                 "Sample02_R2.fastp.fastq.gz_summary.txt:md5,9205af9d1e4e31be4e093bbc876d76fd",
-                "Sample02_S2_L01_R1_001.fastq.gz:md5,7f942bf3ef88ef04431ed0d40baae144",
-                "Sample02_S2_L01_R2_001.fastq.gz:md5,7348f1bf066a69ee48ed3ee6afa2f91b",
                 "Sample03.fastp.json:md5,6e9df3aec4e8b47908f0f6fc18850622",
                 "Sample03_R1.fastp.fastq.gz:md5,56afcab8b820419bddec4982fc85b60f",
                 "Sample03_R1.fastp.fastq.gz.md5:md5,fcca43bfdc17fca0d4d929eb6c113956",
@@ -283,8 +271,6 @@
                 "Sample03_R2.fastp.fastq.gz.md5:md5,cab37f299b9304fbb549b6179635c2e8",
                 "Sample03_R2.fastp.fastq.gz_fastqc_data.txt:md5,538f174beeb6a39c636e4756c32f65d3",
                 "Sample03_R2.fastp.fastq.gz_summary.txt:md5,d4fe428d353aa380edfd347024edd23f",
-                "Sample03_S3_L01_R1_001.fastq.gz:md5,56afcab8b820419bddec4982fc85b60f",
-                "Sample03_S3_L01_R2_001.fastq.gz:md5,38ba38d0d71343e6125fc15b63483ad4",
                 "Sample04.fastp.json:md5,528ffdca35fcbea75ffa7cdf237de68f",
                 "Sample04_R1.fastp.fastq.gz:md5,dcf0ad68be6ff6c21ebceedaa4eaa4c4",
                 "Sample04_R1.fastp.fastq.gz.md5:md5,9b23002e80e089f1df1e5b8ad2d2a1f8",
@@ -293,15 +279,13 @@
                 "Sample04_R2.fastp.fastq.gz:md5,cd88081007614f5bed7975b04e25b7e3",
                 "Sample04_R2.fastp.fastq.gz.md5:md5,20f0f2efbb9dbca14cde5c9ffb240650",
                 "Sample04_R2.fastp.fastq.gz_fastqc_data.txt:md5,4372cde30ebf6bc6f320c9933f5e7fd6",
-                "Sample04_R2.fastp.fastq.gz_summary.txt:md5,9d7b6dfe7f6723cb1b64ec524b9f3fff",
-                "Sample04_S4_L01_R1_001.fastq.gz:md5,dcf0ad68be6ff6c21ebceedaa4eaa4c4",
-                "Sample04_S4_L01_R2_001.fastq.gz:md5,cd88081007614f5bed7975b04e25b7e3"
+                "Sample04_R2.fastp.fastq.gz_summary.txt:md5,9d7b6dfe7f6723cb1b64ec524b9f3fff"
             ]
         ],
-        "timestamp": "2026-08-20T17:03:14.326375305",
+        "timestamp": "2026-09-15T10:20:02.913256961",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     }
 }

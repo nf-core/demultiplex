@@ -70,7 +70,6 @@
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.fastq.gz.md5",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.html",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001.fastp.json",
-                "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_R1_001.fastq.gz",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_fastqc_data.txt",
                 "220422_M11111_0222_000000000-K9H97/L001/Sample1_S1_L001_report.html",
@@ -258,7 +257,6 @@
                 "Sample1_S1_L001.fastp.fastq.gz:md5,64639ff33d4b07d62a9079f88cbbd373",
                 "Sample1_S1_L001.fastp.fastq.gz.md5:md5,9ecb28b42ff9624bf0c56297d8a21cb5",
                 "Sample1_S1_L001.fastp.json:md5,c22d06d6d871be994995ff91417a3f1d",
-                "Sample1_S1_L001_R1_001.fastq.gz:md5,0675fb6365322eaafb33c0f8e862b54b",
                 "Sample1_S1_L001_Sample1_S1_L001.fastp.fastq.gz:md5,53bf34dad1f8269eeed36e661ef036fb",
                 "Sample1_S1_L001_fastqc_data.txt:md5,6001946d5f0d64d53911dbcf8eb1902d",
                 "Sample1_S1_L001_summary.txt:md5,06df1eab621bc8965a038431c3a01dd3",
@@ -322,10 +320,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-08-20T17:02:08.115112982",
+        "timestamp": "2026-09-15T10:19:03.704163931",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "26.08.0"
         }
     }
 }

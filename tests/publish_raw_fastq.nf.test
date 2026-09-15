@@ -2,17 +2,17 @@ def projectDir = new File('.').absolutePath
 
 nextflow_pipeline {
 
-    name "Test publish only trimmed FASTQs"
+    name "Test publish raw FASTQs"
     script "../main.nf"
     profile "test"
 
         def test_scenarios = [
         [
-            name: "Publish only trimmed",
+            name: "Publish raw",
             tag: "bclconvert",
             params: [
                 input: "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv",
-                publish_raw_fastq: false,
+                publish_raw_fastq: true,
                 trim_fastq: true,
             ]
         ]
