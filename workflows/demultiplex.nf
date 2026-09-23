@@ -241,16 +241,16 @@ workflow DEMULTIPLEX {
         // Runs when "demultiplexer" is set to "fqtk"
 
         // Collect fastqs and read structures from field 2 of ch_flowcells
-        fastq_read_structure = ch_flowcells
-            .map { _meta, _samplesheet, per_flowcell_manifest, _dir -> per_flowcell_manifest }
-            .splitCsv(header: true)
-            .map { columns -> [columns.fastq, columns.read_structure] }
+        ch_fqtk_in = ch_flowcells
+            .map { meta, samplesheet, per_flowcell_manifest, dir ->
+                def manifest_records = per_flowcell_manifest.splitCsv(header: true)
+                def fastq_files = manifest_records.collect { record -> dir.resolve(record.fastq) }
+                def read_structures = manifest_records.collect { record -> record.read_structure }
+                tuple(meta, samplesheet, fastq_files, read_structures)
+            }
 
-        // Format ch_samplesheet like so:
-        // [[meta:id], <path to sample names and barcodes in tsv: path>, <path to fastqs: path>, [<fastq name: string>, <read structure: string>]]
-        ch_samplesheet = ch_flowcells.merge(fastq_read_structure.toList()) { a, b -> tuple(a[0], a[1], a[3], b) }
 
-        FQTK(csvToTSV(ch_samplesheet))
+        FQTK(csvToTSV(ch_fqtk_in))
         ch_raw_fastq = ch_raw_fastq.mix(generateFastqMeta(FQTK.out.sample_fastq, /_R[0-9].*$/, 'SINGULAR'))
         ch_multiqc_files = ch_multiqc_files.mix(FQTK.out.metrics.map { _meta, metrics -> metrics })
         ch_demultiplex_reports = ch_demultiplex_reports.mix(FQTK.out.metrics)

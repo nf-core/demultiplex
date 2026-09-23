@@ -43,7 +43,8 @@
                     "fqtk": {
                         "branch": "master",
                         "git_sha": "55bd7cff3f0511fc0a91381604ca90a524e680ca",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/fqtk/fqtk.diff"
                     },
                     "kraken2/kraken2": {
                         "branch": "master",
