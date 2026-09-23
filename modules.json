@@ -42,7 +42,7 @@
                     },
                     "fqtk": {
                         "branch": "master",
-                        "git_sha": "7df5e920381e34d97fbec6b9e17552e93500fc06",
+                        "git_sha": "55bd7cff3f0511fc0a91381604ca90a524e680ca",
                         "installed_by": ["modules"]
                     },
                     "kraken2/kraken2": {
