@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#425](https://github.com/nf-core/demultiplex/pull/425) Fix FQTK not staging files on AWS
+
 ## 1.8.0 - 2026-09-15
 
 ### `Added`
