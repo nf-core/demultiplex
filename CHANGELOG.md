@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#424](https://github.com/nf-core/demultiplex/pull/424) Back to dev
-- [#426](https://github.com/nf-core/demultiplex/pull/426) Improve descriptions on the parameters inside the schema
+- [#426](https://github.com/nf-core/demultiplex/pull/426) Improve descriptions on the parameters inside the nextflow_schema
 
 ### `Fixed`
 
