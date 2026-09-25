@@ -14,12 +14,12 @@
                 "trim_fastq": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether or not to skip trimming"
+                    "description": "Trim adapter sequences with fastp. When false, fastp still generates QC output, but does not modify the reads."
                 },
                 "publish_raw_fastq": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Whether or not to publish raw (untrimmed) FASTQ files alongside trimmed FASTQs. When false, only trimmed FASTQs are published."
+                    "description": "Whether to publish raw, untrimmed FASTQ files alongside trimmed FASTQ files. When false, only trimmed FASTQ files are published."
                 },
                 "skip_tools": {
                     "type": "string",
@@ -34,24 +34,24 @@
                 "kraken_db": {
                     "type": "string",
                     "format": "path",
-                    "description": "Path to Kraken2 DB to use for screening"
+                    "description": "Path to the Kraken2 database used for contamination screening."
                 },
                 "json_schema_validator": {
                     "type": "string",
-                    "description": "String in JSON format to be passed to samshee module for samplesheet validation"
+                    "description": "JSON-formatted schema string passed to the samshee module for samplesheet validation."
                 },
                 "name_schema_validator": {
                     "type": "string",
-                    "description": "Schema name to be passed to samshee module for samplesheet validation"
+                    "description": "Schema name passed to the samshee module for samplesheet validation."
                 },
                 "file_schema_validator": {
                     "type": "string",
                     "format": "file-path",
-                    "description": "Local JSON file to be passed to samshee module for samplesheet validation"
+                    "description": "Local JSON schema file passed to the samshee module for samplesheet validation."
                 },
                 "v1_schema": {
                     "type": "boolean",
-                    "description": "Whether or not illumina samplesheet is v1 "
+                    "description": "Whether the Illumina samplesheet is in v1 format."
                 }
             }
         },
@@ -115,7 +115,7 @@
                     "exists": true,
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "Per-flowcell manifest file for fqtk single-flowcell runs.",
+                    "description": "Per-flowcell manifest file for single-flowcell fqtk runs.",
                     "help_text": "Required when using fqtk without a pipeline samplesheet.",
                     "fa_icon": "fas fa-file-csv"
                 },
@@ -128,7 +128,7 @@
                 "optional_outputs": {
                     "type": "boolean",
                     "fa_icon": "far fa-copy",
-                    "description": "Whether to publish optional outputs such as undertermined files."
+                    "description": "Whether to publish optional outputs such as undetermined FASTQ files."
                 },
                 "email": {
                     "type": "string",
@@ -310,7 +310,7 @@
                 },
                 "remove_samplesheet_adapter": {
                     "type": "boolean",
-                    "description": "Boolean whether to remove adapter information from Illumina samplesheet. If adapter information is present, the various bcl conversion tools will perform adapter trimming already at the demultiplexing step.",
+                    "description": "Whether to remove adapter information from the Illumina samplesheet before demultiplexing. If it is present, demultiplexers may trim adapters during the demultiplexing step.",
                     "default": true
                 },
                 "validate_params": {
