@@ -20,20 +20,19 @@ input:
           e.g. [ id:'test', single_end:false ]
     - sample_sheet:
         type: file
-        description: Tsv file, with two columns sample_id and barcode
-        pattern: "*.{tsv}"
+        description: "FQTK samplesheet - a tsv file, with at least two columns: `sample_id` and `barcode`"
+        pattern: "*.tsv"
         ontologies:
-          - edam: http://edamontology.org/format_3475
-    - fastq_folder:
+          - edam: http://edamontology.org/format_3475 # TSV
+    - fastq:
         type: file
-        description: Directory containing fastq files that will be staged as
-          'input' folder
-        pattern: "*"
-        ontologies: []
-    - fastq_readstructure_pairs:
-        type: map
-        description: List of lists i.e. [[<fastq file name>, <read
-          structure>],...]
+        description: FastQ file(s) to demultiplex
+        pattern: "*.{fq,fastq}{,.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_1930 # FASTQ
+    - read_structure:
+        type: string
+        description: Read structure(s) of the input FastQ files. Must be same length and order as the FastQ files
 output:
   sample_fastq:
     - - meta:
@@ -41,23 +40,23 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - output/*.fq.gz:
+      - "*.fq.gz":
           type: file
           description: Demultiplexed per-sample FASTQ files
-          pattern: "output/*R*.fastq.gz"
+          pattern: "*R*.fastq.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989
+            - edam: http://edamontology.org/format_3989 # GZIP format
   metrics:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - output/demux-metrics.txt:
+      - demux-metrics.txt:
           type: file
           description: |
             Demultiplexing summary stats; sample_id, barcode templates, frac_templates, ratio_to_mean, ratio_to_best
-          pattern: "output/demux-metrics.txt"
+          pattern: "demux-metrics.txt"
           ontologies: []
   most_frequent_unmatched:
     - - meta:
@@ -65,13 +64,13 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - output/unmatched*.fq.gz:
+      - unmatched*.fq.gz:
           type: file
           description: |
             File containing unmatched fastq records
-          pattern: "output/unmatched*.fq.gz"
+          pattern: "unmatched*.fq.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989
+            - edam: http://edamontology.org/format_3989 # GZIP format
   versions_fqtk:
     - - ${task.process}:
           type: string
@@ -96,6 +95,32 @@ topics:
 authors:
   - "@nh13"
   - "@sam-white04"
+  - "@schmytzi"
 maintainers:
   - "@nh13"
   - "@sam-white04"
+  - "@schmytzi"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/fqtk_gzip:1d4381117bf10c54
+      build_id: bd-1d4381117bf10c54_1
+      scan_id: sc-7c4d95c4871a13d1_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/fqtk_gzip:81d7c6eca7833eb6
+      build_id: bd-81d7c6eca7833eb6_1
+      scan_id: sc-8b7c4a73ebb8f2b8_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/fqtk_gzip:5a230295b008eda1
+      build_id: bd-5a230295b008eda1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80b8bc43e0124231809f9ae8527743e5891abc292ea42450cce1f40fcb4f3ffd/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/fqtk_gzip:34973a5213fa9722
+      build_id: bd-34973a5213fa9722_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1f/1fbba9c1588c07723836a1bae5c0fd3d73cdef4cda91ebc232f0cf384dfc861e/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/fqtk/.conda-lock/linux_amd64-bd-1d4381117bf10c54_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/fqtk/.conda-lock/linux_arm64-bd-81d7c6eca7833eb6_1.txt

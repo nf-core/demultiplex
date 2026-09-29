@@ -1215,7 +1215,7 @@
                     "fastp": "1.1.0"
                 },
                 "FQTK": {
-                    "fqtk": "0.3.1"
+                    "fqtk": "0.4.0"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -1935,10 +1935,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-09-15T10:12:57.025810863",
+        "timestamp": "2026-09-24T10:49:02.837849079",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.04.6"
         }
     },
     "Fails with both --input and --flowcell_samplesheet": {

@@ -374,8 +374,8 @@ def csvToTSV(ch_samplesheet) {
 
     ch_samplesheet
         .join(ch_samplesheet_tsv, failOnMismatch: true)
-        .map { meta, _sample_sheet_csv, flowcell, fastq_readstructure_pairs, sample_sheet_tsv ->
-            [meta, sample_sheet_tsv, flowcell, fastq_readstructure_pairs]
+        .map { meta, _sample_sheet_csv, fastqs, read_structures, sample_sheet_tsv ->
+            [meta, sample_sheet_tsv, fastqs, read_structures]
         }
 }
 
