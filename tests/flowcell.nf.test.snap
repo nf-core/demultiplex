@@ -550,7 +550,7 @@
             22,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -958,10 +958,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-09-15T10:11:01.534909616",
+        "timestamp": "2026-10-21T19:36:45.011326549",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "Test single-flowcell input - BASES2FASTQ": {
