@@ -17,7 +17,7 @@
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "8b798ea24b2d639ef4d204add9ddb35dc0d8279f",
+                        "git_sha": "397f0b3f2741db37f51572a69841347c964efce9",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "cellranger/mkfastq": {

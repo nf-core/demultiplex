@@ -4,7 +4,7 @@
             11,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FASTP": {
                     "fastp": "1.1.0"
@@ -271,10 +271,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-15T10:35:49.077351158",
+        "timestamp": "2026-10-21T19:46:12.037798036",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "User wants to trim with the demultiplexer": {
@@ -282,7 +282,7 @@
             9,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -500,10 +500,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-14T15:38:38.662053552",
+        "timestamp": "2026-10-21T19:46:52.193894527",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "User wants to skip trimming all together": {
@@ -511,7 +511,7 @@
             9,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "MD5SUM": {
                     "md5sum": 9.5
@@ -729,10 +729,10 @@
                 "Undetermined_S0_L001_R1_001.fastq.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-09-14T15:39:34.594118901",
+        "timestamp": "2026-10-21T19:47:37.613862657",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     }
 }

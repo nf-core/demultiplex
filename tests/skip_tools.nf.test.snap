@@ -4,7 +4,7 @@
             6,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -227,10 +227,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-09-14T13:56:50.273710318",
+        "timestamp": "2026-10-21T19:41:21.395573044",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "Skip Trimming": {
@@ -238,7 +238,7 @@
             6,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -487,10 +487,10 @@
                 ]
             ]
         ],
-        "timestamp": "2026-09-14T13:56:05.804038647",
+        "timestamp": "2026-10-21T19:40:43.380878178",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "Skip MultiQC": {
@@ -498,7 +498,7 @@
             6,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -624,10 +624,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-09-15T10:31:16.66428187",
+        "timestamp": "2026-10-21T19:44:37.879874077",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "Skip Fastqc": {
@@ -635,7 +635,7 @@
             7,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -903,10 +903,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-09-15T10:29:06.944133626",
+        "timestamp": "2026-10-21T19:42:45.254453316",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     },
     "Skip Fastp & Fastqc": {
@@ -914,7 +914,7 @@
             6,
             {
                 "BCLCONVERT": {
-                    "bclconvert": "4.5.4"
+                    "bclconvert": "4.6.2"
                 },
                 "FALCO": {
                     "falco": "1.2.5"
@@ -1137,10 +1137,10 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ]
         ],
-        "timestamp": "2026-09-14T13:59:42.780089318",
+        "timestamp": "2026-10-21T19:43:26.655929321",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.08.0"
+            "nextflow": "26.10.0"
         }
     }
 }

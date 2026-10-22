@@ -11,8 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#424](https://github.com/nf-core/demultiplex/pull/424) Back to dev
 - [#426](https://github.com/nf-core/demultiplex/pull/426) Improve descriptions on the parameters inside the nextflow_schema
+- [#432](https://github.com/nf-core/demultiplex/pull/432) Update bclconvert module
 
 ### `Fixed`
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| bclconvert | 4.5.4       | 4.6.2       |
 
 ## 1.8.0 - 2026-09-15
 
