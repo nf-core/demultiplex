@@ -1,0 +1,24 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test publish raw FASTQs"
+    script "../main.nf"
+    profile "test"
+
+        def test_scenarios = [
+        [
+            name: "Publish raw",
+            tag: "bclconvert",
+            params: [
+                input: "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv",
+                publish_raw_fastq: true,
+                trim_fastq: true,
+            ]
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
