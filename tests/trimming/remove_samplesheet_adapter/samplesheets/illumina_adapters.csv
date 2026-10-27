@@ -1,0 +1,14 @@
+[Header]
+
+[Reads]
+110
+
+[Settings]
+
+[BCLConvert_Settings]
+AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+[Data]
+Sample_ID,Sample_Name,Description,Sample_Project
+Sample1,Sample1,,

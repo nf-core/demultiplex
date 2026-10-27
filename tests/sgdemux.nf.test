@@ -1,0 +1,17 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf - Sgdemux"
+    script "../main.nf"
+    profile "test_sgdemux"
+
+    def test_scenarios = [
+        [
+            name: "SGDEMUX",
+            tag: "sgdemux"
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

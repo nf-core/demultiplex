@@ -1,0 +1,18 @@
+nextflow_pipeline {
+    name "Test Workflow main.nf - MGIKIT"
+    script "../main.nf"
+    profile "test_mgikit,docker"
+
+    def test_scenarios = [
+        [
+            name: "mgikit",
+            tag: "mgikit",
+            skip_samplesheet: true,
+            optional_outputs: true
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

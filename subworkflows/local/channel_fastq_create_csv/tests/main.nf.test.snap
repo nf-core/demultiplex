@@ -1,0 +1,99 @@
+{
+    "Should produce valid CSV with mixed single-end and paired-end samples": {
+        "content": [
+            "rnaseq_samplesheet.csv:md5,db81bd281460b589a7f8dd13bb54f519",
+            "headers:[sample, fastq_1, strandedness, fastq_2]",
+            "rowCount:2",
+            "columnCount:4"
+        ],
+        "timestamp": "2026-08-21T12:24:29.611940614",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - atacseq": {
+        "content": [
+            {
+                "samplesheet": [
+                    "atacseq_samplesheet.csv:md5,40adcac1edf4708ca433ab8a84d33dea"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:20:44.867201576",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - rnaseq": {
+        "content": [
+            {
+                "samplesheet": [
+                    "rnaseq_samplesheet.csv:md5,318d268fbbc83fd73b18778d81db260c"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:20:25.058047165",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - taxprofiler": {
+        "content": [
+            {
+                "samplesheet": [
+                    "taxprofiler_samplesheet.csv:md5,eb3f2081cf556c7ff2d17ef2abf6c384"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:21:04.266822507",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - methylseq": {
+        "content": [
+            {
+                "samplesheet": [
+                    "methylseq_samplesheet.csv:md5,ac6db97f112ea7e1801067c0d19d3f1c"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:21:13.52423541",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - sarek": {
+        "content": [
+            {
+                "samplesheet": [
+                    "sarek_samplesheet.csv:md5,2c9683d26f09427e78e60402b4c90bac"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:20:34.337909946",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "Should run without failures - seqinspector": {
+        "content": [
+            {
+                "samplesheet": [
+                    "seqinspector_samplesheet.csv:md5,855609d6359360d72d3e4b424ddd85d4"
+                ]
+            }
+        ],
+        "timestamp": "2026-08-21T13:20:54.508879189",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}

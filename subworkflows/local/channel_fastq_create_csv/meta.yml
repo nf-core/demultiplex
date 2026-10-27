@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: channel_fastq_create_csv
+description: Create pipeline samplesheet CSV from metadata using channel operators
+keywords:
+  - samplesheet
+  - csv
+  - metadata
+components: []
+input:
+  - ch_meta_fastq:
+      type: map
+      description: >
+        Queue channel of meta maps containing sample information
+
+  - pipelines:
+      type: list
+      description: >
+        List of pipeline names e.g. ['rnaseq', 'sarek']
+
+  - strandedness:
+      type: string
+      description: >
+        Strandedness value for rnaseq pipeline
+
+output:
+  - samplesheet:
+      type: file
+      description: >
+        Samplesheet CSV file with metadata for pipeline input
+      pattern: "*_samplesheet.csv"
+
+authors:
+  - "@maxulysse"
