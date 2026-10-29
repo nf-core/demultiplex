@@ -1,0 +1,4 @@
+flowcell,samplesheet,lane,run_dir
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,1,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC,/path/to/SampleSheet.csv,2,/path/to/sequencer/output
+DDMMYY_SERIAL_NUMBER_FC2,/path/to/SampleSheet2.csv,1,/path/to/sequencer/output2

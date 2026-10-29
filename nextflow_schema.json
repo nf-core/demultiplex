@@ -5,22 +5,118 @@
     "description": "Demultiplexing pipeline for Illumina sequencing data",
     "type": "object",
     "$defs": {
+        "workflow_options": {
+            "title": "Workflow options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "trim_fastq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Trim adapter sequences with fastp. When false, fastp still generates QC output, but does not modify the reads."
+                },
+                "publish_raw_fastq": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to publish raw, untrimmed FASTQ files alongside trimmed FASTQ files. When false, only trimmed FASTQ files are published."
+                },
+                "skip_tools": {
+                    "type": "string",
+                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samshee)?,?)*(?<!,)$",
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
+                },
+                "sample_size": {
+                    "type": "integer",
+                    "default": 100000,
+                    "description": "Number of reads to subsample for contamination detection."
+                },
+                "kraken_db": {
+                    "type": "string",
+                    "format": "path",
+                    "description": "Path to the Kraken2 database used for contamination screening."
+                },
+                "json_schema_validator": {
+                    "type": "string",
+                    "description": "JSON-formatted schema string passed to the samshee module for samplesheet validation."
+                },
+                "name_schema_validator": {
+                    "type": "string",
+                    "description": "Schema name passed to the samshee module for samplesheet validation."
+                },
+                "file_schema_validator": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Local JSON schema file passed to the samshee module for samplesheet validation."
+                },
+                "v1_schema": {
+                    "type": "boolean",
+                    "description": "Whether the Illumina samplesheet is in v1 format."
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["outdir"],
+            "oneOf": [
+                {
+                    "required": ["input"]
+                },
+                {
+                    "required": ["flowcell_id", "flowcell_samplesheet", "flowcell_path"]
+                }
+            ],
             "properties": {
                 "input": {
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
+                    "help_text": "You will need to create a design file (e.g. `samplesheet.csv`) with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/demultiplex/usage#samplesheet-input).",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "flowcell_id": {
+                    "type": "string",
+                    "description": "Flowcell ID for single-flowcell runs.",
+                    "fa_icon": "fas fa-id-card"
+                },
+                "flowcell_samplesheet": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to the flowcell SampleSheet.csv for single-flowcell runs.",
+                    "help_text": "Use with --flowcell_id and --flowcell_path to avoid creating a pipeline samplesheet when processing a single flowcell.",
+                    "fa_icon": "fas fa-file-csv"
+                },
+                "flowcell_lane": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 8,
+                    "description": "Lane number for single-flowcell runs.",
+                    "fa_icon": "fas fa-road"
+                },
+                "flowcell_path": {
+                    "type": "string",
+                    "format": "path",
+                    "description": "Run directory (or tar.gz) for single-flowcell runs.",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "flowcell_per_flowcell_manifest": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Per-flowcell manifest file for single-flowcell fqtk runs.",
+                    "help_text": "Required when using fqtk without a pipeline samplesheet.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -28,6 +124,11 @@
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
+                },
+                "optional_outputs": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-copy",
+                    "description": "Whether to publish optional outputs such as undetermined FASTQ files."
                 },
                 "email": {
                     "type": "string",
@@ -40,6 +141,37 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                }
+            }
+        },
+        "demultiplex_options": {
+            "title": "Demultiplexing options",
+            "type": "object",
+            "fa_icon": "fas fa-microscope",
+            "description": "Options for demultiplexing.",
+            "required": ["demultiplexer"],
+            "properties": {
+                "demultiplexer": {
+                    "type": "string",
+                    "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "mkfastq", "mgikit"],
+                    "description": "Demultiplexer to use.",
+                    "fa_icon": "fas fa-microscope",
+                    "default": "bclconvert"
+                }
+            }
+        },
+        "downstream_csv_options": {
+            "title": "Downstream CSV options",
+            "type": "object",
+            "description": "Options to customize downstream csv creation",
+            "default": "",
+            "properties": {
+                "strandedness": {
+                    "type": "string",
+                    "enum": ["unstranded", "auto", "reverse", "forward"],
+                    "default": "auto",
+                    "description": "Specifies the strandedness of RNA-Seq data for downstream sample sheet generation. This parameter does not affect the demultiplexing process but is used to generate the appropriate field in the nf-core/rnaseq samplesheet",
+                    "fa_icon": "fas fa-arrows-alt-v"
                 }
             }
         },
@@ -59,6 +191,7 @@
                 },
                 "custom_config_base": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
@@ -88,6 +221,20 @@
                     "description": "Institutional config URL link.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                }
+            }
+        },
+        "checkqc_options": {
+            "title": "CheckQC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "checkqc_config": {
+                    "type": "string",
+                    "description": "Path to the checkqc config yml file.",
+                    "fa_icon": "far fa-check-square",
+                    "format": "file-path"
                 }
             }
         },
@@ -152,12 +299,19 @@
                     "type": "string",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
+                    "format": "file-path",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
+                },
+                "remove_samplesheet_adapter": {
+                    "type": "boolean",
+                    "description": "Whether to remove adapter information from the Illumina samplesheet before demultiplexing. If it is present, demultiplexers may trim adapters during the demultiplexing step.",
+                    "default": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -196,10 +350,22 @@
     },
     "allOf": [
         {
+            "$ref": "#/$defs/workflow_options"
+        },
+        {
             "$ref": "#/$defs/input_output_options"
         },
         {
+            "$ref": "#/$defs/demultiplex_options"
+        },
+        {
+            "$ref": "#/$defs/downstream_csv_options"
+        },
+        {
             "$ref": "#/$defs/institutional_config_options"
+        },
+        {
+            "$ref": "#/$defs/checkqc_options"
         },
         {
             "$ref": "#/$defs/generic_options"
