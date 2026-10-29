@@ -4,9 +4,9 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
 include { paramsSummaryMap        } from 'plugin/nf-schema'
@@ -19,26 +19,26 @@ include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    SUBWORKFLOW TO INITIALISE PIPELINE
+SUBWORKFLOW TO INITIALISE PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow PIPELINE_INITIALISATION {
     take:
-    version // boolean: Display version and exit
-    validate_params // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs // boolean: Do not use coloured log outputs
-    nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir //  string: The output directory where the results will be saved
-    input //  string: Path to input samplesheet
-    flowcell_id // string: Flowcell id for single-flowcell runs
-    flowcell_samplesheet // string: Path to flowcell samplesheet for single-flowcell runs
-    flowcell_lane // integer: Lane number for single-flowcell runs
-    flowcell_path // string: Path to flowcell run directory for single-flowcell runs
+    version                        // boolean: Display version and exit
+    validate_params                // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs                // boolean: Do not use coloured log outputs
+    nextflow_cli_args              //   array: List of positional nextflow CLI args
+    outdir                         //  string: The output directory where the results will be saved
+    input                          //  string: Path to input samplesheet
+    flowcell_id                    // string: Flowcell id for single-flowcell runs
+    flowcell_samplesheet           // string: Path to flowcell samplesheet for single-flowcell runs
+    flowcell_lane                  // integer: Lane number for single-flowcell runs
+    flowcell_path                  // string: Path to flowcell run directory for single-flowcell runs
     flowcell_per_flowcell_manifest // string: Path to per-flowcell manifest for fqtk
-    help // boolean: Display help message and exit
-    help_full // boolean: Show the full help message
-    show_hidden // boolean: Show hidden parameters in the help message
+    help                           // boolean: Display help message and exit
+    help_full                      // boolean: Show the full help message
+    show_hidden                    // boolean: Show hidden parameters in the help message
 
     main:
 
@@ -93,7 +93,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        false,
+        null,
     )
 
     //
@@ -163,18 +163,18 @@ workflow PIPELINE_INITIALISATION {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    SUBWORKFLOW FOR PIPELINE COMPLETION
+SUBWORKFLOW FOR PIPELINE COMPLETION
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow PIPELINE_COMPLETION {
     take:
-    email //  string: email address
-    email_on_fail //  string: email address sent on pipeline failure
+    email           //  string: email address
+    email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
-    outdir //    path: Path to output directory where results will be published
+    outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
-    multiqc_report //  string: Path to MultiQC report
+    multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -197,7 +197,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -211,9 +211,9 @@ workflow PIPELINE_COMPLETION {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
+FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 //
 // Get attribute from genome config file e.g. fasta
