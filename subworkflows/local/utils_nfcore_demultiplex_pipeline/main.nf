@@ -333,9 +333,9 @@ def readgroupFromFastq(path, platform = 'SINGULAR') {
     def line
 
     path.withInputStream { inputStream ->
-        def gzipStream: InputStream = new java.util.zip.GZIPInputStream(inputStream)
-        def decoder: Reader = new InputStreamReader(gzipStream, 'ASCII')
-        def buffered: BufferedReader = new BufferedReader(decoder)
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(inputStream)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
         line = buffered.readLine()
     }
     assert line.startsWith('@')
@@ -399,21 +399,21 @@ def removeAdapters(samplesheet) {
     return lines_out
 }
 
-def prettyFormat(object) {
+def prettyFormat(Object object) {
     // Convert problematic types to strings before JSON conversion
     def sanitized = sanitizeObject(object)
     def json = new groovy.json.JsonBuilder(sanitized)
     return groovy.json.JsonOutput.prettyPrint(json.toString())
 }
 
-def sanitizeObject(object) {
+def sanitizeObject(Object object) {
     if (object == null) {
         return null
     }
     else if (object instanceof Map) {
         return object.collectEntries { k, v -> [k, sanitizeObject(v)] }
     }
-    else if (object instanceof Iterable) {
+    else if (object instanceof Collection) {
         return object.collect { it -> sanitizeObject(it) }
     }
     else if (object instanceof java.nio.file.Path) {
