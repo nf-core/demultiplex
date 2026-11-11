@@ -1,0 +1,74 @@
+nextflow_pipeline {
+
+    name "Test single-flowcell input using --flowcell_samplesheet"
+    script "../main.nf"
+    profile "test_flowcell"
+
+        def test_scenarios = [
+        [
+            name: "Test single-flowcell input - BCL2FASTQ",
+            tag: "flowcell",
+            params: [
+                skip_tools: 'checkqc,samshee'
+                ]
+        ],
+        [
+            name: "Test single-flowcell input - SGDEMUX",
+            tag: "flowcell",
+            params: [
+                flowcell_id: "sim-data",
+                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/out.sample_meta.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                demultiplexer: "sgdemux"
+            ]
+        ],
+        [
+            name: "Test single-flowcell input - BASES2FASTQ",
+            tag: "flowcell",
+            params: [
+                flowcell_id: "sim-data",
+                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/RunManifest.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/sim-data.tar.gz",
+                demultiplexer: "bases2fastq"
+            ]
+        ],
+        [
+            name: "Test single-flowcell input - BCLCONVERT",
+            tag: "flowcell",
+            params: [
+                flowcell_id: "miniseq_truseq_smrna",
+                flowcell_samplesheet: "https://huggingface.co/datasets/nf-core/demultiplex/resolve/main/testdata/Miniseq_truseq_smrna/SampleSheet.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://huggingface.co/datasets/nf-core/demultiplex/resolve/main/testdata/Miniseq_truseq_smrna/Miniseq_truseq_smrna.tar.gz",
+                demultiplexer: "bclconvert",
+                skip_tools: 'samshee'
+            ]
+        ],
+        [
+            name: "Test single-flowcell input - FQTK",
+            tag: "flowcell",
+            params: [
+                flowcell_id: "test",
+                flowcell_samplesheet: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fqtk_samplesheet.csv",
+                flowcell_lane: null,
+                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                flowcell_per_flowcell_manifest: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/per_flowcell_manifest.csv",
+                demultiplexer: "fqtk"
+            ]
+        ],
+        [
+            name: "Fails with both --input and --flowcell_samplesheet",
+            tag: "flowcell",
+            params: [
+                input: 'https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/samplesheet/1.3.0/flowcell_input.csv',
+            ],
+            failure: true
+        ]
+    ]
+
+    test_scenarios.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

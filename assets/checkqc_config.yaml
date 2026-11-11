@@ -1,0 +1,598 @@
+# For information about config usage, see http://checkqc.readthedocs.io/en/latest/#configuration-file
+
+# Use this section to provide configuration options to the parsers
+parser_configurations:
+  StatsJsonParser:
+    # Path to where the bcl2fastq output (i.e. fastq files, etc) is located relative to
+    # the runfolder
+    bcl2fastq_output_path: Data/Intensities/BaseCalls
+  SamplesheetParser:
+    samplesheet_name: SampleSheet.csv
+
+default_handlers:
+  - name: UndeterminedPercentageHandler
+    warning: unknown
+    error: 9 # <% Phix on lane> + < value as %>
+  - name: UnidentifiedIndexHandler
+    significance_threshold: 10 # % of reads in unidentified
+    # Indexes which are white-listed will only cause a warning even if they occur
+    # above the significance level.
+    # They will be matched like regular expressions,
+    # so e.g. NNN will match exactly three NNNs, while
+    # N{3,} will match three or more Ns.
+    white_listed_indexes:
+      - .*N.*
+      - G{6,}
+
+hiseq2500_rapidhighoutput_v4:
+  51-71:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 180 # Millons of clusters
+        error: unknown
+      - name: Q30Handler
+        warning: 85 # Give percentage for reads greater than Q30
+        error: unknown # Give percentage for reads greater than Q30
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 135 # 75 % of threshold for clusters pass filter
+  100-111:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 180
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 135
+  121-131:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 180
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 135
+
+hiseq2500_rapidrun_v2:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 110
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 82.5
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 110
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 82.5
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 110
+        error: unknown
+      - name: Q30Handler
+        warning: unknown
+        error: 75
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: unknown
+        error: 5
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 82.5
+
+hiseqx_v2:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 400
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 300
+
+novaseq_SP:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 243.75
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 243.75
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 243.75
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 325
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 243.75
+
+novaseq_S1:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 650
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 487.5
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 650
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 487.5
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 650
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 487.5
+
+novaseq_S2:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1650
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1237.5
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1650
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1237.5
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1650
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1237.5
+
+novaseq_S4:
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 2000
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1500
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 2000
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 1500
+
+novaseqxplus_1.5B:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 800
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 600
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 800
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 600
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 800
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 600
+
+novaseqxplus_10B:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1250
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 937.5
+  101:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1250
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 937.5
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1250
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 937.5
+
+novaseqxplus_25B:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 3250
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 2437.5
+
+miseq_nano_v2:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 1
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+
+miseq_micro_v2:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 4
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+
+miseq_v2:
+  51:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 10
+        error: unknown
+      - name: Q30Handler
+        warning: 90
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 10
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+  251:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 10
+        error: unknown
+      - name: Q30Handler
+        warning: 75
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 7.5
+
+miseq_v3:
+  76:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 18
+        error: unknown
+      - name: Q30Handler
+        warning: 85
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 1.5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 13.5
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 18
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 2
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 13.5
+  301:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 18
+        error: unknown
+      - name: Q30Handler
+        warning: 70
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 13.5
+      - name: UndeterminedPercentageHandler
+        warning: unknown
+        error: 14 # <% Phix on lane> + < value as %>
+
+iseq_v1:
+  151:
+    handlers:
+      - name: ClusterPFHandler
+        warning: 4
+        error: unknown
+      - name: Q30Handler
+        warning: 80
+        error: unknown
+      - name: ErrorRateHandler
+        allow_missing_error_rate: False
+        warning: 5
+        error: unknown
+      - name: ReadsPerSampleHandler
+        warning: unknown
+        error: 3

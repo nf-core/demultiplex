@@ -1,0 +1,24 @@
+nextflow_function {
+    name "Test readgroupFromFastq"
+    script "subworkflows/local/utils_nfcore_demultiplex_pipeline/."
+    function "readgroupFromFastq"
+
+    test("Should parse indexed readgroups and preserve the requested platform") {
+        when {
+            function {
+                '''
+                input[0] = file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                input[1] = "ILLUMINA"
+                '''
+            }
+        }
+
+        then {
+            assertAll(
+                { assert function.success },
+                { assert snapshot(function.result).match() }
+            )
+        }
+    }
+
+}
