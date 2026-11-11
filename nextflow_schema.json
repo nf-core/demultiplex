@@ -155,6 +155,7 @@
                     "type": "string",
                     "enum": ["bases2fastq", "bcl2fastq", "bclconvert", "fqtk", "sgdemux", "mkfastq", "mgikit"],
                     "description": "Demultiplexer to use.",
+                    "help_text": "Illumina ends support for `bcl2fastq` on 13 October 2027. Use `bclconvert` for new Illumina runs.",
                     "fa_icon": "fas fa-microscope",
                     "default": "bclconvert"
                 }
