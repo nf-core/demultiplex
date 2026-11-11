@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#426](https://github.com/nf-core/demultiplex/pull/426) Improve descriptions on the parameters inside the nextflow_schema
 - [#432](https://github.com/nf-core/demultiplex/pull/432) Update bclconvert module
 - [#435](https://github.com/nf-core/demultiplex/pull/435) Template update for nf-core/tools v4.2.1
+- [#438](https://github.com/nf-core/demultiplex/pull/438) Template update for nf-core/tools v4.2.2
 
 ### `Fixed`
 
