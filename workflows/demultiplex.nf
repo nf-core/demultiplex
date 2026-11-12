@@ -229,6 +229,9 @@ workflow DEMULTIPLEX {
         ch_demultiplex_interop = ch_demultiplex_interop.mix(BCL_DEMULTIPLEX.out.interop)
         ch_demultiplex_stats = ch_demultiplex_stats.mix(BCL_DEMULTIPLEX.out.stats)
         ch_undetermined = ch_undetermined.mix(BCL_DEMULTIPLEX.out.undetermined)
+        BCL_DEMULTIPLEX.out.autodetect_samplesheet.subscribe { meta, _samplesheet ->
+            log.info("bcl-convert autodetect wrote a revised SampleSheet.autodetect.csv for ${meta.id} to its Reports folder. Autodetect mode produces no FASTQ files.")
+        }
 
         if (!("checkqc" in skip_tools) && demultiplexer == 'bcl2fastq') {
             RUNDIR_CHECKQC(ch_flowcells, BCL_DEMULTIPLEX.out.stats, BCL_DEMULTIPLEX.out.interop, checkqc_config, demultiplexer)

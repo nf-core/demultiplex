@@ -169,6 +169,19 @@ By default, when trimming is enabled (`--trim_fastq true`), only the trimmed FAS
 > [!WARNING]
 > Setting `--publish_raw_fastq true` will publish both the raw and trimmed FASTQ files, which can significantly increase storage requirements.
 
+## bcl-convert autodetect
+
+bcl-convert can check a sample sheet against the data before a full demultiplexing run. Set `--bclconvert_autodetect` to run bcl-convert with `--bcl-output-format demux-autodetect`. bcl-convert then demultiplexes a downsampled subset of the data and reports issues such as indexes missing from the sample sheet or a reverse complemented Index2. It writes a revised `SampleSheet.autodetect.csv` and produces no FASTQ files, so all FASTQ-based steps are skipped.
+
+Autodetect has the following requirements:
+
+- `--demultiplexer bclconvert`
+- CBCL input, as produced by NextSeq 1000/2000, NovaSeq 6000 and newer instruments
+- a v2 sample sheet with `AutoDetectDemuxMode` set to `ExtendSamples`, `CorrectAndExtendSamples` or `OverwriteSamples` in the `[BCLConvert_Settings]` section
+- a `Lane` column in the sample sheet to add samples
+
+Review the revised sample sheet, then run the pipeline again without `--bclconvert_autodetect` to demultiplex the data. See the [BCL Convert documentation](https://help.dragen.illumina.com/dragen-v4.6/product-guides/dragen-v4.6/bcl-conversion.md) for the tuning settings.
+
 ## samshee (Samplesheet validator)
 
 samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--json_schema_validator`, which accepts a JSON schema validation string; the `--name_schema_validator`, which accepts a schema name string; and the `--file_schema_validator` which accepts a JSON schema validation file. Users can specify additional validation rules beyond the default ones provided by the tool using all or any of these parameters, this enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).

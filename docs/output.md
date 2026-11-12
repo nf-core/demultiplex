@@ -48,6 +48,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - `RunInfo.xml`: Run information
   - `SampleSheet.csv`: Sample sheet used for demultiplexing
   - `Top_Unknown_Barcodes.csv`: Top unknown barcodes
+  - `SampleSheet.autodetect.csv`: Revised sample sheet (`--bclconvert_autodetect` only)
+  - `SampleSheet.autodetect.samples-only.csv`: Revised sample sheet with only the samples section (`--bclconvert_autodetect` only)
+  - `AutoDetect_Details.json`: Details of the issues autodetect found (`--bclconvert_autodetect` only)
 
 - `<flowcell_id>/L00<meta.lane>/Logs/`
   - `Errors.log`: Error log

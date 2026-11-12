@@ -12,12 +12,12 @@
                     },
                     "bcl2fastq": {
                         "branch": "master",
-                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "bclconvert": {
                         "branch": "master",
-                        "git_sha": "397f0b3f2741db37f51572a69841347c964efce9",
+                        "git_sha": "bedd9bd522e82c722bb6c96b7d5f253ed627303e",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "cellranger/mkfastq": {
@@ -67,7 +67,7 @@
                     },
                     "multiqcsav": {
                         "branch": "master",
-                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
+                        "git_sha": "0a1a7142f5390835e61b1d965e1b3139b73669d6",
                         "installed_by": ["bcl_demultiplex"]
                     },
                     "samshee": {
@@ -96,7 +96,7 @@
                 "nf-core": {
                     "bcl_demultiplex": {
                         "branch": "master",
-                        "git_sha": "c5d82c0d48f39025e56264b572575255f77847bc",
+                        "git_sha": "5fcde91d109105d75017aedaf88003b43ac8c12d",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_contam_seqtk_kraken": {
