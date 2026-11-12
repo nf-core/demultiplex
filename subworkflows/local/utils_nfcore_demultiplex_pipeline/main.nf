@@ -103,6 +103,10 @@ workflow PIPELINE_INITIALISATION {
         nextflow_cli_args
     )
 
+    if (params.demultiplexer == 'bcl2fastq') {
+        log.warn("Illumina ends support for bcl2fastq on 13 October 2027. Please switch to '--demultiplexer bclconvert'.")
+    }
+
     //
     // Create channel from input file provided through params.input or from single-flowcell params
     //

@@ -155,6 +155,9 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 ## checkQC
 
+> [!WARNING]
+> Illumina ends support for `bcl2fastq` on 13 October 2027. Use `--demultiplexer bclconvert` for new Illumina runs.
+
 If you are running this pipeline with the bcl2fastq demultiplexer, the checkqc module is run. In this case, the default run will include the default config file for checkqc, but you can additionally provide your own checkqc config file using the parameter `--checkqc_config` and a path to a `yml`. See an example of a config file in the [checkqc repository](https://github.com/Molmed/checkQC/blob/dfba84ec63e1df60c0f84ccc96a154a330b28ce4/checkQC/default_config/config.yaml).
 
 ### Trimming
