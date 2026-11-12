@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#440](https://github.com/nf-core/demultiplex/pull/440) Add `--bclconvert_autodetect` to run bcl-convert in autodetect mode
+
 ### `Changed`
 
 - [#424](https://github.com/nf-core/demultiplex/pull/424) Back to dev

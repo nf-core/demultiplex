@@ -157,6 +157,12 @@
                     "description": "Demultiplexer to use.",
                     "fa_icon": "fas fa-microscope",
                     "default": "bclconvert"
+                },
+                "bclconvert_autodetect": {
+                    "type": "boolean",
+                    "description": "Run bcl-convert in autodetect mode to detect sample sheet issues instead of demultiplexing.",
+                    "help_text": "Passes `--bcl-output-format demux-autodetect` to bcl-convert. The run produces no FASTQ files. bcl-convert writes a revised `SampleSheet.autodetect.csv` and `AutoDetect_Details.json` to the `Reports` folder. Requires `--demultiplexer bclconvert`, CBCL input and `AutoDetectDemuxMode` in the `[BCLConvert_Settings]` section of a v2 sample sheet.",
+                    "fa_icon": "fas fa-search"
                 }
             }
         },
