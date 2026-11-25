@@ -175,9 +175,9 @@ By default, when trimming is enabled (`--trim_fastq true`), only the trimmed FAS
 
 How strict the check is can be tuned with `--validator_strictness`, which accepts one of:
 
-- `lenient` - tolerant of optional or newer columns (for example per-sample `OverrideCycles`)
-- `standard` (default) - the built-in semantic checks (index collisions, adapter and structural issues)
-- `strict` - full Illumina v2 conformance (index length against declared cycles, `RunName`, `FileFormatVersion`)
+- `lenient` - minimum index distance of 2, no colour balance check
+- `standard` (default) - minimum index distance of 3, no colour balance check
+- `strict` - minimum index distance of 4, conservative colour balance check, and Illumina v2 conformance (index length against declared cycles, `RunName`, `FileFormatVersion`, bundled Illumina v2 JSON Schema)
 
 For lab-specific rules beyond the built-in checks, pass a custom JSON Schema (Draft 2020-12) file with `--validator_schema`:
 
@@ -189,7 +189,10 @@ For lab-specific rules beyond the built-in checks, pass a custom JSON Schema (Dr
 > [!NOTE]
 > A JSON Schema may `$ref` an external document, including a samshee `urn:samshee:illuminav2/v1` reference, so schemas written for samshee can be reused.
 
-To skip validation entirely, add `samplesheetparser` to `--skip_tools`.
+To skip validation entirely, add `samplesheetparser` to `--skip_tools`. The old `samshee` token is still accepted as a deprecated alias for one release and emits a warning.
+
+> [!NOTE]
+> `mkfastq` runs are not validated by samplesheet-parser, because 10x Genomics index set names (for example `SI-P03-C9`) are not plain ACGTN sequences and would fail the index-character check.
 
 ### Updating the pipeline
 

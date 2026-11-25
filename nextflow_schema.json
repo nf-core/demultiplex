@@ -23,8 +23,8 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samplesheetparser)?,?)*(?<!,)$",
-                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samplesheetparser)"
+                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samplesheetparser|samshee)?,?)*(?<!,)$",
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samplesheetparser). The old 'samshee' token is accepted as a deprecated alias for 'samplesheetparser'."
                 },
                 "sample_size": {
                     "type": "integer",
@@ -40,7 +40,7 @@
                     "type": "string",
                     "default": "standard",
                     "enum": ["lenient", "standard", "strict"],
-                    "description": "Strictness level for samplesheet-parser validation. 'strict' enforces full Illumina v2 conformance; 'standard' applies the default semantic checks; 'lenient' tolerates optional or newer columns."
+                    "description": "Strictness level for samplesheet-parser validation. 'lenient' uses a minimum index distance of 2 with no colour balance check; 'standard' (default) uses a minimum index distance of 3 with no colour balance check; 'strict' uses a minimum index distance of 4, a conservative colour balance check, and Illumina v2 conformance (index length against declared cycles, RunName, FileFormatVersion, bundled Illumina v2 JSON Schema)."
                 },
                 "validator_schema": {
                     "type": "string",

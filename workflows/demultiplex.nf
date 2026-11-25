@@ -64,6 +64,10 @@ workflow DEMULTIPLEX {
     // boolean: true, false
     skip_tools = params.skip_tools ? params.skip_tools.split(',') : []
     // list: [falco, fastp, multiqc]
+    if ("samshee" in skip_tools) {
+        log.warn("The 'samshee' skip_tools token is deprecated and will be removed in a future release; use 'samplesheetparser' instead.")
+        skip_tools = skip_tools.collect { it == "samshee" ? "samplesheetparser" : it }
+    }
     sample_size = params.sample_size
     // int
     kraken_db = params.kraken_db
@@ -90,8 +94,8 @@ workflow DEMULTIPLEX {
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
-    ch_validator_schema = params.validator_schema ? channel.fromPath(params.validator_schema, checkIfExists: true) : []
-    // file schema.json
+    ch_validator_schema = params.validator_schema ? file(params.validator_schema, checkIfExists: true) : []
+    // file schema.json (value, reused across all flowcells)
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
     ch_samplesheet = ch_samplesheet.map { meta, csv, tar, optional -> [[id: meta.id.toString(), lane: meta.lane], csv, tar, optional] }
@@ -123,13 +127,14 @@ workflow DEMULTIPLEX {
     }
 
     // RUN samplesheet validator (samplesheet-parser)
-    if (!("samplesheetparser" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+    // mkfastq is excluded: 10x index set names (e.g. SI-P03-C9) are not ACGTN and fail the index-character check.
+    if (!("samplesheetparser" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert"])) {
         SAMPLESHEETPARSER_VALIDATE(
             ch_samplesheet.map { meta, samplesheet, _flowcell, _lane -> [meta, samplesheet] },
             ch_validator_schema,
         )
         ch_samplesheet = ch_samplesheet
-            .join(SAMPLESHEETPARSER_VALIDATE.out.json)
+            .join(SAMPLESHEETPARSER_VALIDATE.out.json, failOnMismatch: true)
             .map { meta, samplesheet, flowcell, lane, _validation_report -> [meta, samplesheet, flowcell, lane] }
     }
 
