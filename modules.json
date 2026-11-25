@@ -70,9 +70,9 @@
                         "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["bcl_demultiplex"]
                     },
-                    "samshee": {
+                    "samplesheetparser/validate": {
                         "branch": "master",
-                        "git_sha": "5225243e69cb81e5b9f8b6c08ccc9d549b20f8ec",
+                        "git_sha": "e4342563a002338ad4cac1ea066e89867c439fdd",
                         "installed_by": ["modules"]
                     },
                     "seqtk/sample": {

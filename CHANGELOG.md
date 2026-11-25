@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#435](https://github.com/nf-core/demultiplex/pull/435) Template update for nf-core/tools v4.2.1
 - [#438](https://github.com/nf-core/demultiplex/pull/438) Template update for nf-core/tools v4.2.2
 - [#439](https://github.com/nf-core/demultiplex/pull/439) Add deprecation notice for `bcl2fastq`, which Illumina stops supporting on 13 October 2027
+- [#XXXX](https://github.com/nf-core/demultiplex/pull/XXXX) Replace the `samshee` samplesheet validator with [`samplesheet-parser`](https://github.com/chaitanyakasaraneni/samplesheet-parser). Validation strictness is now configurable via `--validator_strictness` (`lenient`/`standard`/`strict`), and a custom JSON Schema (Draft 2020-12) can be supplied via `--validator_schema`. Removes the `--json_schema_validator`, `--name_schema_validator` and `--v1_schema` parameters and renames the `skip_tools` token `samshee` to `samplesheetparser`.
 
 ### `Fixed`
 

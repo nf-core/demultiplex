@@ -22,7 +22,7 @@ include { MULTIQC                   } from '../modules/nf-core/multiqc'
 include { UNTAR as UNTAR_FLOWCELL   } from '../modules/nf-core/untar'
 include { UNTAR as UNTAR_KRAKEN_DB  } from '../modules/nf-core/untar'
 include { MD5SUM                    } from '../modules/nf-core/md5sum'
-include { SAMSHEE                   } from '../modules/nf-core/samshee'
+include { SAMPLESHEETPARSER_VALIDATE } from '../modules/nf-core/samplesheetparser/validate'
 include { BASES2FASTQ               } from '../modules/nf-core/bases2fastq'
 include { CELLRANGER_MKFASTQ        } from '../modules/nf-core/cellranger/mkfastq'
 include { MGIKIT_DEMULTIPLEX        } from '../modules/nf-core/mgikit/demultiplex'
@@ -90,7 +90,7 @@ workflow DEMULTIPLEX {
 
     checkqc_config = params.checkqc_config ? channel.fromPath(params.checkqc_config, checkIfExists: true) : []
     // file checkqc_config.yaml
-    ch_file_schema_validator = params.file_schema_validator ? channel.fromPath(params.file_schema_validator, checkIfExists: true) : []
+    ch_validator_schema = params.validator_schema ? channel.fromPath(params.validator_schema, checkIfExists: true) : []
     // file schema.json
 
     // Remove adapter from Illumina samplesheet to avoid adapter trimming in demultiplexer tools
@@ -122,15 +122,15 @@ workflow DEMULTIPLEX {
         }
     }
 
-    // RUN samplesheet_validator samshee
-    if (!("samshee" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
-        SAMSHEE(
+    // RUN samplesheet validator (samplesheet-parser)
+    if (!("samplesheetparser" in skip_tools) && (params.demultiplexer in ["bcl2fastq", "bclconvert", "mkfastq"])) {
+        SAMPLESHEETPARSER_VALIDATE(
             ch_samplesheet.map { meta, samplesheet, _flowcell, _lane -> [meta, samplesheet] },
-            ch_file_schema_validator,
+            ch_validator_schema,
         )
         ch_samplesheet = ch_samplesheet
-            .join(SAMSHEE.out.samplesheet)
-            .map { meta, samplesheet, flowcell, lane, _samplesheet_formatted -> [meta, samplesheet, flowcell, lane] }
+            .join(SAMPLESHEETPARSER_VALIDATE.out.json)
+            .map { meta, samplesheet, flowcell, lane, _validation_report -> [meta, samplesheet, flowcell, lane] }
     }
 
     // Convenience

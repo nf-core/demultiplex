@@ -22,7 +22,9 @@
 
 - [CheckQC](https://github.com/Molmed/checkQC)
 
-- [samshee](https://github.com/lit-regensburg/samshee)
+- [samplesheet-parser](https://github.com/chaitanyakasaraneni/samplesheet-parser)
+
+  > Kasaraneni C. samplesheet-parser: a format-agnostic parser and validator for Illumina sample sheets. Zenodo. doi: 10.5281/zenodo.18989694.
 
 ## Software packaging/containerisation tools
 

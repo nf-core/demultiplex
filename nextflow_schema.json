@@ -23,8 +23,8 @@
                 },
                 "skip_tools": {
                     "type": "string",
-                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samshee)?,?)*(?<!,)$",
-                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samshee)"
+                    "pattern": "^((fastp|fastqc|kraken|multiqc|checkqc|falco|md5sum|samplesheetparser)?,?)*(?<!,)$",
+                    "description": "Comma-separated list of tools to skip (fastp,fastqc,kraken,multiqc,checkqc,falco,md5sum,samplesheetparser)"
                 },
                 "sample_size": {
                     "type": "integer",
@@ -36,22 +36,16 @@
                     "format": "path",
                     "description": "Path to the Kraken2 database used for contamination screening."
                 },
-                "json_schema_validator": {
+                "validator_strictness": {
                     "type": "string",
-                    "description": "JSON-formatted schema string passed to the samshee module for samplesheet validation."
+                    "default": "standard",
+                    "enum": ["lenient", "standard", "strict"],
+                    "description": "Strictness level for samplesheet-parser validation. 'strict' enforces full Illumina v2 conformance; 'standard' applies the default semantic checks; 'lenient' tolerates optional or newer columns."
                 },
-                "name_schema_validator": {
-                    "type": "string",
-                    "description": "Schema name passed to the samshee module for samplesheet validation."
-                },
-                "file_schema_validator": {
+                "validator_schema": {
                     "type": "string",
                     "format": "file-path",
-                    "description": "Local JSON schema file passed to the samshee module for samplesheet validation."
-                },
-                "v1_schema": {
-                    "type": "boolean",
-                    "description": "Whether the Illumina samplesheet is in v1 format."
+                    "description": "Path to a custom JSON Schema (Draft 2020-12) file, passed to samplesheet-parser via --schema for additional samplesheet validation."
                 }
             }
         },

@@ -12,7 +12,7 @@ nextflow_pipeline {
                 input            = "${projectDir}/tests/trimming/remove_samplesheet_adapter/samplesheets/input_samplesheet.csv"
                 optional_outputs = true
                 outdir           = "$outputDir"
-                skip_tools       = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                skip_tools       = 'samplesheetparser,falco' // Skip samplesheet validation on these trimming-focused test samplesheets
                 // NOTE: This is the default behavior, so we don't need to set these params but leaving them here for clarity
                 // remove_samplesheet_adapter = true
                 // trim_fastq    = true
@@ -55,7 +55,7 @@ nextflow_pipeline {
                 optional_outputs           = true
                 outdir                     = "$outputDir"
                 remove_samplesheet_adapter = false
-                skip_tools                 = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                skip_tools                 = 'samplesheetparser,falco' // Skip samplesheet validation on these trimming-focused test samplesheets
                 trim_fastq                 = false
             }
         }
@@ -95,7 +95,7 @@ nextflow_pipeline {
                 optional_outputs           = true
                 outdir                     = "$outputDir"
                 remove_samplesheet_adapter = true
-                skip_tools                 = 'samshee,falco' // Skip samshee validation which fails on our test samplesheets
+                skip_tools                 = 'samplesheetparser,falco' // Skip samplesheet validation on these trimming-focused test samplesheets
                 trim_fastq                 = false
             }
         }
