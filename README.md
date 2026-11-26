@@ -38,7 +38,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Pipeline summary
 
-1. [samshee](#samshee) - Validates illumina v2 samplesheets.
+1. [samplesheet-parser](#samplesheet-parser) - Validates Illumina v1/v2 samplesheets.
 2. Demultiplexing
 
 - [bcl-convert](#bcl-convert) - converting bcl files to fastq, and demultiplexing (CONDITIONAL)

@@ -169,18 +169,30 @@ By default, when trimming is enabled (`--trim_fastq true`), only the trimmed FAS
 > [!WARNING]
 > Setting `--publish_raw_fastq true` will publish both the raw and trimmed FASTQ files, which can significantly increase storage requirements.
 
-## samshee (Samplesheet validator)
+## samplesheet-parser (Samplesheet validator)
 
-samshee ensures the integrity of Illumina v2 Sample Sheets by allowing users to apply custom validation rules. The module can be used together with the parameter `--json_schema_validator`, which accepts a JSON schema validation string; the `--name_schema_validator`, which accepts a schema name string; and the `--file_schema_validator` which accepts a JSON schema validation file. Users can specify additional validation rules beyond the default ones provided by the tool using all or any of these parameters, this enables tailored validation of Sample Sheets to meet specific requirements or standards relevant to your sequencing workflow. For more information refer to [Samshee on GitHub](https://github.com/lit-regensburg/samshee).
+[samplesheet-parser](https://github.com/chaitanyakasaraneni/samplesheet-parser) checks the integrity of Illumina Sample Sheets (v1 and v2, auto-detected) for index, adapter, and structural issues before demultiplexing. It validates the sheet and fails the pipeline early on an error, rather than letting a malformed sheet reach the demultiplexer. The reporting output is not consumed downstream; the original sheet is passed through unchanged.
+
+How strict the check is can be tuned with `--validator_strictness`, which accepts one of:
+
+- `lenient` - minimum index distance of 2, no colour balance check
+- `standard` (default) - minimum index distance of 3, no colour balance check
+- `strict` - minimum index distance of 4, conservative colour balance check, and Illumina v2 conformance (index length against declared cycles, `RunName`, `FileFormatVersion`, bundled Illumina v2 JSON Schema)
+
+For lab-specific rules beyond the built-in checks, pass a custom JSON Schema (Draft 2020-12) file with `--validator_schema`:
+
+```bash
+--validator_strictness strict
+--validator_schema /path/to/my_schema.json
+```
 
 > [!NOTE]
-> Samshee assumes all illumina samplesheets are v2. If working with samples that have an illumina samplesheet v1 set the parameter `--v1_schema` to true.
-> When indicating `--json_schema_validator` or `--name_schema_validator`, please note that it expects a JSON reference value in string format. For example:
->
-> ```bash
-> --json_schema_validator '{"required": ["Data"]}'
-> --name_schema_validator '{"$ref": "urn:samshee:illuminav2/v1"}'
-> ```
+> A JSON Schema may `$ref` an external document, including a samshee `urn:samshee:illuminav2/v1` reference, so schemas written for samshee can be reused.
+
+To skip validation entirely, add `samplesheetparser` to `--skip_tools`. The old `samshee` token is still accepted as a deprecated alias for one release and emits a warning.
+
+> [!NOTE]
+> `mkfastq` runs are not validated by samplesheet-parser, because 10x Genomics index set names (for example `SI-P03-C9`) are not plain ACGTN sequences and would fail the index-character check.
 
 ### Updating the pipeline
 

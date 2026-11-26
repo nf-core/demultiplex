@@ -9,7 +9,7 @@ nextflow_pipeline {
             name: "Test single-flowcell input - BCL2FASTQ",
             tag: "flowcell",
             params: [
-                skip_tools: 'checkqc,samshee'
+                skip_tools: 'checkqc,samplesheetparser'
                 ]
         ],
         [
@@ -43,7 +43,7 @@ nextflow_pipeline {
                 flowcell_lane: null,
                 flowcell_path: "https://huggingface.co/datasets/nf-core/demultiplex/resolve/main/testdata/Miniseq_truseq_smrna/Miniseq_truseq_smrna.tar.gz",
                 demultiplexer: "bclconvert",
-                skip_tools: 'samshee'
+                skip_tools: 'samplesheetparser'
             ]
         ],
         [
