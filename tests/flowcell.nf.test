@@ -17,9 +17,9 @@ nextflow_pipeline {
             tag: "flowcell",
             params: [
                 flowcell_id: "sim-data",
-                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/out.sample_meta.csv",
+                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/element/sim-data/out.sample_meta.csv",
                 flowcell_lane: null,
-                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                flowcell_path: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/element/sim-data/fastq.tar.gz",
                 demultiplexer: "sgdemux"
             ]
         ],
@@ -28,9 +28,9 @@ nextflow_pipeline {
             tag: "flowcell",
             params: [
                 flowcell_id: "sim-data",
-                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/demultiplex/testdata/sim-data/RunManifest.csv",
+                flowcell_samplesheet: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/element/sim-data/RunManifest.csv",
                 flowcell_lane: null,
-                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/sim-data.tar.gz",
+                flowcell_path: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/element/sim-data/sim-data.tar.gz",
                 demultiplexer: "bases2fastq"
             ]
         ],
@@ -53,7 +53,7 @@ nextflow_pipeline {
                 flowcell_id: "test",
                 flowcell_samplesheet: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fqtk_samplesheet.csv",
                 flowcell_lane: null,
-                flowcell_path: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/fastq.tar.gz",
+                flowcell_path: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/element/sim-data/fastq.tar.gz",
                 flowcell_per_flowcell_manifest: "https://github.com/nf-core/test-datasets/raw/demultiplex/testdata/sim-data/per_flowcell_manifest.csv",
                 demultiplexer: "fqtk"
             ]

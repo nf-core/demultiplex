@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#438](https://github.com/nf-core/demultiplex/pull/438) Template update for nf-core/tools v4.2.2
 - [#439](https://github.com/nf-core/demultiplex/pull/439) Add deprecation notice for `bcl2fastq`, which Illumina stops supporting on 13 October 2027
 - [#441](https://github.com/nf-core/demultiplex/pull/441) **Breaking:** Replace the `samshee` samplesheet validator with [`samplesheet-parser`](https://github.com/chaitanyakasaraneni/samplesheet-parser). Validation strictness is now configurable via `--validator_strictness` (`lenient`/`standard`/`strict`), and a custom JSON Schema (Draft 2020-12) can be supplied via `--validator_schema`. Removes the `--json_schema_validator`, `--name_schema_validator` and `--v1_schema` parameters. The `skip_tools` token `samshee` is replaced by `samplesheetparser`; `samshee` is still accepted as a deprecated alias for one release and emits a warning. `mkfastq` runs are no longer gated by the validator, because 10x index set names are not plain ACGTN sequences.
+- [#443](https://github.com/nf-core/demultiplex/pull/443) Use test data from the nf-core/test-datasets `modules` branch where available
 
 ### `Fixed`
 
