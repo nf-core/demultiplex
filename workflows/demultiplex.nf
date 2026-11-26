@@ -66,7 +66,7 @@ workflow DEMULTIPLEX {
     // list: [falco, fastp, multiqc]
     if ("samshee" in skip_tools) {
         log.warn("The 'samshee' skip_tools token is deprecated and will be removed in a future release; use 'samplesheetparser' instead.")
-        skip_tools = skip_tools.collect { it == "samshee" ? "samplesheetparser" : it }
+        skip_tools = skip_tools.collect { tool -> tool == "samshee" ? "samplesheetparser" : tool }
     }
     sample_size = params.sample_size
     // int
